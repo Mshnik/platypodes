@@ -1,0 +1,5 @@
+#Mac OSX crap
+**/.DS_Store
+
+#Built versions of project
+/export/**
