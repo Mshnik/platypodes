@@ -9,6 +9,7 @@ Most importantly:
 - NEVER COMMIT DIRECTLY TO DEVELOP OR MASTER ONCE THE REPO IS UP. EVER.  
 - all new feature work should be done on feature branches, branched off of develop
 - Never directly merge your new feature yourself without 
+- Never push a feature branch to github
 
 # How To...
 start working on a new feature:
