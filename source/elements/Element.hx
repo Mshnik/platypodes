@@ -14,6 +14,7 @@ class Element extends FlxSprite {
   private var moveDirection : Direction;
 
   private function new(level : Level, row : Int, col : Int, moveVelocity:Float) {
+    super(level.toX(col), level.toY(row));
     this.level = level;
     this.row = row;
     this.col = col;

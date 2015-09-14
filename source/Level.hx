@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxBasic;
 import elements.Direction;
 import haxe.ds.ObjectMap;
 import elements.Element;
@@ -18,13 +19,15 @@ typedef Point = {row : Int, col : Int}
 class Level extends FlxState
 {
 
-  private @final static var SQUARE_SIZE = 50;
+  @final private static var SQUARE_SIZE : Int = 50;
+  @final private static var SQUARE_MARGIN : Int = 4;
 
   private var board = new ObjectMap<Point, Element>();
   private var rows : Int;
   private var cols : Int;
 
   private function new(rows : Int, cols : Int) {
+    super();
     this.rows = rows;
     this.cols = cols;
   }
@@ -36,14 +39,26 @@ class Level extends FlxState
 	{
 		super.create();
 
+    var makeSquare = function(r : Int, c : Int) : FlxSprite {
+      var square = new FlxSprite(c * SQUARE_SIZE + SQUARE_MARGIN/2,
+                                 r * SQUARE_SIZE + SQUARE_MARGIN/2);
+      square.makeGraphic(SQUARE_SIZE - SQUARE_MARGIN, SQUARE_SIZE - SQUARE_MARGIN);
+      return square;
+    }
+
     for(r in 0...rows) {
       for(c in 0...cols) {
-        board.set(new Point(r,c), null);
+        board.set({row : r, col : c}, null);
+        add(makeSquare(r,c));
       }
     }
 	}
-	
-	/**
+
+  public function onAddElement(e : Element) {
+    board.set({row:e.getRow(), col:e.getCol()}, e);
+  }
+
+  /**
 	 * Function that is called when this state is destroyed - you might want to 
 	 * consider setting all objects this state uses to null to help garbage collection.
 	 */
@@ -68,20 +83,28 @@ class Level extends FlxState
     return cols;
   }
 
-  public function getRow(y : Int) : Int {
-    return y / SQUARE_SIZE;
+  public function toRow(y : Float) : Int {
+    return Std.int(y / SQUARE_SIZE);
   }
 
-  public function getCol(x : Int) : Int {
-    return x / SQUARE_SIZE;
+  public function toY(row : Int) : Float {
+    return row * SQUARE_SIZE;
+  }
+
+  public function toCol(x : Float) : Int {
+    return Std.int(x / SQUARE_SIZE);
+  }
+
+  public function toX(col : Int) : Float {
+    return col * SQUARE_SIZE;
   }
 
   public function getRowOf(e : Element) : Int {
-    return getRow(e.y);
+    return toRow(e.y);
   }
 
   public function getColOf(e : Element) : Int {
-    return getRow(e.x);
+    return toRow(e.x);
   }
 
   public function canMove(e : Element, d : Direction) : Bool {
@@ -89,7 +112,7 @@ class Level extends FlxState
 
     var newRow = getRowOf(e) + d.y;
     var newCol = getRowOf(e) + d.x;
-    var point = new Point(newRow, newCol);
+    var point = {row:newRow, col:newCol};
 
     return board.exists(point) && board.get(point) == null;
   }
