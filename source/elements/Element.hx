@@ -51,8 +51,8 @@ class Element extends FlxSprite {
 
     super.update();
 
-    var newRow = getLevel().getRow(this);
-    var newCol = getLevel().getCol(this);
+    var newRow = getLevel().getRowOf(this);
+    var newCol = getLevel().getColOf(this);
 
     if (   (newRow == row && (moveDirection == Direction.Up || moveDirection == Direction.Down))
         || (newCol == col && (moveDirection == Direction.Left || moveDirection == Direction.Right))) {
