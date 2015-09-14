@@ -1,5 +1,6 @@
 package;
 
+import elements.Element;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -10,7 +11,7 @@ import flixel.util.FlxMath;
 /**
  * A FlxState which can be used for the actual gameplay.
  */
-class PlayState extends FlxState
+class Level extends FlxState
 {
 	/**
 	 * Function that is called up when to state is created to set it up. 
@@ -35,5 +36,15 @@ class PlayState extends FlxState
 	override public function update():Void
 	{
 		super.update();
-	}	
+	}
+
+  public function getRow(e : Element) : Int {
+    //TODO
+    return -1;
+  }
+
+  public function getCol(e : Element) : Int {
+    //TODO
+    return -1;
+  }
 }
