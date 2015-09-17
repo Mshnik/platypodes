@@ -61,5 +61,8 @@ class Element extends FlxSprite {
       velocity.x = 0;
       velocity.y = 0;
     }
+
+    row = newRow;
+    col = newCol;
   }
 }

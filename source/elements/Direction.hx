@@ -1,11 +1,17 @@
 package elements;
 class Direction {
 
-  public static var None = new Direction(0, 0);
-  public static var Up = new Direction(0, -1);
-  public static var Down = new Direction(0, 1);
-  public static var Left = new Direction(-1, 0);
-  public static var Right = new Direction(1, 0);
+  @final private static var RT202 = 0.70710678118;
+
+  @final public static var None = new Direction(0, 0);
+  @final public static var Up = new Direction(0, -1);
+  @final public static var Down = new Direction(0, 1);
+  @final public static var Left = new Direction(-1, 0);
+  @final public static var Right = new Direction(1, 0);
+  @final public static var Up_Left = new Direction(-1, -1);
+  @final public static var Up_Right = new Direction(1, -1);
+  @final public static var Down_Right = new Direction(1, 1);
+  @final public static var Down_Left = new Direction(-1, 1);
 
   @final @range(-1, 1) public var x : Int;
   @final @range(-1, 1) public var y : Int;
