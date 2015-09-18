@@ -3,3 +3,6 @@
 
 #Built versions of project
 /export/**
+
+#.idea folder
+.idea/**
