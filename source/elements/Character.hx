@@ -31,19 +31,21 @@ class Character extends Element {
   override public function update() {
     super.update();
 
+    var direc = Direction.None;
 
-    if(UP()) { //UP() && getLevel().canMove(this, Direction.Up)
-      setDirection(Direction.Up);
+    if(UP()) {
+      direc = direc.addDirec(Direction.Up);
     }
-    else if(DOWN()) { //DOWN() && getLevel().canMove(this, Direction.Down)
-      setDirection(Direction.Down);
+    if(DOWN()) {
+      direc = direc.addDirec(Direction.Down);
     }
-    else if(RIGHT()) { //RIGHT() && getLevel().canMove(this, Direction.Right)
-      setDirection(Direction.Right);
+    if(RIGHT()) {
+      direc = direc.addDirec(Direction.Right);
     }
-    else if(LEFT()) { //LEFT() && getLevel().canMove(this, Direction.Left)
-      setDirection(Direction.Left);
+    if(LEFT()) {
+      direc = direc.addDirec(Direction.Left);
     }
 
+    setDirection(direc);
   }
 }

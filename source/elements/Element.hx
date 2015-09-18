@@ -4,10 +4,9 @@ import flixel.FlxSprite;
 @abstract
 class Element extends FlxSprite {
 
-  private var level:Level;
+  @final private static var MOVE_EDGE_MARGIN = 5;
 
-  private var row:Int;
-  private var col:Int;
+  @final public var level:Level;
 
   private var moveable:Bool;
   private var moveVelocity:Float;
@@ -16,26 +15,17 @@ class Element extends FlxSprite {
   private function new(level : Level, row : Int, col : Int, moveVelocity:Float) {
     super(level.toX(col), level.toY(row));
     this.level = level;
-    this.row = row;
-    this.col = col;
     this.moveable = moveVelocity > 0;
     this.moveVelocity = moveVelocity;
     this.moveDirection = Direction.None;
   }
 
-  @final
-  public function getLevel() : Level {
-    return level;
+  public inline function getRow() : Int {
+    return level.getRowOf(this);
   }
 
-  @final
-  public function getRow() : Int {
-    return row;
-  }
-
-  @final
-  public function getCol() : Int {
-    return col;
+  public inline function getCol() : Int {
+    return level.getColOf(this);
   }
 
   public function setDirection(direction : Direction) {
@@ -50,19 +40,15 @@ class Element extends FlxSprite {
     velocity.x = moveVelocity * moveDirection.x;
     velocity.y = moveVelocity * moveDirection.y;
 
-    super.update();
-
-    var newRow = getLevel().getRowOf(this);
-    var newCol = getLevel().getColOf(this);
-
-    if (   (newRow == row && (moveDirection == Direction.Up || moveDirection == Direction.Down))
-        || (newCol == col && (moveDirection == Direction.Left || moveDirection == Direction.Right))) {
-      moveDirection = Direction.None;
+    if (x <= MOVE_EDGE_MARGIN && velocity.x < 0 ||
+        x + width >= level.getWidth() - MOVE_EDGE_MARGIN && velocity.x > 0) {
       velocity.x = 0;
+    }
+    if (y <= MOVE_EDGE_MARGIN && velocity.y < 0 ||
+        y + height >= level.getHeight() - MOVE_EDGE_MARGIN && velocity.y > 0) {
       velocity.y = 0;
     }
 
-    row = newRow;
-    col = newCol;
+    super.update();
   }
 }

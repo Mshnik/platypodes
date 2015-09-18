@@ -1,5 +1,6 @@
 package elements;
-class Direction {
+import flixel.util.FlxVector;
+class Direction extends FlxVector {
 
   @final private static var RT202 = 0.70710678118;
 
@@ -13,19 +14,11 @@ class Direction {
   @final public static var Down_Right = new Direction(1, 1);
   @final public static var Down_Left = new Direction(-1, 1);
 
-  @final @range(-1, 1) public var x : Int;
-  @final @range(-1, 1) public var y : Int;
-
-  private function new(x : Int, y : Int) {
-    this.x = x;
-    this.y = y;
+  public inline function addDirec(v : FlxVector) {
+    return new Direction(x + v.x, y + v.y);
   }
 
-  public function isNonNone() : Bool {
+  public inline function isNonNone() : Bool {
     return x != 0 && y != 0;
-  }
-
-  public function toString() : String {
-    return "(" + x + "," + y + ")";
   }
 }

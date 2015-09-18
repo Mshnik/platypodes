@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxPoint;
 import flixel.FlxBasic;
 import elements.Direction;
 import haxe.ds.ObjectMap;
@@ -11,18 +12,16 @@ import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
 
-typedef Point = {row : Int, col : Int}
-
 /**
  * A FlxState which can be used for the actual gameplay.
  */
 class Level extends FlxState
 {
 
-  @final private static var SQUARE_SIZE : Int = 50;
+  @final private static var SQUARE_SIZE : Int = 48;
   @final private static var SQUARE_MARGIN : Int = 4;
 
-  private var board = new ObjectMap<Point, Element>();
+  private var board = new ObjectMap<FlxPoint, Element>();
   private var rows : Int;
   private var cols : Int;
 
@@ -48,14 +47,14 @@ class Level extends FlxState
 
     for(r in 0...rows) {
       for(c in 0...cols) {
-        board.set({row : r, col : c}, null);
+        board.set(new FlxPoint(c, r), null);
         add(makeSquare(r,c));
       }
     }
 	}
 
   public function onAddElement(e : Element) {
-    board.set({row:e.getRow(), col:e.getCol()}, e);
+    board.set(new FlxPoint(e.getCol(), e.getRow()), e);
   }
 
   /**
@@ -79,8 +78,16 @@ class Level extends FlxState
     return rows;
   }
 
+  public function getWidth() : Int {
+    return cols * SQUARE_SIZE;
+  }
+
   public function getCols() : Int {
     return cols;
+  }
+
+  public function getHeight() : Int {
+    return rows * SQUARE_SIZE;
   }
 
   public function toRow(y : Float) : Int {
@@ -108,11 +115,11 @@ class Level extends FlxState
   }
 
   public function canMove(e : Element, d : Direction) : Bool {
-    if(d == Direction.None) return true;
+    if(d.isNonNone()) return true;
 
     var newRow = getRowOf(e) + d.y;
-    var newCol = getRowOf(e) + d.x;
-    var point = {row:newRow, col:newCol};
+    var newCol = getColOf(e) + d.x;
+    var point = new FlxPoint(newCol, newRow);
 
     return board.exists(point) && board.get(point) == null;
   }
