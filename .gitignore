@@ -4,5 +4,6 @@
 #Built versions of project
 /export/**
 
-#.idea folder
+#IntelliJ things
 .idea/**
+**.iml
