@@ -1,12 +1,11 @@
 package ;
 import elements.Character;
-class DummyLevel extends Level{
-
-  public function new() {
-    super(8, 15);
-  }
+class DummyLevel extends AbsLevel{
 
   override public function create() {
+    set_rows(8);
+    set_cols(8);
+
     super.create();
 
     var character = new Character(this, 0, 0);
