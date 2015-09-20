@@ -12,6 +12,7 @@ import flixel.FlxState;
  * A Flx state (playable) that represents a level. Should be extended
  * in order to make a concrete level to display
  */
+@abstract
 class AbsLevel extends FlxState
 {
 
@@ -45,22 +46,12 @@ class AbsLevel extends FlxState
     for(r in 0...rows) {
       for(c in 0...cols) {
         var point = asMapVal(r,c);
-        trace(Std.string(point));
         board.set(point, null);
         var tile = makeSquare(r,c);
         tiles.set(point, tile);
         add(tile);
       }
     }
-  }
-
-  /** Adds the element to the board to keep track of the board state.
-   * Make sure to call after adding an element to the stage (but not any other sprite).
-   */
-  public function onAddElement(e : Element) {
-    var pt = getLocOf(e);
-    board.set(asMapValOf(pt), e);
-    pt.put();
   }
 
   /**
@@ -170,14 +161,14 @@ class AbsLevel extends FlxState
    * converts that y coordinate to a row index in board space
    */
   public inline function getRowOf(e : Element) : Int {
-    return toRow(e.y);
+    return toRow(e.origin.y + e.y);
   }
 
   /** Finds the x coordinate of the given element in pixel space, then
    * converts that x coordinate to a col index in board space
    */
   public inline function getColOf(e : Element) : Int {
-    return toRow(e.x);
+    return toRow(e.origin.x + e.x);
   }
 
   /** Returns a point that represents the position in board space of the
@@ -203,6 +194,13 @@ class AbsLevel extends FlxState
     var point = getLocOf(e);
 
     return true;
+  }
+
+/** Adds the element to the board to keep track of the board state.
+   * Make sure to call after adding an element to the stage (but not any other sprite).
+   */
+  public function onAddElement(e : Element) {
+    elementMoved(e, e.getRow(), e.getCol());
   }
 
   /** Called by an element whenever it moves from (oldRow, oldCol) to its new current location.
