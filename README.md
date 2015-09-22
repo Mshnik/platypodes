@@ -4,7 +4,7 @@ CS 4154 - fall 2015 - team platypodes
 ## GIT POLICIES
 This repo will mostly follow the git procedures listed here:
 http://nvie.com/posts/a-successful-git-branching-model/
-
+  
 Most importantly:
 - NEVER COMMIT CODE DIRECTLY TO DEVELOP OR MASTER ONCE THE REPO IS UP.
 - all new feature work should be done on feature branches, branched off of develop. NOT MASTER.
