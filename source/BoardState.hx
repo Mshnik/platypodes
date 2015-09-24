@@ -13,7 +13,7 @@ import flixel.FlxState;
  * in order to make a concrete level to display
  */
 @abstract
-class AbsLevel extends FlxState
+class BoardState extends FlxState
 {
 
   @final private static var SQUARE_SIZE : Int = 48;
