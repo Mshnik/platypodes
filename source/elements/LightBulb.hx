@@ -7,7 +7,7 @@ class LightBulb extends Element {
 
 
 /** Constructs a light bulb, light source, with the given level, and initial row and col */
-  public function new(level : AbsLevel, row : Int, col : Int) {
+  public function new(level : PlayState, row : Int, col : Int) {
     super(level, row, col, MOVE_SPEED, DEFAULT_SPRITE);
   }
 
