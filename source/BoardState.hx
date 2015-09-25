@@ -11,6 +11,8 @@ import flixel.FlxState;
 /**
  * A Flx state (playable) that represents a level. Should be extended
  * in order to make a concrete level to display
+ *
+ * NOW UNUSED!!
  */
 @abstract
 class BoardState extends FlxState
