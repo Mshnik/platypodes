@@ -1,4 +1,5 @@
 package elements;
+import flixel.addons.editors.tiled.TiledObject;
 import flixel.util.FlxStringUtil;
 import flixel.FlxSprite;
 
@@ -9,8 +10,9 @@ class Element extends FlxSprite {
   //Value is in pixels
   @final private static var MOVE_EDGE_MARGIN = 5;
 
-  @final public var level:AbsLevel; //The level this element belongs to
+  @final public var level:TiledLevel; //The level this element belongs to
 
+  private var tileObject:TiledObject; //The tiled object representing the element in the grid
   private var moveable:Bool; //True iff this element is movable
   private var moveVelocity:Float; //The velocity with which the element moves
   private var moveDirection : Direction; //The direction this element is currently moving (None if none).
@@ -23,8 +25,9 @@ class Element extends FlxSprite {
    * img - the image to display for this element. If more complex than a simple image, don't supply here;
    *  change the graph content after calling this constructor.
    */
-  private function new(level : AbsLevel, row : Int, col : Int, moveVelocity:Float = 0, ?img:Dynamic) {
-    super(level.toX(col), level.toY(row), img);
+  private function new(level : TiledLevel, x : Int, y : Int, tileObject : TiledObject, moveVelocity:Float = 0, ?img:Dynamic) {
+    super(x, y, img);
+    this.tileObject = tileObject;
     this.level = level;
     this.moveable = moveVelocity > 0;
     this.moveVelocity = moveVelocity;
@@ -47,12 +50,12 @@ class Element extends FlxSprite {
 
   /** Return the row of the board this element is currently occupying */
   public inline function getRow() : Int {
-    return level.getRowOf(this);
+    return -1;
   }
 
   /** Return the col of the board this element is currently occupying */
   public inline function getCol() : Int {
-    return level.getColOf(this);
+    return -1;
   }
 
   /** Sets the movement direction of this element.
@@ -78,11 +81,11 @@ class Element extends FlxSprite {
     velocity.y = moveVelocity * moveDirection.y;
 
     if (x <= MOVE_EDGE_MARGIN && velocity.x < 0 ||
-        x + width >= level.getWidth() - MOVE_EDGE_MARGIN && velocity.x > 0) {
+        x + width >= level.fullWidth - MOVE_EDGE_MARGIN && velocity.x > 0) {
       velocity.x = 0;
     }
     if (y <= MOVE_EDGE_MARGIN && velocity.y < 0 ||
-        y + height >= level.getHeight() - MOVE_EDGE_MARGIN && velocity.y > 0) {
+        y + height >= level.fullHeight - MOVE_EDGE_MARGIN && velocity.y > 0) {
       velocity.y = 0;
     }
 
@@ -95,7 +98,7 @@ class Element extends FlxSprite {
     var newCol = getCol();
 
     if (oldRow != newRow || oldCol != newCol) {
-      level.elementMoved(this, oldRow, oldCol);
+      //level.elementMoved(this, oldRow, oldCol);
     }
   }
 }

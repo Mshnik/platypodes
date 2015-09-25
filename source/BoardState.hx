@@ -11,9 +11,11 @@ import flixel.FlxState;
 /**
  * A Flx state (playable) that represents a level. Should be extended
  * in order to make a concrete level to display
+ *
+ * NOW UNUSED!!
  */
 @abstract
-class AbsLevel extends FlxState
+class BoardState extends FlxState
 {
 
   @final private static var SQUARE_SIZE : Int = 48;

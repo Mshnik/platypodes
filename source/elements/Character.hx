@@ -1,8 +1,9 @@
 package elements;
+import flixel.addons.editors.tiled.TiledObject;
 import flixel.FlxG;
 class Character extends Element {
 
-  @final private static var MOVE_SPEED = 100;
+  @final private static var MOVE_SPEED = 300;
   @final private static var DEFAULT_SPRITE = AssetPaths.vampy_I__png;
 
   static var UP = function() : Bool { return FlxG.keys.pressed.UP; };
@@ -17,8 +18,8 @@ class Character extends Element {
   static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
 
   /** Constructs a new character, with the given level, and initial row and col */
-  public function new(level : AbsLevel, row : Int, col : Int) {
-    super(level, row, col, MOVE_SPEED, DEFAULT_SPRITE);
+  public function new(level : TiledLevel, x : Int, y : Int, o : TiledObject) {
+    super(level, x, y, o, MOVE_SPEED, DEFAULT_SPRITE);
   }
 
   /** Updates the character
