@@ -22,16 +22,20 @@ class TiledLevel extends TiledMap {
   public inline static var c_PATH_LEVEL_TILESHEETS = "assets/images/";
 
   // Array of tilemaps used for collision
-  public var foregroundTiles:FlxGroup;
-  public var backgroundTiles:FlxGroup;
+  public var collidableTiles:FlxGroup;
   private var collidableTileLayers:Array<FlxTilemap>;
+
+  public var backgroundTiles:FlxGroup;
+  public var foregroundTiles:FlxGroup;
+
   public var mirrorLayer:FlxTilemap;
 
   public function new(tiledLevel:Dynamic) {
     super(tiledLevel);
 
-    foregroundTiles = new FlxGroup();
+    collidableTiles = new FlxGroup();
     backgroundTiles = new FlxGroup();
+    foregroundTiles = new FlxGroup();
 
     FlxG.camera.setBounds(0, 0, fullWidth, fullHeight, true);
 
@@ -65,14 +69,18 @@ class TiledLevel extends TiledMap {
         mirrorLayer = tilemap;
       }
 
-      if (tileLayer.properties.contains("nocollide")) {
-        backgroundTiles.add(tilemap);
+      if (tileLayer.properties.contains("nocollide") && tileLayer.properties.get("nocollide") == "true") {
+        if(tileLayer.properties.contains("zindex") && tileLayer.properties.get("zindex") == "front") {
+          foregroundTiles.add(tilemap);
+        } else {
+          backgroundTiles.add(tilemap);
+        }
       }
       else {
         if (collidableTileLayers == null)
           collidableTileLayers = new Array<FlxTilemap>();
 
-        foregroundTiles.add(tilemap);
+        collidableTiles.add(tilemap);
         collidableTileLayers.push(tilemap);
       }
     }
@@ -98,13 +106,14 @@ class TiledLevel extends TiledMap {
   }
 
   public function collideWithLevel(obj:FlxObject, ?notifyCallback:FlxObject->FlxObject->Void, ?processCallback:FlxObject->FlxObject->Bool):Bool {
+    var b = false;
     if (collidableTileLayers != null) {
       for (map in collidableTileLayers) {
         // IMPORTANT: Always collide the map with objects, not the other way around.
         //			  This prevents odd collision errors (collision separation code off by 1 px).
-        return FlxG.overlap(map, obj, notifyCallback, processCallback != null ? processCallback : FlxObject.separate);
+        b = FlxG.overlap(map, obj, notifyCallback, processCallback != null ? processCallback : FlxObject.separate) || b;
       }
     }
-    return false;
+    return b;
   }
 }

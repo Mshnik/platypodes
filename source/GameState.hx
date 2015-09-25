@@ -1,5 +1,6 @@
 package;
 
+import elements.Mirror;
 import elements.Character;
 import flixel.addons.editors.tiled.TiledObjectGroup;
 import flixel.addons.editors.tiled.TiledObject;
@@ -15,8 +16,6 @@ class GameState extends FlxState
 {
   public var level:TiledLevel;
 
-  public var score:FlxText;
-  public var status:FlxText;
   public var coins:FlxGroup;
   public var player:FlxSprite;
   public var floor:FlxObject;
@@ -33,49 +32,30 @@ class GameState extends FlxState
     bgColor = 0xffaaaaaa;
 
 // Load the level's tilemaps
-    level = new TiledLevel(AssetPaths.demoLevel__tmx);
+    level = new TiledLevel(AssetPaths.level0__tmx);
 
 // Add tilemaps
-    add(level.foregroundTiles);
+    add(level.collidableTiles);
 
-// Draw coins first
-    coins = new FlxGroup();
-    add(coins);
+// Add background tiles after adding level objects, so these tiles render on behind player, but on top of collidable tiles
+    add(level.backgroundTiles);
+
+// Draw mirrors first
+    mirrors = new FlxGroup();
+    add(mirrors);
 
 // Load player objects
     level.loadObjects(onAddObject);
 
 // Add background tiles after adding level objects, so these tiles render on top of player
-    add(level.backgroundTiles);
+    add(level.foregroundTiles);
 
-// Create UI
-    score = new FlxText(2, 2, 80);
-    score.scrollFactor.set(0, 0);
-    score.borderColor = 0xff000000;
-    score.borderStyle = FlxText.BORDER_SHADOW;
-    score.text = "SCORE: " + (coins.countDead() * 100);
-    add(score);
-
-    status = new FlxText(FlxG.width - 160 - 2, 2, 160);
-    status.scrollFactor.set(0, 0);
-    status.borderColor = 0xff000000;
-    score.borderStyle = FlxText.BORDER_SHADOW;
-    status.alignment = "right";
-
-    if (youDied == false)
-      status.text = "Collect coins.";
-    else
-      status.text = "Aww, you died!";
-
-    add(status);
   }
 
   override public function update():Void {
     super.update();
 
-    FlxG.overlap(coins, player, getCoin);
-
-// Collide with foreground tile layer
+    // Collide with foreground tile layer
     level.collideWithLevel(player);
 
     FlxG.overlap(exit, player, win);
@@ -87,20 +67,14 @@ class GameState extends FlxState
     }
   }
 
-  public function win(Exit:FlxObject, Player:FlxObject):Void
-  {
-    status.text = "Yay, you won!";
-    score.text = "SCORE: 5000";
+  public function win(Exit:FlxObject, Player:FlxObject):Void {
     player.kill();
   }
 
-  public function getCoin(Coin:FlxObject, Player:FlxObject):Void
-  {
+  public function getCoin(Coin:FlxObject, Player:FlxObject):Void {
     Coin.kill();
-    score.text = "SCORE: " + (coins.countDead() * 100);
     if (coins.countLiving() == 0)
     {
-      status.text = "Find the exit";
       exit.exists = true;
     }
   }
@@ -117,10 +91,14 @@ class GameState extends FlxState
         var floor = new FlxObject(x, y, o.width, o.height);
         this.floor = floor;
 
-      case "coin":
+      case "mirror":
+        trace("got mirror");
         var tileset = g.map.getGidOwner(o.gid);
-        var coin = new FlxSprite(x, y, TiledLevel.c_PATH_LEVEL_TILESHEETS + tileset.imageSource);
-        coins.add(coin);
+        trace(TiledLevel.c_PATH_LEVEL_TILESHEETS);
+        trace(tileset.imageSource);
+        var mirror = new Mirror(level, x, y, o);
+        mirror.loadGraphic("assets/images/mirror_img.png");
+        mirrors.add(mirror);
 
       case "exit":
         // Create the level exit
