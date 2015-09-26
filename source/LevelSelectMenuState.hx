@@ -19,7 +19,8 @@ class LevelSelectMenuState extends FlxState
 	private var levels : Array<Dynamic>;
 
 	/**
-	 * Function that is called up when to state is created to set it up. 
+	 * Function that is called up when to state is created to set it up.
+	 * Creates buttons for each of the levels in levels.
 	 */
 	override public function create():Void {
 		super.create();
@@ -35,7 +36,7 @@ class LevelSelectMenuState extends FlxState
     var w : Float = -1;
     var h : Float = -1;
     for(i in 0...levels.length) {
-      var button = new FlxButton(x, y, "Level " + Std.string(i));
+      var button = new FlxButton(x, y, "Level " + Std.string(i), function(){ loadLevel(i); });
 
       if (w == -1) {
         w = button.width;
@@ -52,10 +53,14 @@ class LevelSelectMenuState extends FlxState
 
       add(button);
     }
-
-
   }
-	
+
+  /** Loads (Switches) to level at levels[index] */
+  private function loadLevel(index : Int) : Void {
+    var gameState = new GameState(levels[index]);
+    FlxG.switchState(gameState);
+  }
+
 	/**
 	 * Function that is called when this state is destroyed - you might want to 
 	 * consider setting all objects this state uses to null to help garbage collection.
