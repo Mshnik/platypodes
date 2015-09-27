@@ -100,8 +100,10 @@ class TiledLevel extends TiledMap {
     var y:Int = o.y;
 
     // objects in tiled are aligned bottom-left (top-left in flixel)
-    if (o.gid != -1)
+    trace(o.gid);
+    if (o.gid != -1) {
       y -= g.map.getGidOwner(o.gid).tileHeight;
+    }
 
     processCallback(o, g, x, y);
   }

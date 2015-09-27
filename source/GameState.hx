@@ -1,5 +1,6 @@
 package;
 
+import elements.Element;
 import elements.Mirror;
 import elements.Character;
 import flixel.addons.editors.tiled.TiledObjectGroup;
@@ -86,28 +87,43 @@ class GameState extends FlxState
     }
   }
 
+  public function getElementAt(row : Int, col : Int) : Element {
+    return null;
+  }
+
   public function onAddObject(o : TiledObject, g : TiledObjectGroup, x : Int, y : Int) {
     trace("processing " + o.type);
+
+    var spr : FlxSprite = null;
+
     switch (o.type.toLowerCase()) {
       case "player_start":
         var player = new Character(level, x, y, o);
         FlxG.camera.follow(player);
         this.player = player;
+        spr = player;
         add(player);
 
       case "mirror":
-        var tileset = g.map.getGidOwner(o.gid);
         var mirror = new Mirror(level, x, y, o);
+        spr = mirror;
         mirror.loadGraphic("assets/images/mirror_img.png");
+
         mirrors.add(mirror);
 
       case "exit":
         // Create the level exit
         var exit = new FlxSprite(x, y);
+        spr = exit;
         exit.makeGraphic(32, 32, 0xff3f3f3f);
         exit.exists = false;
         this.exit = exit;
         add(exit);
+    }
+
+    if (spr != null) {
+      spr.flipX = o.flippedHorizontally;
+      spr.flipY = o.flippedVertically;
     }
   }
 }
