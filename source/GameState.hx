@@ -8,55 +8,62 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
 import flixel.FlxObject;
-import flixel.text.FlxText;
 import flixel.group.FlxGroup;
-import flixel.tile.FlxTilemap;
 
 class GameState extends FlxState
 {
+
+  private static var menuButton = function() { return FlxG.keys.justPressed.ESCAPE; };
+
+  @final private var levelPath : Dynamic;
   public var level:TiledLevel;
 
   public var coins:FlxGroup;
-  public var player:FlxSprite;
+  public var player:Character;
   public var floor:FlxObject;
   public var exit:FlxSprite;
   public var mirrors:FlxGroup;
 
   private static var youDied:Bool = false;
 
+  public function new(levelPath : Dynamic) {
+    super();
+    this.levelPath = levelPath;
+  }
+
   override public function create():Void
   {
     FlxG.mouse.visible = false;
 
-//super.create();
+    //super.create();
     bgColor = 0xffaaaaaa;
 
-// Load the level's tilemaps
-    level = new TiledLevel(AssetPaths.level0__tmx);
+    // Load the level's tilemaps
+    level = new TiledLevel(levelPath);
 
-// Add tilemaps
-    add(level.collidableTiles);
+    // Add tilemaps
+    add(level.floorTiles);
+    add(level.holeTiles);
+    add(level.wallTiles);
 
-// Add background tiles after adding level objects, so these tiles render on behind player, but on top of collidable tiles
-    add(level.backgroundTiles);
-
-// Draw mirrors first
+    // Draw mirrors first
     mirrors = new FlxGroup();
     add(mirrors);
 
-// Load player objects
+    // Load player objects
     level.loadObjects(onAddObject);
-
-// Add background tiles after adding level objects, so these tiles render on top of player
-    add(level.foregroundTiles);
 
   }
 
   override public function update():Void {
+    if(menuButton()) {
+      FlxG.switchState(new LevelSelectMenuState());
+    }
+
     super.update();
 
     // Collide with foreground tile layer
-    level.collideWithLevel(player);
+    level.collideWithLevel(player, false);
 
     FlxG.overlap(exit, player, win);
 
@@ -80,6 +87,7 @@ class GameState extends FlxState
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup, x : Int, y : Int) {
+    trace("processing " + o.type);
     switch (o.type.toLowerCase()) {
       case "player_start":
         var player = new Character(level, x, y, o);
@@ -87,15 +95,8 @@ class GameState extends FlxState
         this.player = player;
         add(player);
 
-      case "floor":
-        var floor = new FlxObject(x, y, o.width, o.height);
-        this.floor = floor;
-
       case "mirror":
-        trace("got mirror");
         var tileset = g.map.getGidOwner(o.gid);
-        trace(TiledLevel.c_PATH_LEVEL_TILESHEETS);
-        trace(tileset.imageSource);
         var mirror = new Mirror(level, x, y, o);
         mirror.loadGraphic("assets/images/mirror_img.png");
         mirrors.add(mirror);
