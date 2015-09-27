@@ -1,11 +1,8 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.text.FlxText;
 import flixel.ui.FlxButton;
-import flixel.util.FlxMath;
 
 /**
  * A FlxState which can be used for the game's level select menu.
@@ -25,11 +22,10 @@ class LevelSelectMenuState extends FlxState
 	override public function create():Void {
 		super.create();
 
+    FlxG.mouse.visible = true;
+
     levels = new Array<Dynamic>();
     levels.push(AssetPaths.level0__tmx);
-    levels.push(AssetPaths.level1__tmx);
-    levels.push(AssetPaths.level2__tmx);
-
 
     var x = MARGIN;
     var y = MARGIN;
