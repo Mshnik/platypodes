@@ -33,6 +33,9 @@ class Element extends FlxSprite {
     this.moveVelocity = moveVelocity;
     this.moveDirection = Direction.None;
     centerOrigin();
+
+    flipX = TiledLevel.isFlippedX(tileObject);
+    flipY = TiledLevel.isFlippedY(tileObject);
   }
 
   /** Return a string representation of this element */
