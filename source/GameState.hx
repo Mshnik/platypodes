@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxBasic;
 import elements.Element;
 import elements.Mirror;
 import elements.Character;
@@ -14,7 +15,7 @@ import flixel.group.FlxGroup;
 class GameState extends FlxState
 {
 
-  private static var menuButton = function() { return FlxG.keys.justPressed.ESCAPE; };
+  private static var menuButton = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
 
   @final private var levelPath : Dynamic;
   public var level:TiledLevel;
@@ -63,28 +64,22 @@ class GameState extends FlxState
 
     super.update();
 
-    // Collide with foreground tile layer
+    // Collide player with holes and walls
     level.collideWithLevel(player, false);
 
-    FlxG.overlap(exit, player, win);
+    //Collide with mirrors - don't let player walk through mirrors
+    FlxG.collide(player, mirrors);
 
-    if (FlxG.overlap(player, floor))
-    {
-      youDied = true;
-      FlxG.resetState();
-    }
-  }
+    //Collide mirrors with walls and holes
+    mirrors.forEachOfType(FlxObject,
+      function(mirror : FlxObject){
+        level.collideWithLevel(mirror, true);
+      }
+    );
 
-  public function win(Exit:FlxObject, Player:FlxObject):Void {
-    player.kill();
-  }
+    //Re-collide player with mirrors to prevent player from moving past mirror that can't move
+    FlxG.collide(player, mirrors);
 
-  public function getCoin(Coin:FlxObject, Player:FlxObject):Void {
-    Coin.kill();
-    if (coins.countLiving() == 0)
-    {
-      exit.exists = true;
-    }
   }
 
   public function getElementAt(row : Int, col : Int) : Element {
