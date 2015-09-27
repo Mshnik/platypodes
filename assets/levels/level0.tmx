@@ -8,9 +8,7 @@
  </tileset>
  <layer name="Floor" width="12" height="12">
   <properties>
-   <property name="nocollide" value="true"/>
    <property name="tileset" value="tile_sheet"/>
-   <property name="zindex" value="behind"/>
   </properties>
   <data encoding="base64" compression="zlib">
    eJxjYGBg4CWA0QFIjBGKkdncJKpnHILq0TEu9aSE51AGANjGAdc=
@@ -24,7 +22,7 @@
    eJxjYBhegInG6kcBKgAAB6AABQ==
   </data>
  </layer>
- <layer name="Foreground" width="12" height="12">
+ <layer name="Walls" width="12" height="12">
   <properties>
    <property name="tileset" value="tile_sheet"/>
   </properties>

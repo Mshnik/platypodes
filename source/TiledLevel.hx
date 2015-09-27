@@ -19,23 +19,26 @@ import flixel.addons.editors.tiled.TiledTileSet;
 class TiledLevel extends TiledMap {
   // For each "Tile Layer" in the map, you must define a "tileset" property which contains the name of a tile sheet image
   // used to draw tiles in that layer (without file extension). The image file must be located in the directory specified bellow.
-  public inline static var c_PATH_LEVEL_TILESHEETS = "assets/images/";
+  @final public inline static var c_PATH_LEVEL_TILESHEETS = "assets/images/";
+
+  @final public inline static var FLOOR_LAYER_NAME = "Floor";
+  @final public inline static var HOLE_LAYER_NAME = "Holes";
+  @final public inline static var WALL_LAYER_NAME = "Walls";
 
   // Array of tilemaps used for collision
-  public var collidableTiles:FlxGroup;
-  private var collidableTileLayers:Array<FlxTilemap>;
-
-  public var backgroundTiles:FlxGroup;
-  public var foregroundTiles:FlxGroup;
-
-  public var mirrorLayer:FlxTilemap;
+  public var floorTiles : FlxGroup;
+  private var floorMap : FlxTilemap;
+  public var holeTiles : FlxGroup;
+  private var holeMap : FlxTilemap;
+  public var wallTiles : FlxGroup;
+  private var wallMap : FlxTilemap;
 
   public function new(tiledLevel:Dynamic) {
     super(tiledLevel);
 
-    collidableTiles = new FlxGroup();
-    backgroundTiles = new FlxGroup();
-    foregroundTiles = new FlxGroup();
+    floorTiles = new FlxGroup();
+    holeTiles = new FlxGroup();
+    wallTiles = new FlxGroup();
 
     FlxG.camera.setBounds(0, 0, fullWidth, fullHeight, true);
 
@@ -65,23 +68,21 @@ class TiledLevel extends TiledMap {
       tilemap.heightInTiles = height;
       tilemap.loadMap(tileLayer.tileArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, 0, 1, 1, 1);
 
-      if(tileLayer.name == "mirrors") {
-        mirrorLayer = tilemap;
-      }
+      switch(tileLayer.name) {
+        case FLOOR_LAYER_NAME:
+          floorTiles.add(tilemap);
+          floorMap = tilemap;
 
-      if (tileLayer.properties.contains("nocollide") && tileLayer.properties.get("nocollide") == "true") {
-        if(tileLayer.properties.contains("zindex") && tileLayer.properties.get("zindex") == "front") {
-          foregroundTiles.add(tilemap);
-        } else {
-          backgroundTiles.add(tilemap);
-        }
-      }
-      else {
-        if (collidableTileLayers == null)
-          collidableTileLayers = new Array<FlxTilemap>();
+        case HOLE_LAYER_NAME:
+          holeTiles.add(tilemap);
+          holeMap = tilemap;
 
-        collidableTiles.add(tilemap);
-        collidableTileLayers.push(tilemap);
+        case WALL_LAYER_NAME:
+          wallTiles.add(tilemap);
+          wallMap = tilemap;
+
+        default:
+          throw "Unexpected tilelayer name " + tileLayer.name;
       }
     }
   }
@@ -99,20 +100,24 @@ class TiledLevel extends TiledMap {
     var y:Int = o.y;
 
     // objects in tiled are aligned bottom-left (top-left in flixel)
-    if (o.gid != -1)
+    trace(o.gid);
+    if (o.gid != -1) {
       y -= g.map.getGidOwner(o.gid).tileHeight;
+    }
 
     processCallback(o, g, x, y);
   }
 
-  public function collideWithLevel(obj:FlxObject, ?notifyCallback:FlxObject->FlxObject->Void, ?processCallback:FlxObject->FlxObject->Bool):Bool {
+  public function collideWithLevel(obj:FlxObject, collideWithHoles : Bool = true, ?notifyCallback:FlxObject->FlxObject->Void, ?processCallback:FlxObject->FlxObject->Bool):Bool {
+
+    // IMPORTANT: Always collide the map with objects, not the other way around.
+    // 			  This prevents odd collision errors (collision separation code off by 1 px).
     var b = false;
-    if (collidableTileLayers != null) {
-      for (map in collidableTileLayers) {
-        // IMPORTANT: Always collide the map with objects, not the other way around.
-        //			  This prevents odd collision errors (collision separation code off by 1 px).
-        b = FlxG.overlap(map, obj, notifyCallback, processCallback != null ? processCallback : FlxObject.separate) || b;
-      }
+    if (holeTiles != null && collideWithHoles) {
+        b = FlxG.overlap(holeMap, obj, notifyCallback, processCallback != null ? processCallback : FlxObject.separate) || b;
+    }
+    if (wallTiles != null) {
+        b = FlxG.overlap(wallMap, obj, notifyCallback, processCallback != null ? processCallback : FlxObject.separate) || b;
     }
     return b;
   }
