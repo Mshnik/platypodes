@@ -4,7 +4,7 @@ class LightBulb extends Element {
 
   @final private static var MOVE_SPEED = 0;
   @final private static var DEFAULT_SPRITE = ""; //TODO
-  private var direction;
+  private var direction:Direction;//the direction that the light is shining at
 
 
 /** Constructs a light bulb, light source, with the given level, and initial row and col */
@@ -14,7 +14,5 @@ class LightBulb extends Element {
 
 
   override public function update() {
-    super.update();
-  }
-}
+    super.update();}}
 
