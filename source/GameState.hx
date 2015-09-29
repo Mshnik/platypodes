@@ -4,6 +4,7 @@ import flixel.FlxBasic;
 import elements.Element;
 import elements.Mirror;
 import elements.Character;
+import elements.Direction;
 import flixel.addons.editors.tiled.TiledObjectGroup;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.FlxG;
@@ -25,6 +26,11 @@ class GameState extends FlxState
   public var floor:FlxObject;
   public var exit:FlxSprite;
   public var mirrors:FlxGroup;
+
+  //Variables used for pulling
+  private var mirrorToPull:Mirror;
+  private var xOffset : Float; //equal to player.x - mirror.x
+  private var yOffset : Float; //equal to player.y - mirror.y;
 
   private static var youDied:Bool = false;
 
@@ -62,13 +68,22 @@ class GameState extends FlxState
       FlxG.switchState(new LevelSelectMenuState());
     }
 
+    if(!Character.PUSH()){
+      mirrorToPull = null;
+    }
+
     super.update();
+
 
     // Collide player with holes and walls
     level.collideWithLevel(player, false);
 
     //Collide with mirrors - don't let player walk through mirrors
     FlxG.overlap(player, mirrors, null, function(player : Character, mirror : Mirror) {
+
+      xOffset = player.x - mirror.x;
+      yOffset = player.y - mirror.y;
+
       if(Character.ROT_CLOCKWISE()) {
         mirror.rotateClockwise();
       }
@@ -79,12 +94,37 @@ class GameState extends FlxState
       //Prevent the mirrors from moving if push button isn't held
       if(Character.PUSH()) {
         mirror.immovable = false;
+        mirrorToPull = mirror;
       } else {
         mirror.immovable = true;
+        mirrorToPull = null;
       }
+
+      //Push the mirror
       return FlxObject.separate(player, mirror);
       mirror.immovable = true;
     });
+
+    if((mirrorToPull != null) && Character.PUSH()){
+      trace('YO');
+      trace(player.getDirection());
+      if(player.getDirection().equals(Direction.Left) && (player.x < mirrorToPull.x)){
+        trace("LEFT");
+        mirrorToPull.x = player.x - xOffset;
+      }
+      else if (player.getDirection().equals(Direction.Right) && (player.x > mirrorToPull.x)){
+        trace("RIGHT");
+        mirrorToPull.x = player.x - xOffset;
+      }
+      else if (player.getDirection().equals(Direction.Up) && (player.y < mirrorToPull.y)){
+        trace("UP");
+        mirrorToPull.y = player.y - yOffset;
+      }
+      else if (player.getDirection().equals(Direction.Down) && (player.y > mirrorToPull.y) ){
+        trace("DOWN");
+        mirrorToPull.y = player.y - yOffset;
+      }
+    }
 
     FlxG.collide(mirrors, mirrors);
 
