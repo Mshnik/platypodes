@@ -83,18 +83,18 @@ class GameState extends FlxState
         mirror.immovable = true;
       }
       return FlxObject.separate(player, mirror);
+      mirror.immovable = true;
     });
 
+    FlxG.collide(mirrors, mirrors);
+
     //Collide mirrors with walls and holes, check for mirror rotation
-    mirrors.forEachOfType(FlxObject,
-      function(mirror : FlxObject){
-        level.collideWithLevel(mirror, true);
-      }
-    );
+    level.collideWithLevel(mirrors, true);
 
     //Re-collide player with mirrors to prevent player from moving past mirror that can't move
+    //And through other mir
+    FlxG.collide(mirrors, mirrors);
     FlxG.collide(player, mirrors);
-
   }
 
   public function getElementAt(row : Int, col : Int) : Element {

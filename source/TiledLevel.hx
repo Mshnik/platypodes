@@ -1,11 +1,8 @@
 package ;
-import elements.Character;
-import openfl.Assets;
+import flixel.FlxBasic;
 import haxe.io.Path;
-import haxe.xml.Parser;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.tile.FlxTilemap;
 import flixel.addons.editors.tiled.TiledMap;
@@ -78,7 +75,6 @@ class TiledLevel extends TiledMap {
 
       var imagePath = new Path(tileSet.imageSource);
       var processedPath = AssetPaths.IMAGE_ROOT + imagePath.file + "." + imagePath.ext;
-      trace(processedPath);
 
       var tilemap:FlxTilemap = new FlxTilemap();
       tilemap.widthInTiles = width;
@@ -125,16 +121,16 @@ class TiledLevel extends TiledMap {
     processCallback(o, g, x, y);
   }
 
-  public function collideWithLevel(obj:FlxObject, collideWithHoles : Bool = true, ?notifyCallback:FlxObject->FlxObject->Void, ?processCallback:FlxObject->FlxObject->Bool):Bool {
+  public function collideWithLevel(objOrGroup:FlxBasic, collideWithHoles : Bool = true, ?notifyCallback:FlxObject->FlxObject->Void, ?processCallback:FlxObject->FlxObject->Bool):Bool {
 
     // IMPORTANT: Always collide the map with objects, not the other way around.
     // 			  This prevents odd collision errors (collision separation code off by 1 px).
     var b = false;
     if (holeTiles != null && collideWithHoles) {
-        b = FlxG.overlap(holeMap, obj, notifyCallback, processCallback != null ? processCallback : FlxObject.separate) || b;
+        b = FlxG.overlap(holeMap, objOrGroup, notifyCallback, processCallback != null ? processCallback : FlxObject.separate) || b;
     }
     if (wallTiles != null) {
-        b = FlxG.overlap(wallMap, obj, notifyCallback, processCallback != null ? processCallback : FlxObject.separate) || b;
+        b = FlxG.overlap(wallMap, objOrGroup, notifyCallback, processCallback != null ? processCallback : FlxObject.separate) || b;
     }
     return b;
   }
