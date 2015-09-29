@@ -21,16 +21,10 @@ class GameState extends FlxState
   @final private var levelPath : Dynamic;
   public var level:TiledLevel;
 
-  public var coins:FlxGroup;
   public var player:Character;
   public var floor:FlxObject;
   public var exit:FlxSprite;
   public var mirrors:FlxGroup;
-
-  //Variables used for pulling
-  private var mirrorToPull:Mirror;
-  private var xOffset : Float; //equal to player.x - mirror.x
-  private var yOffset : Float; //equal to player.y - mirror.y;
 
   private static var youDied:Bool = false;
 
@@ -68,76 +62,37 @@ class GameState extends FlxState
       FlxG.switchState(new LevelSelectMenuState());
     }
 
-    if(!Character.GRAB()){
-      mirrorToPull = null;
-    }
-
     super.update();
 
     // Collide player with holes and walls
     level.collideWithLevel(player, false);
 
     //Collide with mirrors - don't let player walk through mirrors
-    FlxG.overlap(player, mirrors, null, function(player : Character, mirror : Mirror) {
-
-      xOffset = player.x - mirror.x;
-      yOffset = player.y - mirror.y;
-
-      if(Character.ROT_CLOCKWISE()) {
-        mirror.rotateClockwise();
-      }
-      if(Character.ROT_C_CLOCKWISE()) {
-        mirror.rotateCounterClockwise();
-      }
-
-      //Prevent the mirrors from moving if push button isn't held
-      if(Character.GRAB()) {
-        mirror.immovable = false;
-        mirrorToPull = mirror;
-      } else {
-        mirror.immovable = true;
-        mirrorToPull = null;
-      }
-
-      //Push the mirror
-      return FlxObject.separate(player, mirror);
-      mirror.immovable = true;
-    });
-
-    if((mirrorToPull != null) && Character.GRAB()){
-      trace('YO');
-      trace(player.getMoveDirection());
-      if(player.getMoveDirection().equals(Direction.Left) && (player.x < mirrorToPull.x)){
-        trace("LEFT");
-        mirrorToPull.x = player.x - xOffset;
-      }
-      else if (player.getMoveDirection().equals(Direction.Right) && (player.x > mirrorToPull.x)){
-        trace("RIGHT");
-        mirrorToPull.x = player.x - xOffset;
-      }
-      else if (player.getMoveDirection().equals(Direction.Up) && (player.y < mirrorToPull.y)){
-        trace("UP");
-        mirrorToPull.y = player.y - yOffset;
-      }
-      else if (player.getMoveDirection().equals(Direction.Down) && (player.y > mirrorToPull.y) ){
-        trace("DOWN");
-        mirrorToPull.y = player.y - yOffset;
-      }
-    }
+    FlxG.overlap(player, mirrors, null, handlePlayerMirrorCollision);
 
     FlxG.collide(mirrors, mirrors);
 
     //Collide mirrors with walls and holes, check for mirror rotation
     level.collideWithLevel(mirrors, true);
-
-    //Re-collide player with mirrors to prevent player from moving past mirror that can't move
-    //And through other mir
-    FlxG.collide(mirrors, mirrors);
-    FlxG.collide(player, mirrors);
   }
 
-  public function getElementAt(row : Int, col : Int) : Element {
-    return null;
+  private function handlePlayerMirrorCollision(player : Character, mirror : Mirror) : Bool {
+    if(Character.ROT_CLOCKWISE()) {
+      mirror.rotateClockwise();
+    }
+    if(Character.ROT_C_CLOCKWISE()) {
+      mirror.rotateCounterClockwise();
+    }
+
+    //Prevent the mirrors from moving if push button isn't held
+    if(Character.GRAB() ) {
+      FlxObject.separate(player, mirror);
+      mirror.immovable = false;
+      player.grabMirror(mirror);
+      return true;
+    } else {
+      return FlxObject.separate(player, mirror);
+    }
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup, x : Int, y : Int) {

@@ -4,6 +4,7 @@ import flixel.FlxG;
 class Character extends Element {
 
   @final private static var MOVE_SPEED = 300;
+  @final private static var MOVE_WHILE_GRABBING_SPEED = 200;
   @final private static var DEFAULT_SPRITE = AssetPaths.vampire__png;
 
   public static var UP = function() : Bool { return FlxG.keys.pressed.UP; };
@@ -18,6 +19,10 @@ class Character extends Element {
 
   private var directionFacing : Direction; //The direction this character is facing.
 
+  private var grabbedMirror:Mirror;
+  private var xOffset : Float; //equal to player.x - mirror.x
+  private var yOffset : Float; //equal to player.y - mirror.y;
+
 /** Constructs a new character, with the given level, and initial row and col */
   public function new(level : TiledLevel, x : Int, y : Int, o : TiledObject) {
     super(level, x, y, o, MOVE_SPEED, DEFAULT_SPRITE);
@@ -25,6 +30,12 @@ class Character extends Element {
 
   public override function getDirectionFacing() {
     return directionFacing;
+  }
+
+  public function grabMirror(mirror : Mirror) {
+    grabbedMirror = mirror;
+    xOffset = mirror.x - x;
+    yOffset = mirror.y - y;
   }
 
   /** Updates the character
@@ -49,6 +60,30 @@ class Character extends Element {
     }
 
     setMoveDirection(directionFacing);
+
+    if(GRAB() && grabbedMirror != null) {
+        trace('YO');
+        trace(getMoveDirection());
+        if(getMoveDirection().equals(Direction.Left) && (x < grabbedMirror.x)){
+          trace("LEFT");
+          grabbedMirror.x = x - xOffset;
+        }
+        else if (getMoveDirection().equals(Direction.Right) && (x > grabbedMirror.x)){
+          trace("RIGHT");
+          grabbedMirror.x = x - xOffset;
+        }
+        else if (getMoveDirection().equals(Direction.Up) && (y < grabbedMirror.y)){
+          trace("UP");
+          grabbedMirror.y = y - yOffset;
+        }
+        else if (getMoveDirection().equals(Direction.Down) && (y > grabbedMirror.y) ){
+          trace("DOWN");
+          grabbedMirror.y = y - yOffset;
+      }
+    }
+    if(! GRAB()) {
+      grabbedMirror = null;
+    }
     super.update();
   }
 }

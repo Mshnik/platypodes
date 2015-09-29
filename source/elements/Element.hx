@@ -63,6 +63,19 @@ class Element extends FlxSprite {
     return Std.int(this.x / level.tileWidth);
   }
 
+  /**
+   * Sets the movement speed of this element.
+   * This can't change the moveability of an element, but can speed up or slow down
+   * a moveable element
+   **/
+  public function setMoveSpeed(speed : Int) {
+    if(moveable) {
+      moveVelocity = speed;
+    } else {
+      throw "Can't set move speed of " + this;
+    }
+  }
+
   /** Sets the movement direction of this element.
     * This function can't be called on non-moveable elements
     */
