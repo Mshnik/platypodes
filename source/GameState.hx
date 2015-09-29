@@ -68,9 +68,24 @@ class GameState extends FlxState
     level.collideWithLevel(player, false);
 
     //Collide with mirrors - don't let player walk through mirrors
-    FlxG.collide(player, mirrors);
+    FlxG.overlap(player, mirrors, null, function(player : Character, mirror : Mirror) {
+      if(Character.ROT_CLOCKWISE()) {
+        mirror.rotateClockwise();
+      }
+      if(Character.ROT_C_CLOCKWISE()) {
+        mirror.rotateCounterClockwise();
+      }
 
-    //Collide mirrors with walls and holes
+      //Prevent the mirrors from moving if push button isn't held
+      if(Character.PUSH()) {
+        mirror.immovable = false;
+      } else {
+        mirror.immovable = true;
+      }
+      return FlxObject.separate(player, mirror);
+    });
+
+    //Collide mirrors with walls and holes, check for mirror rotation
     mirrors.forEachOfType(FlxObject,
       function(mirror : FlxObject){
         level.collideWithLevel(mirror, true);
@@ -87,38 +102,24 @@ class GameState extends FlxState
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup, x : Int, y : Int) {
-    trace("processing " + o.type);
-
-    var spr : FlxSprite = null;
-
     switch (o.type.toLowerCase()) {
       case "player_start":
         var player = new Character(level, x, y, o);
         FlxG.camera.follow(player);
         this.player = player;
-        spr = player;
         add(player);
 
       case "mirror":
         var mirror = new Mirror(level, x, y, o);
-        spr = mirror;
-        mirror.loadGraphic("assets/images/mirror_img.png");
-
         mirrors.add(mirror);
 
       case "exit":
         // Create the level exit
         var exit = new FlxSprite(x, y);
-        spr = exit;
         exit.makeGraphic(32, 32, 0xff3f3f3f);
         exit.exists = false;
         this.exit = exit;
         add(exit);
-    }
-
-    if (spr != null) {
-      spr.flipX = o.flippedHorizontally;
-      spr.flipY = o.flippedVertically;
     }
   }
 }

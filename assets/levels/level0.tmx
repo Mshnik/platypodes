@@ -40,7 +40,7 @@
    <property name="tileset" value="mirror"/>
   </properties>
   <object id="26" name="mirror" type="mirror" gid="4" x="128" y="384" width="64" height="64"/>
-  <object id="27" name="mirror" type="mirror" gid="4" x="320" y="256" width="64" height="64"/>
+  <object id="27" name="mirror" type="mirror" gid="2147483652" x="320" y="256" width="64" height="64"/>
  </objectgroup>
  <objectgroup name="Light">
   <properties>

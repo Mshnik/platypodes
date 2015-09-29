@@ -6,16 +6,15 @@ class Character extends Element {
   @final private static var MOVE_SPEED = 300;
   @final private static var DEFAULT_SPRITE = AssetPaths.vampy_I__png;
 
-  static var UP = function() : Bool { return FlxG.keys.pressed.UP; };
-  static var DOWN = function() : Bool { return FlxG.keys.pressed.DOWN; };
-  static var RIGHT = function() : Bool { return FlxG.keys.pressed.RIGHT; };
-  static var LEFT = function() : Bool { return FlxG.keys.pressed.LEFT; };
+  public static var UP = function() : Bool { return FlxG.keys.pressed.UP; };
+  public static var DOWN = function() : Bool { return FlxG.keys.pressed.DOWN; };
+  public static var RIGHT = function() : Bool { return FlxG.keys.pressed.RIGHT; };
+  public static var LEFT = function() : Bool { return FlxG.keys.pressed.LEFT; };
 
-  static var PUSH = function() : Bool { return FlxG.keys.pressed.X; };
-  static var RELEASE_PUSH = function() : Bool { return FlxG.keys.justReleased.X; };
-  static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.C; };
-  static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.Z; };
-  static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
+  public static var PUSH = function() : Bool { return FlxG.keys.pressed.X; };
+  public static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.C; };
+  public static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.Z; };
+  public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
 
   /** Constructs a new character, with the given level, and initial row and col */
   public function new(level : TiledLevel, x : Int, y : Int, o : TiledObject) {
