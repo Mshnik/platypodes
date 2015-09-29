@@ -11,4 +11,31 @@ class Mirror extends Element {
 
     this.directionFacing = Direction.Up_Left;
   }
+  
+  private function rot_clock() {
+	  switch this.directionFacing {
+		  case Direction.Up_Left: setDirection(Direction.Up_Right);
+		  case Direction.Up_Right: setDirection(Direction.Down_Right);
+		  case Direction.Down_Right: setDirection(Direction.Down_Left);
+		  case Direction.Down_Left: setDirection(Direction.Up_Left);
+	  }
+  }
+  
+  private function rot_c_clock() {
+	  switch this.directionFacing {
+	  	case Direction.Up_Left: setDirection(Direction.Down_Left);
+	  	case Direction.Up_Right: setDirection(Direction.Up_Left);
+	  	case Direction.Down_Right: setDirection(Direction.Up_Right);
+	  	case Direction.Down_Left: setDirection(Direction.Down_Right);
+	  }
+  }
+  
+  override public function update() {
+	  if(character.ROT_CLOCKWISE) {
+		  rot_clock();
+	  }
+	  if(character.ROT_CLOCKWISE) {
+		  rot_c_clock();
+	  }
+  }
 }
