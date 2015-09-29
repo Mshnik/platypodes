@@ -11,14 +11,20 @@ class Character extends Element {
   public static var RIGHT = function() : Bool { return FlxG.keys.pressed.RIGHT; };
   public static var LEFT = function() : Bool { return FlxG.keys.pressed.LEFT; };
 
-  public static var PUSH = function() : Bool { return FlxG.keys.pressed.X; };
+  public static var GRAB = function() : Bool { return FlxG.keys.pressed.X; };
   public static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.C; };
   public static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.Z; };
   public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
 
-  /** Constructs a new character, with the given level, and initial row and col */
+  private var directionFacing : Direction; //The direction this character is facing.
+
+/** Constructs a new character, with the given level, and initial row and col */
   public function new(level : TiledLevel, x : Int, y : Int, o : TiledObject) {
     super(level, x, y, o, MOVE_SPEED, DEFAULT_SPRITE);
+  }
+
+  public override function getDirectionFacing() {
+    return directionFacing;
   }
 
   /** Updates the character
@@ -27,22 +33,22 @@ class Character extends Element {
     */
   override public function update() {
 
-    var direc = Direction.None;
+    directionFacing = Direction.None;
 
     if(UP()) {
-      direc = direc.addDirec(Direction.Up);
+      directionFacing = directionFacing.addDirec(Direction.Up);
     }
     if(DOWN()) {
-      direc = direc.addDirec(Direction.Down);
+      directionFacing = directionFacing.addDirec(Direction.Down);
     }
     if(RIGHT()) {
-      direc = direc.addDirec(Direction.Right);
+      directionFacing = directionFacing.addDirec(Direction.Right);
     }
     if(LEFT()) {
-      direc = direc.addDirec(Direction.Left);
+      directionFacing = directionFacing.addDirec(Direction.Left);
     }
 
-    setDirection(direc);
+    setMoveDirection(directionFacing);
     super.update();
   }
 }

@@ -13,6 +13,7 @@ class Element extends FlxSprite {
   @final public var level:TiledLevel; //The level this element belongs to
 
   private var tileObject:TiledObject; //The tiled object representing the element in the grid
+
   private var moveable:Bool; //True iff this element is movable
   private var moveVelocity:Float; //The velocity with which the element moves
   private var moveDirection : Direction; //The direction this element is currently moving (None if none).
@@ -25,7 +26,8 @@ class Element extends FlxSprite {
    * img - the image to display for this element. If more complex than a simple image, don't supply here;
    *  change the graph content after calling this constructor.
    */
-  private function new(level : TiledLevel, x : Int, y : Int, tileObject : TiledObject, moveVelocity:Float = 0, ?img:Dynamic) {
+  private function new(level : TiledLevel, x : Int, y : Int, tileObject : TiledObject,
+                       moveVelocity:Float = 0, ?img:Dynamic) {
     super(x, y, img);
     this.tileObject = tileObject;
     this.level = level;
@@ -64,7 +66,7 @@ class Element extends FlxSprite {
   /** Sets the movement direction of this element.
     * This function can't be called on non-moveable elements
     */
-  public function setDirection(direction : Direction) {
+  public function setMoveDirection(direction : Direction) {
     if(moveable) {
       moveDirection = direction;
     } else {
@@ -72,8 +74,15 @@ class Element extends FlxSprite {
     }
   }
 
-  public inline function getDirection() : Direction{
+  public inline function getMoveDirection() : Direction{
     return moveDirection;
+  }
+
+  /** Return the direction this element is facing. Override in subclasses
+   * if this can rotate
+   **/
+  public function getDirectionFacing() : Direction {
+    return Direction.None;
   }
 
   /** Updates this element:

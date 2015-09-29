@@ -68,12 +68,11 @@ class GameState extends FlxState
       FlxG.switchState(new LevelSelectMenuState());
     }
 
-    if(!Character.PUSH()){
+    if(!Character.GRAB()){
       mirrorToPull = null;
     }
 
     super.update();
-
 
     // Collide player with holes and walls
     level.collideWithLevel(player, false);
@@ -92,7 +91,7 @@ class GameState extends FlxState
       }
 
       //Prevent the mirrors from moving if push button isn't held
-      if(Character.PUSH()) {
+      if(Character.GRAB()) {
         mirror.immovable = false;
         mirrorToPull = mirror;
       } else {
@@ -105,22 +104,22 @@ class GameState extends FlxState
       mirror.immovable = true;
     });
 
-    if((mirrorToPull != null) && Character.PUSH()){
+    if((mirrorToPull != null) && Character.GRAB()){
       trace('YO');
-      trace(player.getDirection());
-      if(player.getDirection().equals(Direction.Left) && (player.x < mirrorToPull.x)){
+      trace(player.getMoveDirection());
+      if(player.getMoveDirection().equals(Direction.Left) && (player.x < mirrorToPull.x)){
         trace("LEFT");
         mirrorToPull.x = player.x - xOffset;
       }
-      else if (player.getDirection().equals(Direction.Right) && (player.x > mirrorToPull.x)){
+      else if (player.getMoveDirection().equals(Direction.Right) && (player.x > mirrorToPull.x)){
         trace("RIGHT");
         mirrorToPull.x = player.x - xOffset;
       }
-      else if (player.getDirection().equals(Direction.Up) && (player.y < mirrorToPull.y)){
+      else if (player.getMoveDirection().equals(Direction.Up) && (player.y < mirrorToPull.y)){
         trace("UP");
         mirrorToPull.y = player.y - yOffset;
       }
-      else if (player.getDirection().equals(Direction.Down) && (player.y > mirrorToPull.y) ){
+      else if (player.getMoveDirection().equals(Direction.Down) && (player.y > mirrorToPull.y) ){
         trace("DOWN");
         mirrorToPull.y = player.y - yOffset;
       }
