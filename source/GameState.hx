@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxBasic;
 import elements.Element;
 import elements.Mirror;
 import elements.Character;
@@ -14,7 +15,7 @@ import flixel.group.FlxGroup;
 class GameState extends FlxState
 {
 
-  private static var menuButton = function() { return FlxG.keys.justPressed.ESCAPE; };
+  private static var menuButton = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
 
   @final private var levelPath : Dynamic;
   public var level:TiledLevel;
@@ -63,28 +64,37 @@ class GameState extends FlxState
 
     super.update();
 
-    // Collide with foreground tile layer
+    // Collide player with holes and walls
     level.collideWithLevel(player, false);
 
-    FlxG.overlap(exit, player, win);
+    //Collide with mirrors - don't let player walk through mirrors
+    FlxG.overlap(player, mirrors, null, function(player : Character, mirror : Mirror) {
+      if(Character.ROT_CLOCKWISE()) {
+        mirror.rotateClockwise();
+      }
+      if(Character.ROT_C_CLOCKWISE()) {
+        mirror.rotateCounterClockwise();
+      }
 
-    if (FlxG.overlap(player, floor))
-    {
-      youDied = true;
-      FlxG.resetState();
-    }
-  }
+      //Prevent the mirrors from moving if push button isn't held
+      if(Character.PUSH()) {
+        mirror.immovable = false;
+      } else {
+        mirror.immovable = true;
+      }
+      return FlxObject.separate(player, mirror);
+    });
 
-  public function win(Exit:FlxObject, Player:FlxObject):Void {
-    player.kill();
-  }
+    //Collide mirrors with walls and holes, check for mirror rotation
+    mirrors.forEachOfType(FlxObject,
+      function(mirror : FlxObject){
+        level.collideWithLevel(mirror, true);
+      }
+    );
 
-  public function getCoin(Coin:FlxObject, Player:FlxObject):Void {
-    Coin.kill();
-    if (coins.countLiving() == 0)
-    {
-      exit.exists = true;
-    }
+    //Re-collide player with mirrors to prevent player from moving past mirror that can't move
+    FlxG.collide(player, mirrors);
+
   }
 
   public function getElementAt(row : Int, col : Int) : Element {
@@ -92,38 +102,24 @@ class GameState extends FlxState
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup, x : Int, y : Int) {
-    trace("processing " + o.type);
-
-    var spr : FlxSprite = null;
-
     switch (o.type.toLowerCase()) {
       case "player_start":
         var player = new Character(level, x, y, o);
         FlxG.camera.follow(player);
         this.player = player;
-        spr = player;
         add(player);
 
       case "mirror":
         var mirror = new Mirror(level, x, y, o);
-        spr = mirror;
-        mirror.loadGraphic("assets/images/mirror_img.png");
-
         mirrors.add(mirror);
 
       case "exit":
         // Create the level exit
         var exit = new FlxSprite(x, y);
-        spr = exit;
         exit.makeGraphic(32, 32, 0xff3f3f3f);
         exit.exists = false;
         this.exit = exit;
         add(exit);
-    }
-
-    if (spr != null) {
-      spr.flipX = o.flippedHorizontally;
-      spr.flipY = o.flippedVertically;
     }
   }
 }

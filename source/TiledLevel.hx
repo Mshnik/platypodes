@@ -33,6 +33,25 @@ class TiledLevel extends TiledMap {
   public var wallTiles : FlxGroup;
   private var wallMap : FlxTilemap;
 
+  /** For non -1 gids, upper 4 bits are flags for flipping. Remove those bits for regular Gid */
+  public static function fixGid(gid : Int) : Int {
+    return gid == -1 ? -1 : gid & 0x3fffffff;
+  }
+
+  /** Does correct horizontal flipping detection. Built in cast doesn't handle non-1 true values correctly.
+   * Use this instead of o.flippedHorizontally.
+   **/
+  public static function isFlippedX(o : TiledObject) : Bool {
+    return o.gid != -1 && o.gid & TiledObject.FLIPPED_HORIZONTALLY_FLAG != 0;
+  }
+
+  /** Does correct horizontal flipping detection. Built in cast doesn't handle non-1 true values correctly.
+   * Use this instead of o.flippedVertically.
+   **/
+  public static function isFlippedY(o : TiledObject) : Bool {
+    return o.gid != -1 && o.gid & TiledObject.FLIPPED_VERTICALLY_FLAG != 0;
+  }
+
   public function new(tiledLevel:Dynamic) {
     super(tiledLevel);
 
@@ -100,9 +119,9 @@ class TiledLevel extends TiledMap {
     var y:Int = o.y;
 
     // objects in tiled are aligned bottom-left (top-left in flixel)
-    trace(o.gid);
+    var gid = fixGid(o.gid);
     if (o.gid != -1) {
-      y -= g.map.getGidOwner(o.gid).tileHeight;
+      y -= g.map.getGidOwner(gid).tileHeight;
     }
 
     processCallback(o, g, x, y);
