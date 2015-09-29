@@ -4,7 +4,7 @@ import flixel.FlxG;
 class Character extends Element {
 
   @final private static var MOVE_SPEED = 300;
-  @final private static var DEFAULT_SPRITE = AssetPaths.vampy_I__png;
+  @final private static var DEFAULT_SPRITE = AssetPaths.vampire__png;
 
   public static var UP = function() : Bool { return FlxG.keys.pressed.UP; };
   public static var DOWN = function() : Bool { return FlxG.keys.pressed.DOWN; };

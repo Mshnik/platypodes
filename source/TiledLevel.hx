@@ -17,9 +17,6 @@ import flixel.addons.editors.tiled.TiledTileSet;
  * @author Samuel Batista
  */
 class TiledLevel extends TiledMap {
-  // For each "Tile Layer" in the map, you must define a "tileset" property which contains the name of a tile sheet image
-  // used to draw tiles in that layer (without file extension). The image file must be located in the directory specified bellow.
-  @final public inline static var c_PATH_LEVEL_TILESHEETS = "assets/images/";
 
   @final public inline static var FLOOR_LAYER_NAME = "Floor";
   @final public inline static var HOLE_LAYER_NAME = "Holes";
@@ -80,7 +77,8 @@ class TiledLevel extends TiledMap {
         throw "Tileset '" + tileSheetName + " not found. Did you mispell the 'tilesheet' property in " + tileLayer.name + "' layer?";
 
       var imagePath = new Path(tileSet.imageSource);
-      var processedPath = c_PATH_LEVEL_TILESHEETS + imagePath.file + "." + imagePath.ext;
+      var processedPath = AssetPaths.IMAGE_ROOT + imagePath.file + "." + imagePath.ext;
+      trace(processedPath);
 
       var tilemap:FlxTilemap = new FlxTilemap();
       tilemap.widthInTiles = width;
