@@ -75,6 +75,8 @@ class GameState extends FlxState
       if(Character.ROT_C_CLOCKWISE()) {
         mirror.rotateCounterClockwise();
       }
+
+      //Prevent the mirrors from moving if push button isn't held
       if(Character.PUSH()) {
         mirror.immovable = false;
       } else {

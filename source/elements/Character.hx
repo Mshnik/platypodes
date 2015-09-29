@@ -12,7 +12,6 @@ class Character extends Element {
   public static var LEFT = function() : Bool { return FlxG.keys.pressed.LEFT; };
 
   public static var PUSH = function() : Bool { return FlxG.keys.pressed.X; };
-  public static var RELEASE_PUSH = function() : Bool { return FlxG.keys.justReleased.X; };
   public static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.C; };
   public static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.Z; };
   public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
