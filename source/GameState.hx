@@ -68,9 +68,22 @@ class GameState extends FlxState
     level.collideWithLevel(player, false);
 
     //Collide with mirrors - don't let player walk through mirrors
-    FlxG.collide(player, mirrors);
+    FlxG.overlap(player, mirrors, null, function(player : Character, mirror : Mirror) {
+      if(Character.ROT_CLOCKWISE()) {
+        mirror.rotateClockwise();
+      }
+      if(Character.ROT_C_CLOCKWISE()) {
+        mirror.rotateCounterClockwise();
+      }
+      if(Character.PUSH()) {
+        mirror.immovable = false;
+      } else {
+        mirror.immovable = true;
+      }
+      return FlxObject.separate(player, mirror);
+    });
 
-    //Collide mirrors with walls and holes
+    //Collide mirrors with walls and holes, check for mirror rotation
     mirrors.forEachOfType(FlxObject,
       function(mirror : FlxObject){
         level.collideWithLevel(mirror, true);
