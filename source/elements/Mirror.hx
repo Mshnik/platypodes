@@ -9,33 +9,54 @@ class Mirror extends Element {
   public function new(level : TiledLevel, x : Int, y : Int, o : TiledObject) {
     super(level, x, y, o, 0, DEFAULT_SPRITE);
 
-    this.directionFacing = Direction.Up_Left;
+    if (flipX && flipY) {
+	    directionFacing = Direction.Down_Right;
+    } else if (flipX && ! flipY) {
+	    directionFacing = Direction.Up_Right;
+    } else if (! flipX && flipY) {
+	    directionFacing = Direction.Down_Left;
+    } else {
+	    directionFacing = Direction.Up_Left;
+    }
   }
+
+	public inline function getDirectionFacing() {
+		return directionFacing;
+	}
   
-  private function rot_clock() {
-	  switch this.directionFacing {
-		  case Direction.Up_Left: setDirection(Direction.Up_Right);
-		  case Direction.Up_Right: setDirection(Direction.Down_Right);
-		  case Direction.Down_Right: setDirection(Direction.Down_Left);
-		  case Direction.Down_Left: setDirection(Direction.Up_Left);
+  public function rotateClockwise() {
+	  if (directionFacing.equals(Direction.Up_Left)) {
+		  directionFacing = Direction.Up_Right;
+		  flipX = ! flipX;
+	  } else if (directionFacing.equals(Direction.Up_Right)) {
+		  directionFacing = Direction.Down_Right;
+		  flipY = ! flipY;
+	  } else if (directionFacing.equals(Direction.Down_Right)) {
+		  directionFacing = Direction.Down_Left;
+		  flipX = ! flipX;
+	  } else if (directionFacing.equals(Direction.Down_Left)) {
+		  directionFacing = Direction.Up_Left;
+		  flipY = ! flipY;
 	  }
   }
-  
-  private function rot_c_clock() {
-	  switch this.directionFacing {
-	  	case Direction.Up_Left: setDirection(Direction.Down_Left);
-	  	case Direction.Up_Right: setDirection(Direction.Up_Left);
-	  	case Direction.Down_Right: setDirection(Direction.Up_Right);
-	  	case Direction.Down_Left: setDirection(Direction.Down_Right);
-	  }
-  }
+
+	public function rotateCounterClockwise() {
+		if (directionFacing.equals(Direction.Up_Right)) {
+			directionFacing = Direction.Up_Left;
+			flipX = ! flipX;
+		} else if (directionFacing.equals(Direction.Down_Right)) {
+			directionFacing = Direction.Up_Right;
+			flipY = ! flipY;
+		} else if (directionFacing.equals(Direction.Down_Left)) {
+			directionFacing = Direction.Down_Right;
+			flipX = ! flipX;
+		} else if (directionFacing.equals(Direction.Up_Left)) {
+			directionFacing = Direction.Down_Left;
+			flipY = ! flipY;
+		}
+	}
   
   override public function update() {
-	  if(character.ROT_CLOCKWISE) {
-		  rot_clock();
-	  }
-	  if(character.ROT_CLOCKWISE) {
-		  rot_c_clock();
-	  }
+		super.update();
   }
 }
