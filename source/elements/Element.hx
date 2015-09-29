@@ -72,6 +72,10 @@ class Element extends FlxSprite {
     }
   }
 
+  public inline function getDirection() : Direction{
+    return moveDirection;
+  }
+
   /** Updates this element:
     * - Updates the velocity values with the current value of moveDirection
     * - makes sure this wouldn't cause the element to move off of the board
@@ -100,9 +104,6 @@ class Element extends FlxSprite {
     var newRow = getRow();
     var newCol = getCol();
 
-    trace(" WHEEEEEEEEEEEE");
-    trace(newCol);
-    trace(newRow);
 
     if (oldRow != newRow || oldCol != newCol) {
       //level.elementMoved(this, oldRow, oldCol);
