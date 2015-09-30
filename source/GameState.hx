@@ -50,10 +50,13 @@ class GameState extends FlxState
 
     // Draw mirrors first
     mirrors = new FlxGroup();
-    add(mirrors);
 
-    // Load player objects
+    // Load all objects
     level.loadObjects(onAddObject);
+
+    //Make sure mirrors are added to level after player is added to level
+    //For ordering of the update loop
+    add(mirrors);
 
   }
 
@@ -77,6 +80,8 @@ class GameState extends FlxState
   }
 
   private function handlePlayerMirrorCollision(player : Character, mirror : Mirror) : Bool {
+    FlxObject.separate(player, mirror);
+
     if(Character.ROT_CLOCKWISE()) {
       mirror.rotateClockwise();
     }
@@ -84,15 +89,11 @@ class GameState extends FlxState
       mirror.rotateCounterClockwise();
     }
 
-    //Prevent the mirrors from moving if push button isn't held
-    if(Character.GRAB() ) {
-      FlxObject.separate(player, mirror);
-      mirror.immovable = false;
+    if(Character.GRAB() && ! player.isHoldingMirror()) {
       player.grabMirror(mirror);
-      return true;
-    } else {
-      return FlxObject.separate(player, mirror);
     }
+
+    return true;
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup, x : Int, y : Int) {
@@ -105,6 +106,7 @@ class GameState extends FlxState
 
       case "mirror":
         var mirror = new Mirror(level, x, y, o);
+        mirror.immovable = true;
         mirrors.add(mirror);
 
       case "exit":

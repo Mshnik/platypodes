@@ -16,6 +16,31 @@ class Direction extends FlxVector {
   @final public static var Down_Right : Direction = new Direction(1, 1);
   @final public static var Down_Left : Direction = new Direction(-1, 1);
 
+  public static function getDirectionOf(p : FlxPoint) : Direction {
+    return getDirection(p.x, p.y);
+  }
+
+  public static function getDirection(dx : Float, dy : Float) : Direction {
+    if(dx == 0) {
+      if(dy == 0) return Direction.None;
+      if(dy == 1) return Direction.Down;
+      if(dy == -1) return Direction.Up;
+    }
+    if(dx == -1){
+      if(dy == 0) return Direction.Left;
+      if(dy == 1) return Direction.Down_Left;
+      if(dy == -1) return Direction.Up_Left;
+    }
+    if(dx == 1){
+      if(dy == 0) return Direction.Right;
+      if(dy == 1) return Direction.Down_Right;
+      if(dy == -1) return Direction.Up_Right;
+    }
+    throw "Can't make direction from " + Std.string(dx) + ", " + Std.string(dy);
+  }
+
+
+
   /** Return true iff the vector from start to end is within 90 degrees of this vector */
   public function isInDirection(start : FlxPoint, end : FlxPoint) : Bool {
     var vec = FlxVector.get(end.x - start.x, end.y - start.y);

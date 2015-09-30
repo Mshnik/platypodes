@@ -22,16 +22,17 @@ class Element extends FlxSprite {
    * level - the level this element belongs to
    * row - the row of the board this element is (initially) placed on
    * col - the col of the board this element is (initially) placed on
-   * moveVelocity - the velocity this element moves at. 0 if this is not a moveable elemt.
+   * moveable - true if this element ever moves, false otherwise
+   * moveVelocity - the velocity this element moves at initially
    * img - the image to display for this element. If more complex than a simple image, don't supply here;
    *  change the graph content after calling this constructor.
    */
   private function new(level : TiledLevel, x : Int, y : Int, tileObject : TiledObject,
-                       moveVelocity:Float = 0, ?img:Dynamic) {
+                       moveable : Bool = false, moveVelocity:Float = 0, ?img:Dynamic) {
     super(x, y, img);
     this.tileObject = tileObject;
     this.level = level;
-    this.moveable = moveVelocity > 0;
+    this.moveable = moveable;
     this.moveVelocity = moveVelocity;
     this.moveDirection = Direction.None;
     centerOrigin();
@@ -117,6 +118,7 @@ class Element extends FlxSprite {
         y + height >= level.fullHeight - MOVE_EDGE_MARGIN && velocity.y > 0) {
       velocity.y = 0;
     }
+
 
     var oldRow = getRow();
     var oldCol = getCol();
