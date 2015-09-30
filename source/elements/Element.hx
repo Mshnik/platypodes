@@ -13,26 +13,34 @@ class Element extends FlxSprite {
   @final public var level:TiledLevel; //The level this element belongs to
 
   private var tileObject:TiledObject; //The tiled object representing the element in the grid
+
   private var moveable:Bool; //True iff this element is movable
   private var moveVelocity:Float; //The velocity with which the element moves
   private var moveDirection : Direction; //The direction this element is currently moving (None if none).
+
+  public var squareHighlight : FlxSprite; //Sprite highlighting which square this element is on. For debuggin
 
   /** Construct a new element
    * level - the level this element belongs to
    * row - the row of the board this element is (initially) placed on
    * col - the col of the board this element is (initially) placed on
-   * moveVelocity - the velocity this element moves at. 0 if this is not a moveable elemt.
+   * moveable - true if this element ever moves, false otherwise
+   * moveVelocity - the velocity this element moves at initially
    * img - the image to display for this element. If more complex than a simple image, don't supply here;
    *  change the graph content after calling this constructor.
    */
-  private function new(level : TiledLevel, x : Int, y : Int, tileObject : TiledObject, moveVelocity:Float = 0, ?img:Dynamic) {
+  private function new(level : TiledLevel, x : Int, y : Int, tileObject : TiledObject,
+                       moveable : Bool = false, moveVelocity:Float = 0, ?img:Dynamic) {
     super(x, y, img);
     this.tileObject = tileObject;
     this.level = level;
-    this.moveable = moveVelocity > 0;
+    this.moveable = moveable;
     this.moveVelocity = moveVelocity;
     this.moveDirection = Direction.None;
     centerOrigin();
+
+    squareHighlight = new FlxSprite(x, y);
+    squareHighlight.makeGraphic(level.tileHeight, level.tileWidth, 0x88B36666);
 
     flipX = TiledLevel.isFlippedX(tileObject);
     flipY = TiledLevel.isFlippedY(tileObject);
@@ -53,18 +61,31 @@ class Element extends FlxSprite {
 
   /** Return the row of the board this element is currently occupying. The top-left tile is (0,0) */
   public inline function getRow() : Int {
-    return Std.int(this.y / level.tileHeight);
+    return Std.int( (this.y + this.origin.y) / level.tileHeight);
   }
 
   /** Return the col of the board this element is currently occupying. The top-left tile is (0,0) */
   public inline function getCol() : Int {
-    return Std.int(this.x / level.tileWidth);
+    return Std.int( (this.x + this.origin.x) / level.tileWidth);
+  }
+
+  /**
+   * Sets the movement speed of this element.
+   * This can't change the moveability of an element, but can speed up or slow down
+   * a moveable element
+   **/
+  public function setMoveSpeed(speed : Int) {
+    if(moveable) {
+      moveVelocity = speed;
+    } else {
+      throw "Can't set move speed of " + this;
+    }
   }
 
   /** Sets the movement direction of this element.
     * This function can't be called on non-moveable elements
     */
-  public function setDirection(direction : Direction) {
+  public function setMoveDirection(direction : Direction) {
     if(moveable) {
       moveDirection = direction;
     } else {
@@ -72,8 +93,15 @@ class Element extends FlxSprite {
     }
   }
 
-  public inline function getDirection() : Direction{
+  public inline function getMoveDirection() : Direction{
     return moveDirection;
+  }
+
+  /** Return the direction this element is facing. Override in subclasses
+   * if this can rotate
+   **/
+  public function getDirectionFacing() : Direction {
+    return Direction.None;
   }
 
   /** Updates this element:
@@ -96,17 +124,9 @@ class Element extends FlxSprite {
       velocity.y = 0;
     }
 
-    var oldRow = getRow();
-    var oldCol = getCol();
-
     super.update();
 
-    var newRow = getRow();
-    var newCol = getCol();
-
-
-    if (oldRow != newRow || oldCol != newCol) {
-      //level.elementMoved(this, oldRow, oldCol);
-    }
+    squareHighlight.x = getCol() * level.tileWidth;
+    squareHighlight.y = getRow() * level.tileHeight;
   }
 }

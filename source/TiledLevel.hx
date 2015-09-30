@@ -1,11 +1,8 @@
 package ;
-import elements.Character;
-import openfl.Assets;
+import flixel.FlxBasic;
 import haxe.io.Path;
-import haxe.xml.Parser;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.tile.FlxTilemap;
 import flixel.addons.editors.tiled.TiledMap;
@@ -17,9 +14,6 @@ import flixel.addons.editors.tiled.TiledTileSet;
  * @author Samuel Batista
  */
 class TiledLevel extends TiledMap {
-  // For each "Tile Layer" in the map, you must define a "tileset" property which contains the name of a tile sheet image
-  // used to draw tiles in that layer (without file extension). The image file must be located in the directory specified bellow.
-  @final public inline static var c_PATH_LEVEL_TILESHEETS = "assets/images/";
 
   @final public inline static var FLOOR_LAYER_NAME = "Floor";
   @final public inline static var HOLE_LAYER_NAME = "Holes";
@@ -80,12 +74,13 @@ class TiledLevel extends TiledMap {
         throw "Tileset '" + tileSheetName + " not found. Did you mispell the 'tilesheet' property in " + tileLayer.name + "' layer?";
 
       var imagePath = new Path(tileSet.imageSource);
-      var processedPath = c_PATH_LEVEL_TILESHEETS + imagePath.file + "." + imagePath.ext;
+      var processedPath = AssetPaths.IMAGE_ROOT + imagePath.file + "." + imagePath.ext;
 
       var tilemap:FlxTilemap = new FlxTilemap();
       tilemap.widthInTiles = width;
       tilemap.heightInTiles = height;
-      tilemap.loadMap(tileLayer.tileArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, 0, 1, 1, 1);
+      var fixedArray = tileLayer.tileArray.map(function(i) {return tileSet.fromGid(i); });
+      tilemap.loadMap(fixedArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, 0, 1, 1, 1);
 
       switch(tileLayer.name) {
         case FLOOR_LAYER_NAME:
@@ -127,16 +122,16 @@ class TiledLevel extends TiledMap {
     processCallback(o, g, x, y);
   }
 
-  public function collideWithLevel(obj:FlxObject, collideWithHoles : Bool = true, ?notifyCallback:FlxObject->FlxObject->Void, ?processCallback:FlxObject->FlxObject->Bool):Bool {
+  public function collideWithLevel(objOrGroup:FlxBasic, collideWithHoles : Bool = true, ?notifyCallback:FlxObject->FlxObject->Void, ?processCallback:FlxObject->FlxObject->Bool):Bool {
 
     // IMPORTANT: Always collide the map with objects, not the other way around.
     // 			  This prevents odd collision errors (collision separation code off by 1 px).
     var b = false;
     if (holeTiles != null && collideWithHoles) {
-        b = FlxG.overlap(holeMap, obj, notifyCallback, processCallback != null ? processCallback : FlxObject.separate) || b;
+        b = FlxG.overlap(holeMap, objOrGroup, notifyCallback, processCallback != null ? processCallback : FlxObject.separate) || b;
     }
     if (wallTiles != null) {
-        b = FlxG.overlap(wallMap, obj, notifyCallback, processCallback != null ? processCallback : FlxObject.separate) || b;
+        b = FlxG.overlap(wallMap, objOrGroup, notifyCallback, processCallback != null ? processCallback : FlxObject.separate) || b;
     }
     return b;
   }
