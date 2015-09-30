@@ -21,16 +21,10 @@ class GameState extends FlxState
   @final private var levelPath : Dynamic;
   public var level:TiledLevel;
 
-  public var coins:FlxGroup;
   public var player:Character;
   public var floor:FlxObject;
   public var exit:FlxSprite;
   public var mirrors:FlxGroup;
-
-  //Variables used for pulling
-  private var mirrorToPull:Mirror;
-  private var xOffset : Float; //equal to player.x - mirror.x
-  private var yOffset : Float; //equal to player.y - mirror.y;
 
   private static var youDied:Bool = false;
 
@@ -56,10 +50,13 @@ class GameState extends FlxState
 
     // Draw mirrors first
     mirrors = new FlxGroup();
-    add(mirrors);
 
-    // Load player objects
+    // Load all objects
     level.loadObjects(onAddObject);
+
+    //Make sure mirrors are added to level after player is added to level
+    //For ordering of the update loop
+    add(mirrors);
 
   }
 
@@ -68,80 +65,37 @@ class GameState extends FlxState
       FlxG.switchState(new LevelSelectMenuState());
     }
 
-    if(!Character.PUSH()){
-      mirrorToPull = null;
-    }
-
     super.update();
-
 
     // Collide player with holes and walls
     level.collideWithLevel(player, false);
 
     //Collide with mirrors - don't let player walk through mirrors
-    FlxG.overlap(player, mirrors, null, function(player : Character, mirror : Mirror) {
+    FlxG.overlap(player, mirrors, null, handleInitialPlayerMirrorCollision);
 
-      xOffset = player.x - mirror.x;
-      yOffset = player.y - mirror.y;
+    FlxG.collide(mirrors, mirrors);
 
-      if(Character.ROT_CLOCKWISE()) {
-        mirror.rotateClockwise();
-      }
-      if(Character.ROT_C_CLOCKWISE()) {
-        mirror.rotateCounterClockwise();
-      }
-
-      //Prevent the mirrors from moving if push button isn't held
-      if(Character.PUSH()) {
-        mirror.immovable = false;
-        mirrorToPull = mirror;
-      } else {
-        mirror.immovable = true;
-        mirrorToPull = null;
-      }
-
-      //Push the mirror
-      return FlxObject.separate(player, mirror);
-
-
-    });
-
-    if((mirrorToPull != null) && Character.PUSH()){
-      trace('YO');
-      trace(player.getDirection());
-      if(player.getDirection().equals(Direction.Left) && (player.x < mirrorToPull.x)){
-        trace("LEFT");
-        mirrorToPull.x = player.x - xOffset;
-      }
-      else if (player.getDirection().equals(Direction.Right) && (player.x > mirrorToPull.x)){
-        trace("RIGHT");
-        mirrorToPull.x = player.x - xOffset;
-      }
-      else if (player.getDirection().equals(Direction.Up) && (player.y < mirrorToPull.y)){
-        trace("UP");
-        mirrorToPull.y = player.y - yOffset;
-      }
-      else if (player.getDirection().equals(Direction.Down) && (player.y > mirrorToPull.y) ){
-        trace("DOWN");
-        mirrorToPull.y = player.y - yOffset;
-      }
-    }
-
-
-//Collide mirrors with walls and holes, check for mirror rotation
-    mirrors.forEachOfType(FlxObject,
-      function(mirror : FlxObject){
-        level.collideWithLevel(mirror, true);
-      }
-    );
-
-    //Re-collide player with mirrors to prevent player from moving past mirror that can't move
-    FlxG.collide(player, mirrors);
-
+    //Collide mirrors with walls and holes, check for mirror rotation
+    level.collideWithLevel(mirrors, true);
   }
 
-  public function getElementAt(row : Int, col : Int) : Element {
-    return null;
+  private function handleInitialPlayerMirrorCollision(player : Character, mirror : Mirror) : Bool {
+    mirror.immovable = true;
+    FlxObject.separate(player, mirror);
+
+    if(Character.ROT_CLOCKWISE()) {
+      mirror.rotateClockwise();
+    }
+    if(Character.ROT_C_CLOCKWISE()) {
+      mirror.rotateCounterClockwise();
+    }
+
+    if(Character.GRAB() && ! player.isHoldingMirror()) {
+      player.grabMirror(mirror);
+    }
+    mirror.immovable = false;
+
+    return true;
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup, x : Int, y : Int) {
@@ -150,10 +104,12 @@ class GameState extends FlxState
         var player = new Character(level, x, y, o);
         FlxG.camera.follow(player);
         this.player = player;
+        add(player.squareHighlight);
         add(player);
 
       case "mirror":
         var mirror = new Mirror(level, x, y, o);
+        add(mirror.squareHighlight);
         mirrors.add(mirror);
 
       case "exit":
