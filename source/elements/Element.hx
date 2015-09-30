@@ -40,7 +40,7 @@ class Element extends FlxSprite {
     centerOrigin();
 
     squareHighlight = new FlxSprite(x, y);
-    squareHighlight.makeGraphic(level.tileHeight, level.tileWidth, 0x88008888);
+    squareHighlight.makeGraphic(level.tileHeight, level.tileWidth, 0x88B36666);
 
     flipX = TiledLevel.isFlippedX(tileObject);
     flipY = TiledLevel.isFlippedY(tileObject);

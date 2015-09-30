@@ -79,7 +79,8 @@ class TiledLevel extends TiledMap {
       var tilemap:FlxTilemap = new FlxTilemap();
       tilemap.widthInTiles = width;
       tilemap.heightInTiles = height;
-      tilemap.loadMap(tileLayer.tileArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, 0, 1, 1, 1);
+      var fixedArray = tileLayer.tileArray.map(function(i) {return tileSet.fromGid(i); });
+      tilemap.loadMap(fixedArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, 0, 1, 1, 1);
 
       switch(tileLayer.name) {
         case FLOOR_LAYER_NAME:
