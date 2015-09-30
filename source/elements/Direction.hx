@@ -16,6 +16,27 @@ class Direction extends FlxVector {
   @final public static var Down_Right : Direction = new Direction(1, 1);
   @final public static var Down_Left : Direction = new Direction(-1, 1);
 
+  private var lockComponents : Bool;
+
+  private function new(x : Float, y : Float){
+    super(Std.int(x),Std.int(y));
+    lockComponents = true;
+  }
+
+  public override function set_x(x : Float) : Float  {
+    if(lockComponents) {
+      throw "Can't alter x value of direction after construction";
+    }
+    return super.set_x(x);
+  }
+
+  public override function set_y(y : Float) : Float  {
+    if(lockComponents) {
+      throw "Can't alter y value of direction after construction";
+    }
+    return super.set_y(y);
+  }
+
   public static function getDirectionOf(p : FlxPoint) : Direction {
     return getDirection(p.x, p.y);
   }
@@ -37,6 +58,40 @@ class Direction extends FlxVector {
       if(dy == -1) return Direction.Up_Right;
     }
     throw "Can't make direction from " + Std.string(dx) + ", " + Std.string(dy);
+  }
+
+  public static function fromSimpleDirection(i : Int) : Direction {
+    switch i{
+      case 0: return Direction.None;
+      case 1: return Direction.Up;
+      case 2: return Direction.Up_Right;
+      case 3: return Direction.Right;
+      case 4: return Direction.Down_Right;
+      case 5: return Direction.Down;
+      case 6: return Direction.Down_Left;
+      case 7: return Direction.Left;
+      case 8: return Direction.Up_Left;
+      default: throw "Can't get direction for simpleVal " + Std.string(i);
+    }
+  }
+
+  public function getSimpleDirection() : Int {
+    if(x == 0) {
+      if(y == 0) return 0;
+      if(y == 1) return 5;
+      if(y == -1) return 1;
+    }
+    if(x == -1){
+      if(y == 0) return 7;
+      if(y == 1) return 6;
+      if(y == -1) return 8;
+    }
+    if(x == 1){
+      if(y == 0) return 3;
+      if(y == 1) return 4;
+      if(y == -1) return 2;
+    }
+    throw "Really bad problem - illegal direction created! " + this;
   }
 
   public inline function isCardinal() : Bool {

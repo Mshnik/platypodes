@@ -29,11 +29,11 @@ class Element extends FlxSprite {
    * img - the image to display for this element. If more complex than a simple image, don't supply here;
    *  change the graph content after calling this constructor.
    */
-  private function new(level : TiledLevel, x : Int, y : Int, tileObject : TiledObject,
+  private function new(state : GameState, x : Int, y : Int, tileObject : TiledObject,
                        moveable : Bool = false, moveVelocity:Float = 0, ?img:Dynamic) {
     super(x, y, img);
     this.tileObject = tileObject;
-    this.level = level;
+    this.level = state.level;
     this.moveable = moveable;
     this.moveVelocity = moveVelocity;
     this.moveDirection = Direction.None;
@@ -41,6 +41,7 @@ class Element extends FlxSprite {
 
     squareHighlight = new FlxSprite(x, y);
     squareHighlight.makeGraphic(level.tileHeight, level.tileWidth, 0x88B36666);
+    state.add(squareHighlight);
 
     flipX = TiledLevel.isFlippedX(tileObject);
     flipY = TiledLevel.isFlippedY(tileObject);

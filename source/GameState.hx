@@ -1,5 +1,7 @@
 package;
 
+import elements.LightSwitch;
+import elements.LightBulb;
 import flixel.FlxBasic;
 import elements.Element;
 import elements.Mirror;
@@ -24,6 +26,8 @@ class GameState extends FlxState
   public var player:Character;
   public var floor:FlxObject;
   public var exit:FlxSprite;
+  public var lightBulbs:FlxGroup;
+  public var lightSwitches:FlxGroup;
   public var mirrors:FlxGroup;
 
   private static var youDied:Bool = false;
@@ -48,16 +52,18 @@ class GameState extends FlxState
     add(level.holeTiles);
     add(level.wallTiles);
 
-    // Draw mirrors first
     mirrors = new FlxGroup();
+    lightBulbs = new FlxGroup();
+    lightSwitches = new FlxGroup();
 
     // Load all objects
     level.loadObjects(onAddObject);
 
-    //Make sure mirrors are added to level after player is added to level
+    //Make sure non-player objects are added to level after player is added to level
     //For ordering of the update loop
     add(mirrors);
-
+    add(lightBulbs);
+    add(lightSwitches);
   }
 
   override public function update():Void {
@@ -69,6 +75,8 @@ class GameState extends FlxState
 
     // Collide player with holes and walls
     level.collideWithLevel(player, false);
+
+    FlxG.collide(player, lightBulbs);
 
     //Collide with mirrors - don't let player walk through mirrors
     FlxG.overlap(player, mirrors, null, handleInitialPlayerMirrorCollision);
@@ -101,16 +109,24 @@ class GameState extends FlxState
   public function onAddObject(o : TiledObject, g : TiledObjectGroup, x : Int, y : Int) {
     switch (o.type.toLowerCase()) {
       case "player_start":
-        var player = new Character(level, x, y, o);
+        var player = new Character(this, x, y, o);
         FlxG.camera.follow(player);
         this.player = player;
-        add(player.squareHighlight);
         add(player);
 
       case "mirror":
-        var mirror = new Mirror(level, x, y, o);
-        add(mirror.squareHighlight);
+        var mirror = new Mirror(this, x, y, o);
         mirrors.add(mirror);
+
+      case "lightorb":
+        var lightBulb = new LightBulb(this, x, y, o);
+        lightBulb.immovable = true;
+        lightBulbs.add(lightBulb);
+
+      case "lightswitch":
+        var lightSwitch = new LightSwitch(this, x, y, o);
+        lightSwitch.immovable = true;
+        lightSwitches.add(lightSwitch);
 
       case "exit":
         // Create the level exit
@@ -119,6 +135,9 @@ class GameState extends FlxState
         exit.exists = false;
         this.exit = exit;
         add(exit);
+
+      default:
+        trace("Got unknown object " + o.type.toLowerCase());
     }
   }
 }

@@ -8,8 +8,8 @@ class Mirror extends Element {
   private var parallelDirection : Direction; //All movement must be parallel to this direction
                                              //This prevents strafing with a mirror
 
-  public function new(level : TiledLevel, x : Int, y : Int, o : TiledObject) {
-    super(level, x, y, o, true, 0, DEFAULT_SPRITE);
+  public function new(state : GameState, x : Int, y : Int, o : TiledObject) {
+    super(state, x, y, o, true, 0, DEFAULT_SPRITE);
 
     if (flipX && flipY) {
 	    directionFacing = Direction.Down_Right;
