@@ -77,6 +77,7 @@ class GameState extends FlxState
     level.collideWithLevel(player, false);
 
     FlxG.collide(player, lightBulbs);
+    FlxG.collide(player, lightSwitches);
 
     //Collide with mirrors - don't let player walk through mirrors
     FlxG.overlap(player, mirrors, null, handleInitialPlayerMirrorCollision);
@@ -130,8 +131,7 @@ class GameState extends FlxState
 
       case "exit":
         // Create the level exit
-        var exit = new FlxSprite(x, y);
-        exit.makeGraphic(32, 32, 0xff3f3f3f);
+        var exit =
         exit.exists = false;
         this.exit = exit;
         add(exit);

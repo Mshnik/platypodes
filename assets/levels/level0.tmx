@@ -20,7 +20,7 @@
    <property name="tileset" value="floorSheet"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYCAPsAAxG5TNDOWz4FHPjCTPCtXLTKT5LFC1+NSzIskzQ/WyElAPczMrEh8XYENyEzH+HSkAAM/UAIs=
+   eJxjYCAPsAAxG5TNDOWz4FHPjCTPCtXLTKT5LFC1+NSzIskzQ/WyElCP7B5kPjbAhiRPjH9HCgAAxHQAgQ==
   </data>
  </layer>
  <layer name="Holes" width="12" height="12">
@@ -28,7 +28,7 @@
    <property name="tileset" value="floorSheet"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBjcgJ3G6kcBZQAAF7AADw==
+   eJxjYBjcgH2Iqx/uAAAn4AAd
   </data>
  </layer>
  <layer name="Walls" width="12" height="12">
@@ -41,8 +41,16 @@
  </layer>
  <objectgroup name="Objects"/>
  <objectgroup name="Mirrors">
-  <object id="33" type="mirror" gid="1" x="128" y="384" width="64" height="64"/>
-  <object id="34" type="mirror" gid="2147483649" x="320" y="256" width="64" height="64"/>
+  <object id="33" type="mirror" gid="1" x="128" y="384" width="64" height="64">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
+  <object id="34" type="mirror" gid="2147483649" x="320" y="256" width="64" height="64">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Light">
   <object id="36" type="lightOrb" gid="2" x="128" y="128" width="64" height="64">
