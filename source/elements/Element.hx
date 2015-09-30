@@ -51,14 +51,14 @@ class Element extends FlxSprite {
       LabelValuePair.weak("velocity", velocity)]);
   }
 
-  /** Return the row of the board this element is currently occupying */
+  /** Return the row of the board this element is currently occupying. The top-left tile is (0,0) */
   public inline function getRow() : Int {
-    return -1;
+    return Std.int(this.y / level.tileHeight);
   }
 
-  /** Return the col of the board this element is currently occupying */
+  /** Return the col of the board this element is currently occupying. The top-left tile is (0,0) */
   public inline function getCol() : Int {
-    return -1;
+    return Std.int(this.x / level.tileWidth);
   }
 
   /** Sets the movement direction of this element.
@@ -70,6 +70,10 @@ class Element extends FlxSprite {
     } else {
       throw "Can't set moveDirection of " + this;
     }
+  }
+
+  public inline function getDirection() : Direction{
+    return moveDirection;
   }
 
   /** Updates this element:
@@ -99,6 +103,7 @@ class Element extends FlxSprite {
 
     var newRow = getRow();
     var newCol = getCol();
+
 
     if (oldRow != newRow || oldCol != newCol) {
       //level.elementMoved(this, oldRow, oldCol);
