@@ -18,6 +18,8 @@ class Element extends FlxSprite {
   private var moveVelocity:Float; //The velocity with which the element moves
   private var moveDirection : Direction; //The direction this element is currently moving (None if none).
 
+  public var squareHighlight : FlxSprite; //Sprite highlighting which square this element is on. For debuggin
+
   /** Construct a new element
    * level - the level this element belongs to
    * row - the row of the board this element is (initially) placed on
@@ -36,6 +38,9 @@ class Element extends FlxSprite {
     this.moveVelocity = moveVelocity;
     this.moveDirection = Direction.None;
     centerOrigin();
+
+    squareHighlight = new FlxSprite(x, y);
+    squareHighlight.makeGraphic(level.tileHeight, level.tileWidth, 0x88008888);
 
     flipX = TiledLevel.isFlippedX(tileObject);
     flipY = TiledLevel.isFlippedY(tileObject);
@@ -56,12 +61,12 @@ class Element extends FlxSprite {
 
   /** Return the row of the board this element is currently occupying. The top-left tile is (0,0) */
   public inline function getRow() : Int {
-    return Std.int(this.y / level.tileHeight);
+    return Std.int( (this.y + this.origin.y) / level.tileHeight);
   }
 
   /** Return the col of the board this element is currently occupying. The top-left tile is (0,0) */
   public inline function getCol() : Int {
-    return Std.int(this.x / level.tileWidth);
+    return Std.int( (this.x + this.origin.x) / level.tileWidth);
   }
 
   /**
@@ -119,18 +124,9 @@ class Element extends FlxSprite {
       velocity.y = 0;
     }
 
-
-    var oldRow = getRow();
-    var oldCol = getCol();
-
     super.update();
 
-    var newRow = getRow();
-    var newCol = getCol();
-
-
-    if (oldRow != newRow || oldCol != newCol) {
-      //level.elementMoved(this, oldRow, oldCol);
-    }
+    squareHighlight.x = getCol() * level.tileWidth;
+    squareHighlight.y = getRow() * level.tileHeight;
   }
 }

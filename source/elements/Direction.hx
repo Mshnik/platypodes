@@ -39,7 +39,9 @@ class Direction extends FlxVector {
     throw "Can't make direction from " + Std.string(dx) + ", " + Std.string(dy);
   }
 
-
+  public inline function isCardinal() : Bool {
+    return Math.abs(x) + Math.abs(y) == 1;
+  }
 
   /** Return true iff the vector from start to end is within 90 degrees of this vector */
   public function isInDirection(start : FlxPoint, end : FlxPoint) : Bool {

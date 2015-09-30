@@ -1,6 +1,4 @@
 package elements;
-import flixel.util.FlxPoint;
-import flixel.util.FlxPoint;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.FlxG;
 class Character extends Element {
@@ -8,6 +6,7 @@ class Character extends Element {
   @final private static var MOVE_SPEED = 300;
   @final private static var MOVE_WHILE_GRABBING_SPEED = 200;
   @final private static var DEFAULT_SPRITE = AssetPaths.vampire__png;
+  @final private static var BOUNDING_BOX_MARGIN = 2;
 
   public static var UP = function() : Bool { return FlxG.keys.pressed.UP; };
   public static var DOWN = function() : Bool { return FlxG.keys.pressed.DOWN; };
@@ -29,6 +28,12 @@ class Character extends Element {
 /** Constructs a new character, with the given level, and initial row and col */
   public function new(level : TiledLevel, x : Int, y : Int, o : TiledObject) {
     super(level, x, y, o, true, MOVE_SPEED, DEFAULT_SPRITE);
+
+    //Make bounding box slightly smaller than sprite for ease of movement
+    this.offset.x += BOUNDING_BOX_MARGIN;
+    this.offset.y += BOUNDING_BOX_MARGIN;
+    this.width -= 2 * BOUNDING_BOX_MARGIN;
+    this.height -= 2 * BOUNDING_BOX_MARGIN;
   }
 
   public override function getDirectionFacing() {
@@ -40,13 +45,27 @@ class Character extends Element {
   }
 
   public function grabMirror(mirror : Mirror) {
+    try{
+      tileOffset = Direction.getDirection(mirror.getCol() - getCol(), mirror.getRow() - getRow());
+    } catch(msg : String) {
+      return;
+    }
+    if( ! tileOffset.isCardinal()) {
+      return;
+    }
     grabbedMirror = mirror;
-    tileOffset = Direction.getDirection(mirror.getCol() - getCol(), mirror.getRow() - getRow());
     moveVelocity = MOVE_WHILE_GRABBING_SPEED;
     grabbedMirror.setHoldingCharacter(this, tileOffset, MOVE_WHILE_GRABBING_SPEED);
     trace("Grabbed mirror with row col delta " + tileOffset);
     xOffset = mirror.x - x;
     yOffset = mirror.y - y;
+  }
+
+  public function letGoOfMirror() {
+    trace("Letting go of mirror");
+    grabbedMirror.setHoldingCharacter(null, Direction.None);
+    grabbedMirror = null;
+    moveVelocity = MOVE_SPEED;
   }
 
   /** Updates the character
@@ -72,11 +91,13 @@ class Character extends Element {
 
     setMoveDirection(directionFacing);
 
-    if(! GRAB() && grabbedMirror != null) {
-      trace("Letting go of mirror");
-      grabbedMirror.setHoldingCharacter(null, Direction.None);
-      grabbedMirror = null;
-      moveVelocity = MOVE_SPEED;
+    if(grabbedMirror != null) {
+      var dRow = Math.abs(grabbedMirror.getRow() - getRow());
+      var dCol = Math.abs(grabbedMirror.getCol() - getCol());
+
+      if(!GRAB() || dRow > Math.abs(tileOffset.y) || dCol > Math.abs(tileOffset.x)) {
+        letGoOfMirror();
+      }
     }
 
 //    if(grabbedMirror != null) {
