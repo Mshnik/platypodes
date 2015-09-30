@@ -1,5 +1,6 @@
 package;
 
+import elements.Exit;
 import elements.LightSwitch;
 import elements.LightBulb;
 import flixel.FlxBasic;
@@ -25,7 +26,7 @@ class GameState extends FlxState
 
   public var player:Character;
   public var floor:FlxObject;
-  public var exit:FlxSprite;
+  public var exit:Exit;
   public var lightBulbs:FlxGroup;
   public var lightSwitches:FlxGroup;
   public var mirrors:FlxGroup;
@@ -61,9 +62,11 @@ class GameState extends FlxState
 
     //Make sure non-player objects are added to level after player is added to level
     //For ordering of the update loop
+    add(exit);
     add(mirrors);
     add(lightBulbs);
     add(lightSwitches);
+    add(player);
   }
 
   override public function update():Void {
@@ -113,7 +116,6 @@ class GameState extends FlxState
         var player = new Character(this, x, y, o);
         FlxG.camera.follow(player);
         this.player = player;
-        add(player);
 
       case "mirror":
         var mirror = new Mirror(this, x, y, o);
@@ -130,11 +132,8 @@ class GameState extends FlxState
         lightSwitches.add(lightSwitch);
 
       case "exit":
-        // Create the level exit
-        var exit =
-        exit.exists = false;
+        var exit = new Exit(this, x, y, o);
         this.exit = exit;
-        add(exit);
 
       default:
         trace("Got unknown object " + o.type.toLowerCase());
