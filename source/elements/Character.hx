@@ -26,8 +26,8 @@ class Character extends Element {
   private var yOffset : Float; //equal to player.y - mirror.y;
 
 /** Constructs a new character, with the given level, and initial row and col */
-  public function new(level : TiledLevel, x : Int, y : Int, o : TiledObject) {
-    super(level, x, y, o, true, MOVE_SPEED, DEFAULT_SPRITE);
+  public function new(state : GameState, x : Int, y : Int, o : TiledObject) {
+    super(state, x, y, o, true, MOVE_SPEED, DEFAULT_SPRITE);
 
     //Make bounding box slightly smaller than sprite for ease of movement
     this.offset.x += BOUNDING_BOX_MARGIN;
@@ -56,13 +56,11 @@ class Character extends Element {
     grabbedMirror = mirror;
     moveVelocity = MOVE_WHILE_GRABBING_SPEED;
     grabbedMirror.setHoldingCharacter(this, tileOffset, MOVE_WHILE_GRABBING_SPEED);
-    trace("Grabbed mirror with row col delta " + tileOffset);
     xOffset = mirror.x - x;
     yOffset = mirror.y - y;
   }
 
   public function letGoOfMirror() {
-    trace("Letting go of mirror");
     grabbedMirror.setHoldingCharacter(null, Direction.None);
     grabbedMirror = null;
     moveVelocity = MOVE_SPEED;
@@ -99,21 +97,6 @@ class Character extends Element {
         letGoOfMirror();
       }
     }
-
-//    if(grabbedMirror != null) {
-//        if (getMoveDirection().equals(Direction.Left) && (x < grabbedMirror.x)){
-//          grabbedMirror.x = x - xOffset;
-//        }
-//        else if (getMoveDirection().equals(Direction.Right) && (x > grabbedMirror.x)){
-//          grabbedMirror.x = x - xOffset;
-//        }
-//        else if (getMoveDirection().equals(Direction.Up) && (y < grabbedMirror.y)){
-//          grabbedMirror.y = y - yOffset;
-//        }
-//        else if (getMoveDirection().equals(Direction.Down) && (y > grabbedMirror.y) ){
-//          grabbedMirror.y = y - yOffset;
-//      }
-//    }
     super.update();
   }
 }

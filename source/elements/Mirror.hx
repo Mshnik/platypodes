@@ -2,14 +2,17 @@ package elements;
 import flixel.addons.editors.tiled.TiledObject;
 class Mirror extends Element {
 
-  private static inline var DEFAULT_SPRITE = AssetPaths.mirror_img__png;
+  private static inline var SIDES_PROPERTY_KEY = "sides";
+  private static inline var DEFAULT_SPRITE_ONE_SIDED = AssetPaths.mirror_1__png;
+  private static inline var DEFAULT_SPRITE_TWO_SIDED = ""; //TODO
+
   private var directionFacing : Direction; //The direction this element is facing.
   private var holdingCharacter : Character; //The character holding this mirror, if any
   private var parallelDirection : Direction; //All movement must be parallel to this direction
                                              //This prevents strafing with a mirror
 
-  public function new(level : TiledLevel, x : Int, y : Int, o : TiledObject) {
-    super(level, x, y, o, true, 0, DEFAULT_SPRITE);
+  public function new(state : GameState, x : Int, y : Int, o : TiledObject) {
+    super(state, x, y, o, true, 0, getInitialSprite(o));
 
     if (flipX && flipY) {
 	    directionFacing = Direction.Down_Right;
@@ -19,6 +22,15 @@ class Mirror extends Element {
 	    directionFacing = Direction.Down_Left;
     } else {
 	    directionFacing = Direction.Up_Left;
+    }
+  }
+
+  private function getInitialSprite(o : TiledObject) : Dynamic {
+    var sides = Std.parseInt(o.custom.get(SIDES_PROPERTY_KEY));
+    switch sides {
+      case 1: return DEFAULT_SPRITE_ONE_SIDED;
+      case 2: return DEFAULT_SPRITE_TWO_SIDED;
+      default: throw "Illegal values of sides " + sides;
     }
   }
 
