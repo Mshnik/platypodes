@@ -77,11 +77,10 @@ class GameState extends FlxState
 
     //Collide mirrors with walls and holes, check for mirror rotation
     level.collideWithLevel(mirrors, true);
-
-    FlxG.overlap(player, mirrors);
   }
 
   private function handleInitialPlayerMirrorCollision(player : Character, mirror : Mirror) : Bool {
+    mirror.immovable = true;
     FlxObject.separate(player, mirror);
 
     if(Character.ROT_CLOCKWISE()) {
@@ -94,6 +93,7 @@ class GameState extends FlxState
     if(Character.GRAB() && ! player.isHoldingMirror()) {
       player.grabMirror(mirror);
     }
+    mirror.immovable = false;
 
     return true;
   }
@@ -109,7 +109,6 @@ class GameState extends FlxState
 
       case "mirror":
         var mirror = new Mirror(level, x, y, o);
-        mirror.immovable = true;
         add(mirror.squareHighlight);
         mirrors.add(mirror);
 
