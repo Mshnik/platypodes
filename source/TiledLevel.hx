@@ -139,14 +139,14 @@ class TiledLevel extends TiledMap {
   }
 
   public function hasFloorAt(x : Int, y : Int) : Bool {
-    return floorMap.getTile(x,y) == -1;
+    return floorMap.getTile(x,y) != -1;
   }
 
   public function hasHoleAt(x : Int, y : Int) : Bool {
-    return holeMap.getTile(x,y) == -1;
+    return holeMap.getTile(x,y) != -1;
   }
 
   public function hasWallAt(x : Int, y : Int) : Bool {
-    return wallMap.getTile(x,y) == -1;
+    return wallMap.getTile(x,y) != -1;
   }
 }

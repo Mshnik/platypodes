@@ -1,4 +1,5 @@
 package elements;
+import flixel.FlxSprite;
 class Lighting {
 
   public static inline var TERMINARY = -1; //Represents light hitting a terminating tile (wall/switch)
@@ -13,6 +14,13 @@ class Lighting {
   private var start_x:Int;
   private var start_y:Int;
   private var start_direction:Direction;
+  private var light_sprites : Array<FlxSprite>;
+
+  private function createLightSquare(x : Int, y : Int) : FlxSprite {
+    var light = new FlxSprite(x * state.level.tileWidth, y * state.level.tileHeight);
+    light.makeGraphic(state.level.tileWidth, state.level.tileHeight, 0x77FFFFB2);
+    return light;
+  }
 
   public function new(state : GameState, lightBulb : LightBulb) {
     this.state = state;
@@ -28,7 +36,7 @@ class Lighting {
     start_x = lightBulb.getCol();
     start_y = lightBulb.getRow();
     start_direction = lightBulb.getDirectionFacing();
-    draw_light();
+    light_sprites = new Array<FlxSprite>();
   }
 
   public function redraw_light() {
@@ -41,10 +49,15 @@ class Lighting {
   }
 
   private function trace_light(x:Int, y:Int, direction:Direction):Void {
+    trace("Tracing light at " + y + ", " + x);
     if (state.level.hasWallAt(x,y)){
+      trace("Hit wall");
       light_trace[x][y] = TERMINARY;
       return;
     }
+    var light_sprite = createLightSquare(x,y);
+    light_sprites.push(light_sprite);
+    state.add(light_sprite);
     var e:Element = state.getElementAt(y, x);
     if (e == null) {
       light_trace[x][y] += getVerticalOrHorizontal(direction);
@@ -107,6 +120,10 @@ class Lighting {
   }
 
   private function draw_light() {
+    for(sprite in light_sprites ) {
+      state.remove(sprite);
+    }
+    light_sprites = new Array<FlxSprite>();
     trace_light(start_x + Std.int(start_direction.x), start_y + Std.int(start_direction.y), start_direction);
   }
 
