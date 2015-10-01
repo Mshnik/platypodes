@@ -3,14 +3,17 @@ import flixel.addons.editors.tiled.TiledObject;
 class Mirror extends Element {
 
   private static inline var SIDES_PROPERTY_KEY = "sides";
-  private static inline var DEFAULT_SPRITE_ONE_SIDED = AssetPaths.mirror_1__png;
-  private static inline var DEFAULT_SPRITE_TWO_SIDED = ""; //TODO
+  private static inline var UNLIT_SPRITE_ONE_SIDED = AssetPaths.mirror_1__png;
+  private static inline var LIT_SPRITE_ONE_SIDED = AssetPaths.mirror_1_light__png;
+  private static inline var UNLIT_SPRITE_TWO_SIDED = ""; //TODO
+  private static inline var LIT_SPRITE_TWO_SIDED = ""; //TODO
 
   @final public var sides : Int;  //1 or 2 sides
   private var directionFacing : Direction; //The direction this element is facing.
   private var holdingCharacter : Character; //The character holding this mirror, if any
   private var parallelDirection : Direction; //All movement must be parallel to this direction
                                              //This prevents strafing with a mirror
+  public var isLit(default,set):Bool;
 
   public function new(state : GameState, x : Int, y : Int, o : TiledObject) {
     super(state, x, y, o, true, 0, setSidesAndGetInitialSprite(o));
@@ -24,16 +27,29 @@ class Mirror extends Element {
     } else {
 	    directionFacing = Direction.Up_Left;
     }
-    trace(o.name + " is facing " + directionFacing);
   }
 
   private function setSidesAndGetInitialSprite(o : TiledObject) : Dynamic {
     sides = Std.parseInt(o.custom.get(SIDES_PROPERTY_KEY));
     switch sides {
-      case 1: return DEFAULT_SPRITE_ONE_SIDED;
-      case 2: return DEFAULT_SPRITE_TWO_SIDED;
+      case 1: return UNLIT_SPRITE_ONE_SIDED;
+      case 2: return UNLIT_SPRITE_TWO_SIDED;
       default: throw "Illegal values of sides " + sides;
     }
+  }
+
+  public function set_isLit(lit : Bool) : Bool {
+    if(sides == 1) {
+      if(lit) {
+        loadGraphic(LIT_SPRITE_ONE_SIDED, false, Std.int(width), Std.int(height));
+      } else {
+        loadGraphic(UNLIT_SPRITE_ONE_SIDED, false, Std.int(width), Std.int(height));
+      }
+    } else {
+      //TODO
+    }
+
+    return this.isLit = lit;
   }
 
 	public override function getDirectionFacing() {

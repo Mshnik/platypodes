@@ -2,7 +2,7 @@ package elements;
 import flixel.addons.editors.tiled.TiledObject;
 class LightSwitch extends Element {
 
-  @final private static var DEFAULT_SPRITE = AssetPaths.light_switch_off__png;
+  @final private static var DEFAULT_SPRITE = AssetPaths.light_orb__png;
 
   public var isLit(default,set) : Bool;
 

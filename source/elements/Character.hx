@@ -6,7 +6,7 @@ class Character extends Element {
   @final private static var MOVE_SPEED = 300;
   @final private static var MOVE_WHILE_GRABBING_SPEED = 200;
   @final private static var DEFAULT_SPRITE = AssetPaths.vampire__png;
-  @final private static var BOUNDING_BOX_MARGIN = 2;
+  @final private static var BOUNDING_BOX_MARGIN = 4;
 
   public static var UP = function() : Bool { return FlxG.keys.pressed.UP; };
   public static var DOWN = function() : Bool { return FlxG.keys.pressed.DOWN; };
@@ -16,7 +16,6 @@ class Character extends Element {
   public static var GRAB = function() : Bool { return FlxG.keys.pressed.X; };
   public static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.C; };
   public static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.Z; };
-  public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
 
   private var directionFacing : Direction; //The direction this character is facing.
 
@@ -93,7 +92,7 @@ class Character extends Element {
       var dRow = Math.abs(grabbedMirror.getRow() - getRow());
       var dCol = Math.abs(grabbedMirror.getCol() - getCol());
 
-      if(!GRAB() || dRow > Math.abs(tileOffset.y) || dCol > Math.abs(tileOffset.x)) {
+      if(!GRAB() || dRow > Math.abs(tileOffset.y) * 2 || dCol > Math.abs(tileOffset.x) * 2) {
         letGoOfMirror();
       }
     }
