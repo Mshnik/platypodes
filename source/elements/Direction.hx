@@ -117,6 +117,14 @@ class Direction extends FlxVector {
     return Math.abs(x) + Math.abs(y) == 1;
   }
 
+  public inline function isHorizontal() : Bool {
+    return y == 0 && x != 0;
+  }
+
+  public inline function isVertical() : Bool {
+    return x == 0 && y != 0;
+  }
+
   /** Return true iff the vector from start to end is within 90 degrees of this vector */
   public function isInDirection(start : FlxPoint, end : FlxPoint) : Bool {
     var vec = FlxVector.get(end.x - start.x, end.y - start.y);

@@ -98,6 +98,10 @@ class GameState extends FlxState
   public function updateLight() : Void {
     exit.isOpen = false;
 
+    mirrors.forEach(function(m : Mirror){
+      m.isLit = false;
+    });
+
     lightSwitches.forEach(function(l : LightSwitch) {
       l.isLit = false;
     });
