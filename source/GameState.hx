@@ -157,11 +157,11 @@ class GameState extends FlxState
     }
 
     if (winText != null) {
-      winText.x = FlxG.camera.scroll.x + 50;
+      winText.x = FlxG.camera.scroll.x + 200;
       winText.y = FlxG.camera.scroll.y + 100;
     }
     if (deadText != null) {
-      deadText.x = FlxG.camera.scroll.x + 50;
+      deadText.x = FlxG.camera.scroll.x + 200;
       deadText.y = FlxG.camera.scroll.y + 100;
     }
   }
@@ -219,7 +219,7 @@ class GameState extends FlxState
 
   public function killPlayer() {
     player.kill();
-    deadText = new FlxText(0, 0, "You died - press R", 30);
+    deadText = new FlxText(0, 0, 500, "You died - press R", 30);
     deadText.color = 0xFFFF0022;
     add(deadText);
   }
@@ -228,7 +228,7 @@ class GameState extends FlxState
     if(won) return;
 
     won = true;
-    winText = new FlxText(0, 0, "You win!!", 100);
+    winText = new FlxText(0, 0, 500, "You win!!", 100);
     add(winText);
     player.kill();
   }
