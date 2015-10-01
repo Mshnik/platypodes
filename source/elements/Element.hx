@@ -10,7 +10,7 @@ class Element extends FlxSprite {
   //Value is in pixels
   @final private static var MOVE_EDGE_MARGIN = 5;
 
-  @final public var level:TiledLevel; //The level this element belongs to
+  @final public var state:GameState; //The state this element belongs to
 
   private var tileObject:TiledObject; //The tiled object representing the element in the grid
 
@@ -33,14 +33,14 @@ class Element extends FlxSprite {
                        moveable : Bool = false, moveVelocity:Float = 0, ?img:Dynamic) {
     super(x, y, img);
     this.tileObject = tileObject;
-    this.level = state.level;
+    this.state = state;
     this.moveable = moveable;
     this.moveVelocity = moveVelocity;
     this.moveDirection = Direction.None;
     centerOrigin();
 
     squareHighlight = new FlxSprite(x, y);
-    squareHighlight.makeGraphic(level.tileHeight, level.tileWidth, 0x88B36666);
+    squareHighlight.makeGraphic(state.level.tileHeight, state.level.tileWidth, 0x88B36666);
     state.add(squareHighlight);
 
     flipX = TiledLevel.isFlippedX(tileObject);
@@ -57,17 +57,18 @@ class Element extends FlxSprite {
       LabelValuePair.weak("w", width),
       LabelValuePair.weak("h", height),
       LabelValuePair.weak("visible", visible),
-      LabelValuePair.weak("velocity", velocity)]);
+      LabelValuePair.weak("velocity", velocity),
+      LabelValuePair.weak("directionFacing", getDirectionFacing().getSimpleString())]);
   }
 
   /** Return the row of the board this element is currently occupying. The top-left tile is (0,0) */
   public inline function getRow() : Int {
-    return Std.int( (this.y + this.origin.y) / level.tileHeight);
+    return Std.int( (this.y + this.origin.y) / state.level.tileHeight);
   }
 
   /** Return the col of the board this element is currently occupying. The top-left tile is (0,0) */
   public inline function getCol() : Int {
-    return Std.int( (this.x + this.origin.x) / level.tileWidth);
+    return Std.int( (this.x + this.origin.x) / state.level.tileWidth);
   }
 
   /**
@@ -117,17 +118,17 @@ class Element extends FlxSprite {
     velocity.y = moveVelocity * moveDirection.y;
 
     if (x <= MOVE_EDGE_MARGIN && velocity.x < 0 ||
-        x + width >= level.fullWidth - MOVE_EDGE_MARGIN && velocity.x > 0) {
+        x + width >= state.level.fullWidth - MOVE_EDGE_MARGIN && velocity.x > 0) {
       velocity.x = 0;
     }
     if (y <= MOVE_EDGE_MARGIN && velocity.y < 0 ||
-        y + height >= level.fullHeight - MOVE_EDGE_MARGIN && velocity.y > 0) {
+        y + height >= state.level.fullHeight - MOVE_EDGE_MARGIN && velocity.y > 0) {
       velocity.y = 0;
     }
 
     super.update();
 
-    squareHighlight.x = getCol() * level.tileWidth;
-    squareHighlight.y = getRow() * level.tileHeight;
+    squareHighlight.x = getCol() * state.level.tileWidth;
+    squareHighlight.y = getRow() * state.level.tileHeight;
   }
 }

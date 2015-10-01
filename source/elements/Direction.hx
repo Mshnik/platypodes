@@ -94,6 +94,25 @@ class Direction extends FlxVector {
     throw "Really bad problem - illegal direction created! " + this;
   }
 
+  public function getSimpleString() : String {
+    if(x == 0) {
+      if(y == 0) return "None";
+      if(y == 1) return "Down";
+      if(y == -1) return "Up";
+    }
+    if(x == -1){
+      if(y == 0) return "Left";
+      if(y == 1) return "Down_Left";
+      if(y == -1) return "Up_Left";
+    }
+    if(x == 1){
+      if(y == 0) return "Right";
+      if(y == 1) return "Down_Right";
+      if(y == -1) return "Up_Right";
+    }
+    throw "Really bad problem - illegal direction created! " + this;
+  }
+
   public inline function isCardinal() : Bool {
     return Math.abs(x) + Math.abs(y) == 1;
   }

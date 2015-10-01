@@ -1,5 +1,6 @@
 package;
 
+import flixel.group.FlxTypedGroup;
 import elements.Exit;
 import elements.LightSwitch;
 import elements.LightBulb;
@@ -27,11 +28,9 @@ class GameState extends FlxState
   public var player:Character;
   public var floor:FlxObject;
   public var exit:Exit;
-  public var lightBulbs:FlxGroup;
-  public var lightSwitches:FlxGroup;
-  public var mirrors:FlxGroup;
-
-  private static var youDied:Bool = false;
+  public var lightBulbs:FlxTypedGroup<LightBulb>;
+  public var lightSwitches:FlxTypedGroup<LightSwitch>;
+  public var mirrors:FlxTypedGroup<Mirror>;
 
   public function new(levelPath : Dynamic) {
     super();
@@ -53,9 +52,9 @@ class GameState extends FlxState
     add(level.holeTiles);
     add(level.wallTiles);
 
-    mirrors = new FlxGroup();
-    lightBulbs = new FlxGroup();
-    lightSwitches = new FlxGroup();
+    mirrors = new FlxTypedGroup<Mirror>();
+    lightBulbs = new FlxTypedGroup<LightBulb>();
+    lightSwitches = new FlxTypedGroup<LightSwitch>();
 
     // Load all objects
     level.loadObjects(onAddObject);
@@ -67,6 +66,38 @@ class GameState extends FlxState
     add(lightBulbs);
     add(lightSwitches);
     add(player);
+  }
+
+  /** Returns the element at the given row and col, if any. Null otherwise */
+  public function getElementAt(row : Int, col : Int) : Element {
+    var check = function(e : Element) : Bool {
+      return e.getRow() == row && e.getCol() == col;
+    }
+
+    for(lightSwitch in lightSwitches.members) {
+      if (check(lightSwitch)) return lightSwitch;
+    }
+    for(mirror in mirrors.members) {
+      if (check(mirror)) return mirror;
+    }
+    for(lightBulb in lightBulbs.members) {
+      if (check(lightBulb)) return lightBulb;
+    }
+    if (check(exit)) return exit;
+    if (check(player)) return player;
+    return null;
+  }
+
+  public function updateLight() : Void {
+    exit.isOpen = false;
+
+    lightSwitches.forEach(function(l : LightSwitch) {
+      l.isLit = false;
+    });
+
+    lightBulbs.forEach(function(l : LightBulb) {
+      l.markLightDirty();
+    });
   }
 
   override public function update():Void {
@@ -89,6 +120,17 @@ class GameState extends FlxState
 
     //Collide mirrors with walls and holes, check for mirror rotation
     level.collideWithLevel(mirrors, true);
+
+    //Check for victory
+    if(! exit.isOpen) {
+      var allLit = true;
+      lightSwitches.forEach(function(l : LightSwitch) {
+        allLit = allLit && l.isLit;
+      });
+      if(allLit ) {
+        exit.set_isOpen(true);
+      }
+    }
   }
 
   private function handleInitialPlayerMirrorCollision(player : Character, mirror : Mirror) : Bool {
@@ -97,9 +139,11 @@ class GameState extends FlxState
 
     if(Character.ROT_CLOCKWISE()) {
       mirror.rotateClockwise();
+      updateLight();
     }
     if(Character.ROT_C_CLOCKWISE()) {
       mirror.rotateCounterClockwise();
+      updateLight();
     }
 
     if(Character.GRAB() && ! player.isHoldingMirror()) {
