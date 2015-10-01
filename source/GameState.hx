@@ -1,5 +1,6 @@
 package;
 
+import flixel.group.FlxTypedGroup;
 import elements.Exit;
 import elements.LightSwitch;
 import elements.LightBulb;
@@ -27,11 +28,9 @@ class GameState extends FlxState
   public var player:Character;
   public var floor:FlxObject;
   public var exit:Exit;
-  public var lightBulbs:FlxGroup;
-  public var lightSwitches:FlxGroup;
-  public var mirrors:FlxGroup;
-
-  private static var youDied:Bool = false;
+  public var lightBulbs:FlxTypedGroup<LightBulb>;
+  public var lightSwitches:FlxTypedGroup<LightSwitch>;
+  public var mirrors:FlxTypedGroup<Mirror>;
 
   public function new(levelPath : Dynamic) {
     super();
@@ -53,9 +52,9 @@ class GameState extends FlxState
     add(level.holeTiles);
     add(level.wallTiles);
 
-    mirrors = new FlxGroup();
-    lightBulbs = new FlxGroup();
-    lightSwitches = new FlxGroup();
+    mirrors = new FlxTypedGroup<Mirror>();
+    lightBulbs = new FlxTypedGroup<LightBulb>();
+    lightSwitches = new FlxTypedGroup<LightSwitch>();
 
     // Load all objects
     level.loadObjects(onAddObject);
@@ -71,13 +70,29 @@ class GameState extends FlxState
 
   /** Returns the element at the given row and col, if any. Null otherwise */
   public function getElementAt(row : Int, col : Int) : Element {
-    var elm : Element = null;
-    forEachOfType(Element, function(e : Element) {
-      if(e.getRow() == row && e.getCol() == col) {
-        elm = e;
-      }
-    });
-    return elm;
+    var check = function(e : Element) : Bool {
+      return e.getRow() == row && e.getCol() == col;
+    }
+
+    if (check(player)) return player;
+    for(lightSwitch in lightSwitches) {
+      if (check(lightSwitch)) return lightSwitch;
+    }
+    for(mirror in mirrors) {
+      if (check(mirror)) return mirror;
+    }
+    for(lightBulb in lightBulbs) {
+      if (check(lightBulb)) return lightBulb;
+    }
+    if (check(exit)) return exit;
+
+    return null;
+  }
+
+  public function updateLight() : Void {
+    for(lightBulb in lightBulbs) {
+      lightBulb.markLightDirty();
+    }
   }
 
   override public function update():Void {
@@ -108,9 +123,11 @@ class GameState extends FlxState
 
     if(Character.ROT_CLOCKWISE()) {
       mirror.rotateClockwise();
+      updateLight();
     }
     if(Character.ROT_C_CLOCKWISE()) {
       mirror.rotateCounterClockwise();
+      updateLight();
     }
 
     if(Character.GRAB() && ! player.isHoldingMirror()) {

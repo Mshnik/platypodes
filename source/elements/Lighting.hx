@@ -59,6 +59,7 @@ class Lighting {
     light_sprites.push(light_sprite);
     state.add(light_sprite);
     var e:Element = state.getElementAt(y, x);
+    trace("Found elm " + e);
     if (e == null) {
       light_trace[x][y] += getVerticalOrHorizontal(direction);
       trace_light(x + Std.int(direction.x), y + Std.int(direction.y), direction);

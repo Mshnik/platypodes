@@ -83,6 +83,13 @@ class Mirror extends Element {
       setMoveDirection(Direction.getDirectionOf(proj));
     }
 
+    var oldRow = getRow();
+    var oldCol = getCol();
+
 		super.update();
+
+    if(oldRow != getRow() || oldCol != getCol()) {
+      state.updateLight();
+    }
   }
 }
