@@ -118,6 +118,13 @@ class GameState extends FlxState
     FlxG.collide(player, lightBulbs);
     FlxG.collide(player, lightSwitches);
 
+    //Collide player with light - don't kill player, just don't let them walk into it
+    lightBulbs.forEach(function(l : LightBulb){
+      for(lightsprite in l.get_light_sprites()) {
+        FlxG.collide(player, lightsprite);
+      }
+    });
+
     //Collide with mirrors - don't let player walk through mirrors
     FlxG.overlap(player, mirrors, null, handleInitialPlayerMirrorCollision);
 

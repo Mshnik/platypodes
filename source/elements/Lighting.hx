@@ -18,8 +18,11 @@ class Lighting {
   private var light_sprites : Array<FlxSprite>;
 
   private function createLightSquare(x : Int, y : Int) : FlxSprite {
-    var light = new FlxSprite(x * state.level.tileWidth, y * state.level.tileHeight);
-    light.makeGraphic(state.level.tileWidth, state.level.tileHeight, 0x77FFFFB2);
+    var collisionMargin = 4;
+    var light = new FlxSprite(x * state.level.tileWidth + collisionMargin, y * state.level.tileHeight + collisionMargin);
+    light.makeGraphic(state.level.tileWidth - 2*collisionMargin, state.level.tileHeight - 2*collisionMargin,
+                      0x77FFFFB2);
+    light.immovable = true;
     return light;
   }
 
@@ -140,5 +143,10 @@ class Lighting {
   //we shouldnt need this function until we implement crystal walls
   private function light_exists(direction:Direction):Bool {
     return false;
+  }
+
+  /** Returns all light sprites created by this Lighting. Used for collision detection */
+  public inline function get_light_sprites() : Array<FlxSprite> {
+    return light_sprites;
   }
 }
