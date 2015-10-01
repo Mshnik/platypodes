@@ -19,7 +19,6 @@ class TiledLevel extends TiledMap {
   @final public inline static var HOLE_LAYER_NAME = "Holes";
   @final public inline static var WALL_LAYER_NAME = "Walls";
 
-  // Array of tilemaps used for collision
   public var floorTiles : FlxGroup;
   private var floorMap : FlxTilemap;
   public var holeTiles : FlxGroup;
@@ -79,7 +78,10 @@ class TiledLevel extends TiledMap {
       var tilemap:FlxTilemap = new FlxTilemap();
       tilemap.widthInTiles = width;
       tilemap.heightInTiles = height;
-      var fixedArray = tileLayer.tileArray.map(function(i) {return tileSet.fromGid(i); });
+      var fixedArray = tileLayer.tileArray.map(function(i) {
+        var v = tileSet.fromGid(i);
+        return v >= 0 ? v : -1;
+      });
       tilemap.loadMap(fixedArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, 0, 1, 1, 1);
 
       switch(tileLayer.name) {
@@ -134,5 +136,17 @@ class TiledLevel extends TiledMap {
         b = FlxG.overlap(wallMap, objOrGroup, notifyCallback, processCallback != null ? processCallback : FlxObject.separate) || b;
     }
     return b;
+  }
+
+  public function hasFloorAt(x : Int, y : Int) : Bool {
+    return floorMap.getTile(x,y) == -1;
+  }
+
+  public function hasHoleAt(x : Int, y : Int) : Bool {
+    return holeMap.getTile(x,y) == -1;
+  }
+
+  public function hasWallAt(x : Int, y : Int) : Bool {
+    return wallMap.getTile(x,y) == -1;
   }
 }

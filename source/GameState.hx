@@ -69,6 +69,17 @@ class GameState extends FlxState
     add(player);
   }
 
+  /** Returns the element at the given row and col, if any. Null otherwise */
+  public function getElementAt(row : Int, col : Int) : Element {
+    var elm : Element = null;
+    forEachOfType(Element, function(e : Element) {
+      if(e.getRow() == row && e.getCol() == col) {
+        elm = e;
+      }
+    });
+    return elm;
+  }
+
   override public function update():Void {
     if(menuButton()) {
       FlxG.switchState(new LevelSelectMenuState());
