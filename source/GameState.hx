@@ -21,7 +21,8 @@ import flixel.group.FlxGroup;
 class GameState extends FlxState
 {
 
-  private static var menuButton = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
+  private static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
+  public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
 
   @final private var levelPath : Dynamic;
   public var level:TiledLevel;
@@ -35,6 +36,7 @@ class GameState extends FlxState
 
   private var won : Bool;
   private var winText : FlxText;
+  private var deadText : FlxText;
 
   public function new(levelPath : Dynamic) {
     super();
@@ -106,8 +108,10 @@ class GameState extends FlxState
   }
 
   override public function update():Void {
-    if(menuButton()) {
+    if(MENU_BUTTON()) {
       FlxG.switchState(new LevelSelectMenuState());
+    } else if(RESET()) {
+      FlxG.switchState(new GameState(levelPath));
     }
 
     super.update();
@@ -151,6 +155,10 @@ class GameState extends FlxState
     if (winText != null) {
       winText.x = FlxG.camera.scroll.x + 50;
       winText.y = FlxG.camera.scroll.y + 100;
+    }
+    if (deadText != null) {
+      deadText.x = FlxG.camera.scroll.x + 50;
+      deadText.y = FlxG.camera.scroll.y + 100;
     }
   }
 
@@ -205,12 +213,20 @@ class GameState extends FlxState
     }
   }
 
-  private function win() {
+  public function killPlayer() {
+    player.kill();
+    deadText = new FlxText(0, 0, "You died - press R", 30);
+    deadText.color = 0xFFFF0022;
+    add(deadText);
+  }
+
+  public function win() {
     if(won) return;
 
     won = true;
     winText = new FlxText(0, 0, "You win!!", 100);
     add(winText);
+    player.kill();
   }
 
 }

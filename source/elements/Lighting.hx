@@ -108,6 +108,10 @@ class Lighting {
           trace_light(x + 1, y, Direction.Right);
         }
       }
+    } else if (Std.is(e, Character)) {
+      state.killPlayer();
+      light_trace[x][y] += getVerticalOrHorizontal(direction);
+      trace_light(x + Std.int(direction.x), y + Std.int(direction.y), direction);
     } else if (Std.is(e, LightSwitch)) {
       var lightSwitch : LightSwitch = Std.instance(e, LightSwitch);
       lightSwitch.set_isLit(true);

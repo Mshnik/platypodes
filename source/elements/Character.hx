@@ -16,7 +16,6 @@ class Character extends Element {
   public static var GRAB = function() : Bool { return FlxG.keys.pressed.X; };
   public static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.C; };
   public static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.Z; };
-  public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
 
   private var directionFacing : Direction; //The direction this character is facing.
 
