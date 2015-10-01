@@ -28,11 +28,11 @@ class Lighting {
     var spr = d.isHorizontal() ? HORIZONTAL_SPRITE : VERTICAL_SPRITE;
     var light = new FlxSprite(x * state.level.tileWidth, y * state.level.tileHeight, spr);
     if(d.isHorizontal()) {
-      light.y += 17;
+      light.y += 17; //TODO - fix Hacky bullshit woooo!!
       if(x%2 == 1) light.flipX = true;
     }
     if(d.isVertical()) {
-      light.x += 15;
+      light.x += 15; //TODO - fix Hacky bullshit woooo!!
       if(y%2 == 1) light.flipY = true;
     }
     light.immovable = true;
