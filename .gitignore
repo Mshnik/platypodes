@@ -3,6 +3,7 @@
 
 #Built versions of project
 /export/**
+/out/**
 
 #IntelliJ things
 .idea/**
