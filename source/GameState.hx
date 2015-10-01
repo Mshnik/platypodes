@@ -1,5 +1,6 @@
 package;
 
+import flixel.text.FlxText;
 import flixel.group.FlxTypedGroup;
 import elements.Exit;
 import elements.LightSwitch;
@@ -32,6 +33,9 @@ class GameState extends FlxState
   public var lightSwitches:FlxTypedGroup<LightSwitch>;
   public var mirrors:FlxTypedGroup<Mirror>;
 
+  private var won : Bool;
+  private var winText : FlxText;
+
   public function new(levelPath : Dynamic) {
     super();
     this.levelPath = levelPath;
@@ -40,6 +44,7 @@ class GameState extends FlxState
   override public function create():Void
   {
     FlxG.mouse.visible = false;
+    won = false;
 
     //super.create();
     bgColor = 0xffaaaaaa;
@@ -130,6 +135,15 @@ class GameState extends FlxState
       if(allLit ) {
         exit.set_isOpen(true);
       }
+    } else {
+      if(exit.containsBoundingBoxOf(player)) {
+        win();
+      }
+    }
+
+    if (winText != null) {
+      winText.x = FlxG.camera.scroll.x + 50;
+      winText.y = FlxG.camera.scroll.y + 100;
     }
   }
 
@@ -183,4 +197,13 @@ class GameState extends FlxState
         trace("Got unknown object " + o.type.toLowerCase());
     }
   }
+
+  private function win() {
+    if(won) return;
+
+    won = true;
+    winText = new FlxText(0, 0, "You win!!", 100);
+    add(winText);
+  }
+
 }

@@ -1,4 +1,5 @@
 package elements;
+import flixel.util.FlxRect;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.util.FlxStringUtil;
 import flixel.FlxSprite;
@@ -104,6 +105,11 @@ class Element extends FlxSprite {
    **/
   public function getDirectionFacing() : Direction {
     return Direction.None;
+  }
+
+  /** Return true iff the bounding box for e is entirely contained in the bounding box of this */
+  public inline function containsBoundingBoxOf(e : Element) : Bool {
+    return x <= e.x && e.x + e.width <= x + width && y <= e.y && e.y + e.height <= y + height;
   }
 
   /** Updates this element:

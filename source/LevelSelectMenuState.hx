@@ -26,6 +26,8 @@ class LevelSelectMenuState extends FlxState
 
     levels = new Array<Dynamic>();
     levels.push(AssetPaths.level0__tmx);
+    levels.push(AssetPaths.level1__tmx);
+    levels.push(AssetPaths.level2__tmx);
 
     var x = MARGIN;
     var y = MARGIN;

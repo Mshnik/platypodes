@@ -1,60 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="12" height="12" tilewidth="64" tileheight="64" nextobjectid="35">
- <tileset firstgid="1" name="tile_sheet" tilewidth="64" tileheight="64" tilecount="16">
-  <image source="../images/tile_sheet.png" width="512" height="128"/>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="12" height="12" tilewidth="64" tileheight="64" nextobjectid="42">
+ <tileset firstgid="1" name="Mirror" tilewidth="64" tileheight="64" tilecount="1">
+  <image source="../images/alpha/mirror_1.png" width="64" height="64"/>
  </tileset>
- <tileset firstgid="17" name="mirror" tilewidth="64" tileheight="64" tilecount="1">
-  <image source="../images/mirror_img.png" width="66" height="66"/>
+ <tileset firstgid="2" name="LightOrb" tilewidth="64" tileheight="64" tilecount="1">
+  <image source="../images/alpha/light_orb.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="3" name="floorSheet" tilewidth="64" tileheight="64" tilecount="5">
+  <image source="../images/alpha/floor_sheet.png" width="320" height="64"/>
+ </tileset>
+ <tileset firstgid="8" name="wallSheet" tilewidth="64" tileheight="64" tilecount="6">
+  <image source="../images/alpha/wall_sheet.png" width="384" height="64"/>
+ </tileset>
+ <tileset firstgid="14" name="lightSwitch" tilewidth="64" tileheight="64" tilecount="1">
+  <image source="../images/alpha/light_switch_off.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="15" name="exit" tilewidth="64" tileheight="64" tilecount="1">
+  <image source="../images/alpha/gate_closed.png" width="64" height="64"/>
  </tileset>
  <layer name="Floor" width="12" height="12">
   <properties>
-   <property name="tileset" value="tile_sheet"/>
+   <property name="tileset" value="floorSheet"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYGBg4CWA0QEjDkyqekYC6tHdQYx6dDY1zSfV/bjsGU4AAIn+AZ0=
+   eJxjYCAPsAAxG5RmhtIseNQjq2GF6mUmwnwYm5mAelYkeWYsYtjUsyCxYfawYlcO9yvMfBYGwn4eCQAA0zwAig==
   </data>
  </layer>
  <layer name="Holes" width="12" height="12">
   <properties>
-   <property name="tileset" value="tile_sheet"/>
+   <property name="tileset" value="floorSheet"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYKAe4KWiWSDABMWkqOdFYhNrPqn2jAIEAABEhAAr
+   eJxjYBhYwE6iPLHqCamjVP0ogAAAUXAAOQ==
   </data>
  </layer>
  <layer name="Walls" width="12" height="12">
   <properties>
-   <property name="tileset" value="tile_sheet"/>
+   <property name="tileset" value="wallSheet"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJzjZGBg4MSDeRlQAUwMGSMDaqmHyfEiuYWQemzyhNSjA2qpR8b4wgDdfGS/EmvnQAIAfOUCXg==
+   eJxjYGBg4CUCIwN8fGLUo4PhqJ6U8BzKAACEcgGh
   </data>
  </layer>
- <objectgroup name="Objects">
-  <properties>
-   <property name="tileset" value="tile_sheet"/>
-  </properties>
- </objectgroup>
+ <objectgroup name="Objects"/>
  <objectgroup name="Mirrors">
-  <properties>
-   <property name="tileset" value="mirror"/>
-  </properties>
-  <object id="33" gid="17" x="256" y="320" width="64" height="64"/>
-  <object id="34" gid="17" x="320" y="320" width="64" height="64"/>
+  <object id="33" type="mirror" gid="1" x="448" y="448" width="64" height="64">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
+  <object id="34" type="mirror" gid="2147483649" x="192" y="320" width="64" height="64">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
+  <object id="41" type="mirror" gid="2147483649" x="256" y="128" width="64" height="64">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Light">
-  <properties>
-   <property name="tileset" value="tile_sheet"/>
-  </properties>
+  <object id="36" type="lightOrb" gid="2" x="512" y="384" width="64" height="64">
+   <properties>
+    <property name="direction" value="7"/>
+   </properties>
+  </object>
+  <object id="38" type="lightSwitch" gid="1073741838" x="384" y="128" width="64" height="64"/>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
-  <properties>
-   <property name="tileset" value="tile_sheet"/>
-  </properties>
+  <object id="16" x="192" y="384" width="64" height="64"/>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <properties>
-   <property name="tileset" value="tile_sheet"/>
-  </properties>
+  <object id="40" type="exit" gid="15" x="128" y="128" width="64" height="64"/>
  </objectgroup>
 </map>

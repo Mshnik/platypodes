@@ -50,9 +50,7 @@ class Lighting {
   }
 
   private function trace_light(x:Int, y:Int, direction:Direction):Void {
-    trace("Tracing light at " + y + ", " + x);
     if (state.level.hasWallAt(x,y)){
-      trace("Hit wall");
       light_trace[x][y] = TERMINARY;
       return;
     }
@@ -60,7 +58,6 @@ class Lighting {
     light_sprites.push(light_sprite);
     state.add(light_sprite);
     var e:Element = state.getElementAt(y, x);
-    trace("Found elm " + e);
     if (e == null) {
       light_trace[x][y] += getVerticalOrHorizontal(direction);
       trace_light(x + Std.int(direction.x), y + Std.int(direction.y), direction);
