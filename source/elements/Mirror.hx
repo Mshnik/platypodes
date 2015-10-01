@@ -24,6 +24,7 @@ class Mirror extends Element {
     } else {
 	    directionFacing = Direction.Up_Left;
     }
+    trace(o.name + " is facing " + directionFacing);
   }
 
   private function setSidesAndGetInitialSprite(o : TiledObject) : Dynamic {

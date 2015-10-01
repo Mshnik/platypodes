@@ -74,25 +74,30 @@ class GameState extends FlxState
       return e.getRow() == row && e.getCol() == col;
     }
 
-    if (check(player)) return player;
-    for(lightSwitch in lightSwitches) {
+    for(lightSwitch in lightSwitches.members) {
       if (check(lightSwitch)) return lightSwitch;
     }
-    for(mirror in mirrors) {
+    for(mirror in mirrors.members) {
       if (check(mirror)) return mirror;
     }
-    for(lightBulb in lightBulbs) {
+    for(lightBulb in lightBulbs.members) {
       if (check(lightBulb)) return lightBulb;
     }
     if (check(exit)) return exit;
-
+    if (check(player)) return player;
     return null;
   }
 
   public function updateLight() : Void {
-    for(lightBulb in lightBulbs) {
-      lightBulb.markLightDirty();
-    }
+    exit.isOpen = false;
+
+    lightSwitches.forEach(function(l : LightSwitch) {
+      l.isLit = false;
+    });
+
+    lightBulbs.forEach(function(l : LightBulb) {
+      l.markLightDirty();
+    });
   }
 
   override public function update():Void {
@@ -115,6 +120,17 @@ class GameState extends FlxState
 
     //Collide mirrors with walls and holes, check for mirror rotation
     level.collideWithLevel(mirrors, true);
+
+    //Check for victory
+    if(! exit.isOpen) {
+      var allLit = true;
+      lightSwitches.forEach(function(l : LightSwitch) {
+        allLit = allLit && l.isLit;
+      });
+      if(allLit ) {
+        exit.set_isOpen(true);
+      }
+    }
   }
 
   private function handleInitialPlayerMirrorCollision(player : Character, mirror : Mirror) : Bool {

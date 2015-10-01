@@ -1,4 +1,5 @@
 package elements;
+import elements.LightSwitch;
 import flixel.FlxSprite;
 class Lighting {
 
@@ -70,21 +71,21 @@ class Lighting {
       if (direction.equals(Direction.Right)) {
         if (m.getDirectionFacing().equals(Direction.Up_Left)) {
           light_trace[x][y] = LIT_MIRROR;
-          trace_light(x, y + 1, Direction.Up);
+          trace_light(x, y - 1, Direction.Up);
         }
         else if (m.getDirectionFacing().equals(Direction.Down_Left)) {
           light_trace[x][y] = LIT_MIRROR;
-          trace_light(x, y - 1, Direction.Down);
+          trace_light(x, y + 1, Direction.Down);
         }
       }
       else if (direction.equals(Direction.Left)) {
         if (m.getDirectionFacing().equals(Direction.Down_Right)) {
           light_trace[x][y] = LIT_MIRROR;
-          trace_light(x, y - 1, Direction.Down);
+          trace_light(x, y + 1, Direction.Down);
         }
         else if (m.getDirectionFacing().equals(Direction.Up_Right)) {
           light_trace[x][y] = LIT_MIRROR;
-          trace_light(x, y + 1, Direction.Up);
+          trace_light(x, y - 1, Direction.Up);
         }
       }
       else if (direction.equals(Direction.Up)) {
@@ -107,6 +108,9 @@ class Lighting {
           trace_light(x + 1, y, Direction.Right);
         }
       }
+    } else if (Std.is(e, LightSwitch)) {
+      var lightSwitch : LightSwitch = Std.instance(e, LightSwitch);
+      lightSwitch.set_isLit(true);
     }
   }
 

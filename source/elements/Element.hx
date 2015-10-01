@@ -57,7 +57,8 @@ class Element extends FlxSprite {
       LabelValuePair.weak("w", width),
       LabelValuePair.weak("h", height),
       LabelValuePair.weak("visible", visible),
-      LabelValuePair.weak("velocity", velocity)]);
+      LabelValuePair.weak("velocity", velocity),
+      LabelValuePair.weak("directionFacing", getDirectionFacing().getSimpleString())]);
   }
 
   /** Return the row of the board this element is currently occupying. The top-left tile is (0,0) */
