@@ -113,6 +113,25 @@ class Direction extends FlxVector {
     throw "Really bad problem - illegal direction created! " + this;
   }
 
+  public function opposite() : Direction  {
+    if(x == 0) {
+      if(y == 0) return Direction.None;
+      if(y == 1) return Direction.Up;
+      if(y == -1) return Direction.Down;
+    }
+    if(x == -1){
+      if(y == 0) return Direction.Right;
+      if(y == 1) return Direction.Up_Right;
+      if(y == -1) return Direction.Down_Right;
+    }
+    if(x == 1){
+      if(y == 0) return Direction.Left;
+      if(y == 1) return Direction.Up_Left;
+      if(y == -1) return Direction.Down_Left;
+    }
+    throw "Really bad problem - illegal direction created! " + this;
+  }
+
   public inline function isCardinal() : Bool {
     return Math.abs(x) + Math.abs(y) == 1;
   }

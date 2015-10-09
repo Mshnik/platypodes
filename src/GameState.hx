@@ -194,6 +194,9 @@ class GameState extends FlxState
     if(Character.PUSH() && tileVec.equals(player.getDirectionFacing()) && mirror.canMoveInDirection(tileVec)) {
       mirror.moveDirection = tileVec;
     }
+    if(Character.PULL() && tileVec.equals(player.getDirectionFacing()) && mirror.canMoveInDirection(tileVec.opposite())) {
+      mirror.moveDirection = tileVec.opposite();
+    }
     mirror.immovable = false;
 
     return true;

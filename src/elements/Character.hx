@@ -33,6 +33,21 @@ class Character extends MovingElement {
     return directionFacing;
   }
 
+  public override function canMoveInDirection(d : Direction) {
+    var destRow = Std.int(getRow() + d.y);
+    var destCol = Std.int(getCol() + d.x);
+
+    return !state.level.hasWallAt(destCol, destRow) && state.getElementAt(destRow, destCol) == null;
+  }
+
+  public function canMoveInDirectionWithMirror(d : Direction, m : Mirror) {
+    var destRow = Std.int(getRow() + d.y);
+    var destCol = Std.int(getCol() + d.x);
+    var elm = state.getElementAt(destRow, destCol);
+
+    return !state.level.hasWallAt(destCol, destRow) && (elm== null || elm == m);
+  }
+
   /** Updates the character
     * - updates the move direction based on the current pressing of direction keys.
     * - calls super.update() to move the character based on this move direction.
