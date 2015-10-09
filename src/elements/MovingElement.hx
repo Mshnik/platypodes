@@ -70,22 +70,17 @@ import flixel.addons.editors.tiled.TiledObject;
       //Check if destination is reached
       var boundingBox = getBoundingBox(false);
       if(destTile != null && Element.rectContainsRect(destTile, boundingBox)) {
-        trace("reached");
+        velocity.x = 0;
+        velocity.y = 0;
         moveDirection = Direction.None;
-        destTile == null;
+        destTile = null;
       }
       //Check if destination is unset and we have a non-None direction to move
-      else if (destTile == null && ! moveDirection.equals(Direction.None)) {
-        trace("setting dest tile");
+      else if (destTile == null && !moveDirection.equals(Direction.None)) {
         velocity.x = moveSpeed * moveDirection.x;
         velocity.y = moveSpeed * moveDirection.y;
         destTile = state.getRectangleFor(getRow() + Std.int(moveDirection.y),
                                          getCol() + Std.int(moveDirection.x), true);
-      } else {
-        if(destTile != null) {
-          trace("TILE: " + destTile);
-          trace("BOX:  " + boundingBox);
-        }
       }
       boundingBox.put();
     } else {

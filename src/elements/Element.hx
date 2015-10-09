@@ -64,9 +64,14 @@ class Element extends FlxSprite {
     }
   }
 
+  @final private static var RECT_TOLERANCE = 0.01;
+
   /** Return true if rect a contains rect b */
   public static inline function rectContainsRect(outer : FlxRect, inner : FlxRect) {
-    return outer.left <= inner.left && outer.right >= inner.right && outer.top <= inner.top && outer.bottom >= inner.bottom;
+    return outer.left - inner.left < RECT_TOLERANCE &&
+           outer.right - inner.right > -RECT_TOLERANCE  &&
+           outer.top - inner.top < RECT_TOLERANCE &&
+           outer.bottom - inner.bottom > -RECT_TOLERANCE;
   }
 
   /** Return true iff the bounding box for e is entirely contained in the bounding box of this */
