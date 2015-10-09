@@ -180,6 +180,8 @@ class GameState extends FlxState
     mirror.immovable = true;
     FlxObject.separate(player, mirror);
 
+    var tileVec = Direction.getDirection(mirror.getCol() - player.getCol(), mirror.getRow() - player.getRow());
+
     if(Character.ROT_CLOCKWISE()) {
       mirror.rotateClockwise();
       updateLight();
@@ -189,8 +191,8 @@ class GameState extends FlxState
       updateLight();
     }
 
-    if(Character.GRAB() && ! player.isHoldingMirror()) {
-      player.grabMirror(mirror);
+    if(Character.PUSH() && tileVec.equals(player.getDirectionFacing()) && mirror.canMoveInDirection(tileVec)) {
+      mirror.moveDirection = tileVec;
     }
     mirror.immovable = false;
 

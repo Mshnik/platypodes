@@ -1,20 +1,19 @@
 package elements;
 
+import flixel.util.FlxRect;
 import flixel.addons.editors.tiled.TiledObject;
 @abstract class MovingElement extends Element {
 
   //Buffer to prevent movables to moving to edge of board
   //Value is in pixels
   @final private static var MOVE_EDGE_MARGIN = 5;
-  @final private static var DEST_UNSET = -1;
 
   @final public var tileLocked : Bool; //True if this element only moves in increments of tile, false for freemove
 
-  private var destX : Int; //The x point (pixel) this is traveling to
-  private var destY : Int; //The y point (pixel) this is traveling to
+  private var destTile : FlxRect;
 
   public var moveSpeed(default, set) : Int; //Velocity this moves with when moving
-  private var moveDirection(default, set) : Direction; //The direction this element is currently moving (None if none).
+  public var moveDirection(default, set) : Direction; //The direction this element is currently moving (None if none).
   private var directionFacing : Direction; //The direction this character is facing.
 
   public function new(state : GameState, tileObject : TiledObject, tileLocked : Bool = true,
@@ -22,8 +21,7 @@ import flixel.addons.editors.tiled.TiledObject;
     super(state, tileObject, img);
 
     this.tileLocked = tileLocked;
-    destX = DEST_UNSET;
-    destY = DEST_UNSET;
+    destTile = null;
     this.moveSpeed = moveSpeed;
     this.moveDirection = Direction.None;
   }
@@ -70,19 +68,26 @@ import flixel.addons.editors.tiled.TiledObject;
   public override function update() {
     if (tileLocked) {
       //Check if destination is reached
-      if(x == destX && y == destY) {
+      var boundingBox = getBoundingBox(false);
+      if(destTile != null && Element.rectContainsRect(destTile, boundingBox)) {
+        trace("reached");
         moveDirection = Direction.None;
-        destX = DEST_UNSET;
-        destY = DEST_UNSET;
-      } else if (destX == DEST_UNSET && destY == DEST_UNSET && ! moveDirection.equals(Direction.None)) {
+        destTile == null;
+      }
+      //Check if destination is unset and we have a non-None direction to move
+      else if (destTile == null && ! moveDirection.equals(Direction.None)) {
+        trace("setting dest tile");
         velocity.x = moveSpeed * moveDirection.x;
         velocity.y = moveSpeed * moveDirection.y;
-        var destTile = state.getRectangleFor(getRow() + Std.int(moveDirection.y),
-                                             getCol() + Std.int(moveDirection.x));
-        destX = Std.int(destTile.x + destTile.width/2);
-        destY = Std.int(destTile.y + destTile.height/2);
-        destTile.put();
+        destTile = state.getRectangleFor(getRow() + Std.int(moveDirection.y),
+                                         getCol() + Std.int(moveDirection.x), true);
+      } else {
+        if(destTile != null) {
+          trace("TILE: " + destTile);
+          trace("BOX:  " + boundingBox);
+        }
       }
+      boundingBox.put();
     } else {
       velocity.x = moveSpeed * moveDirection.x;
       velocity.y = moveSpeed * moveDirection.y;

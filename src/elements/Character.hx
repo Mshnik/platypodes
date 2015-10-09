@@ -6,21 +6,17 @@ class Character extends MovingElement {
   @final private static var MOVE_SPEED = 300;
   @final private static var MOVE_WHILE_GRABBING_SPEED = 200;
   @final private static var DEFAULT_SPRITE = AssetPaths.vampire__png;
-  @final private static var BOUNDING_BOX_MARGIN = 4;
+  @final private static var BOUNDING_BOX_MARGIN = 5;
 
   public static var UP = function() : Bool { return FlxG.keys.pressed.UP; };
   public static var DOWN = function() : Bool { return FlxG.keys.pressed.DOWN; };
   public static var RIGHT = function() : Bool { return FlxG.keys.pressed.RIGHT; };
   public static var LEFT = function() : Bool { return FlxG.keys.pressed.LEFT; };
 
-  public static var GRAB = function() : Bool { return FlxG.keys.pressed.X; };
-  public static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.C; };
-  public static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.Z; };
-
-  private var grabbedMirror:Mirror;
-  private var tileOffset : Direction;
-  private var xOffset : Float; //equal to player.x - mirror.x
-  private var yOffset : Float; //equal to player.y - mirror.y;
+  public static var PUSH = function() : Bool { return FlxG.keys.justPressed.W; };
+  public static var PULL = function() : Bool { return FlxG.keys.justPressed.S; };
+  public static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.A; };
+  public static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.D; };
 
 /** Constructs a new character, with the given level, and initial row and col */
   public function new(state : GameState, o : TiledObject) {
@@ -35,32 +31,6 @@ class Character extends MovingElement {
 
   public override function getDirectionFacing() {
     return directionFacing;
-  }
-
-  public function isHoldingMirror() : Bool {
-    return grabbedMirror != null;
-  }
-
-  public function grabMirror(mirror : Mirror) {
-    try{
-      tileOffset = Direction.getDirection(mirror.getCol() - getCol(), mirror.getRow() - getRow());
-    } catch(msg : String) {
-      return;
-    }
-    if( ! tileOffset.isCardinal()) {
-      return;
-    }
-    grabbedMirror = mirror;
-    moveSpeed = MOVE_WHILE_GRABBING_SPEED;
-    grabbedMirror.setHoldingCharacter(this, tileOffset, MOVE_WHILE_GRABBING_SPEED);
-    xOffset = mirror.x - x;
-    yOffset = mirror.y - y;
-  }
-
-  public function letGoOfMirror() {
-    grabbedMirror.setHoldingCharacter(null, Direction.None);
-    grabbedMirror = null;
-    moveSpeed = MOVE_SPEED;
   }
 
   /** Updates the character
@@ -86,14 +56,6 @@ class Character extends MovingElement {
 
     moveDirection = directionFacing;
 
-    if(grabbedMirror != null) {
-      var dRow = Math.abs(grabbedMirror.getRow() - getRow());
-      var dCol = Math.abs(grabbedMirror.getCol() - getCol());
-
-      if(!GRAB() || dRow > Math.abs(tileOffset.y) * 2 || dCol > Math.abs(tileOffset.x) * 2) {
-        letGoOfMirror();
-      }
-    }
     super.update();
   }
 }

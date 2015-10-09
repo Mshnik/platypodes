@@ -55,9 +55,28 @@ class Element extends FlxSprite {
     return Std.int( (this.x + this.origin.x) / state.level.tileWidth);
   }
 
+  /** Return a bounding box for this element */
+  public inline function getBoundingBox(createNew : Bool = true) : FlxRect {
+    if (createNew) {
+      return new FlxRect(x,y,width,height);
+    } else {
+      return FlxRect.get(x,y,width,height);
+    }
+  }
+
+  /** Return true if rect a contains rect b */
+  public static inline function rectContainsRect(outer : FlxRect, inner : FlxRect) {
+    return outer.left <= inner.left && outer.right >= inner.right && outer.top <= inner.top && outer.bottom >= inner.bottom;
+  }
+
   /** Return true iff the bounding box for e is entirely contained in the bounding box of this */
   public inline function containsBoundingBoxOf(e : Element) : Bool {
-    return x <= e.x && e.x + e.width <= x + width && y <= e.y && e.y + e.height <= y + height;
+    var b = getBoundingBox(false);
+    var bb = e.getBoundingBox(false);
+    var r = rectContainsRect(b, bb);
+    b.put();
+    bb.put();
+    return r;
   }
 
   /** Updates this element:

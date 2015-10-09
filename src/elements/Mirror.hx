@@ -11,13 +11,10 @@ class Mirror extends MovingElement {
   @final private static var MOVE_SPEED = 200;
 
   @final public var sides : Int;  //1 or 2 sides
-  private var holdingCharacter : Character; //The character holding this mirror, if any
-  private var parallelDirection : Direction; //All movement must be parallel to this direction
-                                             //This prevents strafing with a mirror
   public var isLit(default,set):Bool;
 
   public function new(state : GameState, o : TiledObject) {
-    super(state, o, false, MOVE_SPEED, setSidesAndGetInitialSprite(o));
+    super(state, o, true, MOVE_SPEED, setSidesAndGetInitialSprite(o));
 
     if (flipX && flipY) {
 	    directionFacing = Direction.Down_Right;
@@ -53,15 +50,13 @@ class Mirror extends MovingElement {
     return this.isLit = lit;
   }
 
+  public override function canMoveInDirection(d : Direction) {
+    return true;
+  }
+
 	public override function getDirectionFacing() {
 		return directionFacing;
 	}
-
-  public function setHoldingCharacter(holdingCharacter : Character, direction : Direction, vel : Int = 0) {
-    this.holdingCharacter = holdingCharacter;
-    this.parallelDirection = direction;
-    this.moveSpeed = vel;
-  }
 
 	public function rotateClockwise() {
 		if (directionFacing.equals(Direction.Up_Left)) {
@@ -96,11 +91,6 @@ class Mirror extends MovingElement {
   }
   
   override public function update() {
-    if (holdingCharacter != null) {
-      var proj = holdingCharacter.moveDirection.projectToNormalized(parallelDirection);
-      moveDirection = Direction.getDirectionOf(proj);
-    }
-
     var oldRow = getRow();
     var oldCol = getCol();
 
