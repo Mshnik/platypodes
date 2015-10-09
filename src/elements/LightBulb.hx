@@ -11,8 +11,8 @@ class LightBulb extends Element {
   private var light_dirty : Bool;  //True if the lighting needs to be recalculated on the next update
 
   /** Constructs a light bulb, light source, with the given level, and initial row and col */
-  public function new(state : GameState, row : Int, col : Int, o : TiledObject) {
-    super(state, row, col, o, false, 0, DEFAULT_SPRITE);
+  public function new(state : GameState, o : TiledObject) {
+    super(state, o, false, 0, DEFAULT_SPRITE);
     direction= Direction.fromSimpleDirection(Std.parseInt(o.custom.get(DIRECTION_PROPERTY_KEY)));
     light_dirty = true;
     lighting = new Lighting(state, this);

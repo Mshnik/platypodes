@@ -23,16 +23,14 @@ class Element extends FlxSprite {
 
   /** Construct a new element
    * level - the level this element belongs to
-   * row - the row of the board this element is (initially) placed on
-   * col - the col of the board this element is (initially) placed on
    * moveable - true if this element ever moves, false otherwise
    * moveVelocity - the velocity this element moves at initially
    * img - the image to display for this element. If more complex than a simple image, don't supply here;
    *  change the graph content after calling this constructor.
    */
-  private function new(state : GameState, x : Int, y : Int, tileObject : TiledObject,
+  private function new(state : GameState, tileObject : TiledObject,
                        moveable : Bool = false, moveVelocity:Float = 0, ?img:Dynamic) {
-    super(x, y, img);
+    super(tileObject.x, tileObject.y, img);
     this.tileObject = tileObject;
     this.state = state;
     this.moveable = moveable;

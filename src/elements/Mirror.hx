@@ -15,8 +15,8 @@ class Mirror extends Element {
                                              //This prevents strafing with a mirror
   public var isLit(default,set):Bool;
 
-  public function new(state : GameState, x : Int, y : Int, o : TiledObject) {
-    super(state, x, y, o, true, 0, setSidesAndGetInitialSprite(o));
+  public function new(state : GameState, o : TiledObject) {
+    super(state, o, true, 0, setSidesAndGetInitialSprite(o));
 
     if (flipX && flipY) {
 	    directionFacing = Direction.Down_Right;

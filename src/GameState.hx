@@ -187,29 +187,29 @@ class GameState extends FlxState
     return true;
   }
 
-  public function onAddObject(o : TiledObject, g : TiledObjectGroup, x : Int, y : Int) {
+  public function onAddObject(o : TiledObject, g : TiledObjectGroup) {
     switch (o.type.toLowerCase()) {
       case "player_start":
-        var player = new Character(this, x, y, o);
+        var player = new Character(this, o);
         FlxG.camera.follow(player);
         this.player = player;
 
       case "mirror":
-        var mirror = new Mirror(this, x, y, o);
+        var mirror = new Mirror(this, o);
         mirrors.add(mirror);
 
       case "lightorb":
-        var lightBulb = new LightBulb(this, x, y, o);
+        var lightBulb = new LightBulb(this, o);
         lightBulb.immovable = true;
         lightBulbs.add(lightBulb);
 
       case "lightswitch":
-        var lightSwitch = new LightSwitch(this, x, y, o);
+        var lightSwitch = new LightSwitch(this, o);
         lightSwitch.immovable = true;
         lightSwitches.add(lightSwitch);
 
       case "exit":
-        var exit = new Exit(this, x, y, o);
+        var exit = new Exit(this, o);
         this.exit = exit;
 
       default:

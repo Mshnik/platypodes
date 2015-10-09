@@ -25,8 +25,8 @@ class Character extends Element {
   private var yOffset : Float; //equal to player.y - mirror.y;
 
 /** Constructs a new character, with the given level, and initial row and col */
-  public function new(state : GameState, x : Int, y : Int, o : TiledObject) {
-    super(state, x, y, o, true, MOVE_SPEED, DEFAULT_SPRITE);
+  public function new(state : GameState, o : TiledObject) {
+    super(state, o, true, MOVE_SPEED, DEFAULT_SPRITE);
 
     //Make bounding box slightly smaller than sprite for ease of movement
     this.offset.x += BOUNDING_BOX_MARGIN;

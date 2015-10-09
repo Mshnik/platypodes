@@ -103,7 +103,7 @@ class TiledLevel extends TiledMap {
     }
   }
 
-  public function loadObjects(processCallback:TiledObject->TiledObjectGroup->Int->Int->Void) {
+  public function loadObjects(processCallback:TiledObject->TiledObjectGroup->Void) {
     for (group in objectGroups) {
       for (o in group.objects) {
         loadObject(o, group, processCallback);
@@ -111,17 +111,13 @@ class TiledLevel extends TiledMap {
     }
   }
 
-  private function loadObject(o:TiledObject, g:TiledObjectGroup, processCallback:TiledObject->TiledObjectGroup->Int->Int->Void) {
-    var x:Int = o.x;
-    var y:Int = o.y;
-
+  private function loadObject(o:TiledObject, g:TiledObjectGroup, processCallback:TiledObject->TiledObjectGroup->Void) {
     // objects in tiled are aligned bottom-left (top-left in flixel)
-    var gid = fixGid(o.gid);
     if (o.gid != -1) {
-      y -= g.map.getGidOwner(gid).tileHeight;
+      o.y -= g.map.getGidOwner(fixGid(o.gid)).tileHeight;
     }
 
-    processCallback(o, g, x, y);
+    processCallback(o, g);
   }
 
   public function collideWithLevel(objOrGroup:FlxBasic, collideWithHoles : Bool = true, ?notifyCallback:FlxObject->FlxObject->Void, ?processCallback:FlxObject->FlxObject->Bool):Bool {
