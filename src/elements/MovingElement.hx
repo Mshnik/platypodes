@@ -8,9 +8,9 @@ import flixel.addons.editors.tiled.TiledObject;
   //Value is in pixels
   @final private static var MOVE_EDGE_MARGIN = 5;
 
-  @final public var tileLocked : Bool; //True if this element only moves in increments of tile, false for freemove
+  public var tileLocked : Bool; //True if this element only moves in increments of tile, false for freemove
 
-  private var destTile : FlxRect;
+  public var destTile : FlxRect;
 
   public var moveSpeed(default, set) : Int; //Velocity this moves with when moving
   public var moveDirection(default, set) : Direction; //The direction this element is currently moving (None if none).
@@ -65,6 +65,16 @@ import flixel.addons.editors.tiled.TiledObject;
     throw "canMove should be overridden in subclass";
   }
 
+  /** Called when the destination of a tileLocked movingElement is set.
+   * Overriding functions should call super first, in case something is put here.
+   **/
+  public function destinationSet() {}
+
+  /** Called when the destination of a tileLocked movingElement is reached.
+   * Overriding functions should call super first, in case something is put here.
+   **/
+  public function destinationReached() {}
+
   public override function update() {
     if (tileLocked) {
       //Check if destination is reached
@@ -73,6 +83,7 @@ import flixel.addons.editors.tiled.TiledObject;
         velocity.x = 0;
         velocity.y = 0;
         moveDirection = Direction.None;
+        destinationReached();
         destTile = null;
       }
       //Check if destination is unset and we have a non-None direction to move
@@ -81,6 +92,7 @@ import flixel.addons.editors.tiled.TiledObject;
         velocity.y = moveSpeed * moveDirection.y;
         destTile = state.getRectangleFor(getRow() + Std.int(moveDirection.y),
                                          getCol() + Std.int(moveDirection.x), true);
+        destinationSet();
       }
       boundingBox.put();
     } else {

@@ -4,7 +4,6 @@ import flixel.FlxG;
 class Character extends MovingElement {
 
   @final private static var MOVE_SPEED = 300;
-  @final private static var MOVE_WHILE_GRABBING_SPEED = 200;
   @final private static var DEFAULT_SPRITE = AssetPaths.vampire__png;
   @final private static var BOUNDING_BOX_MARGIN = 5;
 
@@ -17,6 +16,8 @@ class Character extends MovingElement {
   public static var PULL = function() : Bool { return FlxG.keys.justPressed.S; };
   public static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.A; };
   public static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.D; };
+
+  private var mirrorHolding : Mirror; //The mirror this Character is currently moving, if any
 
 /** Constructs a new character, with the given level, and initial row and col */
   public function new(state : GameState, o : TiledObject) {
@@ -45,7 +46,16 @@ class Character extends MovingElement {
     var destCol = Std.int(getCol() + d.x);
     var elm = state.getElementAt(destRow, destCol);
 
-    return !state.level.hasWallAt(destCol, destRow) && (elm== null || elm == m);
+    return !state.level.hasWallAt(destCol, destRow) && (elm== null || elm == m || Std.is(elm, Exit));
+  }
+
+  public function grabbedMirror(m : Mirror) {
+    mirrorHolding = m;
+  }
+
+  public function releasedMirror(m : Mirror) {
+    mirrorHolding = null;
+    moveSpeed = MOVE_SPEED;
   }
 
   /** Updates the character
@@ -54,22 +64,27 @@ class Character extends MovingElement {
     */
   override public function update() {
 
-    directionFacing = Direction.None;
+    if (mirrorHolding == null) {
+      directionFacing = Direction.None;
 
-    if(UP()) {
-      directionFacing = directionFacing.addDirec(Direction.Up);
-    }
-    if(DOWN()) {
-      directionFacing = directionFacing.addDirec(Direction.Down);
-    }
-    if(RIGHT()) {
-      directionFacing = directionFacing.addDirec(Direction.Right);
-    }
-    if(LEFT()) {
-      directionFacing = directionFacing.addDirec(Direction.Left);
-    }
+      if(UP()) {
+        directionFacing = directionFacing.addDirec(Direction.Up);
+      }
+      if(DOWN()) {
+        directionFacing = directionFacing.addDirec(Direction.Down);
+      }
+      if(RIGHT()) {
+        directionFacing = directionFacing.addDirec(Direction.Right);
+      }
+      if(LEFT()) {
+        directionFacing = directionFacing.addDirec(Direction.Left);
+      }
 
-    moveDirection = directionFacing;
+      moveDirection = directionFacing;
+    } else {
+      moveDirection = mirrorHolding.moveDirection;
+      moveSpeed = mirrorHolding.moveSpeed;
+    }
 
     super.update();
   }

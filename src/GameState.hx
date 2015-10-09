@@ -177,6 +177,10 @@ class GameState extends FlxState
   }
 
   private function handleInitialPlayerMirrorCollision(player : Character, mirror : Mirror) : Bool {
+    if (mirror.holdingPlayer != null) {
+      return false;
+    }
+
     mirror.immovable = true;
     FlxObject.separate(player, mirror);
 
@@ -193,9 +197,11 @@ class GameState extends FlxState
 
     if(Character.PUSH() && tileVec.equals(player.getDirectionFacing()) && mirror.canMoveInDirection(tileVec)) {
       mirror.moveDirection = tileVec;
+      mirror.holdingPlayer = player;
     }
     if(Character.PULL() && tileVec.equals(player.getDirectionFacing()) && mirror.canMoveInDirection(tileVec.opposite())) {
       mirror.moveDirection = tileVec.opposite();
+      mirror.holdingPlayer = player;
     }
     mirror.immovable = false;
 

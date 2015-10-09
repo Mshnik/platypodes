@@ -9,8 +9,11 @@ class Mirror extends MovingElement {
   private static inline var LIT_SPRITE_TWO_SIDED = ""; //TODO
 
   @final private static var MOVE_SPEED = 200;
-
   @final public var sides : Int;  //1 or 2 sides
+
+  public var holdingPlayer(default, set) : Character;
+
+
   public var isLit(default,set):Bool;
 
   public function new(state : GameState, o : TiledObject) {
@@ -72,6 +75,20 @@ class Mirror extends MovingElement {
     }
   }
 
+  public override function destinationSet() {
+    super.destinationSet();
+    if(holdingPlayer != null) {
+      holdingPlayer.velocity.x = velocity.x;
+      holdingPlayer.velocity.y = velocity.y;
+    }
+  }
+
+  public override function destinationReached() {
+    super.destinationReached();
+    set_holdingPlayer(null);
+    state.updateLight();
+  }
+
 	public override function getDirectionFacing() {
 		return directionFacing;
 	}
@@ -107,15 +124,21 @@ class Mirror extends MovingElement {
 			flipY = ! flipY;
 		}
   }
-  
-  override public function update() {
-    var oldRow = getRow();
-    var oldCol = getCol();
 
-		super.update();
+  public function set_holdingPlayer(p : Character) {
+    trace(holdingPlayer);
+    if(holdingPlayer == p) return p;
 
-    if(oldRow != getRow() || oldCol != getCol()) {
-      state.updateLight();
+    if(holdingPlayer != null) {
+      holdingPlayer.releasedMirror(this);
     }
+    if(p != null) {
+      p.grabbedMirror(this);
+    }
+    return holdingPlayer = p;
+  }
+
+  override public function update() {
+		super.update();
   }
 }
