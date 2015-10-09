@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxRect;
 import flixel.text.FlxText;
 import flixel.group.FlxTypedGroup;
 import elements.Exit;
@@ -73,6 +74,15 @@ class GameState extends FlxState
     add(lightBulbs);
     add(lightSwitches);
     add(player);
+  }
+
+  /** Returns a rectangle representing the given tile */
+  public function getRectangleFor(row : Int, col : Int, createNew : Bool = false) : FlxRect {
+    if (createNew) {
+      return new FlxRect(col * level.tileWidth, row * level.tileHeight, level.tileWidth, level.tileHeight);
+    } else {
+      return FlxRect.get(col * level.tileWidth, row * level.tileHeight, level.tileWidth, level.tileHeight);
+    }
   }
 
   /** Returns the element at the given row and col, if any. Null otherwise */
