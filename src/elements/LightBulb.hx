@@ -12,13 +12,13 @@ class LightBulb extends Element {
 
   /** Constructs a light bulb, light source, with the given level, and initial row and col */
   public function new(state : GameState, o : TiledObject) {
-    super(state, o, false, 0, DEFAULT_SPRITE);
+    super(state, o, DEFAULT_SPRITE);
     direction= Direction.fromSimpleDirection(Std.parseInt(o.custom.get(DIRECTION_PROPERTY_KEY)));
     light_dirty = true;
     lighting = new Lighting(state, this);
   }
 
-  override public function getDirectionFacing() : Direction {
+  public function getDirectionFacing() : Direction {
     return direction;
   }
 

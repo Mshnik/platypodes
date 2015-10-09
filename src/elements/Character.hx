@@ -1,7 +1,7 @@
 package elements;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.FlxG;
-class Character extends Element {
+class Character extends MovingElement {
 
   @final private static var MOVE_SPEED = 300;
   @final private static var MOVE_WHILE_GRABBING_SPEED = 200;
@@ -17,8 +17,6 @@ class Character extends Element {
   public static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.C; };
   public static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.Z; };
 
-  private var directionFacing : Direction; //The direction this character is facing.
-
   private var grabbedMirror:Mirror;
   private var tileOffset : Direction;
   private var xOffset : Float; //equal to player.x - mirror.x
@@ -26,7 +24,7 @@ class Character extends Element {
 
 /** Constructs a new character, with the given level, and initial row and col */
   public function new(state : GameState, o : TiledObject) {
-    super(state, o, true, MOVE_SPEED, DEFAULT_SPRITE);
+    super(state, o, false, MOVE_SPEED, DEFAULT_SPRITE);
 
     //Make bounding box slightly smaller than sprite for ease of movement
     this.offset.x += BOUNDING_BOX_MARGIN;
@@ -53,7 +51,7 @@ class Character extends Element {
       return;
     }
     grabbedMirror = mirror;
-    moveVelocity = MOVE_WHILE_GRABBING_SPEED;
+    moveSpeed = MOVE_WHILE_GRABBING_SPEED;
     grabbedMirror.setHoldingCharacter(this, tileOffset, MOVE_WHILE_GRABBING_SPEED);
     xOffset = mirror.x - x;
     yOffset = mirror.y - y;
@@ -62,7 +60,7 @@ class Character extends Element {
   public function letGoOfMirror() {
     grabbedMirror.setHoldingCharacter(null, Direction.None);
     grabbedMirror = null;
-    moveVelocity = MOVE_SPEED;
+    moveSpeed = MOVE_SPEED;
   }
 
   /** Updates the character
@@ -86,7 +84,7 @@ class Character extends Element {
       directionFacing = directionFacing.addDirec(Direction.Left);
     }
 
-    setMoveDirection(directionFacing);
+    moveDirection = directionFacing;
 
     if(grabbedMirror != null) {
       var dRow = Math.abs(grabbedMirror.getRow() - getRow());

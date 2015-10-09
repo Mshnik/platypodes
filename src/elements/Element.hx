@@ -7,19 +7,9 @@ import flixel.FlxSprite;
 @abstract
 class Element extends FlxSprite {
 
-  //Buffer to prevent movables to moving to edge of board
-  //Value is in pixels
-  @final private static var MOVE_EDGE_MARGIN = 5;
-
   @final public var state:GameState; //The state this element belongs to
-
-  private var tileObject:TiledObject; //The tiled object representing the element in the grid
-
-  private var moveable:Bool; //True iff this element is movable
-  private var moveVelocity:Float; //The velocity with which the element moves
-  private var moveDirection : Direction; //The direction this element is currently moving (None if none).
-
-  public var squareHighlight : FlxSprite; //Sprite highlighting which square this element is on. For debuggin
+  @final private var tileObject:TiledObject; //The tiled object representing the element in the grid
+  @final public var squareHighlight : FlxSprite; //Sprite highlighting which square this element is on. For debuggin
 
   /** Construct a new element
    * level - the level this element belongs to
@@ -28,14 +18,10 @@ class Element extends FlxSprite {
    * img - the image to display for this element. If more complex than a simple image, don't supply here;
    *  change the graph content after calling this constructor.
    */
-  private function new(state : GameState, tileObject : TiledObject,
-                       moveable : Bool = false, moveVelocity:Float = 0, ?img:Dynamic) {
+  private function new(state : GameState, tileObject : TiledObject, ?img:Dynamic) {
     super(tileObject.x, tileObject.y, img);
     this.tileObject = tileObject;
     this.state = state;
-    this.moveable = moveable;
-    this.moveVelocity = moveVelocity;
-    this.moveDirection = Direction.None;
     centerOrigin();
 
     squareHighlight = new FlxSprite(x, y);
@@ -56,8 +42,7 @@ class Element extends FlxSprite {
       LabelValuePair.weak("w", width),
       LabelValuePair.weak("h", height),
       LabelValuePair.weak("visible", visible),
-      LabelValuePair.weak("velocity", velocity),
-      LabelValuePair.weak("directionFacing", getDirectionFacing().getSimpleString())]);
+      LabelValuePair.weak("velocity", velocity)]);
   }
 
   /** Return the row of the board this element is currently occupying. The top-left tile is (0,0) */
@@ -68,41 +53,6 @@ class Element extends FlxSprite {
   /** Return the col of the board this element is currently occupying. The top-left tile is (0,0) */
   public inline function getCol() : Int {
     return Std.int( (this.x + this.origin.x) / state.level.tileWidth);
-  }
-
-  /**
-   * Sets the movement speed of this element.
-   * This can't change the moveability of an element, but can speed up or slow down
-   * a moveable element
-   **/
-  public function setMoveSpeed(speed : Int) {
-    if(moveable) {
-      moveVelocity = speed;
-    } else {
-      throw "Can't set move speed of " + this;
-    }
-  }
-
-  /** Sets the movement direction of this element.
-    * This function can't be called on non-moveable elements
-    */
-  public function setMoveDirection(direction : Direction) {
-    if(moveable) {
-      moveDirection = direction;
-    } else {
-      throw "Can't set moveDirection of " + this;
-    }
-  }
-
-  public inline function getMoveDirection() : Direction{
-    return moveDirection;
-  }
-
-  /** Return the direction this element is facing. Override in subclasses
-   * if this can rotate
-   **/
-  public function getDirectionFacing() : Direction {
-    return Direction.None;
   }
 
   /** Return true iff the bounding box for e is entirely contained in the bounding box of this */
@@ -118,18 +68,6 @@ class Element extends FlxSprite {
     *     this element has moved.
     */
   public override function update() {
-    velocity.x = moveVelocity * moveDirection.x;
-    velocity.y = moveVelocity * moveDirection.y;
-
-    if (x <= MOVE_EDGE_MARGIN && velocity.x < 0 ||
-        x + width >= state.level.fullWidth - MOVE_EDGE_MARGIN && velocity.x > 0) {
-      velocity.x = 0;
-    }
-    if (y <= MOVE_EDGE_MARGIN && velocity.y < 0 ||
-        y + height >= state.level.fullHeight - MOVE_EDGE_MARGIN && velocity.y > 0) {
-      velocity.y = 0;
-    }
-
     super.update();
 
     squareHighlight.x = getCol() * state.level.tileWidth;

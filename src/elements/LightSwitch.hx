@@ -8,7 +8,7 @@ class LightSwitch extends Element {
 
   /** Constructs a new light switch, with the given level, and initial row and col */
   public function new(state : GameState, o : TiledObject) {
-    super(state, o, false, 0, DEFAULT_SPRITE);
+    super(state, o, DEFAULT_SPRITE);
     isLit = false;
   }
 

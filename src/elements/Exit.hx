@@ -10,7 +10,7 @@ class Exit extends Element {
 
   /** Constructs an exit, with the given level, and initial row and col */
   public function new(level : GameState, o : TiledObject) {
-    super(level, o, false, 0, CLOSED_SPRITE);
+    super(level, o, CLOSED_SPRITE);
     isOpen = false;
   }
 

@@ -1,6 +1,6 @@
 package elements;
 import flixel.addons.editors.tiled.TiledObject;
-class Mirror extends Element {
+class Mirror extends MovingElement {
 
   private static inline var SIDES_PROPERTY_KEY = "sides";
   private static inline var UNLIT_SPRITE_ONE_SIDED = AssetPaths.mirror_1__png;
@@ -8,15 +8,16 @@ class Mirror extends Element {
   private static inline var UNLIT_SPRITE_TWO_SIDED = ""; //TODO
   private static inline var LIT_SPRITE_TWO_SIDED = ""; //TODO
 
+  @final private static var MOVE_SPEED = 200;
+
   @final public var sides : Int;  //1 or 2 sides
-  private var directionFacing : Direction; //The direction this element is facing.
   private var holdingCharacter : Character; //The character holding this mirror, if any
   private var parallelDirection : Direction; //All movement must be parallel to this direction
                                              //This prevents strafing with a mirror
   public var isLit(default,set):Bool;
 
   public function new(state : GameState, o : TiledObject) {
-    super(state, o, true, 0, setSidesAndGetInitialSprite(o));
+    super(state, o, false, MOVE_SPEED, setSidesAndGetInitialSprite(o));
 
     if (flipX && flipY) {
 	    directionFacing = Direction.Down_Right;
@@ -56,10 +57,10 @@ class Mirror extends Element {
 		return directionFacing;
 	}
 
-  public function setHoldingCharacter(holdingCharacter : Character, direction : Direction, vel : Float = 0) {
+  public function setHoldingCharacter(holdingCharacter : Character, direction : Direction, vel : Int = 0) {
     this.holdingCharacter = holdingCharacter;
     this.parallelDirection = direction;
-    this.moveVelocity = vel;
+    this.moveSpeed = vel;
   }
 
 	public function rotateClockwise() {
@@ -96,8 +97,8 @@ class Mirror extends Element {
   
   override public function update() {
     if (holdingCharacter != null) {
-      var proj = holdingCharacter.getMoveDirection().projectToNormalized(parallelDirection);
-      setMoveDirection(Direction.getDirectionOf(proj));
+      var proj = holdingCharacter.moveDirection.projectToNormalized(parallelDirection);
+      moveDirection = Direction.getDirectionOf(proj);
     }
 
     var oldRow = getRow();
