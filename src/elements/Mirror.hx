@@ -126,14 +126,13 @@ class Mirror extends MovingElement {
   }
 
   public function set_holdingPlayer(p : Character) {
-    trace(holdingPlayer);
     if(holdingPlayer == p) return p;
 
     if(holdingPlayer != null) {
-      holdingPlayer.releasedMirror(this);
+      holdingPlayer.mirrorHolding = null;
     }
     if(p != null) {
-      p.grabbedMirror(this);
+      p.mirrorHolding = this;
     }
     return holdingPlayer = p;
   }

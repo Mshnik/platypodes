@@ -12,12 +12,12 @@ class Character extends MovingElement {
   public static var RIGHT = function() : Bool { return FlxG.keys.pressed.RIGHT; };
   public static var LEFT = function() : Bool { return FlxG.keys.pressed.LEFT; };
 
-  public static var PUSH = function() : Bool { return FlxG.keys.justPressed.W; };
-  public static var PULL = function() : Bool { return FlxG.keys.justPressed.S; };
+  public static var PUSH = function() : Bool { return FlxG.keys.pressed.W; };
+  public static var PULL = function() : Bool { return FlxG.keys.pressed.S; };
   public static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.A; };
   public static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.D; };
 
-  private var mirrorHolding : Mirror; //The mirror this Character is currently moving, if any
+  public var mirrorHolding(default, set) : Mirror; //The mirror this Character is currently moving, if any
 
 /** Constructs a new character, with the given level, and initial row and col */
   public function new(state : GameState, o : TiledObject) {
@@ -49,13 +49,11 @@ class Character extends MovingElement {
     return !state.level.hasWallAt(destCol, destRow) && (elm== null || elm == m || Std.is(elm, Exit));
   }
 
-  public function grabbedMirror(m : Mirror) {
-    mirrorHolding = m;
-  }
-
-  public function releasedMirror(m : Mirror) {
-    mirrorHolding = null;
-    moveSpeed = MOVE_SPEED;
+  public function set_mirrorHolding(m : Mirror) {
+    if (m == null) {
+      moveSpeed = MOVE_SPEED;
+    }
+    return mirrorHolding = m;
   }
 
   /** Updates the character

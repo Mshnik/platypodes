@@ -130,26 +130,24 @@ class GameState extends FlxState
 
     super.update();
 
-    // Collide player with holes and walls
-    level.collideWithLevel(player, false);
+    //Only collide player with stuff she isn't holding a mirror
+    if (player.mirrorHolding == null) {
 
-    FlxG.collide(player, lightBulbs);
-    FlxG.collide(player, lightSwitches);
+      level.collideWithLevel(player, false);  // Collides player with walls
 
-    //Collide player with light - don't kill player, just don't let them walk into it
-    lightBulbs.forEach(function(l : LightBulb){
-      for(lightsprite in l.get_light_sprites()) {
-        FlxG.collide(player, lightsprite);
-      }
-    });
+      FlxG.collide(player, lightBulbs);
+      FlxG.collide(player, lightSwitches);
 
-    //Collide with mirrors - don't let player walk through mirrors
-    FlxG.overlap(player, mirrors, null, handleInitialPlayerMirrorCollision);
+      //Collide player with light - don't kill player, just don't let them walk into it
+      lightBulbs.forEach(function(l : LightBulb){
+        for(lightsprite in l.get_light_sprites()) {
+          FlxG.collide(player, lightsprite);
+        }
+      });
 
-    FlxG.collide(mirrors, mirrors);
-
-    //Collide mirrors with walls and holes, check for mirror rotation
-    level.collideWithLevel(mirrors, true);
+      //Collide with mirrors - don't let player walk through mirrors
+      FlxG.overlap(player, mirrors, null, handleInitialPlayerMirrorCollision);
+    }
 
     //Check for victory
     if(! exit.isOpen) {
@@ -195,11 +193,13 @@ class GameState extends FlxState
       updateLight();
     }
 
-    if(Character.PUSH() && tileVec.equals(player.getDirectionFacing()) && mirror.canMoveInDirection(tileVec)) {
+    if(Character.PUSH() && player.mirrorHolding == null &&
+       tileVec.equals(player.getDirectionFacing()) && mirror.canMoveInDirection(tileVec)) {
       mirror.moveDirection = tileVec;
       mirror.holdingPlayer = player;
     }
-    if(Character.PULL() && tileVec.equals(player.getDirectionFacing()) && mirror.canMoveInDirection(tileVec.opposite())) {
+    if(Character.PULL() && player.mirrorHolding == null &&
+       tileVec.equals(player.getDirectionFacing()) && mirror.canMoveInDirection(tileVec.opposite())) {
       mirror.moveDirection = tileVec.opposite();
       mirror.holdingPlayer = player;
     }
