@@ -57,6 +57,9 @@ class Mirror extends MovingElement {
     if (d == null || d.equals(Direction.None)){
       return true;
     }
+    if (! d.isCardinal()) {
+      return false;
+    }
 
     var destRow = Std.int(getRow() + d.y);
     var destCol = Std.int(getCol() + d.x);

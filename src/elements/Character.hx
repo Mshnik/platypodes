@@ -6,6 +6,8 @@ class Character extends MovingElement {
   @final private static var MOVE_SPEED = 300;
   @final private static var DEFAULT_SPRITE = AssetPaths.vampire__png;
   @final private static var BOUNDING_BOX_MARGIN = 5;
+  @final private static var INITIAL_DIRECTION_FACING_PROPERTY = "direction_facing";
+  @final private static var HIGHLIGHT_COLOR = 0x00000000; //Change to a value to see square character occupies
 
   public static var UP = function() : Bool { return FlxG.keys.pressed.UP; };
   public static var DOWN = function() : Bool { return FlxG.keys.pressed.DOWN; };
@@ -14,8 +16,8 @@ class Character extends MovingElement {
 
   public static var PUSH = function() : Bool { return FlxG.keys.pressed.W; };
   public static var PULL = function() : Bool { return FlxG.keys.pressed.S; };
-  public static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.A; };
-  public static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.D; };
+  public static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.D; };
+  public static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.A; };
 
   public var mirrorHolding(default, set) : Mirror; //The mirror this Character is currently moving, if any
 
@@ -23,11 +25,20 @@ class Character extends MovingElement {
   public function new(state : GameState, o : TiledObject) {
     super(state, o, false, MOVE_SPEED, DEFAULT_SPRITE);
 
+    setHighlightColor(HIGHLIGHT_COLOR);
+
     //Make bounding box slightly smaller than sprite for ease of movement
     this.offset.x += BOUNDING_BOX_MARGIN;
     this.offset.y += BOUNDING_BOX_MARGIN;
     this.width -= 2 * BOUNDING_BOX_MARGIN;
     this.height -= 2 * BOUNDING_BOX_MARGIN;
+
+    var d = o.custom.get(INITIAL_DIRECTION_FACING_PROPERTY);
+    if (d == null) {
+      directionFacing = Direction.Left;
+    } else {
+      directionFacing = Direction.fromSimpleDirection(Std.parseInt(d));
+    }
   }
 
   public override function getDirectionFacing() {
@@ -63,27 +74,53 @@ class Character extends MovingElement {
   override public function update() {
 
     if (mirrorHolding == null) {
-      directionFacing = Direction.None;
+      moveDirection = Direction.None;
 
       if(UP()) {
-        directionFacing = directionFacing.addDirec(Direction.Up);
+        moveDirection = moveDirection.addDirec(Direction.Up);
       }
       if(DOWN()) {
-        directionFacing = directionFacing.addDirec(Direction.Down);
+        moveDirection = moveDirection.addDirec(Direction.Down);
       }
       if(RIGHT()) {
-        directionFacing = directionFacing.addDirec(Direction.Right);
+        moveDirection = moveDirection.addDirec(Direction.Right);
       }
       if(LEFT()) {
-        directionFacing = directionFacing.addDirec(Direction.Left);
+        moveDirection = moveDirection.addDirec(Direction.Left);
       }
 
-      moveDirection = directionFacing;
+      if ( !moveDirection.equals(Direction.None)) {
+        directionFacing = moveDirection;
+      }
     } else {
       moveDirection = mirrorHolding.moveDirection;
       moveSpeed = mirrorHolding.moveSpeed;
     }
 
     super.update();
+
+    if (directionFacing.isCardinal()) {
+      var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
+      if (elm != null && Std.is(elm, Mirror)) {
+        var mirror : Mirror = Std.instance(elm, Mirror);
+        if(ROT_CLOCKWISE()) {
+          mirror.rotateClockwise();
+          state.updateLight();
+        }
+        if(ROT_C_CLOCKWISE()) {
+          mirror.rotateCounterClockwise();
+          state.updateLight();
+        }
+
+        if(PUSH() && mirrorHolding == null && mirror.canMoveInDirection(directionFacing)) {
+          mirror.moveDirection = directionFacing;
+          mirror.holdingPlayer = this;
+        }
+        if(PULL() && mirrorHolding == null && mirror.canMoveInDirection(directionFacing.opposite())) {
+          mirror.moveDirection = directionFacing.opposite();
+          mirror.holdingPlayer = this;
+        }
+      }
+    }
   }
 }

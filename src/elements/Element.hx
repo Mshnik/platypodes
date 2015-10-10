@@ -25,8 +25,9 @@ class Element extends FlxSprite {
     centerOrigin();
 
     squareHighlight = new FlxSprite(x, y);
-    squareHighlight.makeGraphic(state.level.tileHeight, state.level.tileWidth, 0x88B36666);
+    squareHighlight.makeGraphic(state.level.tileHeight, state.level.tileWidth, 0xffffffff);
     state.add(squareHighlight);
+    setHighlightColor(0);
 
     flipX = TiledLevel.isFlippedX(tileObject);
     flipY = TiledLevel.isFlippedY(tileObject);
@@ -82,6 +83,21 @@ class Element extends FlxSprite {
     b.put();
     bb.put();
     return r;
+  }
+
+  /** Return true iff this element is entirely contained within a tile, false otherwise */
+  public inline function isEntirelyWithinTile() : Bool {
+    var b = getBoundingBox(false);
+    var bb = state.getRectangleFor(getRow(), getCol(), false);
+    var r = rectContainsRect(bb, b);
+    b.put();
+    bb.put();
+    return r;
+  }
+
+  public function setHighlightColor(color : Int) {
+    squareHighlight.color = 0x00ffffff & color;
+    squareHighlight.alpha = ((0xff000000 & color) >>> 24) / 256;
   }
 
   /** Updates this element:

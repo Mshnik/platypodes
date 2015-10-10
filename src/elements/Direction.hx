@@ -1,7 +1,6 @@
 package elements;
 import flixel.util.FlxVector;
 import flixel.util.FlxPoint;
-import flixel.util.FlxVector;
 class Direction extends FlxVector {
 
   @final private static var RT202 = 0.70710678118;

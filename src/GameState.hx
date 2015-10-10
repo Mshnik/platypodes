@@ -49,8 +49,7 @@ class GameState extends FlxState
     FlxG.mouse.visible = false;
     won = false;
 
-    //super.create();
-    bgColor = 0xffaaaaaa;
+    super.create();
 
     // Load the level's tilemaps
     level = new TiledLevel(levelPath);
@@ -146,8 +145,12 @@ class GameState extends FlxState
       });
 
       //Collide with mirrors - don't let player walk through mirrors
-      FlxG.overlap(player, mirrors, null, handleInitialPlayerMirrorCollision);
+      FlxG.collide(player, mirrors);
+    } else {
+      //Only collide player with the mirror they are holding
+      FlxG.collide(player, player.mirrorHolding);
     }
+
 
     //Check for victory
     if(! exit.isOpen) {
@@ -174,40 +177,6 @@ class GameState extends FlxState
     }
   }
 
-  private function handleInitialPlayerMirrorCollision(player : Character, mirror : Mirror) : Bool {
-    if (mirror.holdingPlayer != null) {
-      return false;
-    }
-
-    mirror.immovable = true;
-    FlxObject.separate(player, mirror);
-
-    var tileVec = Direction.getDirection(mirror.getCol() - player.getCol(), mirror.getRow() - player.getRow());
-
-    if(Character.ROT_CLOCKWISE()) {
-      mirror.rotateClockwise();
-      updateLight();
-    }
-    if(Character.ROT_C_CLOCKWISE()) {
-      mirror.rotateCounterClockwise();
-      updateLight();
-    }
-
-    if(Character.PUSH() && player.mirrorHolding == null &&
-       tileVec.equals(player.getDirectionFacing()) && mirror.canMoveInDirection(tileVec)) {
-      mirror.moveDirection = tileVec;
-      mirror.holdingPlayer = player;
-    }
-    if(Character.PULL() && player.mirrorHolding == null &&
-       tileVec.equals(player.getDirectionFacing()) && mirror.canMoveInDirection(tileVec.opposite())) {
-      mirror.moveDirection = tileVec.opposite();
-      mirror.holdingPlayer = player;
-    }
-    mirror.immovable = false;
-
-    return true;
-  }
-
   public function onAddObject(o : TiledObject, g : TiledObjectGroup) {
     switch (o.type.toLowerCase()) {
       case "player_start":
@@ -217,6 +186,7 @@ class GameState extends FlxState
 
       case "mirror":
         var mirror = new Mirror(this, o);
+        mirror.immovable = true;
         mirrors.add(mirror);
 
       case "lightorb":
