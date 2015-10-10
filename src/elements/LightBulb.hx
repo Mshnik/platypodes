@@ -1,5 +1,4 @@
 package elements;
-import flixel.FlxSprite;
 import flixel.addons.editors.tiled.TiledObject;
 class LightBulb extends Element {
 
@@ -35,10 +34,5 @@ class LightBulb extends Element {
     }
 
     super.update();
-  }
-
-  /** Returns all light sprites created by this LightBulb. Used for collision detection */
-  public inline function get_light_sprites() : Array<FlxSprite> {
-    return lighting.get_light_sprites();
   }
 }

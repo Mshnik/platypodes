@@ -33,6 +33,7 @@ class GameState extends FlxState
   public var exit:Exit;
   public var lightBulbs:FlxTypedGroup<LightBulb>;
   public var lightSwitches:FlxTypedGroup<LightSwitch>;
+  public var lightSprites:FlxTypedGroup<FlxSprite>;
   public var mirrors:FlxTypedGroup<Mirror>;
 
   private var won : Bool;
@@ -62,6 +63,7 @@ class GameState extends FlxState
     mirrors = new FlxTypedGroup<Mirror>();
     lightBulbs = new FlxTypedGroup<LightBulb>();
     lightSwitches = new FlxTypedGroup<LightSwitch>();
+    lightSprites = new FlxTypedGroup<FlxSprite>();
 
     // Load all objects
     level.loadObjects(onAddObject);
@@ -72,6 +74,7 @@ class GameState extends FlxState
     add(mirrors);
     add(lightBulbs);
     add(lightSwitches);
+    add(lightSprites);
     add(player);
   }
 
@@ -138,11 +141,7 @@ class GameState extends FlxState
       FlxG.collide(player, lightSwitches);
 
       //Collide player with light - don't kill player, just don't let them walk into it
-      lightBulbs.forEach(function(l : LightBulb){
-        for(lightsprite in l.get_light_sprites()) {
-          FlxG.collide(player, lightsprite);
-        }
-      });
+      FlxG.collide(player, lightSprites);
 
       //Collide with mirrors - don't let player walk through mirrors
       FlxG.collide(player, mirrors);
