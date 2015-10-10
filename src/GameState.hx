@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxRect;
 import flixel.text.FlxText;
 import flixel.group.FlxTypedGroup;
 import elements.Exit;
@@ -32,6 +33,7 @@ class GameState extends FlxState
   public var exit:Exit;
   public var lightBulbs:FlxTypedGroup<LightBulb>;
   public var lightSwitches:FlxTypedGroup<LightSwitch>;
+  public var lightSprites:FlxTypedGroup<FlxSprite>;
   public var mirrors:FlxTypedGroup<Mirror>;
 
   private var won : Bool;
@@ -48,8 +50,7 @@ class GameState extends FlxState
     FlxG.mouse.visible = false;
     won = false;
 
-    //super.create();
-    bgColor = 0xffaaaaaa;
+    super.create();
 
     // Load the level's tilemaps
     level = new TiledLevel(levelPath);
@@ -62,6 +63,7 @@ class GameState extends FlxState
     mirrors = new FlxTypedGroup<Mirror>();
     lightBulbs = new FlxTypedGroup<LightBulb>();
     lightSwitches = new FlxTypedGroup<LightSwitch>();
+    lightSprites = new FlxTypedGroup<FlxSprite>();
 
     // Load all objects
     level.loadObjects(onAddObject);
@@ -72,7 +74,17 @@ class GameState extends FlxState
     add(mirrors);
     add(lightBulbs);
     add(lightSwitches);
+    add(lightSprites);
     add(player);
+  }
+
+  /** Returns a rectangle representing the given tile */
+  public function getRectangleFor(row : Int, col : Int, createNew : Bool = false) : FlxRect {
+    if (createNew) {
+      return new FlxRect(col * level.tileWidth, row * level.tileHeight, level.tileWidth, level.tileHeight);
+    } else {
+      return FlxRect.get(col * level.tileWidth, row * level.tileHeight, level.tileWidth, level.tileHeight);
+    }
   }
 
   /** Returns the element at the given row and col, if any. Null otherwise */
@@ -120,26 +132,24 @@ class GameState extends FlxState
 
     super.update();
 
-    // Collide player with holes and walls
-    level.collideWithLevel(player, false);
+    //Only collide player with stuff she isn't holding a mirror
+    if (player.mirrorHolding == null) {
 
-    FlxG.collide(player, lightBulbs);
-    FlxG.collide(player, lightSwitches);
+      level.collideWithLevel(player, false);  // Collides player with walls
 
-    //Collide player with light - don't kill player, just don't let them walk into it
-    lightBulbs.forEach(function(l : LightBulb){
-      for(lightsprite in l.get_light_sprites()) {
-        FlxG.collide(player, lightsprite);
-      }
-    });
+      FlxG.collide(player, lightBulbs);
+      FlxG.collide(player, lightSwitches);
 
-    //Collide with mirrors - don't let player walk through mirrors
-    FlxG.overlap(player, mirrors, null, handleInitialPlayerMirrorCollision);
+      //Collide player with light - don't kill player, just don't let them walk into it
+      FlxG.collide(player, lightSprites);
 
-    FlxG.collide(mirrors, mirrors);
+      //Collide with mirrors - don't let player walk through mirrors
+      FlxG.collide(player, mirrors);
+    } else {
+      //Only collide player with the mirror they are holding
+      FlxG.collide(player, player.mirrorHolding);
+    }
 
-    //Collide mirrors with walls and holes, check for mirror rotation
-    level.collideWithLevel(mirrors, true);
 
     //Check for victory
     if(! exit.isOpen) {
@@ -166,50 +176,30 @@ class GameState extends FlxState
     }
   }
 
-  private function handleInitialPlayerMirrorCollision(player : Character, mirror : Mirror) : Bool {
-    mirror.immovable = true;
-    FlxObject.separate(player, mirror);
-
-    if(Character.ROT_CLOCKWISE()) {
-      mirror.rotateClockwise();
-      updateLight();
-    }
-    if(Character.ROT_C_CLOCKWISE()) {
-      mirror.rotateCounterClockwise();
-      updateLight();
-    }
-
-    if(Character.GRAB() && ! player.isHoldingMirror()) {
-      player.grabMirror(mirror);
-    }
-    mirror.immovable = false;
-
-    return true;
-  }
-
-  public function onAddObject(o : TiledObject, g : TiledObjectGroup, x : Int, y : Int) {
+  public function onAddObject(o : TiledObject, g : TiledObjectGroup) {
     switch (o.type.toLowerCase()) {
       case "player_start":
-        var player = new Character(this, x, y, o);
+        var player = new Character(this, o);
         FlxG.camera.follow(player);
         this.player = player;
 
       case "mirror":
-        var mirror = new Mirror(this, x, y, o);
+        var mirror = new Mirror(this, o);
+        mirror.immovable = true;
         mirrors.add(mirror);
 
       case "lightorb":
-        var lightBulb = new LightBulb(this, x, y, o);
+        var lightBulb = new LightBulb(this, o);
         lightBulb.immovable = true;
         lightBulbs.add(lightBulb);
 
       case "lightswitch":
-        var lightSwitch = new LightSwitch(this, x, y, o);
+        var lightSwitch = new LightSwitch(this, o);
         lightSwitch.immovable = true;
         lightSwitches.add(lightSwitch);
 
       case "exit":
-        var exit = new Exit(this, x, y, o);
+        var exit = new Exit(this, o);
         this.exit = exit;
 
       default:

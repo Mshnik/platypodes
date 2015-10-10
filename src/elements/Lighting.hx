@@ -18,7 +18,6 @@ class Lighting {
   private var start_x:Int;
   private var start_y:Int;
   private var start_direction:Direction;
-  private var light_sprites : Array<FlxSprite>;
 
   private function createLightForSquare(x : Int, y : Int, d : Direction) : FlxSprite {
     if (! d.isCardinal()) {
@@ -53,7 +52,6 @@ class Lighting {
     start_x = lightBulb.getCol();
     start_y = lightBulb.getRow();
     start_direction = lightBulb.getDirectionFacing();
-    light_sprites = new Array<FlxSprite>();
   }
 
   public function redraw_light() {
@@ -77,8 +75,7 @@ class Lighting {
         state.killPlayer();
       }
       var light_sprite = createLightForSquare(x,y, direction);
-      light_sprites.push(light_sprite);
-      state.add(light_sprite);
+      state.lightSprites.add(light_sprite);
       light_trace[x][y] += getVerticalOrHorizontal(direction);
       trace_light(x + Std.int(direction.x), y + Std.int(direction.y), direction);
     }
@@ -150,10 +147,7 @@ class Lighting {
   }
 
   private function draw_light() {
-    for(sprite in light_sprites ) {
-      state.remove(sprite);
-    }
-    light_sprites = new Array<FlxSprite>();
+    state.lightSprites.clear();
     trace_light(start_x + Std.int(start_direction.x), start_y + Std.int(start_direction.y), start_direction);
   }
 
@@ -168,10 +162,5 @@ class Lighting {
   //we shouldnt need this function until we implement crystal walls
   private function light_exists(direction:Direction):Bool {
     return false;
-  }
-
-  /** Returns all light sprites created by this Lighting. Used for collision detection */
-  public inline function get_light_sprites() : Array<FlxSprite> {
-    return light_sprites;
   }
 }

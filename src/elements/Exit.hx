@@ -9,8 +9,8 @@ class Exit extends Element {
   public var isOpen(default, set) : Bool;
 
   /** Constructs an exit, with the given level, and initial row and col */
-  public function new(level : GameState, row : Int, col : Int, o : TiledObject) {
-    super(level, row, col, o, false, 0, CLOSED_SPRITE);
+  public function new(level : GameState, o : TiledObject) {
+    super(level, o, CLOSED_SPRITE);
     isOpen = false;
   }
 

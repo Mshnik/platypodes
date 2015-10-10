@@ -1,7 +1,6 @@
 package elements;
 import flixel.util.FlxVector;
 import flixel.util.FlxPoint;
-import flixel.util.FlxVector;
 class Direction extends FlxVector {
 
   @final private static var RT202 = 0.70710678118;
@@ -109,6 +108,25 @@ class Direction extends FlxVector {
       if(y == 0) return "Right";
       if(y == 1) return "Down_Right";
       if(y == -1) return "Up_Right";
+    }
+    throw "Really bad problem - illegal direction created! " + this;
+  }
+
+  public function opposite() : Direction  {
+    if(x == 0) {
+      if(y == 0) return Direction.None;
+      if(y == 1) return Direction.Up;
+      if(y == -1) return Direction.Down;
+    }
+    if(x == -1){
+      if(y == 0) return Direction.Right;
+      if(y == 1) return Direction.Up_Right;
+      if(y == -1) return Direction.Down_Right;
+    }
+    if(x == 1){
+      if(y == 0) return Direction.Left;
+      if(y == 1) return Direction.Up_Left;
+      if(y == -1) return Direction.Down_Left;
     }
     throw "Really bad problem - illegal direction created! " + this;
   }

@@ -1,68 +1,70 @@
 package elements;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.FlxG;
-class Character extends Element {
+class Character extends MovingElement {
 
   @final private static var MOVE_SPEED = 300;
-  @final private static var MOVE_WHILE_GRABBING_SPEED = 200;
   @final private static var DEFAULT_SPRITE = AssetPaths.vampire__png;
-  @final private static var BOUNDING_BOX_MARGIN = 4;
+  @final private static var BOUNDING_BOX_MARGIN = 5;
+  @final private static var INITIAL_DIRECTION_FACING_PROPERTY = "direction_facing";
+  @final private static var HIGHLIGHT_COLOR = 0x00000000; //Change to a value to see square character occupies
 
   public static var UP = function() : Bool { return FlxG.keys.pressed.UP; };
   public static var DOWN = function() : Bool { return FlxG.keys.pressed.DOWN; };
   public static var RIGHT = function() : Bool { return FlxG.keys.pressed.RIGHT; };
   public static var LEFT = function() : Bool { return FlxG.keys.pressed.LEFT; };
 
-  public static var GRAB = function() : Bool { return FlxG.keys.pressed.X; };
-  public static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.C; };
-  public static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.Z; };
+  public static var PUSH = function() : Bool { return FlxG.keys.pressed.W; };
+  public static var PULL = function() : Bool { return FlxG.keys.pressed.S; };
+  public static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.D; };
+  public static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.A; };
 
-  private var directionFacing : Direction; //The direction this character is facing.
-
-  private var grabbedMirror:Mirror;
-  private var tileOffset : Direction;
-  private var xOffset : Float; //equal to player.x - mirror.x
-  private var yOffset : Float; //equal to player.y - mirror.y;
+  public var mirrorHolding(default, set) : Mirror; //The mirror this Character is currently moving, if any
 
 /** Constructs a new character, with the given level, and initial row and col */
-  public function new(state : GameState, x : Int, y : Int, o : TiledObject) {
-    super(state, x, y, o, true, MOVE_SPEED, DEFAULT_SPRITE);
+  public function new(state : GameState, o : TiledObject) {
+    super(state, o, false, MOVE_SPEED, DEFAULT_SPRITE);
+
+    setHighlightColor(HIGHLIGHT_COLOR);
 
     //Make bounding box slightly smaller than sprite for ease of movement
     this.offset.x += BOUNDING_BOX_MARGIN;
     this.offset.y += BOUNDING_BOX_MARGIN;
     this.width -= 2 * BOUNDING_BOX_MARGIN;
     this.height -= 2 * BOUNDING_BOX_MARGIN;
+
+    var d = o.custom.get(INITIAL_DIRECTION_FACING_PROPERTY);
+    if (d == null) {
+      directionFacing = Direction.Left;
+    } else {
+      directionFacing = Direction.fromSimpleDirection(Std.parseInt(d));
+    }
   }
 
   public override function getDirectionFacing() {
     return directionFacing;
   }
 
-  public function isHoldingMirror() : Bool {
-    return grabbedMirror != null;
+  public override function canMoveInDirection(d : Direction) {
+    var destRow = Std.int(getRow() + d.y);
+    var destCol = Std.int(getCol() + d.x);
+
+    return !state.level.hasWallAt(destCol, destRow) && state.getElementAt(destRow, destCol) == null;
   }
 
-  public function grabMirror(mirror : Mirror) {
-    try{
-      tileOffset = Direction.getDirection(mirror.getCol() - getCol(), mirror.getRow() - getRow());
-    } catch(msg : String) {
-      return;
-    }
-    if( ! tileOffset.isCardinal()) {
-      return;
-    }
-    grabbedMirror = mirror;
-    moveVelocity = MOVE_WHILE_GRABBING_SPEED;
-    grabbedMirror.setHoldingCharacter(this, tileOffset, MOVE_WHILE_GRABBING_SPEED);
-    xOffset = mirror.x - x;
-    yOffset = mirror.y - y;
+  public function canMoveInDirectionWithMirror(d : Direction, m : Mirror) {
+    var destRow = Std.int(getRow() + d.y);
+    var destCol = Std.int(getCol() + d.x);
+    var elm = state.getElementAt(destRow, destCol);
+
+    return !state.level.hasWallAt(destCol, destRow) && (elm== null || elm == m || Std.is(elm, Exit));
   }
 
-  public function letGoOfMirror() {
-    grabbedMirror.setHoldingCharacter(null, Direction.None);
-    grabbedMirror = null;
-    moveVelocity = MOVE_SPEED;
+  public function set_mirrorHolding(m : Mirror) {
+    if (m == null) {
+      moveSpeed = MOVE_SPEED;
+    }
+    return mirrorHolding = m;
   }
 
   /** Updates the character
@@ -71,31 +73,54 @@ class Character extends Element {
     */
   override public function update() {
 
-    directionFacing = Direction.None;
+    if (mirrorHolding == null) {
+      moveDirection = Direction.None;
 
-    if(UP()) {
-      directionFacing = directionFacing.addDirec(Direction.Up);
-    }
-    if(DOWN()) {
-      directionFacing = directionFacing.addDirec(Direction.Down);
-    }
-    if(RIGHT()) {
-      directionFacing = directionFacing.addDirec(Direction.Right);
-    }
-    if(LEFT()) {
-      directionFacing = directionFacing.addDirec(Direction.Left);
+      if(UP()) {
+        moveDirection = moveDirection.addDirec(Direction.Up);
+      }
+      if(DOWN()) {
+        moveDirection = moveDirection.addDirec(Direction.Down);
+      }
+      if(RIGHT()) {
+        moveDirection = moveDirection.addDirec(Direction.Right);
+      }
+      if(LEFT()) {
+        moveDirection = moveDirection.addDirec(Direction.Left);
+      }
+
+      if ( !moveDirection.equals(Direction.None)) {
+        directionFacing = moveDirection;
+      }
+    } else {
+      moveDirection = mirrorHolding.moveDirection;
+      moveSpeed = mirrorHolding.moveSpeed;
     }
 
-    setMoveDirection(directionFacing);
+    super.update();
 
-    if(grabbedMirror != null) {
-      var dRow = Math.abs(grabbedMirror.getRow() - getRow());
-      var dCol = Math.abs(grabbedMirror.getCol() - getCol());
+    if (directionFacing.isCardinal()) {
+      var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
+      if (elm != null && Std.is(elm, Mirror)) {
+        var mirror : Mirror = Std.instance(elm, Mirror);
+        if(ROT_CLOCKWISE()) {
+          mirror.rotateClockwise();
+          state.updateLight();
+        }
+        if(ROT_C_CLOCKWISE()) {
+          mirror.rotateCounterClockwise();
+          state.updateLight();
+        }
 
-      if(!GRAB() || dRow > Math.abs(tileOffset.y) * 2 || dCol > Math.abs(tileOffset.x) * 2) {
-        letGoOfMirror();
+        if(PUSH() && mirrorHolding == null && mirror.canMoveInDirection(directionFacing)) {
+          mirror.moveDirection = directionFacing;
+          mirror.holdingPlayer = this;
+        }
+        if(PULL() && mirrorHolding == null && mirror.canMoveInDirection(directionFacing.opposite())) {
+          mirror.moveDirection = directionFacing.opposite();
+          mirror.holdingPlayer = this;
+        }
       }
     }
-    super.update();
   }
 }

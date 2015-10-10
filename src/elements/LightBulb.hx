@@ -1,5 +1,4 @@
 package elements;
-import flixel.FlxSprite;
 import flixel.addons.editors.tiled.TiledObject;
 class LightBulb extends Element {
 
@@ -11,14 +10,14 @@ class LightBulb extends Element {
   private var light_dirty : Bool;  //True if the lighting needs to be recalculated on the next update
 
   /** Constructs a light bulb, light source, with the given level, and initial row and col */
-  public function new(state : GameState, row : Int, col : Int, o : TiledObject) {
-    super(state, row, col, o, false, 0, DEFAULT_SPRITE);
+  public function new(state : GameState, o : TiledObject) {
+    super(state, o, DEFAULT_SPRITE);
     direction= Direction.fromSimpleDirection(Std.parseInt(o.custom.get(DIRECTION_PROPERTY_KEY)));
     light_dirty = true;
     lighting = new Lighting(state, this);
   }
 
-  override public function getDirectionFacing() : Direction {
+  public function getDirectionFacing() : Direction {
     return direction;
   }
 
@@ -35,10 +34,5 @@ class LightBulb extends Element {
     }
 
     super.update();
-  }
-
-  /** Returns all light sprites created by this LightBulb. Used for collision detection */
-  public inline function get_light_sprites() : Array<FlxSprite> {
-    return lighting.get_light_sprites();
   }
 }
