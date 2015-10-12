@@ -14,8 +14,7 @@ class Character extends MovingElement {
   public static var RIGHT = function() : Bool { return FlxG.keys.pressed.RIGHT; };
   public static var LEFT = function() : Bool { return FlxG.keys.pressed.LEFT; };
 
-  public static var PUSH = function() : Bool { return FlxG.keys.pressed.W; };
-  public static var PULL = function() : Bool { return FlxG.keys.pressed.S; };
+  public static var GRAB = function() : Bool { return FlxG.keys.pressed.S; };
   public static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.D; };
   public static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.A; };
 
@@ -73,6 +72,29 @@ class Character extends MovingElement {
     */
   override public function update() {
 
+    if (directionFacing.isCardinal()) {
+      var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
+      if (elm != null && Std.is(elm, Mirror)) {
+        var mirror : Mirror = Std.instance(elm, Mirror);
+        if(ROT_CLOCKWISE()) {
+          mirror.rotateClockwise();
+          state.updateLight();
+        }
+        if(ROT_C_CLOCKWISE()) {
+          mirror.rotateCounterClockwise();
+          state.updateLight();
+        }
+        if(GRAB() && mirrorHolding == null) {
+          mirror.moveDirection = Direction.None;
+          mirror.holdingPlayer = this;
+        }
+      }
+    }
+
+    if(!GRAB() && mirrorHolding != null && mirrorHolding.isEntirelyWithinTile() && isEntirelyWithinTile()) {
+      mirrorHolding.holdingPlayer = null;
+    }
+
     if (mirrorHolding == null) {
       moveDirection = Direction.None;
 
@@ -89,38 +111,29 @@ class Character extends MovingElement {
         moveDirection = moveDirection.addDirec(Direction.Left);
       }
 
-      if ( !moveDirection.equals(Direction.None)) {
+      if (!moveDirection.equals(Direction.None)) {
         directionFacing = moveDirection;
       }
     } else {
+      if (GRAB()) {
+        if (directionFacing.isHorizontal()) {
+          if (LEFT() && mirrorHolding.canMoveInDirection(Direction.Left)) {
+            mirrorHolding.moveDirection = Direction.Left;
+          } else if (RIGHT() && mirrorHolding.canMoveInDirection(Direction.Right)) {
+            mirrorHolding.moveDirection = Direction.Right;
+          }
+        } else if (directionFacing.isVertical()) {
+          if (UP() && mirrorHolding.canMoveInDirection(Direction.Up)) {
+            mirrorHolding.moveDirection = Direction.Up;
+          } else if (DOWN() && mirrorHolding.canMoveInDirection(Direction.Down)) {
+            mirrorHolding.moveDirection = Direction.Down;
+          }
+        }
+      }
       moveDirection = mirrorHolding.moveDirection;
       moveSpeed = mirrorHolding.moveSpeed;
     }
 
     super.update();
-
-    if (directionFacing.isCardinal()) {
-      var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
-      if (elm != null && Std.is(elm, Mirror)) {
-        var mirror : Mirror = Std.instance(elm, Mirror);
-        if(ROT_CLOCKWISE()) {
-          mirror.rotateClockwise();
-          state.updateLight();
-        }
-        if(ROT_C_CLOCKWISE()) {
-          mirror.rotateCounterClockwise();
-          state.updateLight();
-        }
-
-        if(PUSH() && mirrorHolding == null && mirror.canMoveInDirection(directionFacing)) {
-          mirror.moveDirection = directionFacing;
-          mirror.holdingPlayer = this;
-        }
-        if(PULL() && mirrorHolding == null && mirror.canMoveInDirection(directionFacing.opposite())) {
-          mirror.moveDirection = directionFacing.opposite();
-          mirror.holdingPlayer = this;
-        }
-      }
-    }
   }
 }
