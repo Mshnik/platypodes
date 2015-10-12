@@ -51,7 +51,7 @@ class Lighting {
     }
     start_x = lightBulb.getCol();
     start_y = lightBulb.getRow();
-    start_direction = lightBulb.getDirectionFacing();
+    start_direction = lightBulb.directionFacing;
   }
 
   public function redraw_light() {
@@ -83,48 +83,48 @@ class Lighting {
       // the mirror is assumed to only be one sided
       var m:Mirror = Std.instance(e, Mirror);
       if (direction.equals(Direction.Right)) {
-        if (m.getDirectionFacing().equals(Direction.Up_Left)) {
+        if (m.directionFacing.equals(Direction.Up_Left)) {
           light_trace[x][y] = LIT_MIRROR;
           m.isLit = true;
           trace_light(x, y - 1, Direction.Up);
         }
-        else if (m.getDirectionFacing().equals(Direction.Down_Left)) {
+        else if (m.directionFacing.equals(Direction.Down_Left)) {
           light_trace[x][y] = LIT_MIRROR;
           m.isLit = true;
           trace_light(x, y + 1, Direction.Down);
         }
       }
       else if (direction.equals(Direction.Left)) {
-        if (m.getDirectionFacing().equals(Direction.Down_Right)) {
+        if (m.directionFacing.equals(Direction.Down_Right)) {
           light_trace[x][y] = LIT_MIRROR;
           m.isLit = true;
           trace_light(x, y + 1, Direction.Down);
         }
-        else if (m.getDirectionFacing().equals(Direction.Up_Right)) {
+        else if (m.directionFacing.equals(Direction.Up_Right)) {
           light_trace[x][y] = LIT_MIRROR;
           m.isLit = true;
           trace_light(x, y - 1, Direction.Up);
         }
       }
       else if (direction.equals(Direction.Up)) {
-        if (m.getDirectionFacing().equals(Direction.Down_Right)) {
+        if (m.directionFacing.equals(Direction.Down_Right)) {
           light_trace[x][y] = LIT_MIRROR;
           m.isLit = true;
           trace_light(x + 1, y, Direction.Right);
         }
-        else if (m.getDirectionFacing().equals(Direction.Down_Left)) {
+        else if (m.directionFacing.equals(Direction.Down_Left)) {
           light_trace[x][y] = LIT_MIRROR;
           m.isLit = true;
           trace_light(x - 1, y, Direction.Left);
         }
       }
       else if (direction.equals(Direction.Down)) {
-        if (m.getDirectionFacing().equals(Direction.Up_Left)) {
+        if (m.directionFacing.equals(Direction.Up_Left)) {
           light_trace[x][y] = LIT_MIRROR;
           m.isLit = true;
           trace_light(x - 1, y, Direction.Left);
         }
-        else if (m.getDirectionFacing().equals(Direction.Up_Right)) {
+        else if (m.directionFacing.equals(Direction.Up_Right)) {
           light_trace[x][y] = LIT_MIRROR;
           m.isLit = true;
           trace_light(x + 1, y, Direction.Right);

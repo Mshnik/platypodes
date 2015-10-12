@@ -1,5 +1,4 @@
 package elements;
-import flixel.util.FlxVector;
 import flixel.util.FlxPoint;
 
 /**

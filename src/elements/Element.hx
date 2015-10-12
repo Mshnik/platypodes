@@ -4,17 +4,36 @@ import flixel.addons.editors.tiled.TiledObject;
 import flixel.util.FlxStringUtil;
 import flixel.FlxSprite;
 
-@abstract
-class Element extends FlxSprite {
+/** An Element is any game piece that exists on the board.
+  * Terrain (unmovable walls, floors, holes) are not elements, and drawn light are not elements.
+  * Every other game piece, such as light bulbs, switches, mirrors, characters, etc...
+  * are all extetions of class Element.
+  *
+  * All elements within the game exist on a specific tile. Thus, the Element class handles calculating
+  * which tile this Element exists within at any time. Collision detection is also handled
+  * within the Element class.
+  *
+  * Elements that can move during the game should extend MovingElement, an extension of Element
+  * that handles movement on top of Element's capabilities.
+  **/
+@abstract class Element extends FlxSprite {
 
-  @final public var state:GameState; //The state this element belongs to
-  @final private var tileObject:TiledObject; //The tiled object representing the element in the grid
-  @final public var squareHighlight : FlxSprite; //Sprite highlighting which square this element is on. For debuggin
+  /** The GameState this Element exists within. */
+  @final public var state:GameState;
+
+  /** The TiledObject that this Element was created from when the level was read from a .tmx file */
+  @final private var tileObject:TiledObject;
+
+  /** A square highlighting sprite that shows which tile this Element is on.
+   * Can be displayed for debugging purposes.
+   **/
+  @final public var squareHighlight : FlxSprite;
 
   /** Construct a new element
-   * level - the level this element belongs to
-   * moveable - true if this element ever moves, false otherwise
-   * moveVelocity - the velocity this element moves at initially
+   * state - the GameState this element belongs to
+   * tileObject - the TiledObject that represents this Element in the level file.
+   *              the Element's initial x and y coordinates, along with the graphical
+   *              rotation and flipping are read from this object.
    * img - the image to display for this element. If more complex than a simple image, don't supply here;
    *  change the graph content after calling this constructor.
    */
@@ -33,7 +52,7 @@ class Element extends FlxSprite {
     flipY = TiledLevel.isFlippedY(tileObject);
   }
 
-  /** Return a string representation of this element */
+  /** Return a string representation of this element. Used mainly for debugging. */
   public override function toString() : String {
     return FlxStringUtil.getClassName(this, true) + " " + FlxStringUtil.getDebugString([
       LabelValuePair.weak("row", getRow()),
@@ -56,7 +75,11 @@ class Element extends FlxSprite {
     return Std.int( (this.x + this.origin.x) / state.level.tileWidth);
   }
 
-  /** Return a bounding box for this element */
+  /** Return a bounding box for this element.
+   * By default, a new FlxRect is created. If createNew = false, FlxRect.get(..) is used.
+   * This is more efficient, but has side-effects of possibly being modified after the method
+   * call finishes, and remember to call .put() after using the boundingBox.
+   **/
   public inline function getBoundingBox(createNew : Bool = true) : FlxRect {
     if (createNew) {
       return new FlxRect(x,y,width,height);
@@ -65,9 +88,10 @@ class Element extends FlxSprite {
     }
   }
 
+  /** A helper constant for the following function, because of float rounding errors */
   @final private static var RECT_TOLERANCE = 0.01;
 
-  /** Return true if rect a contains rect b */
+  /** Return true if rect a contains rect b, with respect to the above tolerance */
   public static inline function rectContainsRect(outer : FlxRect, inner : FlxRect) {
     return outer.left - inner.left < RECT_TOLERANCE &&
            outer.right - inner.right > -RECT_TOLERANCE  &&
@@ -95,18 +119,16 @@ class Element extends FlxSprite {
     return r;
   }
 
+  /** Set the color of this' square highlight sprite, in 0xAARRGGBB format */
   public function setHighlightColor(color : Int) {
     squareHighlight.color = 0x00ffffff & color;
     squareHighlight.alpha = ((0xff000000 & color) >>> 24) / 256;
   }
 
   /** Updates this element:
-    * - Updates the velocity values with the current value of moveDirection
-    * - makes sure this wouldn't cause the element to move off of the board
-    * - calls super.update() to cause movement to occur
-    * - if the row and/or col changed as a result of this, tells the level that
-    *     this element has moved.
-    */
+   * - calls super.update().
+   * - moves the squareHighlight to the new row and col.
+   */
   public override function update() {
     super.update();
 

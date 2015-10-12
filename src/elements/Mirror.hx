@@ -92,10 +92,6 @@ class Mirror extends MovingElement {
     state.updateLight();
   }
 
-	public override function getDirectionFacing() {
-		return directionFacing;
-	}
-
 	public function rotateClockwise() {
 		if (directionFacing.equals(Direction.Up_Left)) {
 			directionFacing = Direction.Up_Right;

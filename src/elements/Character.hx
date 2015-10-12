@@ -40,10 +40,6 @@ class Character extends MovingElement {
     }
   }
 
-  public override function getDirectionFacing() {
-    return directionFacing;
-  }
-
   public override function canMoveInDirection(d : Direction) {
     var destRow = Std.int(getRow() + d.y);
     var destCol = Std.int(getCol() + d.x);

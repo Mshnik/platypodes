@@ -4,18 +4,45 @@ import flixel.util.FlxRect;
 import flixel.addons.editors.tiled.TiledObject;
 @abstract class MovingElement extends Element {
 
-  //Buffer to prevent movables to moving to edge of board
-  //Value is in pixels
-  @final private static var MOVE_EDGE_MARGIN = 5;
+  /** Determines the type of movement that this MovingElement performs
+   * If tileLocked == false, this has free movement. Tile is still updated when this moves
+   * from tile to tile, but no checks are performed on movement, and collisions are used to
+   * enforce movement constraints
+   *
+   * If tileLocked == true, this has tile locked movement. This can only move in increments
+   * of a tile, and can only move in a direction if the tile it would occupy by moving
+   * in that direction is legal. Collisions are basically unused (for the purposes of
+   * movement of this object. It may still collide with other free-moving objects).
+   **/
+  public var tileLocked(default, null) : Bool;
 
-  public var tileLocked : Bool; //True if this element only moves in increments of tile, false for freemove
+  /**
+   * If tileLocked, this is the tile this is currently traveling to.
+   * If this isn't traveling, or isn't tileLocked, this is null.
+   **/
+  public var destTile(default, null) : FlxRect;
 
-  public var destTile : FlxRect;
+  /** Velocity this moves with when moving */
+  public var moveSpeed(default, set) : Int;
 
-  public var moveSpeed(default, set) : Int; //Velocity this moves with when moving
-  public var moveDirection(default, set) : Direction; //The direction this element is currently moving (None if none).
-  private var directionFacing : Direction; //The direction this character is facing.
+  /** The direction this element is currently moving (Direction.None if none) */
+  public var moveDirection(default, set) : Direction;
 
+  /** The direction this character is facing. May not necessarily be equal to moveDireciton */
+  public var directionFacing(default, set) : Direction;
+
+
+  /** Construct a new moving element
+   * state - the GameState this element belongs to
+   * tileObject - the TiledObject that represents this Element in the level file.
+   *              the Element's initial x and y coordinates, along with the graphical
+   *              rotation and flipping are read from this object.
+   * tileLocked - true if this object moves in increments of tiles, false for free movement.
+   *              default (if unprovided) is true.
+   * moveSpeed - the speed this moves with when it moves. Can be changed later. Can't be negative. Default 0
+   * img - the image to display for this element. If more complex than a simple image, don't supply here;
+   *  change the graph content after calling this constructor.
+   */
   public function new(state : GameState, tileObject : TiledObject, tileLocked : Bool = true,
                       moveSpeed : Int = 0, ?img : Dynamic) {
     super(state, tileObject, img);
@@ -26,19 +53,16 @@ import flixel.addons.editors.tiled.TiledObject;
     this.moveDirection = Direction.None;
   }
 
-  /**
-   * Sets the movement speed of this element.
-   **/
-  public inline function set_moveSpeed(speed : Int) {
+  /** Sets the movement speed of this element. If negative, throws an exception */
+  public function set_moveSpeed(speed : Int) {
     if (speed < 0) {
       throw "Can't set speed to negative number";
     }
     return moveSpeed = speed;
   }
 
-  /** Sets the movement direction of this element. If direction is null, sets to Direction.NONE.
-    */
-  public inline function set_moveDirection(direction : Direction) {
+  /** Sets the movement direction of this element. If direction is null, sets to Direction.NONE. */
+  public function set_moveDirection(direction : Direction) {
     if(direction == null) {
       moveDirection = Direction.None;
     } else {
@@ -47,20 +71,21 @@ import flixel.addons.editors.tiled.TiledObject;
     return moveDirection;
   }
 
-  /** Return the direction this element is facing. Override in subclasses
-   * if this can rotate
-   **/
-  public function getDirectionFacing() : Direction {
-    return Direction.None;
+  /** Sets the facing direction of this element. If direction is null, sets to Direction.None */
+  public function set_directionFacing(direction : Direction) {
+    if(direction == null) {
+      directionFacing = Direction.None;
+    } else {
+      directionFacing = direction;
+    }
+    return directionFacing;
   }
 
- /**
-  * Should be overridden in tileLocked classes. Checks whether a tile movement
-  * in the given direction is valid from the current location.
-  * Called before movement starts.
-  * Should always return true for Direction.None
-  *
-  **/
+  /** Returns true iff this can move in Direction direction. Only used in tileLocked movingElements.
+   * Default implementation throws an exception, as it is not implemented.
+   * Called before movement starts.
+   * Should always return true for Direction.None
+   **/
   public function canMoveInDirection(direction : Direction) : Bool {
     throw "canMove should be overridden in subclass";
   }
@@ -75,6 +100,16 @@ import flixel.addons.editors.tiled.TiledObject;
    **/
   public function destinationReached() {}
 
+  /** Updates this element:
+   * If TileLocked:
+   *    - Checks if destination is reached. If so, stop moving and call destinationReached.
+   *    - Otherwise, check if destination is null (unset) and we want to move toward it.
+   *       If so, start moving toward it and call destinationSet().
+   * Else (not TileLocked):
+   *    - Set velocity based off of moveDirection.
+   *
+   *- calls super.update().
+   **/
   public override function update() {
     if (tileLocked) {
       //Check if destination is reached
@@ -98,15 +133,6 @@ import flixel.addons.editors.tiled.TiledObject;
     } else {
       velocity.x = moveSpeed * moveDirection.x;
       velocity.y = moveSpeed * moveDirection.y;
-
-      if (x <= MOVE_EDGE_MARGIN && velocity.x < 0 ||
-          x + width >= state.level.fullWidth - MOVE_EDGE_MARGIN && velocity.x > 0) {
-        velocity.x = 0;
-      }
-      if (y <= MOVE_EDGE_MARGIN && velocity.y < 0 ||
-          y + height >= state.level.fullHeight - MOVE_EDGE_MARGIN && velocity.y > 0) {
-        velocity.y = 0;
-      }
     }
 
     super.update();
