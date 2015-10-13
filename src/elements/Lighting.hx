@@ -119,7 +119,7 @@ class Lighting {
       }
     } else if (Std.is(e, LightSwitch)) {
       var lightSwitch : LightSwitch = Std.instance(e, LightSwitch);
-      lightSwitch.set_isLit(true);
+      lightSwitch.isLit = true;
     }
   }
 

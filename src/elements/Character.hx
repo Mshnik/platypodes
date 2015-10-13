@@ -1,26 +1,52 @@
 package elements;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.FlxG;
+
+/** Character is a MovingElement that represents the player in the game.
+ * It has free movement, and moves using the arrow keys.
+ **/
 class Character extends MovingElement {
 
+  /** The Character's default move speed, when not interacting with anything */
   @final private static var MOVE_SPEED = 300;
+
+  /** The default sprite for the character. This will change to a set once direction facing sprites are added */
   @final private static var DEFAULT_SPRITE = AssetPaths.vampire__png;
+
+  /** The clippng on the bounding box of the sprite, to make fitting though a one tile wide path easier */
   @final private static var BOUNDING_BOX_MARGIN = 5;
+
+  /** The custom property on the Character object in Tiled maps that denotes the intial direction facing */
   @final private static var INITIAL_DIRECTION_FACING_PROPERTY = "direction_facing";
+
+  /** The highlight for the tile the Character is occupying, in 0xAARRGGBB format */
   @final private static var HIGHLIGHT_COLOR = 0x00000000; //Change to a value to see square character occupies
 
+  /** Return true iff the up key is pressed */
   public static var UP = function() : Bool { return FlxG.keys.pressed.UP; };
+
+  /** Return true iff the down key is pressed */
   public static var DOWN = function() : Bool { return FlxG.keys.pressed.DOWN; };
+
+  /** Return true iff the right key is pressed */
   public static var RIGHT = function() : Bool { return FlxG.keys.pressed.RIGHT; };
+
+  /** Return true iff the left key is pressed */
   public static var LEFT = function() : Bool { return FlxG.keys.pressed.LEFT; };
 
+  /** Return true iff the grab key is pressed */
   public static var GRAB = function() : Bool { return FlxG.keys.pressed.S; };
+
+  /** Return true when the rotate clockwise key is intially pressed */
   public static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.D; };
+
+  /** Return true when the rotate counter clockwise key is intially pressed */
   public static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.A; };
 
-  public var mirrorHolding(default, set) : Mirror; //The mirror this Character is currently moving, if any
+  /** The mirror this character is currently holding, null if none */
+  public var mirrorHolding(default, set) : Mirror;
 
-/** Constructs a new character, with the given level, and initial row and col */
+  /** Constructs a new character, belonging to the given state and represented by the given TiledObject */
   public function new(state : GameState, o : TiledObject) {
     super(state, o, false, MOVE_SPEED, DEFAULT_SPRITE);
 
@@ -40,19 +66,18 @@ class Character extends MovingElement {
     }
   }
 
-  public override function canMoveInDirection(d : Direction) {
-    var destRow = Std.int(getRow() + d.y);
-    var destCol = Std.int(getCol() + d.x);
-
-    return !state.level.hasWallAt(destCol, destRow) && state.getElementAt(destRow, destCol) == null;
-  }
-
+  /** Return true iff this character can move in direction d,
+   * given that it would be holding mirror m.
+   * Should check that the tile this would move into is not a wall or another mirror,
+   * and that it is free of light.
+   **/
   public function canMoveInDirectionWithMirror(d : Direction, m : Mirror) {
     var destRow = Std.int(getRow() + d.y);
     var destCol = Std.int(getCol() + d.x);
     var elm = state.getElementAt(destRow, destCol);
 
-    return !state.level.hasWallAt(destCol, destRow) && (elm== null || elm == m || Std.is(elm, Exit));
+    return !state.level.hasWallAt(destCol, destRow) && (elm== null || elm == m || Std.is(elm, Exit))
+            && !state.isLit(destRow, destCol);
   }
 
   public function set_mirrorHolding(m : Mirror) {

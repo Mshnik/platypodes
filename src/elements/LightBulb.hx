@@ -10,7 +10,7 @@ class LightBulb extends Element implements Lightable{
   private var lighting : Lighting; //The Lighting object that represents the lighting of this bulb
   private var light_dirty : Bool;  //True if the lighting needs to be recalculated on the next update
 
-  public var isLit(default, null) = true; //LightBulbs are always lit
+  public var isLit(default, null) : Bool;
 
   /** Constructs a light bulb, light source, with the given level, and initial row and col */
   public function new(state : GameState, o : TiledObject) {
@@ -18,6 +18,7 @@ class LightBulb extends Element implements Lightable{
     directionFacing = Direction.fromSimpleDirection(Std.parseInt(o.custom.get(DIRECTION_PROPERTY_KEY)));
     light_dirty = true;
     lighting = new Lighting(state, this);
+    isLit = true;
   }
 
   /** Mark this bulb as having to update lighting on the next frame */
