@@ -1,23 +1,45 @@
 package elements;
 import flixel.addons.editors.tiled.TiledObject;
+
+/** A mirror is a moveable element that reflects light.
+ * It is tile locked, thus movement occurs in increments of tiles.
+ * Each mirror has a reflective surface on either one or both of its sides, that
+ * reflects light in 90 degree angles.
+ **/
 class Mirror extends MovingElement implements Lightable{
 
+  /** The property in Tiled that denotes how many sides a mirror has. Valid values are 1 and 2 */
   private static inline var SIDES_PROPERTY_KEY = "sides";
+
+  /** The sprite for an unlit one sided mirror */
   private static inline var UNLIT_SPRITE_ONE_SIDED = AssetPaths.mirror_1__png;
+
+  /** The sprite for a lit one sided mirror */
   private static inline var LIT_SPRITE_ONE_SIDED = AssetPaths.mirror_1_light__png;
+
+  /** The sprite for an unlit two sided mirror */
   private static inline var UNLIT_SPRITE_TWO_SIDED = ""; //TODO
+
+  /** The sprite for a lit two sided mirror */
   private static inline var LIT_SPRITE_TWO_SIDED = ""; //TODO
 
+  /** The speed mirrors move with when being pushed or pulled by a character */
   @final private static var MOVE_SPEED = 200;
-  @final public var sides : Int;  //1 or 2 sides
 
+  /** The number of sides this mirror has that reflect light. Must be 1 or 2 */
+  @final public var sides : Int;
+
+  /** The character that is currently holding this mirror. Null if none */
   public var holdingPlayer(default, set) : Character;
 
+  /** True iff this is currently reflecting light (on either of its sides), false otherwise */
   public var isLit(default,set):Bool;
 
+  /** Constructs a new mirror belonging to the given game state and representing the given TiledObject */
   public function new(state : GameState, o : TiledObject) {
     super(state, o, true, MOVE_SPEED, setSidesAndGetInitialSprite(o));
 
+    //Read the flipX and flipY fields to determine intial direction facing
     if (flipX && flipY) {
 	    directionFacing = Direction.Down_Right;
     } else if (flipX && ! flipY) {
@@ -29,6 +51,7 @@ class Mirror extends MovingElement implements Lightable{
     }
   }
 
+  /** Return the sprite that represents this mirror intitially. Used in construction */
   private function setSidesAndGetInitialSprite(o : TiledObject) : Dynamic {
     sides = Std.parseInt(o.custom.get(SIDES_PROPERTY_KEY));
     switch sides {
@@ -38,6 +61,7 @@ class Mirror extends MovingElement implements Lightable{
     }
   }
 
+  /** Sets the value of isLit. Updates the sprite to reflect the new lit status */
   public function set_isLit(lit : Bool) : Bool {
     if(sides == 1) {
       if(lit) {
@@ -52,6 +76,13 @@ class Mirror extends MovingElement implements Lightable{
     return this.isLit = lit;
   }
 
+  /** Return true iff this mirror can move in direction D.
+   *    - If null or none, return true, as this mirror can stay where it is now
+   *    - if non cardinal (diagonal), return false. Can only move in cardinal directions
+   *    - if the destination has a hole or wall, return false.
+   *    - Otherwise, determine what element is at the destination. If empty, return true,
+   *        if character, check if the player is also moving, otherwise return false.
+   **/
   public override function canMoveInDirection(d : Direction) {
     if (d == null || d.equals(Direction.None)){
       return true;
@@ -77,6 +108,9 @@ class Mirror extends MovingElement implements Lightable{
     }
   }
 
+  /** Called when the update() function of MovingElement sets the destination of this to move to
+   * If this is being held by a Character, set the velocity of that player to match this.
+   **/
   public override function destinationSet() {
     super.destinationSet();
     if(holdingPlayer != null) {
@@ -85,12 +119,14 @@ class Mirror extends MovingElement implements Lightable{
     }
   }
 
+  /** Called when the update() function of MovingElement notices that this has reached its destination. */
   public override function destinationReached() {
     super.destinationReached();
     set_holdingPlayer(null);
     state.updateLight();
   }
 
+  /** Rotate this mirror once clockwise, and update the directionFacing */
 	public function rotateClockwise() {
 		if (directionFacing.equals(Direction.Up_Left)) {
 			directionFacing = Direction.Up_Right;
@@ -105,9 +141,11 @@ class Mirror extends MovingElement implements Lightable{
 			directionFacing = Direction.Up_Left;
 			flipY = ! flipY;
 		}
-	}
+    state.updateLight();
+  }
 
-	public function rotateCounterClockwise() {
+  /** Rotate this mirror once counter clockwise, and update the directionFacing */
+  public function rotateCounterClockwise() {
 		if (directionFacing.equals(Direction.Up_Right)) {
 			directionFacing = Direction.Up_Left;
 			flipX = ! flipX;
@@ -121,8 +159,13 @@ class Mirror extends MovingElement implements Lightable{
 			directionFacing = Direction.Down_Left;
 			flipY = ! flipY;
 		}
+    state.updateLight();
   }
 
+  /** Sets the holding player to the given character.
+   * Updates the Character's mirrorHolding field to this,
+   * and if the new character is null, updates the old character's mirrorHolding field to null.
+   **/
   public function set_holdingPlayer(p : Character) {
     if(holdingPlayer == p) return p;
 
