@@ -1,5 +1,7 @@
 package;
 
+import elements.LightSprite;
+import elements.Lightable;
 import flixel.util.FlxRect;
 import flixel.text.FlxText;
 import flixel.group.FlxTypedGroup;
@@ -33,7 +35,7 @@ class GameState extends FlxState
   public var exit:Exit;
   public var lightBulbs:FlxTypedGroup<LightBulb>;
   public var lightSwitches:FlxTypedGroup<LightSwitch>;
-  public var lightSprites:FlxTypedGroup<FlxSprite>;
+  public var lightSprites:FlxTypedGroup<LightSprite>;
   public var mirrors:FlxTypedGroup<Mirror>;
 
   private var won : Bool;
@@ -63,7 +65,7 @@ class GameState extends FlxState
     mirrors = new FlxTypedGroup<Mirror>();
     lightBulbs = new FlxTypedGroup<LightBulb>();
     lightSwitches = new FlxTypedGroup<LightSwitch>();
-    lightSprites = new FlxTypedGroup<FlxSprite>();
+    lightSprites = new FlxTypedGroup<LightSprite>();
 
     // Load all objects
     level.loadObjects(onAddObject);
@@ -105,6 +107,25 @@ class GameState extends FlxState
     if (check(exit)) return exit;
     if (check(player)) return player;
     return null;
+  }
+
+  /** Return true iff the given row and col is lighted.
+   * This return true if the location has a lightbulb, lighted mirror, or a light beam on it.
+   **/
+  public function isLit(row : Int, col : Int) : Bool {
+    var e : Element = getElementAt(row, col);
+    if(Std.is(e, Lightable)) {
+      var l : Lightable = cast e;
+      return l.isLit;
+    }
+    var check = function(l : LightSprite) : Bool {
+      return l.getRow() == row && l.getCol() == col;
+    }
+
+    for(lightSprite in lightSprites.members) {
+      if(check(lightSprite)) return true;
+    }
+    return false;
   }
 
   public function updateLight() : Void {

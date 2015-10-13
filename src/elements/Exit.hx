@@ -1,6 +1,6 @@
 package elements;
 import flixel.addons.editors.tiled.TiledObject;
-import flixel.FlxG;
+
 class Exit extends Element {
 
   @final private static var CLOSED_SPRITE = AssetPaths.gate_closed__png;
