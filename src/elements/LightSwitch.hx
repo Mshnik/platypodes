@@ -1,6 +1,6 @@
 package elements;
 import flixel.addons.editors.tiled.TiledObject;
-class LightSwitch extends Element {
+class LightSwitch extends Element implements Lightable {
 
   @final private static var DEFAULT_SPRITE = AssetPaths.light_orb__png;
 

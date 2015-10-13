@@ -1,6 +1,6 @@
 package elements;
 import flixel.addons.editors.tiled.TiledObject;
-class Mirror extends MovingElement {
+class Mirror extends MovingElement implements Lightable{
 
   private static inline var SIDES_PROPERTY_KEY = "sides";
   private static inline var UNLIT_SPRITE_ONE_SIDED = AssetPaths.mirror_1__png;
@@ -12,7 +12,6 @@ class Mirror extends MovingElement {
   @final public var sides : Int;  //1 or 2 sides
 
   public var holdingPlayer(default, set) : Character;
-
 
   public var isLit(default,set):Bool;
 

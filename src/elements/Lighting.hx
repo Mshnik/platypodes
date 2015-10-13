@@ -3,9 +3,6 @@ import elements.LightSwitch;
 import flixel.FlxSprite;
 class Lighting {
 
-  private static inline var HORIZONTAL_SPRITE = AssetPaths.light_horizontal__png;
-  private static inline var VERTICAL_SPRITE = AssetPaths.light_vertical__png;
-
   public static inline var TERMINARY = -1; //Represents light hitting a terminating tile (wall/switch)
   public static inline var NONE = 0; //Represents no light going through a tile
   public static inline var HORIZONTAL = 1; //Represents light going horizontally through a tile
@@ -19,22 +16,12 @@ class Lighting {
   private var start_y:Int;
   private var start_direction:Direction;
 
-  private function createLightForSquare(x : Int, y : Int, d : Direction) : FlxSprite {
+  private function createLightForSquare(x : Int, y : Int, d : Direction) : LightSprite {
     if (! d.isCardinal()) {
       throw "Can't make light for non-cardinal direction";
     }
 
-    var spr = d.isHorizontal() ? HORIZONTAL_SPRITE : VERTICAL_SPRITE;
-    var light = new FlxSprite(x * state.level.tileWidth, y * state.level.tileHeight, spr);
-    if(d.isHorizontal()) {
-      light.y += 17; //TODO - fix Hacky bullshit woooo!!
-      if(x%2 == 1) light.flipX = true;
-    }
-    if(d.isVertical()) {
-      light.x += 15; //TODO - fix Hacky bullshit woooo!!
-      if(y%2 == 1) light.flipY = true;
-    }
-    light.immovable = true;
+    var light = new LightSprite(state, y, x, d);
     return light;
   }
 

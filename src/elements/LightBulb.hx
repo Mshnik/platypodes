@@ -1,6 +1,7 @@
 package elements;
 import flixel.addons.editors.tiled.TiledObject;
-class LightBulb extends Element {
+
+class LightBulb extends Element implements Lightable{
 
   @final private static var DEFAULT_SPRITE = AssetPaths.light_orb__png;
   @final private static var DIRECTION_PROPERTY_KEY = "direction"; //Name of direction property in Tiled
@@ -8,6 +9,8 @@ class LightBulb extends Element {
   public var directionFacing (default, null):Direction;//the direction that the light is shining at
   private var lighting : Lighting; //The Lighting object that represents the lighting of this bulb
   private var light_dirty : Bool;  //True if the lighting needs to be recalculated on the next update
+
+  public var isLit(default, null) = true; //LightBulbs are always lit
 
   /** Constructs a light bulb, light source, with the given level, and initial row and col */
   public function new(state : GameState, o : TiledObject) {
