@@ -28,23 +28,35 @@ class Character extends MovingElement {
   /** Return true iff the up key is pressed */
   public static var UP = function() : Bool { return FlxG.keys.pressed.UP; };
 
+  /** Return true when the up key is pressed (once per press) */
+  public static var UP_SINGLE = function() : Bool { return FlxG.keys.justPressed.UP; };
+
   /** Return true iff the down key is pressed */
   public static var DOWN = function() : Bool { return FlxG.keys.pressed.DOWN; };
+
+  /** Return true when the up key is pressed (once per press) */
+  public static var DOWN_SINGLE = function() : Bool { return FlxG.keys.justPressed.DOWN; };
 
   /** Return true iff the right key is pressed */
   public static var RIGHT = function() : Bool { return FlxG.keys.pressed.RIGHT; };
 
+  /** Return true when the up key is pressed (once per press) */
+  public static var RIGHT_SINGLE = function() : Bool { return FlxG.keys.justPressed.RIGHT; };
+
   /** Return true iff the left key is pressed */
   public static var LEFT = function() : Bool { return FlxG.keys.pressed.LEFT; };
 
+  /** Return true when the up key is pressed (once per press) */
+  public static var LEFT_SINGLE = function() : Bool { return FlxG.keys.justPressed.LEFT; };
+
   /** Return true iff the grab key is pressed */
-  public static var GRAB = function() : Bool { return FlxG.keys.pressed.S; };
+  public static var GRAB = function() : Bool { return FlxG.keys.pressed.SPACE; };
 
   /** Return true when the rotate clockwise key is intially pressed */
-  public static var ROT_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.D; };
+  public var ROT_CLOCKWISE : Void -> Bool;
 
   /** Return true when the rotate counter clockwise key is intially pressed */
-  public static var ROT_C_CLOCKWISE = function() : Bool { return FlxG.keys.justPressed.A; };
+  public var ROT_C_CLOCKWISE : Void -> Bool;
 
   /** The mirror this character is currently holding, null if none */
   public var mirrorHolding(default, set) : Mirror;
@@ -67,6 +79,26 @@ class Character extends MovingElement {
     } else {
       directionFacing = Direction.fromSimpleDirection(Std.parseInt(d));
     }
+
+    ROT_CLOCKWISE = function() : Bool {
+        if (!GRAB()) return false;
+
+        if(directionFacing.equals(Direction.Left)) return DOWN_SINGLE();
+        if(directionFacing.equals(Direction.Up)) return LEFT_SINGLE();
+        if(directionFacing.equals(Direction.Right)) return UP_SINGLE();
+        if(directionFacing.equals(Direction.Down)) return RIGHT_SINGLE();
+        return false;
+    }
+
+    ROT_C_CLOCKWISE = function() : Bool {
+      if (!GRAB()) return false;
+
+      if(directionFacing.equals(Direction.Left)) return UP_SINGLE();
+      if(directionFacing.equals(Direction.Up)) return RIGHT_SINGLE();
+      if(directionFacing.equals(Direction.Right)) return DOWN_SINGLE();
+      if(directionFacing.equals(Direction.Down)) return LEFT_SINGLE();
+      return false;
+    };
   }
 
   /** Return true iff this character can move in direction d,
