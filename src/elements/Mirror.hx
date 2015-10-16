@@ -122,7 +122,6 @@ class Mirror extends MovingElement implements Lightable{
   /** Called when the update() function of MovingElement notices that this has reached its destination. */
   public override function destinationReached() {
     super.destinationReached();
-    set_holdingPlayer(null);
     state.updateLight();
   }
 
@@ -170,9 +169,11 @@ class Mirror extends MovingElement implements Lightable{
     if(holdingPlayer == p) return p;
 
     if(holdingPlayer != null) {
+      trace("Player released");
       holdingPlayer.mirrorHolding = null;
     }
     if(p != null) {
+      trace("Player grabbed");
       p.mirrorHolding = this;
     }
     return holdingPlayer = p;
