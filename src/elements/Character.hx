@@ -120,8 +120,7 @@ class Character extends MovingElement {
       }
     }
 
-    if(!GRAB() && mirrorHolding != null && mirrorHolding.isEntirelyWithinTile() &&
-        mirrorHolding.destTile == null && isEntirelyWithinTile()) {
+    if(!GRAB() && mirrorHolding != null && mirrorHolding.destTile == null) {
       mirrorHolding.holdingPlayer = null;
     }
 
@@ -145,7 +144,7 @@ class Character extends MovingElement {
         directionFacing = moveDirection;
       }
     } else {
-      if (GRAB()) {
+      if (GRAB() && mirrorHolding.destTile == null) {
         if (directionFacing.isHorizontal()) {
           if (LEFT() && mirrorHolding.canMoveInDirection(Direction.Left)) {
             mirrorHolding.moveDirection = Direction.Left;
