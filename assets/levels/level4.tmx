@@ -15,20 +15,26 @@
  <tileset firstgid="107" name="exit" tilewidth="128" tileheight="128" tilecount="1">
   <image source="../images/beta/gate_closed.png" width="128" height="128"/>
  </tileset>
+ <tileset firstgid="108" name="floors" tilewidth="128" tileheight="128" tilecount="4">
+  <image source="../images/beta/floor_sheet.png" width="512" height="128"/>
+ </tileset>
+ <tileset firstgid="112" name="holes" tilewidth="128" tileheight="128" tilecount="18">
+  <image source="../images/beta/hole_sheet.png" width="768" height="384"/>
+ </tileset>
  <layer name="Floor" width="12" height="12">
   <properties>
-   <property name="tileset" value="floorSheet"/>
+   <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJzNkNsKACAIQ0fq//9yBROWSNBbwsC7p4B3s6Wx5BQYW6lp/1awBvrBvEsejONyX+8qT5019HuSp8u7+Gmj8Gaf7leefE/Hon26v7Iazn/reH+wCQuTAMs=
+   eJzFkMEKwDAMQj30cxfz/7cxMGAdG+y0B1JIldgC3ymJOi+O0DJ/y9fmL5tNJv1PtDR4npLvSBj78l3AnmvLZOfpQfPT7ua+cO/t/uzaNife/+NPTpcdF/Y=
   </data>
  </layer>
  <layer name="Holes" width="12" height="12">
   <properties>
-   <property name="tileset" value="floorSheet"/>
+   <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYKAcsNFIPbo6QvpwybPhkGNDw8TaQ6y9+NST6tbBCgCBkABn
+   eJxjYKAclJOovoxMcwnZg8vcAiAuwiJeCsSFUIwsX0OU6xCglkT1IHtLcMjhcutgBQC0cwfB
   </data>
  </layer>
  <layer name="Walls" width="12" height="12">

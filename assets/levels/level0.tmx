@@ -3,32 +3,35 @@
  <tileset firstgid="1" name="Mirror" tilewidth="64" tileheight="64" tilecount="1">
   <image source="../images/alpha/mirror_1.png" width="64" height="64"/>
  </tileset>
- <tileset firstgid="2" name="floorSheet" tilewidth="64" tileheight="64" tilecount="5">
-  <image source="../images/alpha/floor_sheet.png" width="320" height="64"/>
- </tileset>
- <tileset firstgid="7" name="walls" tilewidth="128" tileheight="128" tilecount="50">
+ <tileset firstgid="2" name="walls" tilewidth="128" tileheight="128" tilecount="50">
   <image source="../images/beta/wallSheet.png" width="640" height="1280"/>
  </tileset>
- <tileset firstgid="57" name="lightOrbs" tilewidth="128" tileheight="128" tilecount="50">
+ <tileset firstgid="52" name="lightOrbs" tilewidth="128" tileheight="128" tilecount="50">
   <image source="../images/beta/lightSheet.png" width="640" height="1280"/>
  </tileset>
- <tileset firstgid="107" name="exit" tilewidth="128" tileheight="128" tilecount="1">
+ <tileset firstgid="102" name="exit" tilewidth="128" tileheight="128" tilecount="1">
   <image source="../images/beta/gate_closed.png" width="128" height="128"/>
+ </tileset>
+ <tileset firstgid="103" name="floors" tilewidth="128" tileheight="128" tilecount="4">
+  <image source="../images/beta/floor_sheet.png" width="512" height="128"/>
+ </tileset>
+ <tileset firstgid="107" name="holes" tilewidth="128" tileheight="128" tilecount="18">
+  <image source="../images/beta/hole_sheet.png" width="768" height="384"/>
  </tileset>
  <layer name="Floor" width="12" height="12">
   <properties>
-   <property name="tileset" value="floorSheet"/>
+   <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYCAPMAMxK5TNBOUz41HPhCTPAtXLRKT5zFC1+NSzIMkzQfWyEFCP7B5kPjbAiiRPjH9HCgAAlswAYw==
+   eJxjYCAPZEAxMjsdj/pMKGaAqktH0o9LPcw8mPmZuJWjuCeLCPXpUHXI6vG5H9m9mUSYP1IAAJcCDDc=
   </data>
  </layer>
  <layer name="Holes" width="12" height="12">
   <properties>
-   <property name="tileset" value="floorSheet"/>
+   <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBjcgG2Iqx/uAAAigAAZ
+   eJxjYBjcoIhE9YUkqi8nUX0pieqHOwAAbx4B0A==
   </data>
  </layer>
  <layer name="Walls" width="12" height="12">
@@ -36,7 +39,7 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZ2BgEARiHiiWQmKDsAAQs6NhfgYE0GFABbwE1IuRqB4dDAX1QkDMhwMLY1E/lDEAusAECw==
+   eJxjYmBg4AFidigWRWKDMDcQM6FhLgYEUGdABRwE1AuSqB4dDAX1vEDMiQPzYVE/lDEAiioB5Q==
   </data>
  </layer>
  <objectgroup name="Objects"/>
@@ -53,17 +56,17 @@
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="43" type="lightOrb" gid="57" x="256" y="256" width="128" height="128">
+  <object id="43" type="lightOrb" gid="52" x="256" y="256" width="128" height="128">
    <properties>
     <property name="direction" value="5"/>
    </properties>
   </object>
-  <object id="44" type="lightSwitch" gid="58" x="640" y="256" width="128" height="128"/>
+  <object id="44" type="lightSwitch" gid="53" x="640" y="256" width="128" height="128"/>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
   <object id="45" type="player_start" x="256" y="768" width="128" height="128"/>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="47" type="exit" gid="107" x="896" y="256" width="128" height="128"/>
+  <object id="47" type="exit" gid="102" x="896" y="256" width="128" height="128"/>
  </objectgroup>
 </map>
