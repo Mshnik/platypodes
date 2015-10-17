@@ -33,7 +33,7 @@
  </layer>
  <layer name="Walls" width="12" height="12">
   <properties>
-   <property name="tileset" value="wallSheet"/>
+   <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
    eJwTZGBg4CESCwAxPwNxgAWIeUlQz4BDvTgQ6wKxPJQvQUA9DIgRaT6p7iFHvQQWMXLNFwJiPiKxMBCz0xgDAOu1A4A=
@@ -89,7 +89,7 @@
   <object id="64" type="lightSwitch" gid="58" x="1152" y="384" width="128" height="128"/>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
-  <object id="65" type="playerStart" x="128" y="1024" width="128" height="128"/>
+  <object id="65" type="player_start" x="128" y="1024" width="128" height="128"/>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
   <object id="66" type="exit" gid="107" x="1280" y="256" width="128" height="128"/>
