@@ -10,7 +10,7 @@ import flixel.FlxG;
 class Character extends MovingElement {
 
   /** The Character's default move speed, when not interacting with anything */
-  @final private static var MOVE_SPEED = 300;
+  @final private static var MOVE_SPEED = 600;
 
   /** The clippng on the bounding box of the sprite, to make fitting though a one tile wide path easier */
   @final private static var BOUNDING_BOX_MARGIN = 5;
