@@ -12,11 +12,11 @@ class LightSprite extends FlxSprite implements Lightable{
   public function new(state : GameState, row : Int, col : Int, d : Direction) {
     super(col * state.level.tileWidth, row * state.level.tileHeight, d.isHorizontal() ? HORIZONTAL_SPRITE : VERTICAL_SPRITE);
     if(d.isHorizontal()) {
-      y += 17; //TODO - fix Hacky bullshit woooo!!
+      y += 34; //TODO - fix Hacky bullshit woooo!!
       if(col%2 == 1) flipX = true;
     }
     if(d.isVertical()) {
-      x += 15; //TODO - fix Hacky bullshit woooo!!
+      x += 30; //TODO - fix Hacky bullshit woooo!!
       if(col%2 == 1) flipY = true;
     }
     this.state = state;

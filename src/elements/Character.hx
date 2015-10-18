@@ -1,4 +1,5 @@
 package elements;
+import flixel.FlxObject;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.FlxG;
 
@@ -9,13 +10,16 @@ import flixel.FlxG;
 class Character extends MovingElement {
 
   /** The Character's default move speed, when not interacting with anything */
-  @final private static var MOVE_SPEED = 300;
-
-  /** The default sprite for the character. This will change to a set once direction facing sprites are added */
-  @final private static var DEFAULT_SPRITE = AssetPaths.vampire__png;
+  @final private static var MOVE_SPEED = 600;
 
   /** The clippng on the bounding box of the sprite, to make fitting though a one tile wide path easier */
   @final private static var BOUNDING_BOX_MARGIN = 5;
+
+  /** Size of each character sprite, in px */
+  @final private static var CHARACTER_SPRITE_SIZE = 128;
+
+  /** Animated character sprite sheet location */
+  @final private static var CHARACTER_SPRITE_SHEET = AssetPaths.player_sheet__png;
 
   /** The custom property on the Character object in Tiled maps that denotes the intial direction facing.
    * Valid values are 1 (Up), 3 (Right), 5 (Down), 7 (Left).
@@ -26,25 +30,25 @@ class Character extends MovingElement {
   @final private static var HIGHLIGHT_COLOR = 0x00000000; //Change to a value to see square character occupies
 
   /** Return true iff the up key is pressed */
-  public static var UP = function() : Bool { return FlxG.keys.pressed.UP; };
+  public static var UP_PRESSED = function() : Bool { return FlxG.keys.pressed.UP; };
 
   /** Return true when the up key is pressed (once per press) */
   public static var UP_SINGLE = function() : Bool { return FlxG.keys.justPressed.UP; };
 
   /** Return true iff the down key is pressed */
-  public static var DOWN = function() : Bool { return FlxG.keys.pressed.DOWN; };
+  public static var DOWN_PRESSED = function() : Bool { return FlxG.keys.pressed.DOWN; };
 
   /** Return true when the up key is pressed (once per press) */
   public static var DOWN_SINGLE = function() : Bool { return FlxG.keys.justPressed.DOWN; };
 
   /** Return true iff the right key is pressed */
-  public static var RIGHT = function() : Bool { return FlxG.keys.pressed.RIGHT; };
+  public static var RIGHT_PRESSED = function() : Bool { return FlxG.keys.pressed.RIGHT; };
 
   /** Return true when the up key is pressed (once per press) */
   public static var RIGHT_SINGLE = function() : Bool { return FlxG.keys.justPressed.RIGHT; };
 
   /** Return true iff the left key is pressed */
-  public static var LEFT = function() : Bool { return FlxG.keys.pressed.LEFT; };
+  public static var LEFT_PRESSED = function() : Bool { return FlxG.keys.pressed.LEFT; };
 
   /** Return true when the up key is pressed (once per press) */
   public static var LEFT_SINGLE = function() : Bool { return FlxG.keys.justPressed.LEFT; };
@@ -63,9 +67,14 @@ class Character extends MovingElement {
 
   /** Constructs a new character, belonging to the given state and represented by the given TiledObject */
   public function new(state : GameState, o : TiledObject) {
-    super(state, o, false, MOVE_SPEED, DEFAULT_SPRITE);
+    super(state, o, false, MOVE_SPEED);
 
     setHighlightColor(HIGHLIGHT_COLOR);
+
+    //Sprite loading and animating
+    loadGraphic(CHARACTER_SPRITE_SHEET, true, CHARACTER_SPRITE_SIZE, CHARACTER_SPRITE_SIZE);
+    setFacingFlip(FlxObject.RIGHT, false, false);
+    setFacingFlip(FlxObject.LEFT, true, false);
 
     //Make bounding box slightly smaller than sprite for ease of movement
     this.offset.x += BOUNDING_BOX_MARGIN;
@@ -159,16 +168,16 @@ class Character extends MovingElement {
     if (mirrorHolding == null) {
       moveDirection = Direction.None;
 
-      if(UP()) {
+      if(UP_PRESSED()) {
         moveDirection = moveDirection.addDirec(Direction.Up);
       }
-      if(DOWN()) {
+      if(DOWN_PRESSED()) {
         moveDirection = moveDirection.addDirec(Direction.Down);
       }
-      if(RIGHT()) {
+      if(RIGHT_PRESSED()) {
         moveDirection = moveDirection.addDirec(Direction.Right);
       }
-      if(LEFT()) {
+      if(LEFT_PRESSED()) {
         moveDirection = moveDirection.addDirec(Direction.Left);
       }
 
@@ -178,15 +187,15 @@ class Character extends MovingElement {
     } else {
       if (GRAB() && mirrorHolding.destTile == null) {
         if (directionFacing.isHorizontal()) {
-          if (LEFT() && mirrorHolding.canMoveInDirection(Direction.Left)) {
+          if (LEFT_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Left)) {
             mirrorHolding.moveDirection = Direction.Left;
-          } else if (RIGHT() && mirrorHolding.canMoveInDirection(Direction.Right)) {
+          } else if (RIGHT_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Right)) {
             mirrorHolding.moveDirection = Direction.Right;
           }
         } else if (directionFacing.isVertical()) {
-          if (UP() && mirrorHolding.canMoveInDirection(Direction.Up)) {
+          if (UP_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Up)) {
             mirrorHolding.moveDirection = Direction.Up;
-          } else if (DOWN() && mirrorHolding.canMoveInDirection(Direction.Down)) {
+          } else if (DOWN_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Down)) {
             mirrorHolding.moveDirection = Direction.Down;
           }
         }

@@ -80,7 +80,7 @@ class TiledLevel extends TiledMap {
       tilemap.heightInTiles = height;
       var fixedArray = tileLayer.tileArray.map(function(i) {
         var v = tileSet.fromGid(i);
-        return v >= 0 ? v : -1;
+        return v > 0 ? v : -1;
       });
       tilemap.loadMap(fixedArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, 0, 1, 1, 1);
 

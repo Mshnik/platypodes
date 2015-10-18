@@ -24,7 +24,7 @@ class Mirror extends MovingElement implements Lightable{
   private static inline var LIT_SPRITE_TWO_SIDED = ""; //TODO
 
   /** The speed mirrors move with when being pushed or pulled by a character */
-  @final private static var MOVE_SPEED = 200;
+  @final private static var MOVE_SPEED = 400;
 
   /** The number of sides this mirror has that reflect light. Must be 1 or 2 */
   @final public var sides : Int;
@@ -169,11 +169,9 @@ class Mirror extends MovingElement implements Lightable{
     if(holdingPlayer == p) return p;
 
     if(holdingPlayer != null) {
-      trace("Player released");
       holdingPlayer.mirrorHolding = null;
     }
     if(p != null) {
-      trace("Player grabbed");
       p.mirrorHolding = this;
     }
     return holdingPlayer = p;
