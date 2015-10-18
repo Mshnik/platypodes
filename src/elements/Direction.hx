@@ -1,4 +1,5 @@
 package elements;
+import flixel.FlxObject;
 import flixel.util.FlxPoint;
 
 /**
@@ -15,15 +16,25 @@ import flixel.util.FlxPoint;
  **/
 class Direction extends FlxPoint {
 
-  @final public static var None : Direction = new Direction(0, 0, 0, "None");
-  @final public static var Up : Direction = new Direction(0, -1, 1, "Up");
-  @final public static var Up_Right : Direction= new Direction(1, -1, 2, "Up_Right");
-  @final public static var Right : Direction = new Direction(1, 0, 3, "Right");
-  @final public static var Down_Right : Direction = new Direction(1, 1, 4, "Down_Right");
-  @final public static var Down : Direction = new Direction(0, 1, 5, "Down");
-  @final public static var Down_Left : Direction = new Direction(-1, 1, 6, "Down_Left");
-  @final public static var Left : Direction = new Direction(-1, 0, 7, "Left");
-  @final public static var Up_Left : Direction = new Direction(-1, -1, 8, "Up_Left");
+  private static inline var NONE_VAL = 0x0000;
+  private static inline var LEFT_VAL = 0x0001; //FlxObject.LEFT;
+  private static inline var RIGHT_VAL = 0x0010; //FlxObject.RIGHT;
+  private static inline var UP_VAL = 0x0100; //FlxObject.UP;
+  private static inline var DOWN_VAL = 0x1000; //FlxObject.DOWN;
+  private static inline var UP_LEFT_VAL = 0x0101;
+  private static inline var UP_RIGHT_VAL = 0x0110;
+  private static inline var DOWN_LEFT_VAL = 0x1001;
+  private static inline var DOWN_RIGHT_VAL = 0x1010;
+
+  @final public static var None : Direction = new Direction(0, 0, NONE_VAL, "None");
+  @final public static var Up : Direction = new Direction(0, -1, UP_VAL, "Up");
+  @final public static var Up_Right : Direction= new Direction(1, -1, UP_RIGHT_VAL, "Up_Right");
+  @final public static var Right : Direction = new Direction(1, 0, RIGHT_VAL, "Right");
+  @final public static var Down_Right : Direction = new Direction(1, 1, DOWN_RIGHT_VAL, "Down_Right");
+  @final public static var Down : Direction = new Direction(0, 1, DOWN_VAL, "Down");
+  @final public static var Down_Left : Direction = new Direction(-1, 1, DOWN_LEFT_VAL, "Down_Left");
+  @final public static var Left : Direction = new Direction(-1, 0, LEFT_VAL, "Left");
+  @final public static var Up_Left : Direction = new Direction(-1, -1, UP_LEFT_VAL, "Up_Left");
 
   /**
    * True iff the x and y coordinates of this direction can no longer be changed.
@@ -31,7 +42,9 @@ class Direction extends FlxPoint {
    **/
   @final private var lockComponents : Bool;
 
-  /** The simple int value that represents this direction */
+  /** The simple int value that represents this direction.
+   * Uses the constants FlxObject.UP, FlxObject.LEFT, FlxObject.RIGHT, FlxObject.DOWN.
+   **/
   @final public var simpleDirec(default, null) : Int;
 
   /** The simple string value that represents this direction */
@@ -130,28 +143,21 @@ class Direction extends FlxPoint {
   }
 
   /** Returns the direction corresponding to the given simpleDirection value.
-   * 0 -> None
-   * 1 -> Up
-   * 2 -> Up_Right
-   * 3 -> Right
-   * 4 -> Down_Right
-   * 5 -> Down
-   * 6 -> Down_Left
-   * 7 -> Left
-   * 8 -> Up_Left
+   * Should be a combination of the values FlxObject.LEFT, FlxObject.RIGHT, FlxObject.UP, FlxObject.DOWN.
+   * 0 will return NONE. An unrecognized value will throw.
    * else -> Throws exception
    **/
   public static function fromSimpleDirection(i : Int) : Direction {
     switch i{
-      case 0: return Direction.None;
-      case 1: return Direction.Up;
-      case 2: return Direction.Up_Right;
-      case 3: return Direction.Right;
-      case 4: return Direction.Down_Right;
-      case 5: return Direction.Down;
-      case 6: return Direction.Down_Left;
-      case 7: return Direction.Left;
-      case 8: return Direction.Up_Left;
+      case NONE_VAL: return Direction.None;
+      case UP_VAL: return Direction.Up;
+      case UP_RIGHT_VAL: return Direction.Up_Right;
+      case RIGHT_VAL: return Direction.Right;
+      case DOWN_RIGHT_VAL: return Direction.Down_Right;
+      case DOWN_VAL: return Direction.Down;
+      case DOWN_LEFT_VAL: return Direction.Down_Left;
+      case LEFT_VAL: return Direction.Left;
+      case UP_LEFT_VAL: return Direction.Up_Left;
       default: throw "Can't get direction for simpleVal " + Std.string(i);
     }
   }
