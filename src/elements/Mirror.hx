@@ -169,11 +169,9 @@ class Mirror extends MovingElement implements Lightable{
     if(holdingPlayer == p) return p;
 
     if(holdingPlayer != null) {
-      trace("Player released");
       holdingPlayer.mirrorHolding = null;
     }
     if(p != null) {
-      trace("Player grabbed");
       p.mirrorHolding = this;
     }
     return holdingPlayer = p;
