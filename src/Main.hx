@@ -70,4 +70,13 @@ class Main extends Sprite
 		var g = new FlxGame(gameWidth, gameHeight, initialState, zoom, updateFrameRate, drawFrameRate, skipSplash, startFullscreen);
 		addChild(g);
 	}
+
+  /** A helper function - creates a range as an array */
+  public static function rangeToArray(min : Int, max : Int) : Array<Int> {
+    var arr = new Array<Int>();
+    for(i in min...max) {
+      arr.push(i);
+    }
+    return arr;
+  }
 }

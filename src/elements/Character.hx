@@ -21,6 +21,15 @@ class Character extends MovingElement {
   /** Animated character sprite sheet location */
   @final private static var CHARACTER_SPRITE_SHEET = AssetPaths.player_sheet__png;
 
+  /** The walking left or right animation key */
+  public inline static var WALK_LEFT_RIGHT_KEY = "Left-Right";
+
+  /** The walking down animation key */
+  public inline static var WALK_DOWN_KEY = "Down";
+
+  /** The death animation key */
+  public inline static var DEATH_ANIMATION_KEY = "Die";
+
   /** The custom property on the Character object in Tiled maps that denotes the intial direction facing.
    * Valid values are 1 (Up), 3 (Right), 5 (Down), 7 (Left).
    **/
@@ -75,6 +84,12 @@ class Character extends MovingElement {
     loadGraphic(CHARACTER_SPRITE_SHEET, true, CHARACTER_SPRITE_SIZE, CHARACTER_SPRITE_SIZE);
     setFacingFlip(FlxObject.RIGHT, false, false);
     setFacingFlip(FlxObject.LEFT, true, false);
+    animation.add(WALK_LEFT_RIGHT_KEY, [8,9,10,11], 20, false);
+    animation.add(WALK_DOWN_KEY, [0,1,2,3], 20, false);
+
+    var arr : Array<Int> = Main.rangeToArray(32, 40);
+    arr.push(4);
+    animation.add(DEATH_ANIMATION_KEY, arr, 15, false);
 
     //Make bounding box slightly smaller than sprite for ease of movement
     this.offset.x += BOUNDING_BOX_MARGIN;

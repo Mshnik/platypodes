@@ -269,7 +269,7 @@ class GameState extends FlxState
 //  }
 
   public function killPlayer() {
-    player.kill();
+    player.animation.play(Character.DEATH_ANIMATION_KEY);
     deadText = new FlxText(0, 0, 500, "You died - press R", 30);
     deadText.color = 0xFFFF0022;
     add(deadText);
