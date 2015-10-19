@@ -100,7 +100,7 @@ class Character extends MovingElement {
     animation.add(WALK_DOWN_KEY, [0,1,2,3], 20, false);
     animation.add(GRAB_LEFT_RIGHT_KEY, [24,25,26,27], 20, false);
     animation.add(GRAB_DOWN_KEY, [16,17,18,19], 20, false);
-    animation.add(PUSH_PULL_DOWN, [20,21,22,23], 20, false);
+    animation.add(PUSH_PULL_DOWN_KEY, [20,21,22,23], 20, false);
 
     var arr : Array<Int> = Main.rangeToArray(32, 40);
     arr.push(4);
