@@ -15,21 +15,15 @@ import flixel.group.FlxGroup;
 import flash.Lib;
 
 
-class GameState extends FlxState
-{
+class GameState extends FlxState {
 
+  private static inline var INITAL_ZOOM_PROPERTY = "initial_zoom";
   private static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
   public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
 
-  //TODO - fix zooming
-  private static var ZOOM_IN = function() : Bool { return false; };
-  private static var ZOOM_OUT = function() : Bool { return false;  };
-  private static inline var ZOOM_INC : Float = 0.1;
-
-  static var LEVEL_MIN_X;
-  static var LEVEL_MAX_X;
-  static var LEVEL_MIN_Y;
-  static var LEVEL_MAX_Y;
+  private static var ZOOM_IN = function() : Bool { return FlxG.keys.justPressed.ONE; };
+  private static var ZOOM_OUT = function() : Bool { return FlxG.keys.justPressed.TWO;  };
+  private static inline var ZOOM_MULT : Float = 1.1;
 
   @final private var levelPath : Dynamic;
   public var level:TiledLevel;
@@ -55,11 +49,6 @@ class GameState extends FlxState
   {
     FlxG.mouse.visible = false;
     won = false;
-
-    LEVEL_MIN_X = 0;
-    LEVEL_MAX_X = Lib.current.stage.stageWidth;
-    LEVEL_MIN_Y = 0;
-    LEVEL_MAX_Y = Lib.current.stage.stageHeight;
 
     super.create();
 
@@ -160,9 +149,9 @@ class GameState extends FlxState
     } else if(RESET()) {
       FlxG.switchState(new GameState(levelPath));
     } else if (ZOOM_IN()) {
-      //setZoom(FlxG.camera.zoom + ZOOM_INC);
+      setZoom(FlxG.camera.zoom * ZOOM_MULT);
     } else if (ZOOM_OUT()) {
-      //setZoom(FlxG.camera.zoom - ZOOM_INC);
+      setZoom(FlxG.camera.zoom / ZOOM_MULT);
     }
 
     super.update();
@@ -215,8 +204,15 @@ class GameState extends FlxState
     switch (o.type.toLowerCase()) {
       case "player_start":
         var player = new Character(this, o);
-        FlxG.camera.follow(player, FlxCamera.STYLE_TOPDOWN, 1);
         this.player = player;
+        FlxG.camera.follow(player, FlxCamera.STYLE_NO_DEAD_ZONE, 1);
+        var initialZoom = o.custom.get(INITAL_ZOOM_PROPERTY);
+        if (initialZoom == null) {
+          trace(INITAL_ZOOM_PROPERTY + " unset for this level");
+          setZoom(FlxG.camera.zoom);
+        } else {
+          setZoom(Std.parseFloat(initialZoom));
+        }
 
       case "mirror":
         var mirror = new Mirror(this, o);
@@ -241,33 +237,17 @@ class GameState extends FlxState
         trace("Got unknown object " + o.type.toLowerCase());
     }
   }
-//
-//  private function setZoom(zoom:Float)
-//  {
-//
-//    zoom = Math.round(zoom * 10) / 10; // corrects float precision problems.
-//
-//    FlxG.camera.zoom = zoom;
-//
-//    var zoomDistDiffY;
-//    var zoomDistDiffX;
-//
-//
-//    if (zoom <= 1) {
-//      zoomDistDiffX = Math.abs((LEVEL_MIN_X + LEVEL_MAX_X) - (LEVEL_MIN_X + LEVEL_MAX_X) / 1 + (1 - zoom));
-//      zoomDistDiffY = Math.abs((LEVEL_MIN_Y + LEVEL_MAX_Y) - (LEVEL_MIN_Y + LEVEL_MAX_Y) / 1 + (1 - zoom));
-//    } else {
-//      zoomDistDiffX = Math.abs((LEVEL_MIN_X + LEVEL_MAX_X) - (LEVEL_MIN_X + LEVEL_MAX_X) / zoom);
-//      zoomDistDiffY = Math.abs((LEVEL_MIN_Y + LEVEL_MAX_Y) - (LEVEL_MIN_Y + LEVEL_MAX_Y) / zoom);
-//    }
-//
-//    FlxG.camera.setBounds(LEVEL_MIN_X - zoomDistDiffX,
-//    LEVEL_MIN_Y - zoomDistDiffY,
-//    (LEVEL_MAX_X + Math.abs(LEVEL_MIN_X) + zoomDistDiffX * 2),
-//    (LEVEL_MAX_Y + Math.abs(LEVEL_MIN_Y) + zoomDistDiffY * 2),
-//    false);
-//
-//  }
+
+  private function setZoom(zoom:Float) {
+    //Check for min and max zoom
+    if (zoom < 0.25) zoom = 0.25;
+    if (zoom > 1) zoom = 1;
+
+    FlxG.camera.zoom = zoom;
+    FlxG.camera.setSize(Std.int(Lib.current.stage.stageWidth / zoom), Std.int(Lib.current.stage.stageHeight / zoom));
+    level.updateBuffers();
+    FlxG.camera.focusOn(player.getMidpoint(null));
+  }
 
   public function killPlayer() {
     player.kill();
