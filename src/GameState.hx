@@ -70,6 +70,7 @@ class GameState extends FlxState
     add(level.floorTiles);
     add(level.holeTiles);
     add(level.wallTiles);
+    add(level.tutorialTiles);
 
     mirrors = new FlxTypedGroup<Mirror>();
     lightBulbs = new FlxTypedGroup<LightBulb>();

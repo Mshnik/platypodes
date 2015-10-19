@@ -18,6 +18,7 @@ class TiledLevel extends TiledMap {
   @final public inline static var FLOOR_LAYER_NAME = "Floor";
   @final public inline static var HOLE_LAYER_NAME = "Holes";
   @final public inline static var WALL_LAYER_NAME = "Walls";
+  @final public inline static var TUTORIAL_LAYER_NAME = "Tutorial Images";
 
   public var floorTiles : FlxGroup;
   private var floorMap : FlxTilemap;
@@ -25,6 +26,7 @@ class TiledLevel extends TiledMap {
   private var holeMap : FlxTilemap;
   public var wallTiles : FlxGroup;
   private var wallMap : FlxTilemap;
+  public var tutorialTiles : FlxGroup;
 
   /** For non -1 gids, upper 4 bits are flags for flipping. Remove those bits for regular Gid */
   public static function fixGid(gid : Int) : Int {
@@ -51,6 +53,7 @@ class TiledLevel extends TiledMap {
     floorTiles = new FlxGroup();
     holeTiles = new FlxGroup();
     wallTiles = new FlxGroup();
+    tutorialTiles = new FlxGroup();
 
     FlxG.camera.setBounds(0, 0, fullWidth, fullHeight, true);
 
@@ -76,12 +79,13 @@ class TiledLevel extends TiledMap {
       var processedPath = AssetPaths.IMAGE_ROOT + imagePath.file + "." + imagePath.ext;
 
       var tilemap:FlxTilemap = new FlxTilemap();
-      tilemap.widthInTiles = width;
-      tilemap.heightInTiles = height;
       var fixedArray = tileLayer.tileArray.map(function(i) {
         var v = tileSet.fromGid(i);
         return v > 0 ? v : -1;
       });
+
+      tilemap.widthInTiles = width;
+      tilemap.heightInTiles = height;
       tilemap.loadMap(fixedArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, 0, 1, 1, 1);
 
       switch(tileLayer.name) {
@@ -96,6 +100,9 @@ class TiledLevel extends TiledMap {
         case WALL_LAYER_NAME:
           wallTiles.add(tilemap);
           wallMap = tilemap;
+
+        case TUTORIAL_LAYER_NAME:
+          tutorialTiles.add(tilemap);
 
         default:
           throw "Unexpected tilelayer name " + tileLayer.name;
