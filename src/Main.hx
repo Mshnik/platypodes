@@ -11,8 +11,8 @@ import flixel.FlxState;
 
 class Main extends Sprite 
 {
-	public static var gameWidth:Int = 2048; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
-	public static var gameHeight:Int = 1024; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
+	public static var gameWidth:Int = 640; // Initial Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
+	public static var gameHeight:Int = 320; // Initial Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	var initialState:Class<FlxState> = LevelSelectMenuState; // The FlxState the game starts with.
 	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
 	var updateFrameRate:Int = 60; // How many frames per second the game should run at.
