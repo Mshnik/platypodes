@@ -18,8 +18,8 @@
  <tileset firstgid="124" name="mirrors" tilewidth="128" tileheight="128" tilecount="1">
   <image source="../images/beta/mirror_1.png" width="128" height="128"/>
  </tileset>
- <tileset firstgid="125" name="tutorialImages" tilewidth="512" tileheight="256" tilecount="8">
-  <image source="../images/beta/tutorials/tutorialSheet.png" width="512" height="2048"/>
+ <tileset firstgid="125" name="tutorialImages" tilewidth="128" tileheight="128" tilecount="64">
+  <image source="../images/beta/tutorialSheet.png" width="512" height="2048"/>
  </tileset>
  <layer name="Floor" width="12" height="12">
   <properties>
@@ -46,13 +46,20 @@
   </data>
  </layer>
  <layer name="Tutorial Images" width="12" height="12">
+  <properties>
+   <property name="tileset" value="tutorialImages"/>
+  </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFpICGgXbAIAMAikAAgQ==
+   eJxjYBjZYCoQTwPi6UA8gwj1M4F4FhDPBuI5NHTXUAEAZusExQ==
   </data>
  </layer>
  <objectgroup name="Objects"/>
  <objectgroup name="Mirrors">
-  <object id="50" gid="124" x="256" y="512" width="128" height="128"/>
+  <object id="50" type="mirror" gid="124" x="256" y="512" width="128" height="128">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Light">
   <object id="43" type="lightOrb" gid="51" x="256" y="256" width="128" height="128">

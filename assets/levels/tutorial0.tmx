@@ -18,8 +18,8 @@
  <tileset firstgid="124" name="mirrors" tilewidth="128" tileheight="128" tilecount="1">
   <image source="../images/beta/mirror_1.png" width="128" height="128"/>
  </tileset>
- <tileset firstgid="125" name="tutorialImages" tilewidth="512" tileheight="256" tilecount="8">
-  <image source="../images/beta/tutorials/tutorialSheet.png" width="512" height="2048"/>
+ <tileset firstgid="125" name="tutorialImages" tilewidth="128" tileheight="128" tilecount="64">
+  <image source="../images/beta/tutorialSheet.png" width="512" height="2048"/>
  </tileset>
  <layer name="Floor" width="12" height="12">
   <properties>
@@ -46,8 +46,11 @@
   </data>
  </layer>
  <layer name="Tutorial Images" width="12" height="12">
+  <properties>
+   <property name="tileset" value="tutorialImages"/>
+  </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo4B8AAACQAAB
+   eJxjYBi8oBaI64C4HogbiFDfCMRNQNwMxC20c9YoQAIAHwoEBQ==
   </data>
  </layer>
  <objectgroup name="Objects"/>
@@ -55,10 +58,10 @@
  <objectgroup name="Light">
   <object id="43" type="lightOrb" gid="51" x="256" y="256" width="128" height="128">
    <properties>
-    <property name="direction" value="5"/>
+    <property name="direction" value="3"/>
    </properties>
   </object>
-  <object id="44" type="lightSwitch" gid="52" x="894" y="252" width="128" height="128"/>
+  <object id="44" type="lightSwitch" gid="52" x="896" y="256" width="128" height="128"/>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
   <object id="45" type="player_start" x="256" y="896" width="128" height="128"/>

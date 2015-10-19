@@ -18,8 +18,48 @@
  <tileset firstgid="124" name="mirrors" tilewidth="128" tileheight="128" tilecount="1">
   <image source="../images/beta/mirror_1.png" width="128" height="128"/>
  </tileset>
- <tileset firstgid="125" name="tutorialImages" tilewidth="512" tileheight="256" tilecount="8">
-  <image source="../images/beta/tutorials/tutorialSheet.png" width="512" height="2048"/>
+ <tileset firstgid="125" name="tutorialImages" tilewidth="128" tileheight="128" tilecount="64">
+  <image source="../images/beta/tutorialSheet.png" width="512" height="2048"/>
+  <tile id="16">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </tile>
+  <tile id="17">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </tile>
+  <tile id="18">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </tile>
+  <tile id="20">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </tile>
+  <tile id="21">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </tile>
+  <tile id="23">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="Floor" width="12" height="12">
   <properties>
@@ -46,13 +86,20 @@
   </data>
  </layer>
  <layer name="Tutorial Images" width="12" height="12">
+  <properties>
+   <property name="tileset" value="tutorialImages"/>
+  </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFtAT1A+0AGgMAcWAAgA==
+   eJxjYBgFpIBeIO4D4n4gnkCE+olAPAmIJwPxFBq6a6AAAEWcBIU=
   </data>
  </layer>
  <objectgroup name="Objects"/>
  <objectgroup name="Mirrors">
-  <object id="50" gid="2147483772" x="384" y="640" width="128" height="128"/>
+  <object id="50" type="mirror" gid="2147483772" x="384" y="640" width="128" height="128">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Light">
   <object id="43" type="lightOrb" gid="51" x="896" y="640" width="128" height="128">
