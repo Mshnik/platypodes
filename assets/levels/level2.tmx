@@ -39,25 +39,25 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBg4AZiNhyYC4gZ0TAnAypQQ2KzD0H1AiSqZyCgngeIOXBgXizqhzIGAKkSAds=
+   eJxjZGBg4AZiNhyYC4gZ0TAnA27APkDq+aHygkCsjoQHwj08QMyBA/NiUT+UMQBlcgHI
   </data>
  </layer>
  <objectgroup name="Objects"/>
  <objectgroup name="Mirrors">
-  <object id="50" gid="2147483772" x="620" y="896" width="128" height="128"/>
+  <object id="50" gid="124" x="378" y="514" width="128" height="128"/>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="43" type="lightOrb" gid="51" x="752" y="250" width="128" height="128">
+  <object id="43" type="lightOrb" gid="51" x="386" y="250" width="128" height="128">
    <properties>
     <property name="direction" value="5"/>
    </properties>
   </object>
-  <object id="44" type="lightSwitch" gid="52" x="896" y="894" width="128" height="128"/>
+  <object id="44" type="lightSwitch" gid="52" x="896" y="502" width="128" height="128"/>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
   <object id="45" type="player_start" x="256" y="768" width="128" height="128"/>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="47" type="exit" gid="101" x="252" y="254" width="128" height="128"/>
+  <object id="47" type="exit" gid="101" x="892" y="892" width="128" height="128"/>
  </objectgroup>
 </map>
