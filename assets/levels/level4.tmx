@@ -86,7 +86,7 @@
  <objectgroup name="Light">
   <object id="63" type="lightOrb" gid="51" x="896" y="1792" width="128" height="128">
    <properties>
-    <property name="direction" value="3"/>
+    <property name="direction" value="16"/>
    </properties>
   </object>
   <object id="64" type="lightSwitch" gid="52" x="1920" y="1152" width="128" height="128"/>
