@@ -25,11 +25,6 @@ class GameState extends FlxState
   private static var ZOOM_OUT = function() : Bool { return FlxG.keys.justPressed.TWO;  };
   private static inline var ZOOM_MULT : Float = 1.1;
 
-  static var LEVEL_MIN_X;
-  static var LEVEL_MAX_X;
-  static var LEVEL_MIN_Y;
-  static var LEVEL_MAX_Y;
-
   @final private var levelPath : Dynamic;
   public var level:TiledLevel;
 
@@ -54,11 +49,6 @@ class GameState extends FlxState
   {
     FlxG.mouse.visible = false;
     won = false;
-
-    LEVEL_MIN_X = 0;
-    LEVEL_MAX_X = Lib.current.stage.stageWidth;
-    LEVEL_MIN_Y = 0;
-    LEVEL_MAX_Y = Lib.current.stage.stageHeight;
 
     super.create();
 
@@ -88,8 +78,7 @@ class GameState extends FlxState
     add(lightSwitches);
     add(player);
 
-    trace("Camera Width:" + FlxG.camera.width + ", Game width:" + FlxG.width +", Lib width:" + Lib.current.stage.stageWidth);
-    trace("Camera height:" + FlxG.camera.height + ", Game height:" + FlxG.height +", Lib height" + Lib.current.stage.stageHeight);
+    setZoom(FlxG.camera.zoom);
   }
 
   /** Returns a rectangle representing the given tile */
@@ -245,7 +234,6 @@ class GameState extends FlxState
   }
 
   private function setZoom(zoom:Float) {
-
     //Check for min and max zoom
 
     FlxG.camera.zoom = zoom;
