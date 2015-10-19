@@ -13,7 +13,8 @@ class Character extends MovingElement {
   @final private static var MOVE_SPEED = 600;
 
   /** The clippng on the bounding box of the sprite, to make fitting though a one tile wide path easier */
-  @final private static var BOUNDING_BOX_MARGIN = 5;
+  @final private static inline var BOUNDING_BOX_MARGIN_X = 30;
+  @final private static inline var BOUNDING_BOX_MARGIN_Y = 5;
 
   /** Size of each character sprite, in px */
   @final private static var CHARACTER_SPRITE_SIZE = 128;
@@ -117,10 +118,12 @@ class Character extends MovingElement {
     animation.add(DEATH_ANIMATION_KEY, arr, 15, false);
 
     //Make bounding box slightly smaller than sprite for ease of movement
-    this.offset.x += BOUNDING_BOX_MARGIN;
-    this.offset.y += BOUNDING_BOX_MARGIN;
-    this.width -= 2 * BOUNDING_BOX_MARGIN;
-    this.height -= 2 * BOUNDING_BOX_MARGIN;
+    this.offset.x += BOUNDING_BOX_MARGIN_X;
+    this.offset.y += BOUNDING_BOX_MARGIN_Y;
+    this.x += BOUNDING_BOX_MARGIN_X;
+    this.y += BOUNDING_BOX_MARGIN_Y;
+    this.width -= 2 * BOUNDING_BOX_MARGIN_X;
+    this.height -= 2 * BOUNDING_BOX_MARGIN_Y;
 
     var d = o.custom.get(INITIAL_DIRECTION_FACING_PROPERTY);
     if (d == null) {
