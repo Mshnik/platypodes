@@ -26,6 +26,12 @@ class Character extends MovingElement {
 
   /** The walking down animation key */
   public inline static var WALK_DOWN_KEY = "Down";
+  
+  /** The grab left or right animation key */
+  public inline static var GRAB_LEFT_RIGHT_KEY = "Grab Left-Right";
+  
+  /** The grab down animation key */
+  public inline static var GRAB_DOWN_KEY = "Grab Down";
 
   /** The death animation key */
   public inline static var DEATH_ANIMATION_KEY = "Die";
@@ -86,6 +92,8 @@ class Character extends MovingElement {
     setFacingFlip(FlxObject.LEFT, true, false);
     animation.add(WALK_LEFT_RIGHT_KEY, [8,9,10,11], 20, false);
     animation.add(WALK_DOWN_KEY, [0,1,2,3], 20, false);
+    animation.add(GRAB_LEFT_RIGHT_KEY, [24,25,26,27], 20, false);
+    animation.add(GRAB_DOWN_KEY, [16,17,18,19], 20, false);
 
     var arr : Array<Int> = Main.rangeToArray(32, 40);
     arr.push(4);
