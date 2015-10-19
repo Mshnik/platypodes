@@ -75,7 +75,7 @@
   </properties>
   <object id="60" type="player_start" x="1408" y="1918" width="128" height="128">
    <properties>
-    <property name="initial_zoom" value="0.33"/>
+    <property name="initial_zoom" value="0.5"/>
    </properties>
   </object>
  </objectgroup>
