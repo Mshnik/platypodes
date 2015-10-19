@@ -26,7 +26,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYCAPpENxBhI7DY/6DCScBsXpBNSD1GSi2UXIPZlIevCpRzYbRuNzP8y9yH7GZ/5IAQAl1g6J
+   eJxjYKAMZABxOhSnEak+DYrTybCLlurxAZh70xkQfqam+UMVAADSAwZz
   </data>
  </layer>
  <layer name="Holes" width="12" height="12">
@@ -34,7 +34,7 @@
    <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYKAMFJKovoBE9WWDzPwSEtUPdwAAHvwCsg==
+   eJxjYKAMFJKovoBC+2gJiPFLOc1dMbQAALXCAco=
   </data>
  </layer>
  <layer name="Walls" width="12" height="12">
@@ -42,12 +42,12 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBg4AZiNhyYC4gZ0TAnA27APqqegQeIOXBgXizqhzIGAJJjATM=
+   eJxjZGBgYETC3EDMhoS50OTRMScDKmDHogbZTEUgVgdibSgtTISZIKCGx3xS1YtB7UbGUiSaj8+/PEDMgQPzYlE/lDEAH5QC6g==
   </data>
  </layer>
  <layer name="TutorialImages" width="12" height="12">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFQxXUDrQDgAAAQrQAfg==
+   eJxjYBgeoHagHTBCAQC52AB+
   </data>
  </layer>
  <objectgroup name="Objects"/>
@@ -64,6 +64,6 @@
   <object id="45" type="player_start" x="256" y="766" width="128" height="128"/>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="47" type="exit" gid="101" x="892" y="892" width="128" height="128"/>
+  <object id="47" type="exit" gid="101" x="896" y="512" width="128" height="128"/>
  </objectgroup>
 </map>

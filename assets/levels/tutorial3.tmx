@@ -26,7 +26,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYCAPpENxBhI7DY/6DCScBsXpBNSD1GSi2UXIPZlIevCpRzYbRuNzP8y9yH7GZ/5IAQAl1g6J
+   eJxjYCAPpENxBhI7jUi9aVCcjkdNBg67qAVA9meSqB6fe9EBKWoZoG7JZEANG2r6l1YAAHkPCaw=
   </data>
  </layer>
  <layer name="Holes" width="12" height="12">
@@ -34,7 +34,7 @@
    <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo4B8AAACQAAB
+   eJxjYKAPyALibCDOIUFPHhDnEqm2kGQXjQJqAABY2AKO
   </data>
  </layer>
  <layer name="Walls" width="12" height="12">
@@ -42,25 +42,30 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBg4AZiNhyYC4gZ0TAnAypQQ2KzD0H1AiSqZyCgngeIOXBgXizqhzIGAKkSAds=
+   eJxjZGBg4AZiNhyYC4gZ0TAnA27APoDqJYBYHQ0L41GvRqL5pKoXJ9E9xPqXB4g5cGBeLOppiQGS1QMO
+  </data>
+ </layer>
+ <layer name="Tutorial Images" width="12" height="12">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFpICGgXbAIAMAikAAgQ==
   </data>
  </layer>
  <objectgroup name="Objects"/>
  <objectgroup name="Mirrors">
-  <object id="50" gid="2147483772" x="640" y="896" width="128" height="128"/>
+  <object id="50" gid="124" x="256" y="512" width="128" height="128"/>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="43" type="lightOrb" gid="51" x="752" y="250" width="128" height="128">
+  <object id="43" type="lightOrb" gid="51" x="256" y="256" width="128" height="128">
    <properties>
     <property name="direction" value="5"/>
    </properties>
   </object>
-  <object id="44" type="lightSwitch" gid="52" x="896" y="894" width="128" height="128"/>
+  <object id="44" type="lightSwitch" gid="52" x="896" y="502" width="128" height="128"/>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
-  <object id="45" type="player_start" x="256" y="768" width="128" height="128"/>
+  <object id="45" type="player_start" x="256" y="896" width="128" height="128"/>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="47" type="exit" gid="101" x="252" y="254" width="128" height="128"/>
+  <object id="47" type="exit" gid="101" x="896" y="1152" width="128" height="128"/>
  </objectgroup>
 </map>
