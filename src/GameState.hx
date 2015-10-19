@@ -15,9 +15,9 @@ import flixel.group.FlxGroup;
 import flash.Lib;
 
 
-class GameState extends FlxState
-{
+class GameState extends FlxState {
 
+  private static inline var INITAL_ZOOM_PROPERTY = "initial_zoom";
   private static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
   public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
 
@@ -77,8 +77,6 @@ class GameState extends FlxState
     add(lightBulbs);
     add(lightSwitches);
     add(player);
-
-    setZoom(FlxG.camera.zoom);
   }
 
   /** Returns a rectangle representing the given tile */
@@ -206,8 +204,15 @@ class GameState extends FlxState
     switch (o.type.toLowerCase()) {
       case "player_start":
         var player = new Character(this, o);
-        FlxG.camera.follow(player, FlxCamera.STYLE_NO_DEAD_ZONE, 1);
         this.player = player;
+        FlxG.camera.follow(player, FlxCamera.STYLE_NO_DEAD_ZONE, 1);
+        var initialZoom = o.custom.get(INITAL_ZOOM_PROPERTY);
+        if (initialZoom == null) {
+          trace(INITAL_ZOOM_PROPERTY + " unset for this level");
+          setZoom(FlxG.camera.zoom);
+        } else {
+          setZoom(Std.parseFloat(initialZoom));
+        }
 
       case "mirror":
         var mirror = new Mirror(this, o);

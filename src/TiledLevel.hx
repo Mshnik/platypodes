@@ -59,7 +59,6 @@ class TiledLevel extends TiledMap {
     tutorialTiles = new FlxGroup();
 
     FlxG.camera.setBounds(0, 0, fullWidth, fullHeight, true);
-    trace(fullWidth + ", " + fullHeight);
 
     // Load Tile Maps
     for (tileLayer in layers) {

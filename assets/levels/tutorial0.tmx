@@ -26,7 +26,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFQwGkQ3EGEjttQF1Ee1A70A7AA0Bhn45GUxIfoHjNRDIHFteUmodu7igYBdQEADlACig=
+   eJxjYBgFQwGkQ3EGEjttQF00sgEo7NPRaEriAxSvmUjmwOKaUvPQzR0Fo4CaAAByDgmr
   </data>
  </layer>
  <layer name="Holes" width="20" height="20">
@@ -42,7 +42,7 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBzFVMXcQMyGA3ORYR4nAwJkAXEOEp+dTPPkgVgdDStTYB6yG5HdNljMU8TiX1kKzMMFhqN5PEDMgQPzkmHeKB4+GAAEogTx
+   eJxjZGBgYBzFVMXcQMyGA3ORYR4nAwJkAXEOEp+dDPN4gFgeiNXRsDIQ85LpZ2Q3UuI2WpgHig9FLP6VZaA8PqjhxsFuHii9cODA5KaXUTw8MADRLwTj
   </data>
  </layer>
  <layer name="Tutorial Images" width="20" height="20">
@@ -64,7 +64,11 @@
   <object id="44" type="lightSwitch" gid="52" x="1408" y="768" width="128" height="128"/>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
-  <object id="45" type="player_start" x="768" y="1408" width="128" height="128"/>
+  <object id="45" type="player_start" x="768" y="1408" width="128" height="128">
+   <properties>
+    <property name="initial_zoom" value="0.5"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
   <object id="47" type="exit" gid="101" x="1408" y="1536" width="128" height="128"/>

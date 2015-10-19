@@ -70,7 +70,14 @@
   <object id="44" type="lightSwitch" gid="52" x="896" y="502" width="128" height="128"/>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
-  <object id="45" type="player_start" x="256" y="896" width="128" height="128"/>
+  <properties>
+   <property name="initial_zoom" value="0.5"/>
+  </properties>
+  <object id="45" type="player_start" x="256" y="896" width="128" height="128">
+   <properties>
+    <property name="initial_zoom" value="0.5"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
   <object id="47" type="exit" gid="101" x="896" y="1152" width="128" height="128"/>
