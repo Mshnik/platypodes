@@ -188,12 +188,15 @@ class Character extends MovingElement {
       }
       if(DOWN_PRESSED()) {
         moveDirection = moveDirection.addDirec(Direction.Down);
+        animation.play(WALK_DOWN_KEY);
       }
       if(RIGHT_PRESSED()) {
         moveDirection = moveDirection.addDirec(Direction.Right);
+        animation.play(WALK_LEFT_RIGHT_KEY);
       }
       if(LEFT_PRESSED()) {
         moveDirection = moveDirection.addDirec(Direction.Left);
+        animation.play(WALK_LEFT_RIGHT_KEY);
       }
 
       if (!moveDirection.equals(Direction.None)) {
