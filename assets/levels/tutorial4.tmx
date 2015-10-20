@@ -42,7 +42,7 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBzFIxJzAzEbGuaiwDxOBkygRIHZ2MxTQ2KzDzPzeIBYHojVkbAUBebhcuNgMg/kZw4cmJcM80YxfTEAmyYDgA==
+   eJxjZGBgYBzFIxJzAzEbGuaiwDxOBkygRIHZ2MxTQ2KzDzPzeIBYHojVkbAUBebhcuNgMg/kZw4oRva7MhDzkmEeLreS4zZam4fsd0r9OlAYAI/VBC0=
   </data>
  </layer>
  <layer name="Tutorial Images" width="20" height="20">
@@ -50,7 +50,7 @@
    <property name="tileset" value="tutorialImages"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztzMENgCAUBNHffyIocAUVLNQpYi8kO8m7ToRzujoGbjyC34uJhU/wO5CQcQp+FwoqmuDn3E79AW8JiQ==
+   eJztzEEKgCAYBWHvD2lqWy0rAz2lc4i3Cf6BbzvOWZaugooTl+DXcOPBK/ht8AjYBb+IhIxD8LO0dXzC38AU/v7eAiusDCc=
   </data>
  </layer>
  <objectgroup name="Objects"/>
