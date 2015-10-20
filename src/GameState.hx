@@ -18,14 +18,16 @@ import flash.Lib;
 class GameState extends FlxState {
 
   private static inline var INITAL_ZOOM_PROPERTY = "initial_zoom";
-  private static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
+  public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
+  public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
   public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
 
-  private static var ZOOM_IN = function() : Bool { return FlxG.keys.justPressed.ONE; };
-  private static var ZOOM_OUT = function() : Bool { return FlxG.keys.justPressed.TWO;  };
-  private static inline var ZOOM_MULT : Float = 1.1;
+  private static var ZOOM_IN = function() : Bool { return FlxG.keys.pressed.ONE; };
+  private static var ZOOM_OUT = function() : Bool { return FlxG.keys.pressed.TWO;  };
+  private static inline var ZOOM_MULT : Float = 1.02;
 
-  @final private var levelPath : Dynamic;
+  @final private var levelPaths : Array<Dynamic>;
+  @final private var levelPathIndex : Int;
   public var level:TiledLevel;
   private var savedZoom : Float; //The zoom that the player had before restarting
 
@@ -41,9 +43,10 @@ class GameState extends FlxState {
   private var winText : FlxText;
   private var deadText : FlxText;
 
-  public function new(levelPath : Dynamic, savedZoom : Float = -1) {
+  public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int, savedZoom : Float = -1) {
     super();
-    this.levelPath = levelPath;
+    this.levelPaths = levelPaths;
+    this.levelPathIndex = levelPathIndex;
     this.savedZoom = savedZoom;
   }
 
@@ -55,7 +58,7 @@ class GameState extends FlxState {
     super.create();
 
     // Load the level's tilemaps
-    level = new TiledLevel(levelPath);
+    level = new TiledLevel(levelPaths[levelPathIndex]);
 
     // Add tilemaps
     add(level.floorTiles);
@@ -148,8 +151,10 @@ class GameState extends FlxState {
   override public function update():Void {
     if(MENU_BUTTON()) {
       FlxG.switchState(new LevelSelectMenuState());
+    } else if(won && NEXT_LEVEL_BUTTON() && levelPathIndex + 1 < levelPaths.length){
+      FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {
-      FlxG.switchState(new GameState(levelPath, savedZoom));
+      FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom));
     } else if (ZOOM_IN()) {
       setZoom(FlxG.camera.zoom * ZOOM_MULT);
     } else if (ZOOM_OUT()) {
@@ -190,15 +195,6 @@ class GameState extends FlxState {
       if(exit.containsBoundingBoxOf(player)) {
         win();
       }
-    }
-
-    if (winText != null) {
-      winText.x = FlxG.camera.scroll.x + 200;
-      winText.y = FlxG.camera.scroll.y + 100;
-    }
-    if (deadText != null) {
-      deadText.x = FlxG.camera.scroll.x + 200;
-      deadText.y = FlxG.camera.scroll.y + 100;
     }
   }
 
@@ -259,7 +255,9 @@ class GameState extends FlxState {
 
   public function killPlayer() {
     player.animation.play(Character.DEATH_ANIMATION_KEY, true);
-    deadText = new FlxText(0, 0, 500, "You died - press R", 30);
+    deadText = new FlxText(0, 0, 0, "You died - press R", 60);
+    deadText.x = FlxG.camera.scroll.x + (FlxG.camera.width - deadText.width) / 2;
+    deadText.y = FlxG.camera.scroll.y + (FlxG.camera.height - deadText.height) / 2 + player.height;
     deadText.color = 0xFFFF0022;
     add(deadText);
   }
@@ -268,7 +266,9 @@ class GameState extends FlxState {
     if(won) return;
 
     won = true;
-    winText = new FlxText(0, 0, 500, "You win!!", 100);
+    winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? "" : " - Press Space to continue"), 40);
+    winText.x = FlxG.camera.scroll.x + (FlxG.camera.width - winText.width) / 2;
+    winText.y = FlxG.camera.scroll.y + (FlxG.camera.height - winText.height) / 2;
     add(winText);
     player.kill();
   }
