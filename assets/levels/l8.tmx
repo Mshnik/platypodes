@@ -31,7 +31,7 @@
    <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo4C6IAuIs5FwDoXm5aPxc6lgXh4SpoZ5yIBS80bBKBgqAADKAAX2
+   eJxjYBgFo4C6IAuIs5FwDoXmlaHxCyg0L58B1X25FJqH7j50/igYBcMVAAD/tAYH
   </data>
  </layer>
  <layer name="Walls" width="20" height="20">
@@ -77,7 +77,12 @@
   <object id="57" type="lightSwitch" gid="52" x="1792" y="1408" width="128" height="128"/>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
-  <object id="59" type="player_start" x="768" y="1280" width="128" height="128"/>
+  <object id="59" type="player_start" x="768" y="1280" width="128" height="128">
+   <properties>
+    <property name="direction_facing" value="16"/>
+    <property name="initial_zoom" value="0.75"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
   <object id="58" type="exit" gid="101" x="1792" y="768" width="128" height="128"/>

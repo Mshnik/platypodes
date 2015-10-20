@@ -66,6 +66,7 @@
  <objectgroup color="#141ba4" name="player_start">
   <object id="45" type="player_start" x="1024" y="1536" width="128" height="128">
    <properties>
+    <property name="direction_facing" value="256"/>
     <property name="initial_zoom" value="0.75"/>
    </properties>
   </object>
