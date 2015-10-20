@@ -31,14 +31,16 @@ class Character extends MovingElement {
   public inline static var WALK_UP_ANIMATION_KEY = "Up";
 
   /** The grab mirror animation keys */
-  public inline static var GRAB_LEFT_RIGHT_ANIMATION_KEY = "Grab Left-Right";
-  public inline static var GRAB_DOWN_ANIMATION_KEY = "Grab Down";
-  public inline static var GRAB_UP_ANIMATION_KEY = "Grab Up";
+  public inline static var GRAB_ANIMATION_PREFIX = "Grab";
+  public inline static var GRAB_LEFT_RIGHT_ANIMATION_KEY = GRAB_ANIMATION_PREFIX + " Left-Right";
+  public inline static var GRAB_DOWN_ANIMATION_KEY = GRAB_ANIMATION_PREFIX + " Down";
+  public inline static var GRAB_UP_ANIMATION_KEY = GRAB_ANIMATION_PREFIX + " Up";
 
   /** The release mirror animation keys */
-  public inline static var RELEASE_LEFT_RIGHT_ANIMATION_KEY = "Release Left-Right";
-  public inline static var RELEASE_DOWN_ANIMATION_KEY = "Release Down";
-  public inline static var RELEASE_UP_ANIMATION_KEY = "Release Up";
+  public inline static var RELEASE_ANIMATION_PREFIX = "Release";
+  public inline static var RELEASE_LEFT_RIGHT_ANIMATION_KEY = RELEASE_ANIMATION_PREFIX + " Left-Right";
+  public inline static var RELEASE_DOWN_ANIMATION_KEY = RELEASE_ANIMATION_PREFIX + " Down";
+  public inline static var RELEASE_UP_ANIMATION_KEY = RELEASE_ANIMATION_PREFIX + " Up";
 
   /** The push/pull mirror animation keys */
   /** Active when moving while holding a mirror */
@@ -49,6 +51,11 @@ class Character extends MovingElement {
   /** The death animation key */
   public inline static var DEATH_ANIMATION_SPEED = 10;
   public inline static var DEATH_ANIMATION_KEY = "Die";
+
+  /** True when the animation of going into or out of grab is playing */
+  public var isChangingGrabStatus : Bool;
+
+  /** True when the dying animation is playing */
   public var isDying(default, null) : Bool;
 
   /** The custom property on the Character object in Tiled maps that denotes the intial direction facing.
@@ -105,20 +112,23 @@ class Character extends MovingElement {
     loadGraphic(CHARACTER_SPRITE_SHEET, true, CHARACTER_SPRITE_SIZE, CHARACTER_SPRITE_SIZE);
     setFacingFlip(FlxObject.RIGHT, false, false);
     setFacingFlip(FlxObject.LEFT, true, false);
-    animation.add(WALK_LEFT_RIGHT_ANIMATION_KEY, [8,9,10,11], ANIMATION_SPEED, true);
     animation.add(WALK_DOWN_ANIMATION_KEY, [0,1,2,3], ANIMATION_SPEED, true);
     animation.add(WALK_UP_ANIMATION_KEY, [4,5,6,7], ANIMATION_SPEED, true);
-    animation.add(GRAB_LEFT_RIGHT_ANIMATION_KEY, [24,25,26,27], ANIMATION_SPEED, false);
-    animation.add(GRAB_DOWN_ANIMATION_KEY, [16,17,18,19], ANIMATION_SPEED, false);
-    //animation.add(GRAB_UP_KEY, [0,1,2,3], 20, false);
-    animation.add(RELEASE_LEFT_RIGHT_ANIMATION_KEY, [27,26,25,24], ANIMATION_SPEED, false);
-    animation.add(RELEASE_DOWN_ANIMATION_KEY, [19,18,17,16], ANIMATION_SPEED, false);
-    //animation.add(RELEASE_UP_KEY, [0,1,2,3], 20, false);
-    animation.add(PUSH_PULL_DOWN_ANIMATION_KEY, [20,21,22,23], ANIMATION_SPEED, false);
-    //animation.add(PUSH_PULL_LEFT_RIGHT_KEY, [0,1,2,3], 20, false);
-    //animation.add(PUSH_PULL_UP_KEY, [0,1,2,3], 20, false);
+    animation.add(WALK_LEFT_RIGHT_ANIMATION_KEY, [8,9,10,11], ANIMATION_SPEED, true);
 
-    animation.add(DEATH_ANIMATION_KEY, [32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42], DEATH_ANIMATION_SPEED, false);
+    animation.add(GRAB_DOWN_ANIMATION_KEY, [16,17,18,19], ANIMATION_SPEED, false);
+    animation.add(PUSH_PULL_DOWN_ANIMATION_KEY, [20,21,22,23], ANIMATION_SPEED, false);
+    animation.add(RELEASE_DOWN_ANIMATION_KEY, [19,18,17,16], ANIMATION_SPEED, false);
+
+    animation.add(GRAB_UP_ANIMATION_KEY, [24,25,26,27], ANIMATION_SPEED, false);
+    animation.add(PUSH_PULL_UP_ANIMATION_KEY, [27, 28], ANIMATION_SPEED, false);
+    animation.add(RELEASE_UP_ANIMATION_KEY, [27,26,25,24], ANIMATION_SPEED, false);
+
+    animation.add(GRAB_LEFT_RIGHT_ANIMATION_KEY, [32,33,34,35], ANIMATION_SPEED, false);
+    animation.add(PUSH_PULL_LEFT_RIGHT_ANIMATION_KEY, [35,36], ANIMATION_SPEED, false);
+    animation.add(RELEASE_LEFT_RIGHT_ANIMATION_KEY, [35,34,33,32], ANIMATION_SPEED, false);
+
+    animation.add(DEATH_ANIMATION_KEY, [40, 41, 42, 43, 44, 45, 46, 47, 48], DEATH_ANIMATION_SPEED, false);
     animation.callback = animationCallback;
 
     //Make bounding box slightly smaller than sprite for ease of movement
@@ -181,10 +191,11 @@ class Character extends MovingElement {
 
     if (m == null) {
       moveSpeed = MOVE_SPEED;
+      isChangingGrabStatus = true;
       switch (this.directionFacing.simpleString) {
         //need release up sprites
-        //case Direction.Up:
-        //  animation.play(RELEASE_UP_KEY);
+        case "Up":
+          animation.play(RELEASE_UP_ANIMATION_KEY);
         case "Down":
           animation.play(RELEASE_DOWN_ANIMATION_KEY);
         case "Left":
@@ -195,10 +206,11 @@ class Character extends MovingElement {
       }
       return mirrorHolding = m;
     } else {
+      isChangingGrabStatus = true;
       switch (this.directionFacing.simpleString) {
         //need grab up sprites
-        //case Direction.Up:
-        //  animation.play(GRAB_UP_KEY);
+        case "Up":
+          animation.play(GRAB_UP_ANIMATION_KEY);
         case "Down":
           animation.play(GRAB_DOWN_ANIMATION_KEY);
         case "Left":
@@ -247,19 +259,15 @@ class Character extends MovingElement {
 
       if(UP_PRESSED()) {
         moveDirection = moveDirection.addDirec(Direction.Up);
-        animation.play(WALK_UP_ANIMATION_KEY);
       }
       if(DOWN_PRESSED()) {
         moveDirection = moveDirection.addDirec(Direction.Down);
-        animation.play(WALK_DOWN_ANIMATION_KEY);
       }
       if(RIGHT_PRESSED()) {
         moveDirection = moveDirection.addDirec(Direction.Right);
-        animation.play(WALK_LEFT_RIGHT_ANIMATION_KEY);
       }
       if(LEFT_PRESSED()) {
         moveDirection = moveDirection.addDirec(Direction.Left);
-        animation.play(WALK_LEFT_RIGHT_ANIMATION_KEY);
       }
 
       if (!moveDirection.equals(Direction.None)) {
@@ -283,18 +291,67 @@ class Character extends MovingElement {
       }
       moveDirection = mirrorHolding.moveDirection;
       moveSpeed = mirrorHolding.moveSpeed;
-      //switch on movewDirection
+    }
+
+    //Play the appropriate animation
+    if(!isChangingGrabStatus && !isDying) {
+      if (mirrorHolding != null) {
+        switch (directionFacing.simpleString) {
+          case "Up":
+            animation.play(PUSH_PULL_UP_ANIMATION_KEY);
+          case "Up_Right":
+            animation.play(PUSH_PULL_UP_ANIMATION_KEY);
+          case "Up_Left":
+            animation.play(PUSH_PULL_UP_ANIMATION_KEY);
+          case "Down":
+            animation.play(PUSH_PULL_DOWN_ANIMATION_KEY);
+          case "Down_Right":
+            animation.play(PUSH_PULL_DOWN_ANIMATION_KEY);
+          case "Down_Left":
+            animation.play(PUSH_PULL_DOWN_ANIMATION_KEY);
+          case "Left":
+            animation.play(PUSH_PULL_LEFT_RIGHT_ANIMATION_KEY);
+          case "Right":
+            animation.play(PUSH_PULL_LEFT_RIGHT_ANIMATION_KEY);
+        }
+      } else {
+        switch (directionFacing.simpleString) {
+          case "Up":
+            animation.play(WALK_UP_ANIMATION_KEY);
+          case "Up_Right":
+            animation.play(WALK_UP_ANIMATION_KEY);
+          case "Up_Left":
+            animation.play(WALK_UP_ANIMATION_KEY);
+          case "Down":
+            animation.play(WALK_DOWN_ANIMATION_KEY);
+          case "Down_Right":
+            animation.play(WALK_DOWN_ANIMATION_KEY);
+          case "Down_Left":
+            animation.play(WALK_DOWN_ANIMATION_KEY);
+          case "Left":
+            animation.play(WALK_LEFT_RIGHT_ANIMATION_KEY);
+          case "Right":
+            animation.play(WALK_LEFT_RIGHT_ANIMATION_KEY);
+        }
+      }
     }
 
     super.update();
   }
 
   private function animationCallback(key : String, frameNumber : Int, frameIndex : Int) : Void {
+    trace(animation.finished);
     if(key == DEATH_ANIMATION_KEY) {
       isDying = true;
       if(animation.finished) {
         kill();
       }
+    }
+    if(key.indexOf(GRAB_ANIMATION_PREFIX) != -1 && frameNumber == 3) {
+      isChangingGrabStatus = false;
+    }
+    if(key.indexOf(RELEASE_ANIMATION_PREFIX) != -1 && frameNumber == 3) {
+      isChangingGrabStatus = false;
     }
   }
 }
