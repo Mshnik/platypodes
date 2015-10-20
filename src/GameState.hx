@@ -27,6 +27,7 @@ class GameState extends FlxState {
 
   @final private var levelPath : Dynamic;
   public var level:TiledLevel;
+  private var savedZoom : Float; //The zoom that the player had before restarting
 
   public var player:Character;
   public var floor:FlxObject;
@@ -40,9 +41,10 @@ class GameState extends FlxState {
   private var winText : FlxText;
   private var deadText : FlxText;
 
-  public function new(levelPath : Dynamic) {
+  public function new(levelPath : Dynamic, savedZoom : Float = -1) {
     super();
     this.levelPath = levelPath;
+    this.savedZoom = savedZoom;
   }
 
   override public function create():Void
@@ -147,7 +149,7 @@ class GameState extends FlxState {
     if(MENU_BUTTON()) {
       FlxG.switchState(new LevelSelectMenuState());
     } else if(RESET()) {
-      FlxG.switchState(new GameState(levelPath));
+      FlxG.switchState(new GameState(levelPath, savedZoom));
     } else if (ZOOM_IN()) {
       setZoom(FlxG.camera.zoom * ZOOM_MULT);
     } else if (ZOOM_OUT()) {
@@ -206,12 +208,16 @@ class GameState extends FlxState {
         var player = new Character(this, o);
         this.player = player;
         FlxG.camera.follow(player, FlxCamera.STYLE_NO_DEAD_ZONE, 1);
-        var initialZoom = o.custom.get(INITAL_ZOOM_PROPERTY);
-        if (initialZoom == null) {
-          trace(INITAL_ZOOM_PROPERTY + " unset for this level");
-          setZoom(FlxG.camera.zoom);
+        if(savedZoom == -1) {
+          var initialZoom = o.custom.get(INITAL_ZOOM_PROPERTY);
+          if (initialZoom == null) {
+            trace(INITAL_ZOOM_PROPERTY + " unset for this level");
+            setZoom(FlxG.camera.zoom);
+          } else {
+            setZoom(Std.parseFloat(initialZoom));
+          }
         } else {
-          setZoom(Std.parseFloat(initialZoom));
+          setZoom(savedZoom);
         }
 
       case "mirror":
@@ -247,10 +253,12 @@ class GameState extends FlxState {
     FlxG.camera.setSize(Std.int(Lib.current.stage.stageWidth / zoom), Std.int(Lib.current.stage.stageHeight / zoom));
     level.updateBuffers();
     FlxG.camera.focusOn(player.getMidpoint(null));
+
+    savedZoom = zoom;
   }
 
   public function killPlayer() {
-    player.animation.play(Character.DEATH_ANIMATION_KEY);
+    player.animation.play(Character.DEATH_ANIMATION_KEY, true);
     deadText = new FlxText(0, 0, 500, "You died - press R", 30);
     deadText.color = 0xFFFF0022;
     add(deadText);
