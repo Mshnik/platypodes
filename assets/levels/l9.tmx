@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="24" height="24" tilewidth="128" tileheight="128" nextobjectid="70">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="128" tileheight="128" nextobjectid="75">
  <tileset firstgid="1" name="walls" tilewidth="128" tileheight="128" tilecount="50">
   <image source="../images/beta/wallSheet.png" width="640" height="1280"/>
  </tileset>
@@ -18,28 +18,28 @@
  <tileset firstgid="124" name="mirrors" tilewidth="128" tileheight="128" tilecount="1">
   <image source="../images/beta/mirror_1.png" width="128" height="128"/>
  </tileset>
- <layer name="Floor" width="24" height="24">
+ <layer name="Floor" width="20" height="20">
   <properties>
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztkVEKACEIRD1t5v0vUAsOzUfFUrD7Mw9k1GAUMxNC/EntEZk/6lQXyk+JjUe59IY/dq6LGbP+W+DtGfCMVO6fAA/+B9TQmzu5jRvgDjwT70KIb2mizRFj
+   eJzt0EEKACAIRNHxsqn3v0AtDKaWsyoweGSbj2QArD3Nl6zbrnnUW+kF4Z6y3z5OrNpKjwV1lF5SJ3Hu50KP7SbvF+I/tvabCf1xETA=
   </data>
  </layer>
- <layer name="Holes" width="24" height="24">
+ <layer name="Holes" width="20" height="20">
   <properties>
    <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUDAZQSIBPKcgH4mwknAsVzwLiHCrak4eEaQHKaWQuDJTR2PwSGps/CkbBKCAOAAARqQaB
+   eJxjYBgFQxUUUtm8MiqbV0Bl8waL+0qBOBuIi9HESyhzzigYBUMOAAAXNgQF
   </data>
  </layer>
- <layer name="Walls" width="24" height="24">
+ <layer name="Walls" width="20" height="20">
   <properties>
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBzFo3gUY8XcQMxGJOYiw3xOBuIB+xA0X2iIu3+wm88DxBxEYl4yzB/Fo3g4YwCjrwMN
+   eJxjYBgF1ATcQMyGhEXQ+MiYiwjzONH4AnjUspNhHjbADMQcQMxLgnmCQMyPx12MUEysefgAtc1jYiA/PvABYuKDhwES1sRgYuKDkUQ8at4ooAQAAPCTAak=
   </data>
  </layer>
  <objectgroup name="Objects"/>
@@ -47,73 +47,54 @@
   <properties>
    <property name="sides" value="1"/>
   </properties>
-  <object id="60" type="mirror" gid="124" x="1920" y="1920" width="128" height="128">
+  <object id="63" type="mirror" gid="3221225596" x="1024" y="1280" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="61" type="mirror" gid="124" x="1536" y="1792" width="128" height="128">
+  <object id="65" type="mirror" gid="2147483772" x="1024" y="1408" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="62" type="mirror" gid="2147483772" x="1408" y="1792" width="128" height="128">
+  <object id="68" type="mirror" gid="1073741948" x="1536" y="1408" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="63" type="mirror" gid="3221225596" x="1408" y="1664" width="128" height="128">
+  <object id="70" type="mirror" gid="3221225596" x="896" y="768" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="64" type="mirror" gid="3221225596" x="1536" y="1280" width="128" height="128">
+  <object id="72" type="mirror" gid="2147483772" x="1280" y="768" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="65" type="mirror" gid="1073741948" x="1792" y="1280" width="128" height="128">
+  <object id="73" type="mirror" gid="2147483772" x="1152" y="1024" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="66" type="mirror" gid="2147483772" x="1792" y="1792" width="128" height="128">
-   <properties>
-    <property name="sides" value="1"/>
-   </properties>
-  </object>
-  <object id="67" type="mirror" gid="2147483772" x="1280" y="1920" width="128" height="128">
-   <properties>
-    <property name="sides" value="1"/>
-   </properties>
-  </object>
-  <object id="68" type="mirror" gid="1073741948" x="1920" y="1664" width="128" height="128">
-   <properties>
-    <property name="sides" value="1"/>
-   </properties>
-  </object>
-  <object id="69" type="mirror" gid="3221225596" x="1280" y="1408" width="128" height="128">
+  <object id="74" type="mirror" gid="2147483772" x="1280" y="896" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="56" type="lightOrb" gid="51" x="2304" y="1792" width="128" height="128">
+  <object id="56" type="lightOrb" gid="51" x="640" y="768" width="128" height="128">
    <properties>
-    <property name="direction" value="1"/>
+    <property name="direction" value="3"/>
    </properties>
   </object>
-  <object id="57" type="lightSwitch" gid="52" x="2048" y="1408" width="128" height="128"/>
+  <object id="57" type="lightSwitch" gid="52" x="1792" y="1408" width="128" height="128"/>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
-  <object id="59" type="player_start" x="1152" y="1792" width="128" height="128">
-   <properties>
-    <property name="initial_zoom" value="0.5"/>
-   </properties>
-  </object>
+  <object id="59" type="player_start" x="640" y="1152" width="128" height="128"/>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="58" type="exit" gid="101" x="2304" y="1280" width="128" height="128"/>
+  <object id="58" type="exit" gid="101" x="1792" y="768" width="128" height="128"/>
  </objectgroup>
 </map>
