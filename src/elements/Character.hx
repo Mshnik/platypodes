@@ -340,7 +340,6 @@ class Character extends MovingElement {
   }
 
   private function animationCallback(key : String, frameNumber : Int, frameIndex : Int) : Void {
-    trace(animation.finished);
     if(key == DEATH_ANIMATION_KEY) {
       isDying = true;
       if(animation.finished) {
