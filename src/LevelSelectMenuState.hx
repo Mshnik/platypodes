@@ -61,7 +61,7 @@ class LevelSelectMenuState extends FlxState
 
   /** Loads (Switches) to level at levels[index] */
   private function loadLevel(index : Int) : Void {
-    var gameState = new GameState(levels[index]);
+    var gameState = new GameState(levels, index);
     FlxG.switchState(gameState);
   }
 
