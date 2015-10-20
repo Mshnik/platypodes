@@ -67,6 +67,6 @@
   </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="47" type="exit" gid="101" x="1404" y="1404" width="128" height="128"/>
+  <object id="47" type="exit" gid="101" x="1408" y="1408" width="128" height="128"/>
  </objectgroup>
 </map>

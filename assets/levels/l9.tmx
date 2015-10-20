@@ -39,7 +39,7 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgF1ATcQMyGhEXQ+MiYiwjzONH4AnjUspNhHjbADMQcQMxLgnmCQMyPx12MUEysefgAtc1jYiA/PvABYuKDhwES1sRgYuKDkUQ8at4ooAQAAPCTAak=
+   eJxjZGBgYBzFVMPcQMyGhEXQ+MiYiwjzOBlQgQADbsBOhnnYADMQcwAxLwnmCQIxPwXuIsV91DaPiYH8+KDUnTwMkLAmBhMTH6N4FNMTAwASzwKp
   </data>
  </layer>
  <objectgroup name="Objects"/>
@@ -62,7 +62,7 @@
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="70" type="mirror" gid="3221225596" x="896" y="768" width="128" height="128">
+  <object id="70" type="mirror" gid="1073741948" x="896" y="768" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
@@ -86,7 +86,7 @@
  <objectgroup name="Light">
   <object id="56" type="lightOrb" gid="51" x="640" y="768" width="128" height="128">
    <properties>
-    <property name="direction" value="3"/>
+    <property name="direction" value="16"/>
    </properties>
   </object>
   <object id="57" type="lightSwitch" gid="52" x="1792" y="1408" width="128" height="128"/>
