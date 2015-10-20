@@ -20,6 +20,8 @@ class TiledLevel extends TiledMap {
   @final public inline static var WALL_LAYER_NAME = "Walls";
   @final public inline static var TUTORIAL_LAYER_NAME = "Tutorial Images";
 
+  private var tileMaps : Array<FlxTilemap>;
+
   public var floorTiles : FlxGroup;
   private var floorMap : FlxTilemap;
   public var holeTiles : FlxGroup;
@@ -50,6 +52,7 @@ class TiledLevel extends TiledMap {
   public function new(tiledLevel:Dynamic) {
     super(tiledLevel);
 
+    tileMaps = new Array<FlxTilemap>();
     floorTiles = new FlxGroup();
     holeTiles = new FlxGroup();
     wallTiles = new FlxGroup();
@@ -87,6 +90,8 @@ class TiledLevel extends TiledMap {
       tilemap.widthInTiles = width;
       tilemap.heightInTiles = height;
       tilemap.loadMap(fixedArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, 0, 1, 1, 1);
+
+      tileMaps.push(tilemap);
 
       switch(tileLayer.name) {
         case FLOOR_LAYER_NAME:
@@ -151,5 +156,11 @@ class TiledLevel extends TiledMap {
 
   public function hasWallAt(x : Int, y : Int) : Bool {
     return wallMap.getTile(x,y) != -1;
+  }
+
+  public function updateBuffers() : Void {
+    for(tilemap in tileMaps) {
+      tilemap.updateBuffers();
+    }
   }
 }

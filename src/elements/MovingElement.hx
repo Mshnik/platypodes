@@ -78,6 +78,7 @@ import flixel.addons.editors.tiled.TiledObject;
     } else {
       directionFacing = direction;
     }
+    facing = directionFacing.simpleDirec;
     return directionFacing;
   }
 

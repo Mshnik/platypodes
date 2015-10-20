@@ -39,15 +39,15 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBg4AZiNhyYC4gZ0TAnAypQQ2KzD0H1AiSqZyCgngeIOXBgXizqhzIGAKkSAds=
+   eJxjZGBg4AZiNiQsgsTmAmJGNMzJgArUkNjsQ1C9AInqGQio5wFiDhyYF4v6oYwBx3oB6Q==
   </data>
  </layer>
  <objectgroup name="Objects"/>
  <objectgroup name="Mirrors">
-  <object id="50" gid="2147483772" x="620" y="896" width="128" height="128"/>
+  <object id="50" gid="124" x="640" y="896" width="128" height="128"/>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="43" type="lightOrb" gid="51" x="752" y="250" width="128" height="128">
+  <object id="43" type="lightOrb" gid="51" x="768" y="256" width="128" height="128">
    <properties>
     <property name="direction" value="5"/>
    </properties>

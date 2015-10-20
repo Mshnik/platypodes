@@ -21,6 +21,30 @@ class Character extends MovingElement {
   /** Animated character sprite sheet location */
   @final private static var CHARACTER_SPRITE_SHEET = AssetPaths.player_sheet__png;
 
+  /** The walking animation keys */
+  public inline static var WALK_LEFT_RIGHT_KEY = "Left-Right";
+  public inline static var WALK_DOWN_KEY = "Down";
+  public inline static var WALK_UP_KEY = "Up";
+
+  /** The grab mirror animation keys */
+  public inline static var GRAB_LEFT_RIGHT_KEY = "Grab Left-Right";
+  public inline static var GRAB_DOWN_KEY = "Grab Down";
+  public inline static var GRAB_UP_KEY = "Grab Up";
+
+  /** The release mirror animation keys */
+  public inline static var RELEASE_LEFT_RIGHT_KEY = "Release Left-Right";
+  public inline static var RELEASE_DOWN_KEY = "Release Down";
+  public inline static var RELEASE_UP_KEY = "Release Up";
+
+  /** The push/pull mirror animation keys */
+  /** Active when moving while holding a mirror */
+  public inline static var PUSH_PULL_LEFT_RIGHT_KEY = "Push-Pull Left-Right";
+  public inline static var PUSH_PULL_DOWN_KEY = "Push-Pull Down";
+  public inline static var PUSH_PULL_UP_KEY = "Push-Pull Up";
+
+  /** The death animation key */
+  public inline static var DEATH_ANIMATION_KEY = "Die";
+
   /** The custom property on the Character object in Tiled maps that denotes the intial direction facing.
    * Valid values are 1 (Up), 3 (Right), 5 (Down), 7 (Left).
    **/
@@ -75,6 +99,22 @@ class Character extends MovingElement {
     loadGraphic(CHARACTER_SPRITE_SHEET, true, CHARACTER_SPRITE_SIZE, CHARACTER_SPRITE_SIZE);
     setFacingFlip(FlxObject.RIGHT, false, false);
     setFacingFlip(FlxObject.LEFT, true, false);
+    animation.add(WALK_LEFT_RIGHT_KEY, [8,9,10,11], 20, true);
+    animation.add(WALK_DOWN_KEY, [0,1,2,3], 20, true);
+    //animation.add(WALK_UP_KEY, [a,b,c,d], 20, false);
+    animation.add(GRAB_LEFT_RIGHT_KEY, [24,25,26,27], 20, false);
+    animation.add(GRAB_DOWN_KEY, [16,17,18,19], 20, false);
+    //animation.add(GRAB_UP_KEY, [0,1,2,3], 20, false);
+    animation.add(RELEASE_LEFT_RIGHT_KEY, [27,26,25,24], 20, false);
+    animation.add(RELEASE_DOWN_KEY, [19,18,17,16], 20, false);
+    //animation.add(RELEASE_UP_KEY, [0,1,2,3], 20, false);
+    animation.add(PUSH_PULL_DOWN_KEY, [20,21,22,23], 20, false);
+    //animation.add(PUSH_PULL_LEFT_RIGHT_KEY, [0,1,2,3], 20, false);
+    //animation.add(PUSH_PULL_UP_KEY, [0,1,2,3], 20, false);
+
+    var arr : Array<Int> = Main.rangeToArray(32, 40);
+    arr.push(4);
+    animation.add(DEATH_ANIMATION_KEY, arr, 15, false);
 
     //Make bounding box slightly smaller than sprite for ease of movement
     this.offset.x += BOUNDING_BOX_MARGIN;
@@ -130,8 +170,34 @@ class Character extends MovingElement {
   public function set_mirrorHolding(m : Mirror) {
     if (m == null) {
       moveSpeed = MOVE_SPEED;
+      switch (this.directionFacing.simpleString) {
+        //need release up sprites
+        //case Direction.Up:
+        //  animation.play(RELEASE_UP_KEY);
+        case "Down":
+          animation.play(RELEASE_DOWN_KEY);
+        case "Left":
+          animation.play(RELEASE_LEFT_RIGHT_KEY);
+        case "Right":
+          animation.play(RELEASE_LEFT_RIGHT_KEY);
+        default:
+      }
+      return mirrorHolding = m;
+    } else {
+      switch (this.directionFacing.simpleString) {
+        //need grab up sprites
+        //case Direction.Up:
+        //  animation.play(GRAB_UP_KEY);
+        case "Down":
+          animation.play(GRAB_DOWN_KEY);
+        case "Left":
+          animation.play(GRAB_LEFT_RIGHT_KEY);
+        case "Right":
+          animation.play(GRAB_LEFT_RIGHT_KEY);
+        default:
+      }
+      return mirrorHolding = m;
     }
-    return mirrorHolding = m;
   }
 
   /** Updates the character for this frame
@@ -170,15 +236,19 @@ class Character extends MovingElement {
 
       if(UP_PRESSED()) {
         moveDirection = moveDirection.addDirec(Direction.Up);
+        //animation.play(WALK_UP_KEY);
       }
       if(DOWN_PRESSED()) {
         moveDirection = moveDirection.addDirec(Direction.Down);
+        animation.play(WALK_DOWN_KEY);
       }
       if(RIGHT_PRESSED()) {
         moveDirection = moveDirection.addDirec(Direction.Right);
+        animation.play(WALK_LEFT_RIGHT_KEY);
       }
       if(LEFT_PRESSED()) {
         moveDirection = moveDirection.addDirec(Direction.Left);
+        animation.play(WALK_LEFT_RIGHT_KEY);
       }
 
       if (!moveDirection.equals(Direction.None)) {
@@ -202,6 +272,7 @@ class Character extends MovingElement {
       }
       moveDirection = mirrorHolding.moveDirection;
       moveSpeed = mirrorHolding.moveSpeed;
+      //switch on movewDirection
     }
 
     super.update();
