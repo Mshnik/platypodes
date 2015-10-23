@@ -11,7 +11,7 @@ class ActionElement {
 
   private static inline var POS_SIZE : Int = 5;
   private static inline var ID_SIZE : Int = 2;
-  private static inline var DIREC_SIZE : Int = 3;
+  private static inline var DIREC_SIZE : Int = 4;
   private static inline var ROTATE_SIZE : Int = 1;
 
   private static var START_X_MASK : Int;
@@ -163,6 +163,7 @@ class ActionElement {
 
  /** Serializes this ActionElement to an int. */
   public function serialize() : Int {
+    trace("Serializing" + (startY << START_Y_SHIFT));
     return (id << ID_SHIFT) +
            (startX << START_X_SHIFT) +
            (startY << START_Y_SHIFT) +
