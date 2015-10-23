@@ -1,5 +1,7 @@
 package;
 
+import elements.Direction;
+import logging.ActionElement;
 import flixel.FlxG;
 import flash.display.Sprite;
 import flash.display.StageAlign;
@@ -64,6 +66,10 @@ class Main extends Sprite
 			gameWidth = Math.ceil(stageWidth / zoom);
 			gameHeight = Math.ceil(stageHeight / zoom);
 		}
+
+		var x = ActionElement.move(9, 6, Direction.Up_Left, Direction.Down_Right);
+    trace(x);
+    trace(ActionElement.deserialize(x.serialize()));
 
 		var g = new FlxGame(gameWidth, gameHeight, initialState, zoom, updateFrameRate, drawFrameRate, skipSplash, startFullscreen);
 		addChild(g);

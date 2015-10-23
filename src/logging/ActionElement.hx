@@ -50,7 +50,7 @@ class ActionElement {
 
     ELM_X_SHIFT = bits;
     bits += POS_SIZE;
-    ELM_X_MASK = bitMaskOfSize(POS_SIZE, 0) << ELM_Y_SHIFT;
+    ELM_X_MASK = bitMaskOfSize(POS_SIZE, 0) << ELM_X_SHIFT;
 
     DIREC_FACING_SHIFT = bits;
     bits += DIREC_SIZE;
@@ -65,11 +65,20 @@ class ActionElement {
     START_X_MASK = bitMaskOfSize(POS_SIZE, 0) << START_X_SHIFT;
 
     ID_SHIFT = bits;
-    bits += ID_SHIFT;
+    bits += ID_SIZE;
     ID_MASK = bitMaskOfSize(ID_SIZE, 0) << ID_SHIFT;
 
+    trace(toBinString(ROTATE_MASK));
+    trace(toBinString(MOVE_DIREC_MASK));
+    trace(toBinString(ELM_Y_MASK));
+    trace(toBinString(ELM_X_MASK));
+    trace(toBinString(DIRECT_FACING_MASK));
+    trace(toBinString(START_Y_MASK));
+    trace(toBinString(START_X_MASK));
+    trace(toBinString(ID_MASK));
+
     if(bits > 32) {
-      throw "Too many bits used"
+      throw "Too many bits used " + bits;
     }
   }
 
@@ -141,7 +150,7 @@ class ActionElement {
   }
 
   public static function deserialize(ser : Int) : ActionElement {
-    var a = new ActionElement((ser & ID_MASK) >>> ID_SHIFT,
+    return new ActionElement((ser & ID_MASK) >>> ID_SHIFT,
                               (ser & START_X_MASK) >>> START_X_SHIFT,
                               (ser & START_Y_MASK) >>> START_Y_SHIFT,
                               direcFrom3Bit((ser & DIRECT_FACING_MASK) >>> DIREC_FACING_SHIFT),
@@ -158,7 +167,8 @@ class ActionElement {
            (startX << START_X_SHIFT) +
            (startY << START_Y_SHIFT) +
            (direcTo3Bit(directionFacing) << DIREC_FACING_SHIFT) +
-           (elmX << ELM_X_SHIFT) + (elmY << ELM_Y_SHIFT) +
+           (elmX << ELM_X_SHIFT) +
+           (elmY << ELM_Y_SHIFT) +
            (direcTo3Bit(moveDirection) << MOVE_DIREC_SHIFT) +
            ((rotateClockwise ? 1 : 0) << ROTATE_SHIFT);
   }
@@ -217,5 +227,23 @@ class ActionElement {
       LabelValuePair.weak("elmY", elmY),
       LabelValuePair.weak("moveDirection", moveDirection.simpleString),
       LabelValuePair.weak("rotateDirection", rotateClockwise ? "Clockwise" : "Counter-clockwise")]);
+  }
+
+  private static function toBinString(numb : Int) : String{
+    if (numb == 0) {
+      return "00000000000000000000000000000000";
+    }
+
+    var s = "";
+    while (numb > 0) {
+      s = (numb % 2) + s;
+      numb = Std.int(numb/2);
+    }
+
+    while(s.length < 32) {
+      s = "0" + s;
+    }
+
+    return s;
   }
 }
