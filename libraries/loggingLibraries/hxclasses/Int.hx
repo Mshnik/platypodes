@@ -1,1 +1,0 @@
-@:coreType @:notNull @:runtimeValue abstract Int {}

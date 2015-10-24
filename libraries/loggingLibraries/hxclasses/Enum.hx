@@ -1,1 +1,0 @@
-@:coreType @:runtimeValue abstract Enum<T> {}

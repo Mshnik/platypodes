@@ -1,1 +1,0 @@
-typedef Null<T> = T

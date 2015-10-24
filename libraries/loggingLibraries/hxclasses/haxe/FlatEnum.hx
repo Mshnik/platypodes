@@ -1,3 +1,0 @@
-package haxe;
-
-abstract FlatEnum {}

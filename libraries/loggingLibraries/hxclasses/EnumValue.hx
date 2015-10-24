@@ -1,1 +1,0 @@
-@:coreType abstract EnumValue {}

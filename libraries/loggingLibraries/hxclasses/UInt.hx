@@ -1,1 +1,0 @@
-@:coreType @:notNull @:runtimeValue @:analyzer(no_const_propagation) abstract UInt {}
