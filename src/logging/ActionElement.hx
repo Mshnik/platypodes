@@ -5,12 +5,18 @@ import flixel.util.FlxStringUtil;
 import elements.Direction;
 class ActionElement {
 
-  private static inline var MOVE = 1;
-  private static inline var PUSHPULL = 2;
-  private static inline var ROTATE = 3;
+  private static inline var RESET = 0;
+  private static inline var UNDO = 1;
+
+  private static inline var MOVE = 2;
+  private static inline var PUSHPULL = 3;
+  private static inline var ROTATE = 4;
+
+  private static inline var DIE = 5;
+  private static inline var WIN = 6;
 
   private static inline var POS_SIZE : Int = 5;
-  private static inline var ID_SIZE : Int = 2;
+  private static inline var ID_SIZE : Int = 3;
   private static inline var DIREC_SIZE : Int = 4;
   private static inline var ROTATE_SIZE : Int = 1;
 
@@ -33,7 +39,6 @@ class ActionElement {
   private static var ROTATE_SHIFT : Int;
 
   static function __init__() {
-    //Do left aligned fields
     var bits = 0;
 
     ROTATE_SHIFT = bits;
@@ -68,29 +73,21 @@ class ActionElement {
     bits += ID_SIZE;
     ID_MASK = bitMaskOfSize(ID_SIZE, 0) << ID_SHIFT;
 
-    trace(toBinString(ROTATE_MASK));
-    trace(toBinString(MOVE_DIREC_MASK));
-    trace(toBinString(ELM_Y_MASK));
-    trace(toBinString(ELM_X_MASK));
-    trace(toBinString(DIRECT_FACING_MASK));
-    trace(toBinString(START_Y_MASK));
-    trace(toBinString(START_X_MASK));
-    trace(toBinString(ID_MASK));
-
     if(bits > 32) {
-      throw "Too many bits used " + bits;
+      throw "Too many bits used";
     }
   }
 
-
+ /** Creates a bit mask (000001111...) of the given number of 1s.
+   * @param s - the number of 1s in the bit mask.
+   * @param acc - the accumulator in recursive calls. Should be 0 in the initial call.
+   **/
   private static function bitMaskOfSize(s : Int, acc : Int) {
     if(s == 0) return acc;
     return bitMaskOfSize(s-1, (acc << 1) + 1);
   }
 
-
-
-//Used in all ActionElements - what square the character was standing on when this action started
+  //Used in all ActionElements - what square the character was standing on when this action started
   //Must be in range 0-31
   public var startX(default, null) : Int;
   public var startY(default, null) : Int;
@@ -135,6 +132,14 @@ class ActionElement {
     this.rotateClockwise = rotateClockwise;
   }
 
+  public static function undo(startX : Int, startY : Int, directionFacing : Direction) : ActionElement {
+    return new ActionElement(UNDO, startX, startY, directionFacing, 0, 0, Direction.None, false);
+  }
+
+  public static function reset(startX : Int, startY : Int, directionFacing : Direction) : ActionElement {
+    return new ActionElement(RESET, startX, startY, directionFacing, 0, 0, Direction.None, false);
+  }
+
   public static function move(startX : Int, startY : Int, directionFacing : Direction, moveDirection : Direction) : ActionElement {
     return new ActionElement(MOVE, startX, startY, directionFacing, 0, 0, moveDirection, false);
   }
@@ -147,6 +152,14 @@ class ActionElement {
   public static function rotate(startX : Int, startY : Int, directionFacing : Direction,
                                 elmX : Int, elmY : Int, rotateClockwise : Bool) : ActionElement {
     return new ActionElement(ROTATE, startX, startY, directionFacing, elmX, elmY, Direction.None, rotateClockwise);
+  }
+
+  public static function die(startX : Int, startY : Int, directionFacing : Direction) : ActionElement {
+    return new ActionElement(DIE, startX, startY, directionFacing, 0, 0, Direction.None, false);
+  }
+
+  public static function win(startX : Int, startY : Int, directionFacing : Direction) : ActionElement {
+    return new ActionElement(WIN, startX, startY, directionFacing, 0, 0, Direction.None, false);
   }
 
   public static function deserialize(ser : Int) : ActionElement {
@@ -163,7 +176,6 @@ class ActionElement {
 
  /** Serializes this ActionElement to an int. */
   public function serialize() : Int {
-    trace("Serializing" + (startY << START_Y_SHIFT));
     return (id << ID_SHIFT) +
            (startX << START_X_SHIFT) +
            (startY << START_Y_SHIFT) +
@@ -230,6 +242,7 @@ class ActionElement {
       LabelValuePair.weak("rotateDirection", rotateClockwise ? "Clockwise" : "Counter-clockwise")]);
   }
 
+  /** Returns a string representing the 32-bit binary representation of the given int */
   private static function toBinString(numb : Int) : String{
     if (numb == 0) {
       return "00000000000000000000000000000000";

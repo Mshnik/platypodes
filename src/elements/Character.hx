@@ -64,7 +64,7 @@ class Character extends MovingElement {
   @final private static var INITIAL_DIRECTION_FACING_PROPERTY = "direction_facing";
 
   /** The highlight for the tile the Character is occupying, in 0xAARRGGBB format */
-  @final private static var HIGHLIGHT_COLOR = 0x00000000; //Change to a value to see square character occupies
+  @final private static var HIGHLIGHT_COLOR = 0x88FF00FF; //Change to a value to see square character occupies
 
   /** Return true iff the up key is pressed */
   public static var UP_PRESSED = function() : Bool { return FlxG.keys.pressed.UP; };
@@ -238,9 +238,11 @@ class Character extends MovingElement {
       if (elm != null && Std.is(elm, Mirror)) {
         var mirror : Mirror = Std.instance(elm, Mirror);
         if(ROT_CLOCKWISE()) {
+          state.actionStack.addRotate(mirror, true);
           mirror.rotateClockwise();
         }
         if(ROT_C_CLOCKWISE()) {
+          state.actionStack.addRotate(mirror, false);
           mirror.rotateCounterClockwise();
         }
         if(GRAB() && mirrorHolding == null) {
@@ -335,8 +337,16 @@ class Character extends MovingElement {
         }
       }
     }
-
     super.update();
+  }
+
+  public override function locationReached(oldRow : Int, oldCol : Int) {
+    super.locationReached(oldRow, oldCol);
+    if (mirrorHolding == null) {
+      state.actionStack.addMove(oldCol, oldRow);
+    } else {
+      state.actionStack.addPushpull(oldCol, oldRow, mirrorHolding);
+    }
   }
 
   private function animationCallback(key : String, frameNumber : Int, frameIndex : Int) : Void {

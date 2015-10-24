@@ -1,5 +1,6 @@
 package;
 
+import logging.ActionStack;
 import elements.*;
 import flixel.FlxCamera;
 import flixel.util.FlxRect;
@@ -32,6 +33,7 @@ class GameState extends FlxState {
   private var savedZoom : Float; //The zoom that the player had before restarting
 
   public var player:Character;
+  public var actionStack : ActionStack;
   public var floor:FlxObject;
   public var exit:Exit;
   public var lightBulbs:FlxTypedGroup<LightBulb>;
@@ -43,11 +45,13 @@ class GameState extends FlxState {
   private var winText : FlxText;
   private var deadText : FlxText;
 
-  public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int, savedZoom : Float = -1) {
+  public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int, savedZoom : Float = -1,
+                      savedActionStack : ActionStack = null) {
     super();
     this.levelPaths = levelPaths;
     this.levelPathIndex = levelPathIndex;
     this.savedZoom = savedZoom;
+    this.actionStack = savedActionStack;
   }
 
   override public function create():Void
@@ -73,6 +77,13 @@ class GameState extends FlxState {
 
     // Load all objects
     level.loadObjects(onAddObject);
+
+    //Either create a new action stack for the player, or set the saved action stack to use the new player
+    if (actionStack == null) {
+      actionStack = new ActionStack(player);
+    } else {
+      actionStack.character = player;
+    }
 
     //Make sure non-player objects are added to level after player is added to level
     //For ordering of the update loop
@@ -154,7 +165,8 @@ class GameState extends FlxState {
     } else if(won && NEXT_LEVEL_BUTTON() && levelPathIndex + 1 < levelPaths.length){
       FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {
-      FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom));
+      actionStack.addReset();
+      FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom, actionStack));
     } else if (ZOOM_IN()) {
       setZoom(FlxG.camera.zoom * ZOOM_MULT);
     } else if (ZOOM_OUT()) {
@@ -255,6 +267,7 @@ class GameState extends FlxState {
 
   public function killPlayer() {
     player.animation.play(Character.DEATH_ANIMATION_KEY, true);
+    actionStack.addDie();
     deadText = new FlxText(0, 0, 0, "You died - press R", 60);
     deadText.x = FlxG.camera.scroll.x + (FlxG.camera.width - deadText.width) / 2;
     deadText.y = FlxG.camera.scroll.y + (FlxG.camera.height - deadText.height) / 2 + player.height;
@@ -266,6 +279,7 @@ class GameState extends FlxState {
     if(won) return;
 
     won = true;
+    actionStack.addWin();
     winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? "" : " - Press Space to continue"), 40);
     winText.x = FlxG.camera.scroll.x + (FlxG.camera.width - winText.width) / 2;
     winText.y = FlxG.camera.scroll.y + (FlxG.camera.height - winText.height) / 2;
