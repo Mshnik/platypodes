@@ -1,5 +1,6 @@
 package;
 
+import haxe.Timer;
 import logging.ActionStack;
 import elements.*;
 import flixel.FlxCamera;
@@ -33,7 +34,11 @@ class GameState extends FlxState {
   private var savedZoom : Float; //The zoom that the player had before restarting
 
   public var player:Character;
+
   public var actionStack : ActionStack;
+  private static inline var RE_LOGGING_TIME = 5000; //time in ms between whole stack (redundant) loggings
+  private var actionStackTimer : Timer;
+
   public var floor:FlxObject;
   public var exit:Exit;
   public var lightBulbs:FlxTypedGroup<LightBulb>;
@@ -54,8 +59,7 @@ class GameState extends FlxState {
     this.actionStack = savedActionStack;
   }
 
-  override public function create():Void
-  {
+  override public function create():Void {
     FlxG.mouse.visible = false;
     won = false;
 
@@ -80,10 +84,13 @@ class GameState extends FlxState {
 
     //Either create a new action stack for the player, or set the saved action stack to use the new player
     if (actionStack == null) {
+      Logging.getSingleton().recordLevelStart(levelPathIndex); //TODO - add more?
       actionStack = new ActionStack(player);
     } else {
       actionStack.character = player;
     }
+    actionStackTimer = new Timer(RE_LOGGING_TIME);
+    actionStackTimer.run = actionStack.logStack;
 
     //Make sure non-player objects are added to level after player is added to level
     //For ordering of the update loop
@@ -161,10 +168,14 @@ class GameState extends FlxState {
 
   override public function update():Void {
     if(MENU_BUTTON()) {
+      actionStackTimer.stop();
       FlxG.switchState(new LevelSelectMenuState());
     } else if(won && NEXT_LEVEL_BUTTON() && levelPathIndex + 1 < levelPaths.length){
+      Logging.getSingleton().recordLevelEnd();
+      actionStackTimer.stop();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {
+      actionStackTimer.stop();
       actionStack.addReset();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom, actionStack));
     } else if (ZOOM_IN()) {

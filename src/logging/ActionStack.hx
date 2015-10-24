@@ -17,7 +17,11 @@ class ActionStack {
 
   private function add(a : ActionElement) {
     elms.push(a);
-    trace(elms);
+    Logging.getSingleton().recordEvent(a.serialize(), "");
+  }
+
+  public function logStack() {
+    Logging.getSingleton().recordEvent(Math.pow(2, 32) - 1, elms.toString());
   }
 
   public function addUndo() {
