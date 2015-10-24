@@ -1,6 +1,7 @@
 package logging;
 
 
+import flixel.util.FlxStringUtil.LabelValuePair;
 import flixel.util.FlxStringUtil;
 import elements.Direction;
 class ActionElement {
@@ -14,6 +15,25 @@ class ActionElement {
 
   private static inline var DIE = 5;
   private static inline var WIN = 6;
+
+  private static function idToString(id : Int) {
+    if (id == RESET){
+      return "Reset";
+    } else if (id == UNDO) {
+      return "Undo";
+    } else if (id==MOVE) {
+      return "Move";
+    } else if(id == PUSHPULL) {
+      return "Push/Pull";
+    } else if (id == ROTATE) {
+      return "Rotate";
+    } else if (id == DIE) {
+      return "Die";
+    } else if (id == WIN) {
+      return "Win";
+    }
+    return "__INVALID__";
+  }
 
   private static inline var POS_SIZE : Int = 5;
   private static inline var ID_SIZE : Int = 3;
@@ -113,13 +133,13 @@ class ActionElement {
 
   private function new(id : Int, startX : Int, startY : Int, directionFacing : Direction,
                        elmX : Int, elmY : Int, moveDirection : Direction, rotateClockwise : Bool) {
-    if (id != MOVE && id != PUSHPULL && id != ROTATE) {
+    if (id != RESET && id != UNDO && id != MOVE && id != PUSHPULL && id != ROTATE && id != DIE && id != WIN) {
       throw "Illegal id " + id;
     }
-    if (startX < 0 || startX > 31 || startY < 0 || startY > 31) {
+    if (startX < 0 || startX > Math.pow(2,POS_SIZE) - 1 || startY < 0 || startY > Math.pow(2, POS_SIZE) - 1) {
       throw "Start x or y out of bounds " + startX + ", " + startY;
     }
-    if (elmX < 0 || elmX > 31 || elmY < 0 || elmY > 31) {
+    if (elmX < 0 || elmX > Math.pow(2,POS_SIZE) - 1 || elmY < 0 || elmY > Math.pow(2,POS_SIZE) - 1) {
       throw "Elm x or y out of bounds " + elmX + ", " + elmY;
     }
     this.id = id;
@@ -222,24 +242,22 @@ class ActionElement {
   }
 
   public function toString() : String {
-    var t = "__INVALID__";
-    if (id==MOVE) {
-      t = "Move";
-    } else if(id == PUSHPULL) {
-      t = "Push/Pull";
-    } else if (id == ROTATE) {
-      t = "Rotate";
-    }
+    var arr = [LabelValuePair.weak("type", idToString(id)),
+               LabelValuePair.weak("startX", startX),
+               LabelValuePair.weak("startY", startY),
+               LabelValuePair.weak("directionFacing", directionFacing.simpleString)];
 
-    return  FlxStringUtil.getDebugString([
-      LabelValuePair.weak("type", t),
-      LabelValuePair.weak("startX", startX),
-      LabelValuePair.weak("startY", startY),
-      LabelValuePair.weak("directionFacing", directionFacing.simpleString),
-      LabelValuePair.weak("elmX", elmX),
-      LabelValuePair.weak("elmY", elmY),
-      LabelValuePair.weak("moveDirection", moveDirection.simpleString),
-      LabelValuePair.weak("rotateDirection", rotateClockwise ? "Clockwise" : "Counter-clockwise")]);
+    if(id == PUSHPULL || id == ROTATE) {
+      arr.push(LabelValuePair.weak("elmX", elmX));
+      arr.push(LabelValuePair.weak("elmY", elmY));
+    }
+    if(id == PUSHPULL || id == MOVE) {
+      arr.push(LabelValuePair.weak("moveDirection", moveDirection.simpleString));
+    }
+    if(id == ROTATE) {
+      arr.push(LabelValuePair.weak("rotateDirection", rotateClockwise ? "Clockwise" : "Counter-clockwise"));
+    }
+    return  FlxStringUtil.getDebugString(arr);
   }
 
   /** Returns a string representing the 32-bit binary representation of the given int */
