@@ -40,7 +40,8 @@
 
 	<haxelib name="swf" />
 
-    <haxeflag name="-swf-lib" value="assets/libraries/Logging.swc" />
+    <haxeflag name="-swf-lib" value="assets/libraries/Logging.swc"/>
+
     <!--In case you want to use the ui package-->
 	<!--haxelib name="flixel-ui"/-->
 	

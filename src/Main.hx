@@ -1,5 +1,9 @@
 package;
 
+import format.SWF;
+import openfl.Assets;
+import haxe.Resource;
+import logging.Logging;
 import elements.Direction;
 import logging.ActionElement;
 import flixel.FlxG;
@@ -51,15 +55,12 @@ class Main extends Sprite
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 		}
 
-
-
 		setupGame();
 	}
 	
 	private function setupGame():Void {
-
-    Logging.getSingleton().initialize(TEAM_ID, VERSION_ID, DEBUG_MODE);
-    Logging.getSingleton().recordPageLoad(""); //TODO?
+    //Logging.getSingleton().initialize(TEAM_ID, VERSION_ID, DEBUG_MODE);
+    //Logging.getSingleton().recordPageLoad(""); //TODO?
 
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
