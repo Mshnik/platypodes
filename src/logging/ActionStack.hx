@@ -1,6 +1,7 @@
 package logging;
 
 
+import UInt;
 import elements.MovingElement;
 import elements.Element;
 import elements.Direction;
@@ -21,7 +22,7 @@ class ActionStack {
   }
 
   public function logStack() {
-    Logging.getSingleton().recordEvent(Math.pow(2, 32) - 1, elms.toString());
+    Logging.getSingleton().recordEvent(Std.int(Math.pow(2, 32) - 1), elms.toString());
   }
 
   public function addUndo() {
