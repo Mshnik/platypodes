@@ -31,6 +31,11 @@ import flixel.addons.editors.tiled.TiledObject;
   /** The direction this character is facing. May not necessarily be equal to moveDireciton */
   public var directionFacing(default, set) : Direction;
 
+  /** The row this MovingElement was on, before calling super.update() to move */
+  private var oldRow : Int;
+
+  /** The row this MovingElement was on, before calling super.update() to move */
+  private var oldCol : Int;
 
   /** Construct a new moving element
    * state - the GameState this element belongs to
@@ -51,6 +56,9 @@ import flixel.addons.editors.tiled.TiledObject;
     destTile = null;
     this.moveSpeed = moveSpeed;
     this.moveDirection = Direction.None;
+
+    oldRow = getRow();
+    oldCol = getCol();
   }
 
   /** Sets the movement speed of this element. If negative, throws an exception */
@@ -101,7 +109,13 @@ import flixel.addons.editors.tiled.TiledObject;
    **/
   public function destinationReached() {}
 
+  /** Called when a new location is reached. Overriding functions should call
+   * super first, in case something is put here
+   **/
+  public function locationReached(oldRow : Int, oldCol : Int){}
+
   /** Updates this element:
+   * Check for location move. If moved, call locationReached, update oldRow and oldCol
    * If TileLocked:
    *    - Checks if destination is reached. If so, stop moving and call destinationReached.
    *    - Otherwise, check if destination is null (unset) and we want to move toward it.
@@ -112,6 +126,12 @@ import flixel.addons.editors.tiled.TiledObject;
    *- calls super.update().
    **/
   public override function update() {
+    if (oldRow != getRow() || oldCol != getCol()) {
+      locationReached(oldRow, oldCol);
+      oldRow = getRow();
+      oldCol = getCol();
+    }
+
     if (tileLocked) {
       //Check if destination is reached
       var boundingBox = getBoundingBox(false);

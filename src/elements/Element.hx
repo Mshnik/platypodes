@@ -126,13 +126,13 @@ import flixel.FlxSprite;
   }
 
   /** Updates this element:
-   * - calls super.update().
    * - moves the squareHighlight to the new row and col.
+   * - calls super.update().
    */
   public override function update() {
-    super.update();
-
     squareHighlight.x = getCol() * state.level.tileWidth;
     squareHighlight.y = getRow() * state.level.tileHeight;
+
+    super.update();
   }
 }
