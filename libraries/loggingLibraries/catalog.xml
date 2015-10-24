@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding ="utf-8"?>
+<swc xmlns="http://www.adobe.com/flash/swccatalog/9">
+  <versions>
+    <swc version="1.2" />
+    <flex version="4.14.1" build="20151010" minimumSupportedVersion="3.0.0" />
+  </versions>
+  <features>
+    <feature-script-deps />
+    <feature-files />
+  </features>
+  <libraries>
+    <library path="library.swf">
+      <script name="_9dcd73cef111572a6e660d342c5c57a70367391cfc26e60b9641a4b91018ac14_flash_display_Sprite" mod="1445288017587" signatureChecksum="3423172951" >
+        <def id="_9dcd73cef111572a6e660d342c5c57a70367391cfc26e60b9641a4b91018ac14_flash_display_Sprite" /> 
+        <dep id="flash.system:Security" type="e" /> 
+        <dep id="flash.display:Sprite" type="i" /> 
+        <dep id="AS3" type="n" /> 
+      </script>
+      <script name="Logging" mod="1445287956000" signatureChecksum="3173559209" >
+        <def id="Logging" /> 
+        <dep id="flash.net:URLLoader" type="s" /> 
+        <dep id="flash.events:IOErrorEvent" type="s" /> 
+        <dep id="flash.net:SharedObject" type="s" /> 
+        <dep id="flash.events:Event" type="s" /> 
+        <dep id="flash.errors:IllegalOperationError" type="e" /> 
+        <dep id="trace" type="e" /> 
+        <dep id="flash.net:URLLoader" type="e" /> 
+        <dep id="flash.events:IOErrorEvent" type="e" /> 
+        <dep id="flash.net:SharedObject" type="e" /> 
+        <dep id="flash.net:URLRequest" type="e" /> 
+        <dep id="Math" type="e" /> 
+        <dep id="Date" type="e" /> 
+        <dep id="flash.events:Event" type="e" /> 
+        <dep id="Object" type="i" /> 
+        <dep id="AS3" type="n" /> 
+      </script>
+      <digests>
+        <digest type="SHA-256" signed="false" value="f287fe54707c3c66082d70a7faef53ed59fe704238db2031a9d67252e9e879f1"   />
+      </digests>
+    </library>
+  </libraries>
+  <files>
+  </files>
+</swc>
