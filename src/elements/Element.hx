@@ -75,6 +75,13 @@ import flixel.FlxSprite;
     return Std.int( (this.x + this.origin.x) / state.level.tileWidth);
   }
 
+  public function centerInTile() {
+    var tile = state.getRectangleFor(getRow(), getCol());
+    x = (tile.x + tile.width/2) - (width - offset.x) / 2;
+    y = (tile.y + tile.height/2) - (height - offset.y) / 2;
+    tile.put();
+  }
+
   /** Return a bounding box for this element.
    * By default, a new FlxRect is created. If createNew = false, FlxRect.get(..) is used.
    * This is more efficient, but has side-effects of possibly being modified after the method
@@ -126,13 +133,13 @@ import flixel.FlxSprite;
   }
 
   /** Updates this element:
-   * - calls super.update().
    * - moves the squareHighlight to the new row and col.
+   * - calls super.update().
    */
   public override function update() {
-    super.update();
-
     squareHighlight.x = getCol() * state.level.tileWidth;
     squareHighlight.y = getRow() * state.level.tileHeight;
+
+    super.update();
   }
 }

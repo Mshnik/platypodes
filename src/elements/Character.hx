@@ -64,7 +64,7 @@ class Character extends MovingElement {
   @final private static var INITIAL_DIRECTION_FACING_PROPERTY = "direction_facing";
 
   /** The highlight for the tile the Character is occupying, in 0xAARRGGBB format */
-  @final private static var HIGHLIGHT_COLOR = 0x00000000; //Change to a value to see square character occupies
+  @final private static var HIGHLIGHT_COLOR = 0x88FF00FF; //Change to a value to see square character occupies
 
   /** Return true iff the up key is pressed */
   public static var UP_PRESSED = function() : Bool { return FlxG.keys.pressed.UP; };
@@ -101,6 +101,12 @@ class Character extends MovingElement {
 
   /** The mirror this character is currently holding, null if none */
   public var mirrorHolding(default, set) : Mirror;
+
+  /** The old x value of the mirror this is holding before it started moving */
+  private var mirrorHoldingOldX : Int;
+
+  /** The old x value of the mirror this is holding before it started moving */
+  private var mirrorHoldingOldY : Int;
 
   /** Constructs a new character, belonging to the given state and represented by the given TiledObject */
   public function new(state : GameState, o : TiledObject) {
@@ -167,6 +173,20 @@ class Character extends MovingElement {
     };
 
     isDying = false;
+    resetMirrorHoldingOldCoords();
+  }
+
+  public override function canMoveInDirection(d : Direction) : Bool {
+    if (d.equals(Direction.None)) {
+      return true;
+    }
+
+    var destRow = Std.int(getRow() + d.y);
+    var destCol = Std.int(getCol() + d.x);
+    var elm = state.getElementAt(destRow, destCol);
+
+    return !state.level.hasWallAt(destCol, destRow) && (elm == null || Std.is(elm, Exit))
+            && !state.isLit(destRow, destCol);
   }
 
   /** Return true iff this character can move in direction d,
@@ -223,6 +243,16 @@ class Character extends MovingElement {
     }
   }
 
+  private function setMirrorHoldingOldChords() {
+    mirrorHoldingOldX = mirrorHolding.getCol();
+    mirrorHoldingOldY = mirrorHolding.getRow();
+  }
+
+  private function resetMirrorHoldingOldCoords() {
+    mirrorHoldingOldX = -1;
+    mirrorHoldingOldY = -1;
+  }
+
   /** Updates the character for this frame
     * - checks if facing a mirror (facing cardinal direction, tile this is facing towards contains a mirror).
     *     If so, check for rotate button pushses to rotate the mirror, or grab button to grab ahold of the mirror.
@@ -232,65 +262,70 @@ class Character extends MovingElement {
     * - calls super.update() to move the character based on calculated move direction
     */
   override public function update() {
-
-    if (directionFacing.isCardinal()) {
-      var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
-      if (elm != null && Std.is(elm, Mirror)) {
-        var mirror : Mirror = Std.instance(elm, Mirror);
-        if(ROT_CLOCKWISE()) {
-          mirror.rotateClockwise();
-        }
-        if(ROT_C_CLOCKWISE()) {
-          mirror.rotateCounterClockwise();
-        }
-        if(GRAB() && mirrorHolding == null) {
-          mirror.moveDirection = Direction.None;
-          mirror.holdingPlayer = this;
-        }
-      }
-    }
-
-    if(!GRAB() && mirrorHolding != null && mirrorHolding.destTile == null) {
-      mirrorHolding.holdingPlayer = null;
-    }
-
-    if (mirrorHolding == null) {
-      moveDirection = Direction.None;
-
-      if(UP_PRESSED()) {
-        moveDirection = moveDirection.addDirec(Direction.Up);
-      }
-      if(DOWN_PRESSED()) {
-        moveDirection = moveDirection.addDirec(Direction.Down);
-      }
-      if(RIGHT_PRESSED()) {
-        moveDirection = moveDirection.addDirec(Direction.Right);
-      }
-      if(LEFT_PRESSED()) {
-        moveDirection = moveDirection.addDirec(Direction.Left);
-      }
-
-      if (!moveDirection.equals(Direction.None)) {
-        directionFacing = moveDirection;
-      }
-    } else {
-      if (GRAB() && mirrorHolding.destTile == null) {
-        if (directionFacing.isHorizontal()) {
-          if (LEFT_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Left)) {
-            mirrorHolding.moveDirection = Direction.Left;
-          } else if (RIGHT_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Right)) {
-            mirrorHolding.moveDirection = Direction.Right;
+    if(!tileLocked) {
+      if (directionFacing.isCardinal()) {
+        var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
+        if (elm != null && Std.is(elm, Mirror)) {
+          var mirror : Mirror = Std.instance(elm, Mirror);
+          if(ROT_CLOCKWISE()) {
+            state.actionStack.addRotate(mirror, true);
+            mirror.rotateClockwise();
           }
-        } else if (directionFacing.isVertical()) {
-          if (UP_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Up)) {
-            mirrorHolding.moveDirection = Direction.Up;
-          } else if (DOWN_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Down)) {
-            mirrorHolding.moveDirection = Direction.Down;
+          if(ROT_C_CLOCKWISE()) {
+            state.actionStack.addRotate(mirror, false);
+            mirror.rotateCounterClockwise();
+          }
+          if(GRAB() && mirrorHolding == null) {
+            mirror.moveDirection = Direction.None;
+            mirror.holdingPlayer = this;
           }
         }
       }
-      moveDirection = mirrorHolding.moveDirection;
-      moveSpeed = mirrorHolding.moveSpeed;
+
+      if(!GRAB() && mirrorHolding != null && mirrorHolding.destTile == null) {
+        mirrorHolding.holdingPlayer = null;
+        resetMirrorHoldingOldCoords();
+      }
+
+      if (mirrorHolding == null) {
+        moveDirection = Direction.None;
+
+        if(UP_PRESSED()) {
+          moveDirection = moveDirection.addDirec(Direction.Up);
+        }
+        if(DOWN_PRESSED()) {
+          moveDirection = moveDirection.addDirec(Direction.Down);
+        }
+        if(RIGHT_PRESSED()) {
+          moveDirection = moveDirection.addDirec(Direction.Right);
+        }
+        if(LEFT_PRESSED()) {
+          moveDirection = moveDirection.addDirec(Direction.Left);
+        }
+
+        if (!moveDirection.equals(Direction.None)) {
+          directionFacing = moveDirection;
+        }
+      } else {
+        if (GRAB() && mirrorHolding.destTile == null) {
+          if (directionFacing.isHorizontal()) {
+            if (LEFT_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Left)) {
+              mirrorHolding.moveDirection = Direction.Left;
+            } else if (RIGHT_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Right)) {
+              mirrorHolding.moveDirection = Direction.Right;
+            }
+          } else if (directionFacing.isVertical()) {
+            if (UP_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Up)) {
+              mirrorHolding.moveDirection = Direction.Up;
+            } else if (DOWN_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Down)) {
+              mirrorHolding.moveDirection = Direction.Down;
+            }
+          }
+          setMirrorHoldingOldChords();
+        }
+        moveDirection = mirrorHolding.moveDirection;
+        moveSpeed = mirrorHolding.moveSpeed;
+      }
     }
 
     //Play the appropriate animation
@@ -335,8 +370,29 @@ class Character extends MovingElement {
         }
       }
     }
-
     super.update();
+  }
+
+  public override function destinationSet() {
+    super.destinationSet();
+  }
+
+  public override function destinationReached() {
+    super.destinationReached();
+    tileLocked = false;
+  }
+
+  public override function locationReached(oldRow : Int, oldCol : Int) {
+    super.locationReached(oldRow, oldCol);
+    if (!tileLocked) {
+      if (mirrorHolding == null) {
+        state.actionStack.addMove(oldCol, oldRow);
+      } else {
+        state.actionStack.addPushpull(oldCol, oldRow, mirrorHoldingOldX, mirrorHoldingOldY);
+        mirrorHoldingOldX = -1;
+        mirrorHoldingOldY = -1;
+      }
+    }
   }
 
   private function animationCallback(key : String, frameNumber : Int, frameIndex : Int) : Void {

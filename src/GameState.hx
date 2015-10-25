@@ -1,5 +1,9 @@
 package;
 
+import logging.ActionElement;
+import logging.Logging;
+import haxe.Timer;
+import logging.ActionStack;
 import elements.*;
 import flixel.FlxCamera;
 import flixel.util.FlxRect;
@@ -22,6 +26,8 @@ class GameState extends FlxState {
   public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
   public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
 
+  public var UNDO : Void -> Bool;
+
   private static var ZOOM_IN = function() : Bool { return FlxG.keys.pressed.ONE; };
   private static var ZOOM_OUT = function() : Bool { return FlxG.keys.pressed.TWO;  };
   private static inline var ZOOM_MULT : Float = 1.02;
@@ -32,6 +38,11 @@ class GameState extends FlxState {
   private var savedZoom : Float; //The zoom that the player had before restarting
 
   public var player:Character;
+
+  public var actionStack : ActionStack;
+  private static inline var RE_LOGGING_TIME = 5000; //time in ms between whole stack (redundant) loggings
+  private var actionStackTimer : Timer;
+
   public var floor:FlxObject;
   public var exit:Exit;
   public var lightBulbs:FlxTypedGroup<LightBulb>;
@@ -43,15 +54,16 @@ class GameState extends FlxState {
   private var winText : FlxText;
   private var deadText : FlxText;
 
-  public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int, savedZoom : Float = -1) {
+  public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int, savedZoom : Float = -1,
+                      savedActionStack : ActionStack = null) {
     super();
     this.levelPaths = levelPaths;
     this.levelPathIndex = levelPathIndex;
     this.savedZoom = savedZoom;
+    this.actionStack = savedActionStack;
   }
 
-  override public function create():Void
-  {
+  override public function create():Void {
     FlxG.mouse.visible = false;
     won = false;
 
@@ -74,6 +86,16 @@ class GameState extends FlxState {
     // Load all objects
     level.loadObjects(onAddObject);
 
+    //Either create a new action stack for the player, or set the saved action stack to use the new player
+    if (actionStack == null) {
+      //Logging.getSingleton().recordLevelStart(levelPathIndex); //TODO - add more?
+      actionStack = new ActionStack(player);
+    } else {
+      actionStack.character = player;
+    }
+    actionStackTimer = new Timer(RE_LOGGING_TIME);
+    actionStackTimer.run = actionStack.logStack;
+
     //Make sure non-player objects are added to level after player is added to level
     //For ordering of the update loop
     add(exit);
@@ -82,6 +104,10 @@ class GameState extends FlxState {
     add(lightBulbs);
     add(lightSwitches);
     add(player);
+
+    UNDO = function(){
+      return !player.tileLocked && FlxG.keys.justPressed.BACKSPACE;
+    };
   }
 
   /** Returns a rectangle representing the given tile */
@@ -150,11 +176,20 @@ class GameState extends FlxState {
 
   override public function update():Void {
     if(MENU_BUTTON()) {
+      actionStackTimer.stop();
       FlxG.switchState(new LevelSelectMenuState());
     } else if(won && NEXT_LEVEL_BUTTON() && levelPathIndex + 1 < levelPaths.length){
+      //Logging.getSingleton().recordLevelEnd();
+      actionStackTimer.stop();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {
-      FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom));
+      actionStackTimer.stop();
+      actionStack.addReset();
+      FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom, actionStack));
+    } else if (UNDO()) {
+      actionStack.addUndo();
+      var action : ActionElement = actionStack.getHead();
+      executeAction(action);
     } else if (ZOOM_IN()) {
       setZoom(FlxG.camera.zoom * ZOOM_MULT);
     } else if (ZOOM_OUT()) {
@@ -253,8 +288,58 @@ class GameState extends FlxState {
     savedZoom = zoom;
   }
 
+  public function executeAction(a : ActionElement) {
+    if(! a.isExecutable()) {
+      throw "Can't execute non-executable action " + a;
+    }
+
+    if(player.getCol() != a.startX || player.getRow() != a.startY) {
+      throw "Can't execute action " + a + " player is at " + player.getCol() + ", " + player.getRow();
+    }
+
+    if (a.id == ActionElement.MOVE) {
+      if (! player.canMoveInDirection(a.moveDirection)) {
+        throw "Can't execute action " + a + " can't move in direction " + a.moveDirection.simpleString;
+      }
+      player.moveDirection = a.moveDirection;
+      player.directionFacing = a.directionFacing;
+      player.tileLocked = true;
+      return;
+    }
+
+    var elm : Element = getElementAt(a.elmY, a.elmX);
+    if (elm == null || ! Std.is(elm, Mirror)) {
+      throw "Can't execute action " + a + " can't push/rotate " + elm;
+    }
+
+    if (a.id == ActionElement.PUSHPULL && Std.is(elm, Mirror)) {
+      var m : Mirror = Std.instance(elm, Mirror);
+      if (! m.canMoveInDirection(a.moveDirection) || ! player.canMoveInDirectionWithMirror(a.moveDirection, m)) {
+        throw "Can't execute action " + a + " can't move mirror " + m + " in direction " + a.moveDirection.simpleString;
+      }
+
+      m.holdingPlayer = player;
+      m.moveDirection = a.moveDirection;
+      player.moveDirection = a.moveDirection;
+      player.directionFacing = a.directionFacing;
+      player.moveSpeed = Mirror.MOVE_SPEED;
+      player.tileLocked = true;
+      return;
+    }
+    if (a.id == ActionElement.ROTATE && Std.is(elm, Mirror)) {
+      var m : Mirror = Std.instance(elm, Mirror);
+      if (a.rotateClockwise) {
+        m.rotateClockwise();
+      } else {
+        m.rotateCounterClockwise();
+      }
+      return;
+    }
+  }
+
   public function killPlayer() {
     player.animation.play(Character.DEATH_ANIMATION_KEY, true);
+    actionStack.addDie();
     deadText = new FlxText(0, 0, 0, "You died - press R", 60);
     deadText.x = FlxG.camera.scroll.x + (FlxG.camera.width - deadText.width) / 2;
     deadText.y = FlxG.camera.scroll.y + (FlxG.camera.height - deadText.height) / 2 + player.height;
@@ -266,6 +351,7 @@ class GameState extends FlxState {
     if(won) return;
 
     won = true;
+    actionStack.addWin();
     winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? "" : " - Press Space to continue"), 40);
     winText.x = FlxG.camera.scroll.x + (FlxG.camera.width - winText.width) / 2;
     winText.y = FlxG.camera.scroll.y + (FlxG.camera.height - winText.height) / 2;
