@@ -1,5 +1,6 @@
 package;
 
+import logging.ActionElement;
 import logging.Logging;
 import haxe.Timer;
 import logging.ActionStack;
@@ -275,6 +276,56 @@ class GameState extends FlxState {
     FlxG.camera.focusOn(player.getMidpoint(null));
 
     savedZoom = zoom;
+  }
+
+  public function executeAction(a : ActionElement) {
+    if(! a.isExecutable()) {
+      throw "Can't execute non-executable action " + a;
+    }
+
+    if(player.getCol() != a.startX || player.getRow() != a.startY) {
+      throw "Can't execute action " + a + " player is at ";
+    }
+
+    if (a.id == ActionElement.MOVE) {
+      if (! player.canMoveInDirection(a.moveDirection)) {
+        throw "Can't execute action " + a + " can't move in direction " + a.moveDirection.simpleString;
+      }
+      player.centerInTile();
+      player.moveDirection = a.moveDirection;
+      player.directionFacing = a.directionFacing;
+      player.tileLocked = true;
+      return;
+    }
+
+    var elm : Element = getElementAt(a.elmY, a.elmX);
+    if (elm == null || ! Std.is(elm, Mirror)) {
+      throw "Can't execute action " + a + " can't push/rotate " + elm;
+    }
+
+    if (a.id == ActionElement.PUSHPULL && Std.is(elm, Mirror)) {
+      var m : Mirror = Std.instance(elm, Mirror);
+      if (! m.canMoveInDirection(a.moveDirection) || ! player.canMoveInDirectionWithMirror(a.moveDirection, m)) {
+        throw "Can't execute action " + a + " can't move mirror " + m + " in direction " + a.moveDirection.simpleString;
+      }
+
+      m.holdingPlayer = player;
+      m.moveDirection = a.moveDirection;
+      player.centerInTile();
+      player.moveDirection = a.moveDirection;
+      player.directionFacing = a.directionFacing;
+      player.tileLocked;
+      return;
+    }
+    if (a.id == ActionElement.ROTATE && Std.is(elm, Mirror)) {
+      var m : Mirror = Std.instance(elm, Mirror);
+      if (a.rotateClockwise) {
+        m.rotateClockwise();
+      } else {
+        m.rotateCounterClockwise();
+      }
+      return;
+    }
   }
 
   public function killPlayer() {

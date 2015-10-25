@@ -6,15 +6,15 @@ import flixel.util.FlxStringUtil;
 import elements.Direction;
 class ActionElement {
 
-  private static inline var RESET = 0;
-  private static inline var UNDO = 1;
+  public static inline var RESET = 0;
+  public static inline var UNDO = 1;
 
-  private static inline var MOVE = 2;
-  private static inline var PUSHPULL = 3;
-  private static inline var ROTATE = 4;
+  public static inline var MOVE = 2;
+  public static inline var PUSHPULL = 3;
+  public static inline var ROTATE = 4;
 
-  private static inline var DIE = 5;
-  private static inline var WIN = 6;
+  public static inline var DIE = 5;
+  public static inline var WIN = 6;
 
   private static function idToString(id : Int) {
     if (id == RESET){
@@ -278,4 +278,9 @@ class ActionElement {
 
     return s;
   }
+
+  public function isExecutable() : Bool {
+    return id == MOVE || id == ROTATE || id == PUSHPULL;
+  }
+
 }

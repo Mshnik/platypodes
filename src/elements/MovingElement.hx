@@ -14,7 +14,7 @@ import flixel.addons.editors.tiled.TiledObject;
    * in that direction is legal. Collisions are basically unused (for the purposes of
    * movement of this object. It may still collide with other free-moving objects).
    **/
-  public var tileLocked(default, null) : Bool;
+  public var tileLocked(default, default) : Bool;
 
   /**
    * If tileLocked, this is the tile this is currently traveling to.
@@ -132,30 +132,27 @@ import flixel.addons.editors.tiled.TiledObject;
       oldCol = getCol();
     }
 
-    if (tileLocked) {
-      //Check if destination is reached
-      var boundingBox = getBoundingBox(false);
-      if(destTile != null && Element.rectContainsRect(destTile, boundingBox)) {
-        velocity.x = 0;
-        velocity.y = 0;
-        moveDirection = Direction.None;
-        destinationReached();
-        destTile = null;
-      }
-      //Check if destination is unset and we have a non-None direction to move
-      else if (destTile == null && !moveDirection.equals(Direction.None)) {
-        velocity.x = moveSpeed * moveDirection.x;
-        velocity.y = moveSpeed * moveDirection.y;
-        destTile = state.getRectangleFor(getRow() + Std.int(moveDirection.y),
-                                         getCol() + Std.int(moveDirection.x), true);
-        destinationSet();
-      }
-      boundingBox.put();
-    } else {
+    //Check if destination is reached
+    var boundingBox = getBoundingBox(false);
+    if(destTile != null && Element.rectContainsRect(destTile, boundingBox)) {
+      velocity.x = 0;
+      velocity.y = 0;
+      moveDirection = Direction.None;
+      destinationReached();
+      destTile = null;
+    }
+    //Check if destination is unset and we have a non-None direction to move
+    else if (tileLocked && destTile == null && !moveDirection.equals(Direction.None)) {
+      velocity.x = moveSpeed * moveDirection.x;
+      velocity.y = moveSpeed * moveDirection.y;
+      destTile = state.getRectangleFor(getRow() + Std.int(moveDirection.y),
+                                       getCol() + Std.int(moveDirection.x), true);
+      destinationSet();
+    } else if(! tileLocked) {
       velocity.x = moveSpeed * moveDirection.x;
       velocity.y = moveSpeed * moveDirection.y;
     }
-
+    boundingBox.put();
     super.update();
   }
 }
