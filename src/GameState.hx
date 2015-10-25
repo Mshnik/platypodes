@@ -26,6 +26,8 @@ class GameState extends FlxState {
   public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
   public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
 
+  public var UNDO : Void -> Bool;
+
   private static var ZOOM_IN = function() : Bool { return FlxG.keys.pressed.ONE; };
   private static var ZOOM_OUT = function() : Bool { return FlxG.keys.pressed.TWO;  };
   private static inline var ZOOM_MULT : Float = 1.02;
@@ -102,6 +104,10 @@ class GameState extends FlxState {
     add(lightBulbs);
     add(lightSwitches);
     add(player);
+
+    UNDO = function(){
+      return !player.tileLocked && FlxG.keys.justPressed.BACKSPACE;
+    };
   }
 
   /** Returns a rectangle representing the given tile */
@@ -180,6 +186,10 @@ class GameState extends FlxState {
       actionStackTimer.stop();
       actionStack.addReset();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom, actionStack));
+    } else if (UNDO()) {
+      actionStack.addUndo();
+      var action : ActionElement = actionStack.getHead();
+      executeAction(action);
     } else if (ZOOM_IN()) {
       setZoom(FlxG.camera.zoom * ZOOM_MULT);
     } else if (ZOOM_OUT()) {
@@ -284,14 +294,13 @@ class GameState extends FlxState {
     }
 
     if(player.getCol() != a.startX || player.getRow() != a.startY) {
-      throw "Can't execute action " + a + " player is at ";
+      throw "Can't execute action " + a + " player is at " + player.getCol() + ", " + player.getRow();
     }
 
     if (a.id == ActionElement.MOVE) {
       if (! player.canMoveInDirection(a.moveDirection)) {
         throw "Can't execute action " + a + " can't move in direction " + a.moveDirection.simpleString;
       }
-      player.centerInTile();
       player.moveDirection = a.moveDirection;
       player.directionFacing = a.directionFacing;
       player.tileLocked = true;
@@ -311,10 +320,10 @@ class GameState extends FlxState {
 
       m.holdingPlayer = player;
       m.moveDirection = a.moveDirection;
-      player.centerInTile();
       player.moveDirection = a.moveDirection;
       player.directionFacing = a.directionFacing;
-      player.tileLocked;
+      player.moveSpeed = Mirror.MOVE_SPEED;
+      player.tileLocked = true;
       return;
     }
     if (a.id == ActionElement.ROTATE && Std.is(elm, Mirror)) {

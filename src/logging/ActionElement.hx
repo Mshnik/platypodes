@@ -283,4 +283,25 @@ class ActionElement {
     return id == MOVE || id == ROTATE || id == PUSHPULL;
   }
 
+  public function getOpposite() : ActionElement {
+    if (id == RESET || id == DIE || id == WIN || id == UNDO) {
+      return this;
+    }
+
+    if (id == ROTATE) {
+      return rotate(startX, startY, directionFacing, elmX, elmY, !rotateClockwise);
+    }
+    if (id == MOVE) {
+      return move(Std.int(startX + moveDirection.x), Std.int(startY + moveDirection.y),
+                  directionFacing.opposite(), moveDirection.opposite());
+    }
+    if (id == PUSHPULL) {
+      return pushpull(Std.int(startX + moveDirection.x), Std.int(startY + moveDirection.y),
+                  directionFacing, Std.int(elmX + moveDirection.x), Std.int(elmY + moveDirection.y),
+                  moveDirection.opposite());
+    }
+
+    throw "Illegal ID for " + this;
+  }
+
 }

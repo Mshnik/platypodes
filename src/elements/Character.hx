@@ -102,6 +102,12 @@ class Character extends MovingElement {
   /** The mirror this character is currently holding, null if none */
   public var mirrorHolding(default, set) : Mirror;
 
+  /** The old x value of the mirror this is holding before it started moving */
+  private var mirrorHoldingOldX : Int;
+
+  /** The old x value of the mirror this is holding before it started moving */
+  private var mirrorHoldingOldY : Int;
+
   /** Constructs a new character, belonging to the given state and represented by the given TiledObject */
   public function new(state : GameState, o : TiledObject) {
     super(state, o, false, MOVE_SPEED);
@@ -167,6 +173,7 @@ class Character extends MovingElement {
     };
 
     isDying = false;
+    resetMirrorHoldingOldCoords();
   }
 
   public override function canMoveInDirection(d : Direction) : Bool {
@@ -236,6 +243,16 @@ class Character extends MovingElement {
     }
   }
 
+  private function setMirrorHoldingOldChords() {
+    mirrorHoldingOldX = mirrorHolding.getCol();
+    mirrorHoldingOldY = mirrorHolding.getRow();
+  }
+
+  private function resetMirrorHoldingOldCoords() {
+    mirrorHoldingOldX = -1;
+    mirrorHoldingOldY = -1;
+  }
+
   /** Updates the character for this frame
     * - checks if facing a mirror (facing cardinal direction, tile this is facing towards contains a mirror).
     *     If so, check for rotate button pushses to rotate the mirror, or grab button to grab ahold of the mirror.
@@ -267,6 +284,7 @@ class Character extends MovingElement {
 
       if(!GRAB() && mirrorHolding != null && mirrorHolding.destTile == null) {
         mirrorHolding.holdingPlayer = null;
+        resetMirrorHoldingOldCoords();
       }
 
       if (mirrorHolding == null) {
@@ -303,6 +321,7 @@ class Character extends MovingElement {
               mirrorHolding.moveDirection = Direction.Down;
             }
           }
+          setMirrorHoldingOldChords();
         }
         moveDirection = mirrorHolding.moveDirection;
         moveSpeed = mirrorHolding.moveSpeed;
@@ -365,10 +384,14 @@ class Character extends MovingElement {
 
   public override function locationReached(oldRow : Int, oldCol : Int) {
     super.locationReached(oldRow, oldCol);
-    if (mirrorHolding == null) {
-      state.actionStack.addMove(oldCol, oldRow);
-    } else {
-      state.actionStack.addPushpull(oldCol, oldRow, mirrorHolding);
+    if (!tileLocked) {
+      if (mirrorHolding == null) {
+        state.actionStack.addMove(oldCol, oldRow);
+      } else {
+        state.actionStack.addPushpull(oldCol, oldRow, mirrorHoldingOldX, mirrorHoldingOldY);
+        mirrorHoldingOldX = -1;
+        mirrorHoldingOldY = -1;
+      }
     }
   }
 

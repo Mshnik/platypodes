@@ -1,8 +1,7 @@
 package logging;
 
 
-import UInt;
-import elements.MovingElement;
+import logging.ActionElement;
 import elements.Element;
 import elements.Direction;
 import elements.Character;
@@ -18,11 +17,25 @@ class ActionStack {
 
   private function add(a : ActionElement) {
     elms.push(a);
+    trace(a);
     //Logging.getSingleton().recordEvent(a.serialize(), "");
   }
 
   public function logStack() {
     //Logging.getSingleton().recordEvent(Std.int(Math.pow(2, 32) - 1), elms.toString());
+  }
+
+  public function getHead() : ActionElement {
+    return resolve(elms.iterator());
+  }
+
+  private function resolve(iter : Iterator<ActionElement>) : ActionElement {
+    var e : ActionElement = iter.next();
+    if (e.id == ActionElement.UNDO) {
+      return resolve(iter).getOpposite();
+    } else {
+      return e;
+    }
   }
 
   public function addUndo() {
@@ -38,12 +51,10 @@ class ActionStack {
     add(ActionElement.move(oldX, oldY, character.directionFacing, moveDirection));
   }
 
-  public function addPushpull(oldX : Int, oldY : Int, e : MovingElement) {
+  public function addPushpull(oldX : Int, oldY : Int, elmOldX : Int, elmOldY : Int) {
     var moveDirection = Direction.getDirection(character.getCol() - oldX, character.getRow() - oldY);
     add(ActionElement.pushpull(oldX, oldY, character.directionFacing,
-                               Std.int(e.getCol() - moveDirection.x),
-                               Std.int(e.getRow() - moveDirection.y),
-                               moveDirection));
+                               elmOldX, elmOldY, moveDirection));
   }
 
   public function addRotate(e : Element, rotateClockwise : Bool) {
