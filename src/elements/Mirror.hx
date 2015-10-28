@@ -12,10 +12,10 @@ class Mirror extends MovingElement implements Lightable{
   private static inline var SIDES_PROPERTY_KEY = "sides";
 
   /** The sprite for an unlit one sided mirror */
-  private static inline var UNLIT_SPRITE_ONE_SIDED = AssetPaths.mirror_1__png;
+  private static inline var UNLIT_SPRITE_ONE_SIDED = AssetPaths.light_sheet_0_2__png;
 
   /** The sprite for a lit one sided mirror */
-  private static inline var LIT_SPRITE_ONE_SIDED = AssetPaths.mirror_1_light__png;
+  private static inline var LIT_SPRITE_ONE_SIDED = AssetPaths.light_sheet_1_2__png;
 
   /** The sprite for an unlit two sided mirror */
   private static inline var UNLIT_SPRITE_TWO_SIDED = ""; //TODO

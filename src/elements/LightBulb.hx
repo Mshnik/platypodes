@@ -3,7 +3,7 @@ import flixel.addons.editors.tiled.TiledObject;
 
 class LightBulb extends Element implements Lightable{
 
-  @final private static var DEFAULT_SPRITE = AssetPaths.light_orb__png;
+  @final private static var DEFAULT_SPRITE = AssetPaths.light_sheet_2_2__png;
   @final private static var DIRECTION_PROPERTY_KEY = "direction"; //Name of direction property in Tiled
 
   public var directionFacing (default, null):Direction;//the direction that the light is shining at

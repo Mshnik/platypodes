@@ -3,8 +3,8 @@ package elements;
 import flixel.FlxSprite;
 class LightSprite extends FlxSprite implements Lightable{
 
-  private static inline var HORIZONTAL_SPRITE = AssetPaths.light_horizontal__png;
-  private static inline var VERTICAL_SPRITE = AssetPaths.light_vertical__png;
+  private static inline var HORIZONTAL_SPRITE = AssetPaths.light_sheet_0_0__png;
+  private static inline var VERTICAL_SPRITE = AssetPaths.light_sheet_1_0__png;
 
   public var state : GameState;
   public var isLit(default, null) : Bool;
