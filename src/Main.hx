@@ -3,7 +3,6 @@ package;
 import format.SWF;
 import openfl.Assets;
 import haxe.Resource;
-import logging.Logging;
 import elements.Direction;
 import logging.ActionElement;
 import flixel.FlxG;
@@ -26,9 +25,9 @@ class Main extends Sprite
 	var skipSplash:Bool = false; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 
-  public static inline var TEAM_ID = 626; //THIS SHOULD NEVER CHANGE EVER EVER
+  public static inline var TEAM_ID = 626; //THIS SHOULD NEVER CHANGE EVER EVER EVER
   public static inline var VERSION_ID = 1; //This can change when we do a big update
-  public static inline var DEBUG_MODE = true; //Make sure this is false when we submit
+  public static inline var DEBUG_MODE = false; //Make sure this is false when we submit
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 	
@@ -59,8 +58,8 @@ class Main extends Sprite
 	}
 	
 	private function setupGame():Void {
-    //Logging.getSingleton().initialize(TEAM_ID, VERSION_ID, DEBUG_MODE);
-    //Logging.getSingleton().recordPageLoad(""); //TODO?
+    Logging.getSingleton().initialize(TEAM_ID, VERSION_ID, DEBUG_MODE);
+    Logging.getSingleton().recordPageLoad(""); //TODO?
 
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;

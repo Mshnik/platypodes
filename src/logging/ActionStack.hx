@@ -18,11 +18,11 @@ class ActionStack {
   private function add(a : ActionElement) {
     elms.push(a);
     trace(a);
-    //Logging.getSingleton().recordEvent(a.serialize(), "");
+    Logging.getSingleton().recordEvent(a.serialize(), "");
   }
 
   public function logStack() {
-    //Logging.getSingleton().recordEvent(Std.int(Math.pow(2, 32) - 1), elms.toString());
+    Logging.getSingleton().recordEvent(Std.int(Math.pow(2, 32) - 1), elms.toString());
   }
 
   public function getHead() : ActionElement {
