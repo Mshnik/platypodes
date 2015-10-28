@@ -1,7 +1,6 @@
 package;
 
 import logging.ActionElement;
-import logging.Logging;
 import haxe.Timer;
 import logging.ActionStack;
 import elements.*;
@@ -88,7 +87,7 @@ class GameState extends FlxState {
 
     //Either create a new action stack for the player, or set the saved action stack to use the new player
     if (actionStack == null) {
-      //Logging.getSingleton().recordLevelStart(levelPathIndex); //TODO - add more?
+      Logging.getSingleton().recordLevelStart(levelPathIndex); //TODO - add more?
       actionStack = new ActionStack(player);
     } else {
       actionStack.character = player;
@@ -179,7 +178,7 @@ class GameState extends FlxState {
       actionStackTimer.stop();
       FlxG.switchState(new LevelSelectMenuState());
     } else if(won && NEXT_LEVEL_BUTTON() && levelPathIndex + 1 < levelPaths.length){
-      //Logging.getSingleton().recordLevelEnd();
+      Logging.getSingleton().recordLevelEnd();
       actionStackTimer.stop();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {
