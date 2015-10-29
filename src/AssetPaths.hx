@@ -4,6 +4,6 @@ package;
 class AssetPaths {
 
   /** The current root for images. Should change by version */
-  @final static public var IMAGE_ROOT = "assets/images/beta/";
+  @final static public var IMAGE_ROOT = "assets/images/friends_release/";
 
 }
