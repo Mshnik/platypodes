@@ -187,7 +187,6 @@ class GameState extends FlxState {
       FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom, actionStack));
     } else if (UNDO() && !player.isDying) {
       actionStack.addUndo();
-      trace("Undoing " + player.alive);
       if(! player.alive) {
         player.revive();
       }
@@ -346,7 +345,7 @@ class GameState extends FlxState {
 
   public function killPlayer() {
     player.mirrorHolding = null;
-    player.animation.play(Character.DEATH_ANIMATION_KEY, true);
+    player.animation.play(Character.DEATH_ANIMATION_KEY, false);
     actionStack.addDie();
     deadText = new FlxText(0, 0, 800, "You died - press Space to undo or R to reset", 40);
     deadText.x = FlxG.camera.scroll.x + (FlxG.camera.width - deadText.width) / 2;

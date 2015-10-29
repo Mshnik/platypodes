@@ -333,7 +333,9 @@ class Character extends MovingElement {
     }
 
     //Play the appropriate animation
+    trace("Changing Grab Status " + isChangingGrabStatus + " alive " + alive);
     if(!isChangingGrabStatus && alive) {
+      trace("Playing animation");
       if (mirrorHolding != null) {
         switch (directionFacing.simpleString) {
           case "Up":
@@ -408,6 +410,7 @@ class Character extends MovingElement {
   public override function kill() {
     super.kill();
     isDying = false;
+    isChangingGrabStatus = false;
   }
 
   private function animationCallback(key : String, frameNumber : Int, frameIndex : Int) : Void {
