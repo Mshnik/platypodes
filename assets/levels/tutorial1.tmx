@@ -1,25 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="128" tileheight="128" nextobjectid="53">
  <tileset firstgid="1" name="walls" tilewidth="128" tileheight="128" tilecount="50">
-  <image source="../images/beta/wallSheet.png" width="640" height="1280"/>
+  <image source="../images/friends_release/wallSheet.png" width="640" height="1280"/>
  </tileset>
- <tileset firstgid="51" name="lightOrbs" tilewidth="128" tileheight="128" tilecount="50">
-  <image source="../images/beta/lightSheet.png" width="640" height="1280"/>
+ <tileset firstgid="51" name="light" tilewidth="128" tileheight="128" tilecount="32">
+  <image source="../images/friends_release/light_sheet.png" width="512" height="1028"/>
  </tileset>
- <tileset firstgid="101" name="exit" tilewidth="128" tileheight="128" tilecount="1">
-  <image source="../images/beta/gate_closed.png" width="128" height="128"/>
+ <tileset firstgid="83" name="exit" tilewidth="128" tileheight="128" tilecount="1">
+  <image source="../images/friends_release/gate_closed.png" width="128" height="128"/>
  </tileset>
- <tileset firstgid="102" name="floors" tilewidth="128" tileheight="128" tilecount="4">
-  <image source="../images/beta/floor_sheet.png" width="512" height="128"/>
+ <tileset firstgid="84" name="floors" tilewidth="128" tileheight="128" tilecount="4">
+  <image source="../images/friends_release/floor_sheet.png" width="512" height="128"/>
  </tileset>
- <tileset firstgid="106" name="holes" tilewidth="128" tileheight="128" tilecount="18">
-  <image source="../images/beta/hole_sheet.png" width="768" height="384"/>
+ <tileset firstgid="88" name="holes" tilewidth="128" tileheight="128" tilecount="18">
+  <image source="../images/friends_release/hole_sheet.png" width="768" height="384"/>
  </tileset>
- <tileset firstgid="124" name="mirrors" tilewidth="128" tileheight="128" tilecount="1">
-  <image source="../images/beta/mirror_1.png" width="128" height="128"/>
- </tileset>
- <tileset firstgid="125" name="tutorialImages" tilewidth="128" tileheight="128" tilecount="64">
-  <image source="../images/beta/tutorialSheet.png" width="512" height="2048"/>
+ <tileset firstgid="106" name="tutorialImages" tilewidth="128" tileheight="128" tilecount="64">
+  <image source="../images/friends_release/tutorialSheet.png" width="512" height="2048"/>
  </tileset>
  <layer name="Floor" width="20" height="20">
   <properties>
