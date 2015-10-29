@@ -341,9 +341,10 @@ class GameState extends FlxState {
   }
 
   public function killPlayer() {
+    player.mirrorHolding = null;
     player.animation.play(Character.DEATH_ANIMATION_KEY, true);
     actionStack.addDie();
-    deadText = new FlxText(0, 0, 0, "You died - press R", 60);
+    deadText = new FlxText(0, 0, 800, "You died - press Space to undo or R to reset", 40);
     deadText.x = FlxG.camera.scroll.x + (FlxG.camera.width - deadText.width) / 2;
     deadText.y = FlxG.camera.scroll.y + (FlxG.camera.height - deadText.height) / 2 + player.height;
     deadText.color = 0xFFFF0022;

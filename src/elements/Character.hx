@@ -56,7 +56,7 @@ class Character extends MovingElement {
   public var isChangingGrabStatus : Bool;
 
   /** True when the dying animation is playing */
-  public var isDying(default, null) : Bool;
+  public var isDead(default, null) : Bool;
 
   /** The custom property on the Character object in Tiled maps that denotes the intial direction facing.
    * Valid values are 1 (Up), 3 (Right), 5 (Down), 7 (Left).
@@ -172,7 +172,7 @@ class Character extends MovingElement {
       return false;
     };
 
-    isDying = false;
+    isDead = false;
     resetMirrorHoldingOldCoords();
   }
 
@@ -207,7 +207,7 @@ class Character extends MovingElement {
    * equal to null), resets the movementspeed so this can move quickly again.
    **/
   public function set_mirrorHolding(m : Mirror) {
-    if(isDying) return mirrorHolding;
+    if(isDead) return mirrorHolding;
 
     if (m == null) {
       moveSpeed = MOVE_SPEED;
@@ -266,7 +266,7 @@ class Character extends MovingElement {
     */
   override public function update() {
     if(!tileLocked) {
-      if (directionFacing.isCardinal()) {
+      if (directionFacing.isCardinal() && ! isDead) {
         var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
         if (elm != null && Std.is(elm, Mirror)) {
           var mirror : Mirror = Std.instance(elm, Mirror);
@@ -289,8 +289,9 @@ class Character extends MovingElement {
         mirrorHolding.holdingPlayer = null;
         resetMirrorHoldingOldCoords();
       }
-
-      if (mirrorHolding == null) {
+      if (isDead) {
+        moveDirection = Direction.None;
+      } else if (mirrorHolding == null) {
         moveDirection = Direction.None;
 
         if(UP_PRESSED()) {
@@ -332,7 +333,7 @@ class Character extends MovingElement {
     }
 
     //Play the appropriate animation
-    if(!isChangingGrabStatus && !isDying) {
+    if(!isChangingGrabStatus && !isDead) {
       if (mirrorHolding != null) {
         switch (directionFacing.simpleString) {
           case "Up":
@@ -400,7 +401,7 @@ class Character extends MovingElement {
 
   private function animationCallback(key : String, frameNumber : Int, frameIndex : Int) : Void {
     if(key == DEATH_ANIMATION_KEY) {
-      isDying = true;
+      isDead = true;
       if(animation.finished) {
         kill();
       }
