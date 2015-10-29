@@ -3,14 +3,11 @@ package elements;
 import flixel.FlxSprite;
 class LightSprite extends FlxSprite implements Lightable{
 
-  private static inline var HORIZONTAL_SPRITE = AssetPaths.light_sheet_0_0__png;
-  private static inline var VERTICAL_SPRITE = AssetPaths.light_sheet_1_0__png;
-
   public var state : GameState;
   public var isLit(default, null) : Bool;
 
-  public function new(state : GameState, row : Int, col : Int, d : Direction) {
-    super(col * state.level.tileWidth, row * state.level.tileHeight, d.isHorizontal() ? HORIZONTAL_SPRITE : VERTICAL_SPRITE);
+  public function new(state : GameState, row : Int, col : Int, d : Direction, spr : Dynamic) {
+    super(col * state.level.tileWidth, row * state.level.tileHeight, spr);
     if(d.isHorizontal() && col%2 == 1) {
       flipX = true;
     }
