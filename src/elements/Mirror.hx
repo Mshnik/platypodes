@@ -41,13 +41,13 @@ class Mirror extends MovingElement implements Lightable{
 
     //Read the flipX and flipY fields to determine intial direction facing
     if (flipX && flipY) {
-	    directionFacing = Direction.Down_Right;
+      directionFacing = Direction.Down_Left;
     } else if (flipX && ! flipY) {
-	    directionFacing = Direction.Up_Right;
+      directionFacing = Direction.Up_Left;
     } else if (! flipX && flipY) {
-	    directionFacing = Direction.Down_Left;
+      directionFacing = Direction.Down_Right;
     } else {
-	    directionFacing = Direction.Up_Left;
+      directionFacing = Direction.Up_Right;
     }
   }
 
