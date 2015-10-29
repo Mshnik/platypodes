@@ -105,7 +105,7 @@ class GameState extends FlxState {
     add(player);
 
     UNDO = function(){
-      return !player.tileLocked && FlxG.keys.justPressed.BACKSPACE;
+      return ! player.tileLocked && FlxG.keys.justPressed.BACKSPACE;
     };
   }
 
@@ -185,9 +185,13 @@ class GameState extends FlxState {
       actionStackTimer.stop();
       actionStack.addReset();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom, actionStack));
-    } else if (UNDO()) {
+    } else if (UNDO() && !player.isDying) {
       actionStack.addUndo();
-      var action : ActionElement = actionStack.getHead();
+      trace("Undoing " + player.alive);
+      if(! player.alive) {
+        player.revive();
+      }
+      var action : ActionElement = actionStack.getHeadSkipDeath();
       executeAction(action);
     } else if (ZOOM_IN()) {
       setZoom(FlxG.camera.zoom * ZOOM_MULT);

@@ -56,7 +56,7 @@ class Character extends MovingElement {
   public var isChangingGrabStatus : Bool;
 
   /** True when the dying animation is playing */
-  public var isDead(default, null) : Bool;
+  public var isDying(default, null) : Bool;
 
   /** The custom property on the Character object in Tiled maps that denotes the intial direction facing.
    * Valid values are 1 (Up), 3 (Right), 5 (Down), 7 (Left).
@@ -172,7 +172,7 @@ class Character extends MovingElement {
       return false;
     };
 
-    isDead = false;
+    isDying = false;
     resetMirrorHoldingOldCoords();
   }
 
@@ -207,7 +207,7 @@ class Character extends MovingElement {
    * equal to null), resets the movementspeed so this can move quickly again.
    **/
   public function set_mirrorHolding(m : Mirror) {
-    if(isDead) return mirrorHolding;
+    if(! alive || isDying) return mirrorHolding = m;
 
     if (m == null) {
       moveSpeed = MOVE_SPEED;
@@ -266,15 +266,15 @@ class Character extends MovingElement {
     */
   override public function update() {
     if(!tileLocked) {
-      if (directionFacing.isCardinal() && ! isDead) {
+      if (directionFacing.isCardinal() && alive && ! isDying) {
         var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
         if (elm != null && Std.is(elm, Mirror)) {
           var mirror : Mirror = Std.instance(elm, Mirror);
-          if(ROT_CLOCKWISE()) {
+          if(mirror.destTile == null && ROT_CLOCKWISE()) {
             state.actionStack.addRotate(mirror, true);
             mirror.rotateClockwise();
           }
-          if(ROT_C_CLOCKWISE()) {
+          if(mirror.destTile == null && ROT_C_CLOCKWISE()) {
             state.actionStack.addRotate(mirror, false);
             mirror.rotateCounterClockwise();
           }
@@ -285,11 +285,11 @@ class Character extends MovingElement {
         }
       }
 
-      if(!GRAB() && mirrorHolding != null && mirrorHolding.destTile == null) {
+      if(mirrorHolding != null &&  (isDying || !GRAB() && mirrorHolding.destTile == null)) {
         mirrorHolding.holdingPlayer = null;
         resetMirrorHoldingOldCoords();
       }
-      if (isDead) {
+      if (isDying || ! alive) {
         moveDirection = Direction.None;
       } else if (mirrorHolding == null) {
         moveDirection = Direction.None;
@@ -333,7 +333,7 @@ class Character extends MovingElement {
     }
 
     //Play the appropriate animation
-    if(!isChangingGrabStatus && !isDead) {
+    if(!isChangingGrabStatus && alive) {
       if (mirrorHolding != null) {
         switch (directionFacing.simpleString) {
           case "Up":
@@ -399,10 +399,21 @@ class Character extends MovingElement {
     }
   }
 
+  public override function revive() {
+    super.revive();
+    visible = true;
+    isDying = false;
+  }
+
+  public override function kill() {
+    super.kill();
+    isDying = false;
+  }
+
   private function animationCallback(key : String, frameNumber : Int, frameIndex : Int) : Void {
     if(key == DEATH_ANIMATION_KEY) {
-      isDead = true;
-      if(animation.finished) {
+      isDying = true;
+      if(frameNumber == 8) {
         kill();
       }
     }
