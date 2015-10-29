@@ -289,16 +289,18 @@ class GameState extends FlxState {
 
   public function executeAction(a : ActionElement) {
     if(! a.isExecutable()) {
-      throw "Can't execute non-executable action " + a;
+      trace("Can't execute non-executable action " + a);
+      return;
     }
 
     if(player.getCol() != a.startX || player.getRow() != a.startY) {
-      throw "Can't execute action " + a + " player is at " + player.getCol() + ", " + player.getRow();
+      trace("Can't execute action " + a + " player is at " + player.getCol() + ", " + player.getRow());
     }
 
     if (a.id == ActionElement.MOVE) {
       if (! player.canMoveInDirection(a.moveDirection)) {
-        throw "Can't execute action " + a + " can't move in direction " + a.moveDirection.simpleString;
+        trace("Can't execute action " + a + " can't move in direction " + a.moveDirection.simpleString);
+        return;
       }
       player.moveDirection = a.moveDirection;
       player.directionFacing = a.directionFacing;
@@ -308,13 +310,15 @@ class GameState extends FlxState {
 
     var elm : Element = getElementAt(a.elmY, a.elmX);
     if (elm == null || ! Std.is(elm, Mirror)) {
-      throw "Can't execute action " + a + " can't push/rotate " + elm;
+      trace("Can't execute action " + a + " can't push/rotate " + elm);
+      return;
     }
 
     if (a.id == ActionElement.PUSHPULL && Std.is(elm, Mirror)) {
       var m : Mirror = Std.instance(elm, Mirror);
       if (! m.canMoveInDirection(a.moveDirection) || ! player.canMoveInDirectionWithMirror(a.moveDirection, m)) {
-        throw "Can't execute action " + a + " can't move mirror " + m + " in direction " + a.moveDirection.simpleString;
+        trace("Can't execute action " + a + " can't move mirror " + m + " in direction " + a.moveDirection.simpleString);
+        return;
       }
 
       m.holdingPlayer = player;

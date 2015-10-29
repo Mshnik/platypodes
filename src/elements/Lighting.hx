@@ -15,8 +15,8 @@ class Lighting {
 
   private static inline var HIT_WALL_DOWN_SPRITE = AssetPaths.light_sheet_0_1__png;
   private static inline var HIT_WALL_UP_SPRITE = AssetPaths.light_sheet_1_1__png;
-  private static inline var HIT_WALL_LEFT_SPRITE = AssetPaths.light_sheet_2_1__png;
-  private static inline var HIT_WALL_RIGHT_SPRITE = AssetPaths.light_sheet_3_1__png;
+  private static inline var HIT_WALL_RIGHT_SPRITE = AssetPaths.light_sheet_2_1__png;
+  private static inline var HIT_WALL_LEFT_SPRITE = AssetPaths.light_sheet_3_1__png;
 
   private var state : GameState;
   private var light_trace:Array<Array<Int>>;

@@ -224,7 +224,8 @@ class Character extends MovingElement {
           animation.play(RELEASE_LEFT_RIGHT_ANIMATION_KEY);
         default:
       }
-      return mirrorHolding = m;
+      mirrorHolding = m;
+      return mirrorHolding;
     } else {
       isChangingGrabStatus = true;
       switch (this.directionFacing.simpleString) {
@@ -239,7 +240,9 @@ class Character extends MovingElement {
           animation.play(GRAB_LEFT_RIGHT_ANIMATION_KEY);
         default:
       }
-      return mirrorHolding = m;
+      mirrorHolding = m;
+      setMirrorHoldingOldChords();
+      return mirrorHolding;
     }
   }
 
