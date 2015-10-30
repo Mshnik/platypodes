@@ -54,7 +54,11 @@ class GameState extends FlxState {
   private var won : Bool;
   private var winText : FlxText;
   private var deadText : FlxText;
+
+  public static inline var HUD_HEIGHT = 40;
+
   private var hud : TopBar;
+  private var hudCamera : FlxCamera;
 
   public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int, savedZoom : Float = -1,
                       savedActionStack : ActionStack = null) {
@@ -84,9 +88,7 @@ class GameState extends FlxState {
     lightSwitches = new FlxTypedGroup<LightSwitch>();
     lightSprites = new FlxTypedGroup<LightSprite>();
 
-    hud = new TopBar();
-
-    // Load all objects
+// Load all objects
     level.loadObjects(onAddObject);
 
     //Either create a TopBar action stack for the player, or set the saved action stack to use the TopBar player
@@ -120,7 +122,13 @@ class GameState extends FlxState {
       }
     }
 
-    //Added last so its on top
+    FlxG.camera.setPosition(0, HUD_HEIGHT);
+    setZoom(FlxG.camera.zoom);
+
+    hudCamera = new FlxCamera(0, 0, FlxG.width, HUD_HEIGHT, 1.0);
+    FlxG.cameras.add(hudCamera);
+
+    hud = new TopBar(hudCamera);
     add(hud);
   }
 
@@ -299,12 +307,13 @@ class GameState extends FlxState {
     if (zoom > 1) zoom = 1;
 
     FlxG.camera.zoom = zoom;
-    FlxG.camera.setSize(Std.int(Lib.current.stage.stageWidth / zoom), Std.int(Lib.current.stage.stageHeight / zoom));
+    FlxG.camera.setSize(Std.int(Lib.current.stage.stageWidth / zoom),
+                        Std.int( (Lib.current.stage.stageHeight - HUD_HEIGHT) / zoom));
     level.updateBuffers();
     FlxG.camera.focusOn(player.getMidpoint(null));
 
     if(hud != null) {
-      hud.fixZoom();
+      hud.fixZoom(savedZoom);
     }
 
     savedZoom = zoom;
