@@ -333,9 +333,7 @@ class Character extends MovingElement {
     }
 
     //Play the appropriate animation
-    trace("Changing Grab Status " + isChangingGrabStatus + " alive " + alive);
     if(!isChangingGrabStatus && alive) {
-      trace("Playing animation");
       if (mirrorHolding != null) {
         switch (directionFacing.simpleString) {
           case "Up":

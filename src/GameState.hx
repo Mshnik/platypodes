@@ -189,6 +189,7 @@ class GameState extends FlxState {
       actionStack.addUndo();
       if(! player.alive) {
         player.revive();
+        remove(deadText);
       }
       var action : ActionElement = actionStack.getHeadSkipDeath();
       executeAction(action);
