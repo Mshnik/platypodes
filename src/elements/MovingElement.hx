@@ -135,9 +135,9 @@ import flixel.addons.editors.tiled.TiledObject;
     //Check if destination is reached
     var boundingBox = getBoundingBox(false);
     if(destTile != null && Element.rectContainsRect(destTile, boundingBox)) {
-      destinationReached();
       velocity.x = 0;
       velocity.y = 0;
+      destinationReached();
       moveDirection = Direction.None;
       destTile = null;
     }

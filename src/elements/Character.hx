@@ -210,7 +210,6 @@ class Character extends MovingElement {
     if(! alive || isDying) return mirrorHolding = m;
 
     if (m == null) {
-      moveSpeed = MOVE_SPEED;
       isChangingGrabStatus = true;
       switch (this.directionFacing.simpleString) {
         //need release up sprites
@@ -287,12 +286,13 @@ class Character extends MovingElement {
         }
       }
 
-      if(mirrorHolding != null &&  (isDying || !GRAB() && mirrorHolding.destTile == null)) {
-        mirrorHolding.holdingPlayer = null;
-        resetMirrorHoldingOldCoords();
-      }
       if (isDying || ! alive) {
         moveDirection = Direction.None;
+      } else if(mirrorHolding != null &&  (isDying || !GRAB() && mirrorHolding.destTile == null)) {
+        mirrorHolding.holdingPlayer = null;
+        moveSpeed = MOVE_SPEED;
+        moveDirection = Direction.None;
+        resetMirrorHoldingOldCoords();
       } else if (mirrorHolding == null) {
         moveDirection = Direction.None;
 
