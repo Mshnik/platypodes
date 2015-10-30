@@ -20,6 +20,8 @@ import flash.Lib;
 
 class GameState extends FlxState {
 
+  private static inline var DISPLAY_COORDINATES = false;
+
   private static inline var INITAL_ZOOM_PROPERTY = "initial_zoom";
   public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
   public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
@@ -107,6 +109,14 @@ class GameState extends FlxState {
     UNDO = function(){
       return ! player.tileLocked && FlxG.keys.justPressed.BACKSPACE;
     };
+
+    if(DISPLAY_COORDINATES) {
+      for(r in 0...level.height) {
+        for(c in 0...level.width) {
+          add(new FlxText(c * level.tileWidth, r * level.tileHeight, 0, "(" + r + "," + c + ")", 20));
+        }
+      }
+    }
   }
 
   /** Returns a rectangle representing the given tile */

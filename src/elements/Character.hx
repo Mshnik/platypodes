@@ -247,8 +247,10 @@ class Character extends MovingElement {
   }
 
   private function setMirrorHoldingOldChords() {
-    mirrorHoldingOldX = mirrorHolding.getCol();
-    mirrorHoldingOldY = mirrorHolding.getRow();
+    if(mirrorHoldingOldX == -1 && mirrorHoldingOldY == -1 ){
+      mirrorHoldingOldX = mirrorHolding.getCol();
+      mirrorHoldingOldY = mirrorHolding.getRow();
+    }
   }
 
   private function resetMirrorHoldingOldCoords() {
@@ -388,14 +390,11 @@ class Character extends MovingElement {
 
   public override function locationReached(oldRow : Int, oldCol : Int) {
     super.locationReached(oldRow, oldCol);
-    if (!tileLocked) {
-      if (mirrorHolding == null) {
-        state.actionStack.addMove(oldCol, oldRow);
-      } else {
-        state.actionStack.addPushpull(oldCol, oldRow, mirrorHoldingOldX, mirrorHoldingOldY);
-        mirrorHoldingOldX = -1;
-        mirrorHoldingOldY = -1;
-      }
+    if (!tileLocked && mirrorHolding == null) {
+      state.actionStack.addMove(oldCol, oldRow);
+    } else if(! tileLocked && mirrorHolding != null) {
+      state.actionStack.addPushpull(oldCol, oldRow, mirrorHoldingOldX, mirrorHoldingOldY);
+      resetMirrorHoldingOldCoords();
     }
   }
 
