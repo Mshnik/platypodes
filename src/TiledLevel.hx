@@ -23,7 +23,7 @@ class TiledLevel extends TiledMap {
   private var tileMaps : Array<FlxTilemap>;
 
   public var floorTiles : FlxGroup;
-  private var floorMap : FlxTilemap;
+  public var floorMap : FlxTilemap;
   public var holeTiles : FlxGroup;
   private var holeMap : FlxTilemap;
   public var wallTiles : FlxGroup;
@@ -163,4 +163,17 @@ class TiledLevel extends TiledMap {
       tilemap.updateBuffers();
     }
   }
+
+  //Return the highest tile index number of a FlxTilemap
+  public static function getMaxTileIndex(map : FlxTilemap) : Int {
+    var max = 0;
+    for (index in map.getData().iterator()){
+      if (index > max){
+        max = index;
+      }
+    }
+    return max;
+  }
+
+
 }
