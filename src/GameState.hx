@@ -54,6 +54,7 @@ class GameState extends FlxState {
   private var won : Bool;
   private var winText : FlxText;
   private var deadText : FlxText;
+  private var hud : TopBar;
 
   public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int, savedZoom : Float = -1,
                       savedActionStack : ActionStack = null) {
@@ -65,7 +66,6 @@ class GameState extends FlxState {
   }
 
   override public function create():Void {
-    FlxG.mouse.visible = false;
     won = false;
 
     super.create();
@@ -84,10 +84,12 @@ class GameState extends FlxState {
     lightSwitches = new FlxTypedGroup<LightSwitch>();
     lightSprites = new FlxTypedGroup<LightSprite>();
 
+    hud = new TopBar();
+
     // Load all objects
     level.loadObjects(onAddObject);
 
-    //Either create a new action stack for the player, or set the saved action stack to use the new player
+    //Either create a TopBar action stack for the player, or set the saved action stack to use the TopBar player
     if (actionStack == null) {
       Logging.getSingleton().recordLevelStart(levelPathIndex); //TODO - add more?
       actionStack = new ActionStack(player);
@@ -117,6 +119,9 @@ class GameState extends FlxState {
         }
       }
     }
+
+    //Added last so its on top
+    add(hud);
   }
 
   /** Returns a rectangle representing the given tile */
@@ -297,6 +302,10 @@ class GameState extends FlxState {
     FlxG.camera.setSize(Std.int(Lib.current.stage.stageWidth / zoom), Std.int(Lib.current.stage.stageHeight / zoom));
     level.updateBuffers();
     FlxG.camera.focusOn(player.getMidpoint(null));
+
+    if(hud != null) {
+      hud.fixZoom();
+    }
 
     savedZoom = zoom;
   }
