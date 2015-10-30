@@ -25,14 +25,16 @@ class ActionStack {
     Logging.getSingleton().recordEvent(Std.int(Math.pow(2, 32) - 1), elms.toString());
   }
 
-  public function getHead() : ActionElement {
-    return resolve(elms.iterator());
+  public function getHeadSkipDeath() : ActionElement {
+    return resolveSkipDeath(elms.iterator());
   }
 
-  private function resolve(iter : Iterator<ActionElement>) : ActionElement {
+  private function resolveSkipDeath(iter : Iterator<ActionElement>) : ActionElement {
     var e : ActionElement = iter.next();
     if (e.id == ActionElement.UNDO) {
-      return resolve(iter).getOpposite();
+      return resolveSkipDeath(iter).getOpposite();
+    } else if (e.id == ActionElement.DIE){
+      return resolveSkipDeath(iter);
     } else {
       return e;
     }

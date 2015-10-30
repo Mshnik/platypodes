@@ -8,12 +8,6 @@ class LightSprite extends FlxSprite implements Lightable{
 
   public function new(state : GameState, row : Int, col : Int, d : Direction, spr : Dynamic) {
     super(col * state.level.tileWidth, row * state.level.tileHeight, spr);
-    if(d.isHorizontal() && col%2 == 1) {
-      flipX = true;
-    }
-    if(d.isVertical() && col%2 == 1) {
-      flipY = true;
-    }
     this.state = state;
     isLit = true;
     immovable = true;

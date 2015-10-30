@@ -166,8 +166,6 @@ class Mirror extends MovingElement implements Lightable{
    * and if the new character is null, updates the old character's mirrorHolding field to null.
    **/
   public function set_holdingPlayer(p : Character) {
-    if(holdingPlayer == p) return p;
-
     if(holdingPlayer != null) {
       holdingPlayer.mirrorHolding = null;
     }

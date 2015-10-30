@@ -31,6 +31,3 @@ submit your feature branch to develop **after it has been checked**
 - Note - in the merge message, write a list of the features the merge of this branch is adding.
 
 
-
-
-

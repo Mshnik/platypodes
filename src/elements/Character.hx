@@ -207,10 +207,9 @@ class Character extends MovingElement {
    * equal to null), resets the movementspeed so this can move quickly again.
    **/
   public function set_mirrorHolding(m : Mirror) {
-    if(isDying) return mirrorHolding;
+    if(! alive || isDying) return mirrorHolding = m;
 
     if (m == null) {
-      moveSpeed = MOVE_SPEED;
       isChangingGrabStatus = true;
       switch (this.directionFacing.simpleString) {
         //need release up sprites
@@ -224,7 +223,8 @@ class Character extends MovingElement {
           animation.play(RELEASE_LEFT_RIGHT_ANIMATION_KEY);
         default:
       }
-      return mirrorHolding = m;
+      mirrorHolding = m;
+      return mirrorHolding;
     } else {
       isChangingGrabStatus = true;
       switch (this.directionFacing.simpleString) {
@@ -239,13 +239,17 @@ class Character extends MovingElement {
           animation.play(GRAB_LEFT_RIGHT_ANIMATION_KEY);
         default:
       }
-      return mirrorHolding = m;
+      mirrorHolding = m;
+      setMirrorHoldingOldChords();
+      return mirrorHolding;
     }
   }
 
   private function setMirrorHoldingOldChords() {
-    mirrorHoldingOldX = mirrorHolding.getCol();
-    mirrorHoldingOldY = mirrorHolding.getRow();
+    if(mirrorHoldingOldX == -1 && mirrorHoldingOldY == -1 ){
+      mirrorHoldingOldX = mirrorHolding.getCol();
+      mirrorHoldingOldY = mirrorHolding.getRow();
+    }
   }
 
   private function resetMirrorHoldingOldCoords() {
@@ -263,15 +267,15 @@ class Character extends MovingElement {
     */
   override public function update() {
     if(!tileLocked) {
-      if (directionFacing.isCardinal()) {
+      if (directionFacing.isCardinal() && alive && ! isDying) {
         var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
         if (elm != null && Std.is(elm, Mirror)) {
           var mirror : Mirror = Std.instance(elm, Mirror);
-          if(ROT_CLOCKWISE()) {
+          if(mirror.destTile == null && ROT_CLOCKWISE()) {
             state.actionStack.addRotate(mirror, true);
             mirror.rotateClockwise();
           }
-          if(ROT_C_CLOCKWISE()) {
+          if(mirror.destTile == null && ROT_C_CLOCKWISE()) {
             state.actionStack.addRotate(mirror, false);
             mirror.rotateCounterClockwise();
           }
@@ -282,12 +286,14 @@ class Character extends MovingElement {
         }
       }
 
-      if(!GRAB() && mirrorHolding != null && mirrorHolding.destTile == null) {
+      if (isDying || ! alive) {
+        moveDirection = Direction.None;
+      } else if(mirrorHolding != null &&  (isDying || !GRAB() && mirrorHolding.destTile == null)) {
         mirrorHolding.holdingPlayer = null;
+        moveSpeed = MOVE_SPEED;
+        moveDirection = Direction.None;
         resetMirrorHoldingOldCoords();
-      }
-
-      if (mirrorHolding == null) {
+      } else if (mirrorHolding == null) {
         moveDirection = Direction.None;
 
         if(UP_PRESSED()) {
@@ -329,7 +335,7 @@ class Character extends MovingElement {
     }
 
     //Play the appropriate animation
-    if(!isChangingGrabStatus && !isDying) {
+    if(!isChangingGrabStatus && alive) {
       if (mirrorHolding != null) {
         switch (directionFacing.simpleString) {
           case "Up":
@@ -384,21 +390,30 @@ class Character extends MovingElement {
 
   public override function locationReached(oldRow : Int, oldCol : Int) {
     super.locationReached(oldRow, oldCol);
-    if (!tileLocked) {
-      if (mirrorHolding == null) {
-        state.actionStack.addMove(oldCol, oldRow);
-      } else {
-        state.actionStack.addPushpull(oldCol, oldRow, mirrorHoldingOldX, mirrorHoldingOldY);
-        mirrorHoldingOldX = -1;
-        mirrorHoldingOldY = -1;
-      }
+    if (!tileLocked && mirrorHolding == null) {
+      state.actionStack.addMove(oldCol, oldRow);
+    } else if(! tileLocked && mirrorHolding != null) {
+      state.actionStack.addPushpull(oldCol, oldRow, mirrorHoldingOldX, mirrorHoldingOldY);
+      resetMirrorHoldingOldCoords();
     }
+  }
+
+  public override function revive() {
+    super.revive();
+    visible = true;
+    isDying = false;
+  }
+
+  public override function kill() {
+    super.kill();
+    isDying = false;
+    isChangingGrabStatus = false;
   }
 
   private function animationCallback(key : String, frameNumber : Int, frameIndex : Int) : Void {
     if(key == DEATH_ANIMATION_KEY) {
       isDying = true;
-      if(animation.finished) {
+      if(frameNumber == 8) {
         kill();
       }
     }
