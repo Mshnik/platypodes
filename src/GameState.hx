@@ -20,6 +20,8 @@ import flash.Lib;
 
 class GameState extends FlxState {
 
+  private static inline var DISPLAY_COORDINATES = false;
+
   private static inline var INITAL_ZOOM_PROPERTY = "initial_zoom";
   public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
   public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
@@ -105,8 +107,16 @@ class GameState extends FlxState {
     add(player);
 
     UNDO = function(){
-      return !player.tileLocked && FlxG.keys.justPressed.BACKSPACE;
+      return ! player.tileLocked && FlxG.keys.justPressed.BACKSPACE;
     };
+
+    if(DISPLAY_COORDINATES) {
+      for(r in 0...level.height) {
+        for(c in 0...level.width) {
+          add(new FlxText(c * level.tileWidth, r * level.tileHeight, 0, "(" + r + "," + c + ")", 20));
+        }
+      }
+    }
   }
 
   /** Returns a rectangle representing the given tile */
@@ -185,9 +195,13 @@ class GameState extends FlxState {
       actionStackTimer.stop();
       actionStack.addReset();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom, actionStack));
-    } else if (UNDO()) {
+    } else if (UNDO() && !player.isDying) {
       actionStack.addUndo();
-      var action : ActionElement = actionStack.getHead();
+      if(! player.alive) {
+        player.revive();
+        remove(deadText);
+      }
+      var action : ActionElement = actionStack.getHeadSkipDeath();
       executeAction(action);
     } else if (ZOOM_IN()) {
       setZoom(FlxG.camera.zoom * ZOOM_MULT);
@@ -289,16 +303,18 @@ class GameState extends FlxState {
 
   public function executeAction(a : ActionElement) {
     if(! a.isExecutable()) {
-      throw "Can't execute non-executable action " + a;
+      trace("Can't execute non-executable action " + a);
+      return;
     }
 
     if(player.getCol() != a.startX || player.getRow() != a.startY) {
-      throw "Can't execute action " + a + " player is at " + player.getCol() + ", " + player.getRow();
+      trace("Can't execute action " + a + " player is at " + player.getCol() + ", " + player.getRow());
     }
 
     if (a.id == ActionElement.MOVE) {
       if (! player.canMoveInDirection(a.moveDirection)) {
-        throw "Can't execute action " + a + " can't move in direction " + a.moveDirection.simpleString;
+        trace("Can't execute action " + a + " can't move in direction " + a.moveDirection.simpleString);
+        return;
       }
       player.moveDirection = a.moveDirection;
       player.directionFacing = a.directionFacing;
@@ -308,13 +324,15 @@ class GameState extends FlxState {
 
     var elm : Element = getElementAt(a.elmY, a.elmX);
     if (elm == null || ! Std.is(elm, Mirror)) {
-      throw "Can't execute action " + a + " can't push/rotate " + elm;
+      trace("Can't execute action " + a + " can't push/rotate " + elm);
+      return;
     }
 
     if (a.id == ActionElement.PUSHPULL && Std.is(elm, Mirror)) {
       var m : Mirror = Std.instance(elm, Mirror);
       if (! m.canMoveInDirection(a.moveDirection) || ! player.canMoveInDirectionWithMirror(a.moveDirection, m)) {
-        throw "Can't execute action " + a + " can't move mirror " + m + " in direction " + a.moveDirection.simpleString;
+        trace("Can't execute action " + a + " can't move mirror " + m + " in direction " + a.moveDirection.simpleString);
+        return;
       }
 
       m.holdingPlayer = player;
@@ -337,9 +355,10 @@ class GameState extends FlxState {
   }
 
   public function killPlayer() {
-    player.animation.play(Character.DEATH_ANIMATION_KEY, true);
+    player.mirrorHolding = null;
+    player.animation.play(Character.DEATH_ANIMATION_KEY, false);
     actionStack.addDie();
-    deadText = new FlxText(0, 0, 0, "You died - press R", 60);
+    deadText = new FlxText(0, 0, 800, "You died - press Space to undo or R to reset", 40);
     deadText.x = FlxG.camera.scroll.x + (FlxG.camera.width - deadText.width) / 2;
     deadText.y = FlxG.camera.scroll.y + (FlxG.camera.height - deadText.height) / 2 + player.height;
     deadText.color = 0xFFFF0022;
