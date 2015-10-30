@@ -19,7 +19,6 @@ class TopBar extends FlxTypedGroup<FlxSprite>{
     super();
 
     back = new FlxSprite().makeGraphic(FlxG.width, GameState.HUD_HEIGHT, FlxColor.BLACK);
-    back.alpha = 0.75;
 
     resetButton = new FlxButton(5, 5, "Reset");
     undoButton = new FlxButton(100, 5, "Undo");

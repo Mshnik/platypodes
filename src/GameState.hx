@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxSprite;
 import logging.ActionElement;
 import haxe.Timer;
 import logging.ActionStack;
@@ -122,12 +123,10 @@ class GameState extends FlxState {
       }
     }
 
-    FlxG.camera.setPosition(0, HUD_HEIGHT);
     setZoom(FlxG.camera.zoom);
 
     hudCamera = new FlxCamera(0, 0, FlxG.width, HUD_HEIGHT, 1.0);
     FlxG.cameras.add(hudCamera);
-
     hud = new TopBar(hudCamera);
     add(hud);
   }
@@ -308,14 +307,9 @@ class GameState extends FlxState {
 
     FlxG.camera.zoom = zoom;
     FlxG.camera.setSize(Std.int(Lib.current.stage.stageWidth / zoom),
-                        Std.int( (Lib.current.stage.stageHeight - HUD_HEIGHT) / zoom));
+                        Std.int(Lib.current.stage.stageHeight / zoom));
     level.updateBuffers();
     FlxG.camera.focusOn(player.getMidpoint(null));
-
-    if(hud != null) {
-      hud.fixZoom(savedZoom);
-    }
-
     savedZoom = zoom;
   }
 
