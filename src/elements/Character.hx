@@ -90,6 +90,9 @@ class Character extends MovingElement {
   /** Return true when the up key is pressed (once per press) */
   public static var LEFT_SINGLE = function() : Bool { return FlxG.keys.justPressed.LEFT; };
 
+  /** Return true if any of the movement keys are pressed **/
+  public static var IS_MOVEMENT_KEY_PRESSED = function() : Bool {return LEFT_PRESSED() || RIGHT_PRESSED() || DOWN_PRESSED() || UP_PRESSED();};
+
   /** Return true iff the grab key is pressed */
   public static var GRAB = function() : Bool { return FlxG.keys.pressed.SPACE; };
 

@@ -11,6 +11,7 @@ import flixel.group.FlxTypedGroup;
 import flixel.FlxBasic;
 import flixel.addons.editors.tiled.TiledObjectGroup;
 import flixel.addons.editors.tiled.TiledObject;
+import flixel.addons.plugin.FlxMouseControl;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxObject;
@@ -66,7 +67,9 @@ class GameState extends FlxState {
   }
 
   override public function create():Void {
-    FlxG.mouse.visible = false;
+    FlxG.mouse.visible = true;
+    FlxG.plugins.add(new FlxMouseControl());
+
     won = false;
 
     super.create();
@@ -250,8 +253,7 @@ class GameState extends FlxState {
       }
     }
 
-    //Update tooltip
-    this.tooltip.update();
+
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup) {
