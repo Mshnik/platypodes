@@ -43,6 +43,8 @@ class GameState extends FlxState {
   private var winText : FlxText;
   private var deadText : FlxText;
 
+  private var sndWin : FlxSound;
+
   public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int, savedZoom : Float = -1) {
     super();
     this.levelPaths = levelPaths;
@@ -54,6 +56,7 @@ class GameState extends FlxState {
   {
     FlxG.mouse.visible = false;
     won = false;
+    sndWin = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
 
     super.create();
 
@@ -266,6 +269,7 @@ class GameState extends FlxState {
     if(won) return;
 
     won = true;
+    sndWin.play();
     winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? "" : " - Press Space to continue"), 40);
     winText.x = FlxG.camera.scroll.x + (FlxG.camera.width - winText.width) / 2;
     winText.y = FlxG.camera.scroll.y + (FlxG.camera.height - winText.height) / 2;
