@@ -21,7 +21,7 @@ import flash.Lib;
 
 class GameState extends FlxState {
 
-  private static inline var DISPLAY_COORDINATES = true;
+  private static inline var DISPLAY_COORDINATES = false;
 
   private static inline var INITAL_ZOOM_PROPERTY = "initial_zoom";
   public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
@@ -208,9 +208,9 @@ class GameState extends FlxState {
     } else if (UNDO() && !player.isDying) {
       undoMove();
     } else if (ZOOM_IN()) {
-      setZoom(FlxG.camera.zoom * ZOOM_MULT);
+      zoomIn();
     } else if (ZOOM_OUT()) {
-      setZoom(FlxG.camera.zoom / ZOOM_MULT);
+      zoomOut();
     }
 
     super.update();
@@ -290,6 +290,14 @@ class GameState extends FlxState {
       default:
         trace("Got unknown object " + o.type.toLowerCase());
     }
+  }
+
+  public inline function zoomIn() {
+    setZoom(FlxG.camera.zoom * ZOOM_MULT);
+  }
+
+  public inline function zoomOut() {
+    setZoom(FlxG.camera.zoom / ZOOM_MULT);
   }
 
   private function setZoom(zoom:Float) {

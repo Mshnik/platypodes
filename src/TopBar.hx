@@ -23,16 +23,16 @@ class TopBar extends FlxTypedGroup<FlxSprite>{
     this.state = state;
     back = new FlxSprite().makeGraphic(FlxG.width, GameState.HUD_HEIGHT, FlxColor.BLACK);
 
-    resetButton = new FlxButton(0, 0, "Reset", state.resetState);
-    undoButton = new FlxButton(0, 0, "Undo", state.undoMove);
-    zoomOutButton = new FlxButton(0, 0, "Zoom Out");
-    zoomInButton = new FlxButton(0, 0, "Zoom In");
+    resetButton = new FlxButton(0, 0, "Reset (R)", state.resetState);
+    undoButton = new FlxButton(0, 0, "Undo (Bksp)", state.undoMove);
+    zoomInButton = new FlxButton(0, 0, "Zoom In (1)");
+    zoomOutButton = new FlxButton(0, 0, "Zoom Out (2)");
 
     add(back);
     add(resetButton);
     add(undoButton);
-    add(zoomOutButton);
     add(zoomInButton);
+    add(zoomOutButton);
     forEach(function(spr:FlxSprite) {
       spr.scrollFactor.set();
       spr.cameras = [camera];
@@ -46,5 +46,14 @@ class TopBar extends FlxTypedGroup<FlxSprite>{
       b.y = (GameState.HUD_HEIGHT - b.height) / 2;
       i += 2;
     });
+  }
+
+  public override function update() {
+    super.update();
+    if(zoomOutButton.status == FlxButton.PRESSED) {
+      state.zoomOut();
+    } else if(zoomInButton.status == FlxButton.PRESSED) {
+      state.zoomIn();
+    }
   }
 }
