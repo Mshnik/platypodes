@@ -23,7 +23,7 @@ class Main extends Sprite
 	// You can pretty much ignore everything from here on - your code should go in your states.
 	
 	public static function main():Void
-	{	
+	{
 		Lib.current.addChild(new Main());
 	}
 	
@@ -55,6 +55,8 @@ class Main extends Sprite
 	{
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
+
+		FlxG.sound.playMusic(AssetPaths.BasicBackground__wav, 1, true);
 
 		if (zoom == -1)
 		{
