@@ -1,5 +1,6 @@
 package;
 
+import flixel.system.FlxSound;
 import elements.*;
 import flixel.FlxCamera;
 import flixel.util.FlxRect;
