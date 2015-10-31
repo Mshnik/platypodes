@@ -21,7 +21,7 @@ import flash.Lib;
 
 class GameState extends FlxState {
 
-  private static inline var DISPLAY_COORDINATES = false;
+  private static inline var DISPLAY_COORDINATES = true;
 
   private static inline var INITAL_ZOOM_PROPERTY = "initial_zoom";
   public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
@@ -366,13 +366,15 @@ class GameState extends FlxState {
 
   public function undoMove() {
     if(!player.isDying) {
-      actionStack.addUndo();
-      if(! player.alive) {
-        player.revive();
-        remove(deadText);
-      }
       var action : ActionElement = actionStack.getHeadSkipDeath();
-      executeAction(action);
+      if(action != null) {
+        actionStack.addUndo();
+        if(! player.alive) {
+          player.revive();
+          remove(deadText);
+        }
+          executeAction(action.getOpposite());
+      }
     }
   }
 

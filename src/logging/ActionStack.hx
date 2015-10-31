@@ -30,6 +30,9 @@ class ActionStack {
   }
 
   private function resolveSkipDeath(iter : Iterator<ActionElement>) : ActionElement {
+    if(! iter.hasNext()) {
+      return null;
+    }
     var e : ActionElement = iter.next();
     if (e.id == ActionElement.UNDO) {
       return resolveSkipDeath(iter).getOpposite();
