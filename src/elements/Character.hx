@@ -111,7 +111,7 @@ class Character extends MovingElement {
   /** The old x value of the mirror this is holding before it started moving */
   private var mirrorHoldingOldY : Int;
 
-  /** Constructs a new character, belonging to the given state and represented by the given TiledObject */
+  /** Constructs a TopBar character, belonging to the given state and represented by the given TiledObject */
   public function new(state : GameState, o : TiledObject) {
     super(state, o, false, MOVE_SPEED);
 

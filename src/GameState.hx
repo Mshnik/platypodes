@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxSprite;
 import logging.ActionElement;
 import haxe.Timer;
 import logging.ActionStack;
@@ -57,6 +58,11 @@ class GameState extends FlxState {
   private var winText : FlxText;
   private var deadText : FlxText;
 
+  public static inline var HUD_HEIGHT = 40;
+
+  private var hud : TopBar;
+  private var hudCamera : FlxCamera;
+
   public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int, savedZoom : Float = -1,
                       savedActionStack : ActionStack = null) {
     super();
@@ -88,10 +94,10 @@ class GameState extends FlxState {
     lightSwitches = new FlxTypedGroup<LightSwitch>();
     lightSprites = new FlxTypedGroup<LightSprite>();
 
-    // Load all objects
+// Load all objects
     level.loadObjects(onAddObject);
 
-    //Either create a new action stack for the player, or set the saved action stack to use the new player
+    //Either create a TopBar action stack for the player, or set the saved action stack to use the TopBar player
     if (actionStack == null) {
       Logging.getSingleton().recordLevelStart(levelPathIndex); //TODO - add more?
       actionStack = new ActionStack(player);
@@ -125,6 +131,13 @@ class GameState extends FlxState {
         }
       }
     }
+
+    setZoom(FlxG.camera.zoom);
+
+    hudCamera = new FlxCamera(0, 0, FlxG.width, HUD_HEIGHT, 1.0);
+    FlxG.cameras.add(hudCamera);
+    hud = new TopBar(this, hudCamera);
+    add(hud);
   }
 
   /** Returns a rectangle representing the given tile */
@@ -200,21 +213,13 @@ class GameState extends FlxState {
       actionStackTimer.stop();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {
-      actionStackTimer.stop();
-      actionStack.addReset();
-      FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom, actionStack));
+      resetState();
     } else if (UNDO() && !player.isDying) {
-      actionStack.addUndo();
-      if(! player.alive) {
-        player.revive();
-        remove(deadText);
-      }
-      var action : ActionElement = actionStack.getHeadSkipDeath();
-      executeAction(action);
+      undoMove();
     } else if (ZOOM_IN()) {
-      setZoom(FlxG.camera.zoom * ZOOM_MULT);
+      zoomIn();
     } else if (ZOOM_OUT()) {
-      setZoom(FlxG.camera.zoom / ZOOM_MULT);
+      zoomOut();
     }
 
     super.update();
@@ -252,8 +257,6 @@ class GameState extends FlxState {
         win();
       }
     }
-
-
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup) {
@@ -298,19 +301,26 @@ class GameState extends FlxState {
     }
   }
 
+  public inline function zoomIn() {
+    setZoom(FlxG.camera.zoom * ZOOM_MULT);
+  }
+
+  public inline function zoomOut() {
+    setZoom(FlxG.camera.zoom / ZOOM_MULT);
+  }
+
   private function setZoom(zoom:Float) {
     //Check for min and max zoom
     if (zoom < 0.25) zoom = 0.25;
     if (zoom > 1) zoom = 1;
 
     FlxG.camera.zoom = zoom;
-    FlxG.camera.setSize(Std.int(Lib.current.stage.stageWidth / zoom), Std.int(Lib.current.stage.stageHeight / zoom));
+    FlxG.camera.setSize(Std.int(Lib.current.stage.stageWidth / zoom),
+                        Std.int(Lib.current.stage.stageHeight / zoom));
     level.updateBuffers();
     FlxG.camera.focusOn(player.getMidpoint(null));
-
     savedZoom = zoom;
   }
-
 
   public function executeAction(a : ActionElement) {
     if(! a.isExecutable()) {
@@ -362,6 +372,26 @@ class GameState extends FlxState {
         m.rotateCounterClockwise();
       }
       return;
+    }
+  }
+
+  public function resetState() {
+    actionStackTimer.stop();
+    actionStack.addReset();
+    FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom, actionStack));
+  }
+
+  public function undoMove() {
+    if(!player.isDying) {
+      var action : ActionElement = actionStack.getHeadSkipDeath();
+      if(action != null) {
+        actionStack.addUndo();
+        if(! player.alive) {
+          player.revive();
+          remove(deadText);
+        }
+          executeAction(action.getOpposite());
+      }
     }
   }
 
