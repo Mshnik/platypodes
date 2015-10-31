@@ -9,19 +9,22 @@ import flixel.group.FlxTypedGroup;
 
 class TopBar extends FlxTypedGroup<FlxSprite>{
 
+  @final public var state : GameState;
+
   public var back(default, null) : FlxSprite;
   private var resetButton : FlxButton;
   private var undoButton : FlxButton;
   private var zoomOutButton : FlxButton;
   private var zoomInButton : FlxButton;
 
-  public function new(camera : FlxCamera) {
+  public function new(state : GameState, camera : FlxCamera) {
     super();
 
+    this.state = state;
     back = new FlxSprite().makeGraphic(FlxG.width, GameState.HUD_HEIGHT, FlxColor.BLACK);
 
-    resetButton = new FlxButton(5, 5, "Reset");
-    undoButton = new FlxButton(100, 5, "Undo");
+    resetButton = new FlxButton(5, 5, "Reset", state.resetState);
+    undoButton = new FlxButton(100, 5, "Undo", state.undoMove);
     zoomOutButton = new FlxButton(200, 5, "Zoom Out");
     zoomInButton = new FlxButton(300, 5, "Zoom In");
 
@@ -34,21 +37,5 @@ class TopBar extends FlxTypedGroup<FlxSprite>{
       spr.scrollFactor.set();
       spr.cameras = [camera];
     });
-  }
-
-  public function fixZoom(oldZoom : Float) {
-//    back.scale.set(1 / FlxG.camera.zoom, 1 / FlxG.camera.zoom);
-//
-//    resetButton.setGraphicSize(Std.int(resetButton.width / FlxG.camera.zoom), Std.int(resetButton.height / FlxG.camera.zoom));
-//    resetButton.updateHitbox();
-//
-//    undoButton.setGraphicSize(Std.int(undoButton.width / FlxG.camera.zoom), Std.int(undoButton.height / FlxG.camera.zoom));
-//    undoButton.updateHitbox();
-//
-//    zoomOutButton.setGraphicSize(Std.int(zoomOutButton.width / FlxG.camera.zoom), Std.int(zoomOutButton.height / FlxG.camera.zoom));
-//    zoomOutButton.updateHitbox();
-//
-//    zoomInButton.setGraphicSize(Std.int(zoomInButton.width / FlxG.camera.zoom), Std.int(zoomInButton.height / FlxG.camera.zoom));
-//    zoomInButton.updateHitbox();
   }
 }

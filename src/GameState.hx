@@ -127,7 +127,7 @@ class GameState extends FlxState {
 
     hudCamera = new FlxCamera(0, 0, FlxG.width, HUD_HEIGHT, 1.0);
     FlxG.cameras.add(hudCamera);
-    hud = new TopBar(hudCamera);
+    hud = new TopBar(this, hudCamera);
     add(hud);
   }
 
@@ -204,17 +204,9 @@ class GameState extends FlxState {
       actionStackTimer.stop();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {
-      actionStackTimer.stop();
-      actionStack.addReset();
-      FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom, actionStack));
+      resetState();
     } else if (UNDO() && !player.isDying) {
-      actionStack.addUndo();
-      if(! player.alive) {
-        player.revive();
-        remove(deadText);
-      }
-      var action : ActionElement = actionStack.getHeadSkipDeath();
-      executeAction(action);
+      undoMove();
     } else if (ZOOM_IN()) {
       setZoom(FlxG.camera.zoom * ZOOM_MULT);
     } else if (ZOOM_OUT()) {
@@ -363,6 +355,24 @@ class GameState extends FlxState {
         m.rotateCounterClockwise();
       }
       return;
+    }
+  }
+
+  public function resetState() {
+    actionStackTimer.stop();
+    actionStack.addReset();
+    FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom, actionStack));
+  }
+
+  public function undoMove() {
+    if(!player.isDying) {
+      actionStack.addUndo();
+      if(! player.alive) {
+        player.revive();
+        remove(deadText);
+      }
+      var action : ActionElement = actionStack.getHeadSkipDeath();
+      executeAction(action);
     }
   }
 
