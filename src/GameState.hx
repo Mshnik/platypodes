@@ -1,5 +1,6 @@
 package;
 
+import openfl.Assets;
 import flixel.system.FlxSound;
 import elements.*;
 import flixel.FlxCamera;
@@ -86,6 +87,9 @@ class GameState extends FlxState {
     add(lightBulbs);
     add(lightSwitches);
     add(player);
+
+    var song = Assets.getSound(AssetPaths.BasicBackground__wav);
+    song.play();
   }
 
   /** Returns a rectangle representing the given tile */
