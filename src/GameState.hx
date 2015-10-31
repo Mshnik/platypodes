@@ -39,6 +39,7 @@ class GameState extends FlxState {
   private var savedZoom : Float; //The zoom that the player had before restarting
 
   public var player:Character;
+  public var tooltip:Tooltip;
 
   public var actionStack : ActionStack;
   private static inline var RE_LOGGING_TIME = 5000; //time in ms between whole stack (redundant) loggings
@@ -97,6 +98,9 @@ class GameState extends FlxState {
     actionStackTimer = new Timer(RE_LOGGING_TIME);
     actionStackTimer.run = actionStack.logStack;
 
+    //Create Tooltip
+    tooltip = new Tooltip(this);
+
     //Make sure non-player objects are added to level after player is added to level
     //For ordering of the update loop
     add(exit);
@@ -105,6 +109,7 @@ class GameState extends FlxState {
     add(lightBulbs);
     add(lightSwitches);
     add(player);
+    add(tooltip);
 
     UNDO = function(){
       return ! player.tileLocked && FlxG.keys.justPressed.BACKSPACE;
@@ -244,6 +249,9 @@ class GameState extends FlxState {
         win();
       }
     }
+
+    //Update tooltip
+    this.tooltip.update();
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup) {
@@ -300,6 +308,7 @@ class GameState extends FlxState {
 
     savedZoom = zoom;
   }
+
 
   public function executeAction(a : ActionElement) {
     if(! a.isExecutable()) {

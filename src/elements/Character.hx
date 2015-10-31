@@ -240,12 +240,12 @@ class Character extends MovingElement {
         default:
       }
       mirrorHolding = m;
-      setMirrorHoldingOldChords();
+      setMirrorHoldingOldCoords();
       return mirrorHolding;
     }
   }
 
-  private function setMirrorHoldingOldChords() {
+  private function setMirrorHoldingOldCoords() {
     if(mirrorHoldingOldX == -1 && mirrorHoldingOldY == -1 ){
       mirrorHoldingOldX = mirrorHolding.getCol();
       mirrorHoldingOldY = mirrorHolding.getRow();
@@ -256,6 +256,7 @@ class Character extends MovingElement {
     mirrorHoldingOldX = -1;
     mirrorHoldingOldY = -1;
   }
+
 
   /** Updates the character for this frame
     * - checks if facing a mirror (facing cardinal direction, tile this is facing towards contains a mirror).
@@ -282,6 +283,8 @@ class Character extends MovingElement {
           if(GRAB() && mirrorHolding == null) {
             mirror.moveDirection = Direction.None;
             mirror.holdingPlayer = this;
+
+
           }
         }
       }
@@ -293,6 +296,7 @@ class Character extends MovingElement {
         moveSpeed = MOVE_SPEED;
         moveDirection = Direction.None;
         resetMirrorHoldingOldCoords();
+
       } else if (mirrorHolding == null) {
         moveDirection = Direction.None;
 
@@ -327,7 +331,7 @@ class Character extends MovingElement {
               mirrorHolding.moveDirection = Direction.Down;
             }
           }
-          setMirrorHoldingOldChords();
+          setMirrorHoldingOldCoords();
         }
         moveDirection = mirrorHolding.moveDirection;
         moveSpeed = mirrorHolding.moveSpeed;
