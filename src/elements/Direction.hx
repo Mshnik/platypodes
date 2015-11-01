@@ -7,7 +7,7 @@ import flixel.util.FlxPoint;
  * in a grid-based game.
  *
  * All access to the Direction class should be done through the public static final fields
- * that represent the directions. (No new instances should be constructed outside of the
+ * that represent the directions. (No TopBar instances should be constructed outside of the
  * Direction class).
  * Because there is only one of each Direction, each is unique and can thus be compared
  * using == and != for equality/inequality.
@@ -50,7 +50,7 @@ class Direction extends FlxPoint {
   /** The simple string value that represents this direction */
   @final public var simpleString(default, null) : String;
 
-  /** Construct a new Direction with the given x and y components, then lock the components */
+  /** Construct a TopBar Direction with the given x and y components, then lock the components */
   private function new(x : Float, y : Float, d : Int, s : String){
     super(Std.int(x),Std.int(y));
     simpleDirec = d;

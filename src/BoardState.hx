@@ -175,7 +175,7 @@ class BoardState extends FlxState
 
   /** Returns a point that represents the position in board space of the
    * given element. If recycle is true, the point will be pulled out of the
-   * Point pool. Otherwise a new point will be created.
+   * Point pool. Otherwise a TopBar point will be created.
    */
   public inline function getLocOf(e : Element, recycle : Bool = true) : FlxPoint {
     if (recycle) {
@@ -205,8 +205,8 @@ class BoardState extends FlxState
     elementMoved(e, e.getRow(), e.getCol());
   }
 
-  /** Called by an element whenever it moves from (oldRow, oldCol) to its new current location.
-    * Updates the board with the new location of the element, and also preforms a tinting change
+  /** Called by an element whenever it moves from (oldRow, oldCol) to its TopBar current location.
+    * Updates the board with the TopBar location of the element, and also preforms a tinting change
     * to signify the board update. (tinting can be removed later)
     */
   public function elementMoved(e : Element, oldRow : Int, oldCol : Int) {

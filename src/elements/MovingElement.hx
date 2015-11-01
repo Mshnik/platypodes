@@ -37,7 +37,7 @@ import flixel.addons.editors.tiled.TiledObject;
   /** The row this MovingElement was on, before calling super.update() to move */
   private var oldCol : Int;
 
-  /** Construct a new moving element
+  /** Construct a TopBar moving element
    * state - the GameState this element belongs to
    * tileObject - the TiledObject that represents this Element in the level file.
    *              the Element's initial x and y coordinates, along with the graphical
@@ -109,7 +109,7 @@ import flixel.addons.editors.tiled.TiledObject;
    **/
   public function destinationReached() {}
 
-  /** Called when a new location is reached. Overriding functions should call
+  /** Called when a TopBar location is reached. Overriding functions should call
    * super first, in case something is put here
    **/
   public function locationReached(oldRow : Int, oldCol : Int){}

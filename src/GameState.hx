@@ -1,8 +1,11 @@
 package;
 
+import flixel.FlxSprite;
 import logging.ActionElement;
 import haxe.Timer;
 import logging.ActionStack;
+import openfl.Assets;
+import flixel.system.FlxSound;
 import elements.*;
 import flixel.FlxCamera;
 import flixel.util.FlxRect;
@@ -28,6 +31,8 @@ class GameState extends FlxState {
   public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
   public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
   public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
+
+  private static var BACKGROUND_THEME : FlxSound;
 
   public var UNDO : Void -> Bool;
 
@@ -57,6 +62,13 @@ class GameState extends FlxState {
   private var winText : FlxText;
   private var deadText : FlxText;
 
+  public static inline var HUD_HEIGHT = 40;
+
+  private var hud : TopBar;
+  private var hudCamera : FlxCamera;
+
+  private var sndWin : FlxSound;
+
   public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int, savedZoom : Float = -1,
                       savedActionStack : ActionStack = null) {
     super();
@@ -69,6 +81,7 @@ class GameState extends FlxState {
   override public function create():Void {
     FlxG.mouse.visible = true;
     won = false;
+    sndWin = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
 
     super.create();
 
@@ -93,10 +106,10 @@ class GameState extends FlxState {
     lightSwitches = new FlxTypedGroup<LightSwitch>();
     lightSprites = new FlxTypedGroup<LightSprite>();
 
-    // Load all objects
+// Load all objects
     level.loadObjects(onAddObject);
 
-    //Either create a new action stack for the player, or set the saved action stack to use the new player
+    //Either create a TopBar action stack for the player, or set the saved action stack to use the TopBar player
     if (actionStack == null) {
       Logging.getSingleton().recordLevelStart(levelPathIndex); //TODO - add more?
       actionStack = new ActionStack(player);
@@ -125,6 +138,18 @@ class GameState extends FlxState {
           add(new FlxText(c * level.tileWidth, r * level.tileHeight, 0, "(" + r + "," + c + ")", 20));
         }
       }
+    }
+
+    setZoom(FlxG.camera.zoom);
+
+    hudCamera = new FlxCamera(0, 0, FlxG.width, HUD_HEIGHT, 1.0);
+    FlxG.cameras.add(hudCamera);
+    hud = new TopBar(this, hudCamera);
+    add(hud);
+
+    if(BACKGROUND_THEME == null) {
+      BACKGROUND_THEME = FlxG.sound.load(AssetPaths.Background__mp3, 0.8, true);
+      BACKGROUND_THEME.play();
     }
   }
 
@@ -201,21 +226,13 @@ class GameState extends FlxState {
       actionStackTimer.stop();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {
-      actionStackTimer.stop();
-      actionStack.addReset();
-      FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom, actionStack));
+      resetState();
     } else if (UNDO() && !player.isDying) {
-      actionStack.addUndo();
-      if(! player.alive) {
-        player.revive();
-        remove(deadText);
-      }
-      var action : ActionElement = actionStack.getHeadSkipDeath();
-      executeAction(action);
+      undoMove();
     } else if (ZOOM_IN()) {
-      setZoom(FlxG.camera.zoom * ZOOM_MULT);
+      zoomIn();
     } else if (ZOOM_OUT()) {
-      setZoom(FlxG.camera.zoom / ZOOM_MULT);
+      zoomOut();
     }
 
     //Check mouse clicks and process possible movements
@@ -258,16 +275,16 @@ class GameState extends FlxState {
     //Only collide player with stuff she isn't holding a mirror
     if (player.mirrorHolding == null) {
 
-      level.collideWithLevel(player, false);  // Collides player with walls
+      level.collideWithLevel(player, false, function(a, a){player.playCollisionSound();});  // Collides player with walls
 
-      FlxG.collide(player, lightBulbs);
-      FlxG.collide(player, lightSwitches);
+      FlxG.collide(player, lightBulbs, function(a, a){player.playCollisionSound();});
+      FlxG.collide(player, lightSwitches, function(a, a){player.playCollisionSound();});
 
       //Collide player with light - don't kill player, just don't let them walk into it
-      FlxG.collide(player, lightSprites);
+      FlxG.collide(player, lightSprites, function(a, a){player.playCollisionSound();});
 
       //Collide with mirrors - don't let player walk through mirrors
-      FlxG.collide(player, mirrors);
+      FlxG.collide(player, mirrors, function(a, a){player.playCollisionSound();});
     } else {
       //Only collide player with the mirror they are holding
       FlxG.collide(player, player.mirrorHolding);
@@ -333,16 +350,24 @@ class GameState extends FlxState {
     }
   }
 
+  public inline function zoomIn() {
+    setZoom(FlxG.camera.zoom * ZOOM_MULT);
+  }
+
+  public inline function zoomOut() {
+    setZoom(FlxG.camera.zoom / ZOOM_MULT);
+  }
+
   private function setZoom(zoom:Float) {
     //Check for min and max zoom
     if (zoom < 0.25) zoom = 0.25;
     if (zoom > 1) zoom = 1;
 
     FlxG.camera.zoom = zoom;
-    FlxG.camera.setSize(Std.int(Lib.current.stage.stageWidth / zoom), Std.int(Lib.current.stage.stageHeight / zoom));
+    FlxG.camera.setSize(Std.int(Lib.current.stage.stageWidth / zoom),
+                        Std.int(Lib.current.stage.stageHeight / zoom));
     level.updateBuffers();
     FlxG.camera.focusOn(player.getMidpoint(null));
-
     savedZoom = zoom;
   }
 
@@ -399,8 +424,29 @@ class GameState extends FlxState {
     }
   }
 
+  public function resetState() {
+    actionStackTimer.stop();
+    actionStack.addReset();
+    FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom, actionStack));
+  }
+
+  public function undoMove() {
+    if(!player.isDying) {
+      var action : ActionElement = actionStack.getHeadSkipDeath();
+      if(action != null) {
+        actionStack.addUndo();
+        if(! player.alive) {
+          player.revive();
+          remove(deadText);
+        }
+          executeAction(action.getOpposite());
+      }
+    }
+  }
+
   public function killPlayer() {
     player.mirrorHolding = null;
+    player.deathSound.play();
     player.animation.play(Character.DEATH_ANIMATION_KEY, false);
     actionStack.addDie();
     deadText = new FlxText(0, 0, 800, "You died - press Space to undo or R to reset", 40);
@@ -415,6 +461,7 @@ class GameState extends FlxState {
 
     won = true;
     actionStack.addWin();
+    sndWin.play();
     winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? "" : " - Press Space to continue"), 40);
     winText.x = FlxG.camera.scroll.x + (FlxG.camera.width - winText.width) / 2;
     winText.y = FlxG.camera.scroll.y + (FlxG.camera.height - winText.height) / 2;

@@ -7,7 +7,7 @@ class LightSwitch extends Element implements Lightable {
 
   public var isLit(default, set) : Bool;
 
-  /** Constructs a new light switch, with the given level, and initial row and col */
+  /** Constructs a TopBar light switch, with the given level, and initial row and col */
   public function new(state : GameState, o : TiledObject) {
     super(state, o);
     set_isLit(false);

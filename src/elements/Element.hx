@@ -29,7 +29,7 @@ import flixel.FlxSprite;
    **/
   @final public var squareHighlight : FlxSprite;
 
-  /** Construct a new element
+  /** Construct a TopBar element
    * state - the GameState this element belongs to
    * tileObject - the TiledObject that represents this Element in the level file.
    *              the Element's initial x and y coordinates, along with the graphical
@@ -83,7 +83,7 @@ import flixel.FlxSprite;
   }
 
   /** Return a bounding box for this element.
-   * By default, a new FlxRect is created. If createNew = false, FlxRect.get(..) is used.
+   * By default, a TopBar FlxRect is created. If createNew = false, FlxRect.get(..) is used.
    * This is more efficient, but has side-effects of possibly being modified after the method
    * call finishes, and remember to call .put() after using the boundingBox.
    **/
@@ -133,7 +133,7 @@ import flixel.FlxSprite;
   }
 
   /** Updates this element:
-   * - moves the squareHighlight to the new row and col.
+   * - moves the squareHighlight to the TopBar row and col.
    * - calls super.update().
    */
   public override function update() {

@@ -1,4 +1,5 @@
 package elements;
+import flixel.system.FlxSound;
 import flixel.FlxObject;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.FlxG;
@@ -58,6 +59,12 @@ class Character extends MovingElement {
   /** True when the dying animation is playing */
   public var isDying(default, null) : Bool;
 
+  /** Death sound */
+  public var deathSound(default, null) : FlxSound;
+
+  /** Collision sound */
+  public var collisionSound(default, null) : FlxSound;
+
   /** The custom property on the Character object in Tiled maps that denotes the intial direction facing.
    * Valid values are 1 (Up), 3 (Right), 5 (Down), 7 (Left).
    **/
@@ -108,7 +115,7 @@ class Character extends MovingElement {
   /** The old x value of the mirror this is holding before it started moving */
   private var mirrorHoldingOldY : Int;
 
-  /** Constructs a new character, belonging to the given state and represented by the given TiledObject */
+  /** Constructs a TopBar character, belonging to the given state and represented by the given TiledObject */
   public function new(state : GameState, o : TiledObject) {
     super(state, o, false, MOVE_SPEED);
 
@@ -173,6 +180,8 @@ class Character extends MovingElement {
     };
 
     isDying = false;
+    collisionSound = FlxG.sound.load(AssetPaths.Collision8Bit__mp3);
+    deathSound = FlxG.sound.load(AssetPaths.crackle__mp3);
     resetMirrorHoldingOldCoords();
   }
 
@@ -315,16 +324,32 @@ class Character extends MovingElement {
       } else {
         if (GRAB() && mirrorHolding.destTile == null) {
           if (directionFacing.isHorizontal()) {
-            if (LEFT_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Left)) {
-              mirrorHolding.moveDirection = Direction.Left;
-            } else if (RIGHT_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Right)) {
-              mirrorHolding.moveDirection = Direction.Right;
+            if (LEFT_PRESSED()) {
+              if(mirrorHolding.canMoveInDirection(Direction.Left)) {
+                mirrorHolding.moveDirection = Direction.Left;
+              } else {
+                playCollisionSound();
+              }
+            } else if (RIGHT_PRESSED()) {
+              if (mirrorHolding.canMoveInDirection(Direction.Right)) {
+                mirrorHolding.moveDirection = Direction.Right;
+              } else {
+                playCollisionSound();
+              }
             }
           } else if (directionFacing.isVertical()) {
-            if (UP_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Up)) {
-              mirrorHolding.moveDirection = Direction.Up;
-            } else if (DOWN_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Down)) {
-              mirrorHolding.moveDirection = Direction.Down;
+            if (UP_PRESSED()) {
+              if (mirrorHolding.canMoveInDirection(Direction.Up)) {
+                mirrorHolding.moveDirection = Direction.Up;
+              } else {
+                playCollisionSound();
+              }
+            } else if (DOWN_PRESSED()) {
+              if (mirrorHolding.canMoveInDirection(Direction.Down)) {
+                mirrorHolding.moveDirection = Direction.Down;
+              } else {
+                playCollisionSound();
+              }
             }
           }
           setMirrorHoldingOldChords();
@@ -396,6 +421,10 @@ class Character extends MovingElement {
       state.actionStack.addPushpull(oldCol, oldRow, mirrorHoldingOldX, mirrorHoldingOldY);
       resetMirrorHoldingOldCoords();
     }
+  }
+
+  public function playCollisionSound() {
+    collisionSound.play();
   }
 
   public override function revive() {
