@@ -7,8 +7,8 @@ class Crystal implements Lightable{
     private static inline var LIT_CRYSTAL="";
     public function new(state:GameState,o:TiledObject){
         super(state,o,UNLIT_CRYSTAL);}
-    public function change_light(light:Bool):Bool{
-        if(lit){loadGraphic(LIT_CRYSTAL,false,Std.int(width),Std.int(height));}
+    public function set_isLit(light:Bool):Bool{
+        if(light){loadGraphic(LIT_CRYSTAL,false,Std.int(width),Std.int(height));}
         else{loadGraphic(UNLIT_CRYSTAL,false,Std.int(width),Std.int(height));}
-        return this.lit=lit;}
+        return this.isLit=light;}
 }

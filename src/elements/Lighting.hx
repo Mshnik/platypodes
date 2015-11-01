@@ -86,12 +86,8 @@ class Lighting {
       light_trace[x][y] = TERMINARY;
       return false;}
     var e:Element = state.getElementAt(y, x);
-
     if (e == null || Std.is(e, Character)) {
-      if(Std.is(e, Character)) {
-        state.killPlayer();
-      }
-
+      if(Std.is(e, Character)) {state.killPlayer();}
       light_trace[x][y] += getVerticalOrHorizontal(direction);
       var nonCollision = trace_light(x + Std.int(direction.x), y + Std.int(direction.y), direction);
       var light_sprite = createLightForSquare(x,y, direction, nonCollision);
