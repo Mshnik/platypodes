@@ -1,4 +1,5 @@
 package;
+import logging.ActionElement;
 import flixel.FlxObject;
 import flixel.util.FlxPoint;
 import flixel.addons.display.FlxExtendedSprite;
@@ -8,6 +9,7 @@ import flixel.FlxSprite;
 import flixel.FlxG;
 import elements.Character;
 import elements.Mirror;
+import elements.Direction;
 
 class Tooltip extends FlxGroup {
 
@@ -19,6 +21,8 @@ class Tooltip extends FlxGroup {
     private var pushArrowButton : FlxExtendedSprite; //push arrow
     private var aKeySprite : FlxExtendedSprite; //A key CORRESPONDS TO CLOCKWISE ARROW
     private var zKeySprite : FlxExtendedSprite; //Z key CORRESPONDS TO COUNTERCLOCKWISE ARROW
+    private var pushMirrorDirection : Direction;
+    private var pullMirrorDirection : Direction;
 
     /** Rotation arrow graphic **/
     private inline static var ROTATE_ARROW_PATH = AssetPaths.rotate_arrow__png; //clockwise
@@ -51,43 +55,44 @@ class Tooltip extends FlxGroup {
         super();
         this.visible = false;
 
-
         pullArrowButton = new FlxExtendedSprite();
         pullArrowButton.enableMouseClicks(true);
         pullArrowButton.loadRotatedGraphic(PUSH_ARROW_PATH, 4); //Create 4 rotations for the push/pull arrow.
         pullArrowButton.scale.set(ARROW_SPRITE_SCALE, ARROW_SPRITE_SCALE);
+        pullArrowButton.mousePressedCallback = pullMirrorCallback;
 
         pushArrowButton = new FlxExtendedSprite();
         pushArrowButton.enableMouseClicks(true);
         pushArrowButton.loadRotatedGraphic(PUSH_ARROW_PATH, 4);
         pushArrowButton.scale.set(ARROW_SPRITE_SCALE, ARROW_SPRITE_SCALE);
+        pushArrowButton.mousePressedCallback = pushMirrorCallback;
 
         cwArrowButton = new FlxExtendedSprite();
         cwArrowButton.enableMouseClicks(true);
         cwArrowButton.loadRotatedGraphic(ROTATE_ARROW_PATH, 4); //Create 4 rotations for the rotate arrows
         cwArrowButton.scale.set(ARROW_SPRITE_SCALE, ARROW_SPRITE_SCALE);
-        cwArrowButton.mouseReleasedCallback = rotateCW;
+        cwArrowButton.mouseReleasedCallback = rotateCWCallback;
 
         ccwArrowButton = new FlxExtendedSprite();
         ccwArrowButton.enableMouseClicks(true);
         ccwArrowButton.loadRotatedGraphic(ROTATE_ARROW_PATH, 4);
         ccwArrowButton.flipX = true;
         ccwArrowButton.scale.set(ARROW_SPRITE_SCALE, ARROW_SPRITE_SCALE);
-        ccwArrowButton.mouseReleasedCallback = rotateCCW;
+        ccwArrowButton.mouseReleasedCallback = rotateCCWCallback;
 
         aKeySprite = new FlxExtendedSprite();
         aKeySprite.enableMouseClicks(true);
         aKeySprite.loadGraphic(A_KEY_SHEET, true, KEY_SPRITE_SIZE, KEY_SPRITE_SIZE, false);
         aKeySprite.scale.set(KEY_SPRITE_SCALE, KEY_SPRITE_SCALE);
         aKeySprite.animation.add(KEY_GLOW_ANIMATION_KEY,[0,1,2,3], KEY_ANIMATION_SPEED);
-        aKeySprite.mouseReleasedCallback = rotateCW;
+        aKeySprite.mouseReleasedCallback = rotateCWCallback;
 
         zKeySprite  = new FlxExtendedSprite();
         zKeySprite.enableMouseClicks(true);
         zKeySprite.loadGraphic(Z_KEY_SHEET, true,  KEY_SPRITE_SIZE, KEY_SPRITE_SIZE, false);
         zKeySprite.scale.set(KEY_SPRITE_SCALE, KEY_SPRITE_SCALE);
         zKeySprite.animation.add(KEY_GLOW_ANIMATION_KEY, [0, 1, 2, 3], KEY_ANIMATION_SPEED);
-        zKeySprite.mouseReleasedCallback = rotateCCW;
+        zKeySprite.mouseReleasedCallback = rotateCCWCallback;
 
         this.add(pullArrowButton);
         this.add(pushArrowButton);
@@ -95,7 +100,6 @@ class Tooltip extends FlxGroup {
         this.add(ccwArrowButton);
         this.add(aKeySprite);
         this.add(zKeySprite);
-
 
         game = currGame;
 
@@ -107,7 +111,7 @@ class Tooltip extends FlxGroup {
         var player = game.player;
         var mirror = game.player.mirrorHolding;
 
-        if((mirror == null) || (player == null) || (Character.IS_MOVEMENT_KEY_PRESSED()) || (mirror.holdingPlayer == null)){
+        if((mirror == null) || (player == null) || (mirror.holdingPlayer == null) || (mirror.moveDirection != Direction.None)){
             this.visible = false;
             super.update();
             return;
@@ -120,31 +124,26 @@ class Tooltip extends FlxGroup {
         if(player.getRow() == mirror.getRow()){
             if(player.getCol() < mirror.getCol()){
                 //PLAYER TO THE LEFT OF MIRROR
-
                 pullArrowButton.setPosition(player.x - PIXEL_SPACE_LARGE, mirror.y);
                 pullArrowButton.angle = 270;
-                pullArrowButton.mouseReleasedCallback = pullFromLeft;
+                pullMirrorDirection = Direction.Left;
 
                 pushArrowButton.setPosition(mirror.x + PIXEL_SPACE_LARGE, mirror.y);
                 pushArrowButton.angle = 90;
-                pushArrowButton.mouseReleasedCallback = pushFromLeft;
-
+                pushMirrorDirection = Direction.Right;
                 configureRotateArrows(true);
-
 
             }
             else if (player.getCol() > mirror.getCol()){
 
                 //PLAYER TO THE RIGHT OF MIRROR
-
                 pullArrowButton.setPosition(player.x + PIXEL_SPACE_LARGE, mirror.y);
                 pullArrowButton.angle = 90;
-                pullArrowButton.mouseReleasedCallback = pullFromRight;
+                pullMirrorDirection = Direction.Right;
 
                 pushArrowButton.setPosition(mirror.x - PIXEL_SPACE_LARGE, mirror.y);
                 pushArrowButton.angle = 270;
-                pushArrowButton.mouseReleasedCallback = pushFromRight;
-
+                pushMirrorDirection = Direction.Left;
                 configureRotateArrows(true);
 
             }
@@ -154,26 +153,23 @@ class Tooltip extends FlxGroup {
                 //PLAYER ABOVE MIRROR
                 pullArrowButton.setPosition(mirror.x, player.y - PIXEL_SPACE_LARGE);
                 pullArrowButton.angle = 0;
-                pullArrowButton.mouseReleasedCallback = pullFromAbove;
+                pullMirrorDirection = Direction.Up;
 
                 pushArrowButton.setPosition(mirror.x, mirror.y + PIXEL_SPACE_LARGE);
                 pushArrowButton.angle = 180;
-                pushArrowButton.mouseReleasedCallback = pushFromAbove;
-
+                pushMirrorDirection = Direction.Down;
                 configureRotateArrows(false);
 
             }
             else if (player.getRow() > mirror.getRow()){
                 //PLAYER BELOW MIRROR
-
                 pullArrowButton.setPosition(mirror.x, player.y + PIXEL_SPACE_LARGE);
                 pullArrowButton.angle = 180;
-                pullArrowButton.mouseReleasedCallback = pullFromBelow;
+                pullMirrorDirection = Direction.Down;
 
                 pushArrowButton.setPosition(mirror.x, mirror.y - PIXEL_SPACE_LARGE);
                 pushArrowButton.angle = 0;
-                pushArrowButton.mouseReleasedCallback = pushFromBelow;
-
+                pushMirrorDirection = Direction.Up;
 
                 configureRotateArrows(false);
 
@@ -210,50 +206,40 @@ class Tooltip extends FlxGroup {
         }
     }
 
-    private function pullFromLeft(obj:FlxExtendedSprite, x: Int, y: Int) : Void{
-            //TODO
-    }
+    //  public static function pushpull(startX : Int, startY : Int, directionFacing : Direction,
+//    elmX : Int, elmY : Int, moveDirection : Direction) : ActionElement {
+//return new ActionElement(PUSHPULL, startX, startY, directionFacing, elmX, elmY, moveDirection, false);
 
-    private function pullFromRight(obj:FlxExtendedSprite, x: Int, y: Int) : Void{
-
-    }
-
-    private function pullFromAbove(obj:FlxExtendedSprite, x: Int, y: Int) : Void{
-
-    }
-
-    private function pullFromBelow(obj:FlxExtendedSprite, x: Int, y: Int) : Void{
-
-    }
-
-    private function pushFromLeft(obj:FlxExtendedSprite, x: Int, y: Int) : Void{
-
-    }
-
-    private function pushFromRight(obj:FlxExtendedSprite, x: Int, y: Int) : Void{
-
-    }
-
-    private function pushFromAbove(obj:FlxExtendedSprite, x: Int, y: Int) : Void{
-
-    }
-
-    private function pushFromBelow(obj:FlxExtendedSprite, x: Int, y: Int) : Void{
-
-    }
-
-    private function rotateCW(obj :FlxExtendedSprite, x: Int, y: Int) : Void{
-        trace("HOWDY");
+    private function pullMirrorCallback(obj :FlxExtendedSprite, x: Int, y: Int) : Void{
         var mirror = game.player.mirrorHolding;
-        if (mirror != null){
-            mirror.rotateClockwise();
+        if(mirror != null){
+            var pull : ActionElement = ActionElement.pushpull(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), pullMirrorDirection);
+            game.executeAction(pull);
         }
     }
 
-    private function rotateCCW(obj :FlxExtendedSprite, x: Int, y: Int) : Void{
+    private function pushMirrorCallback(obj :FlxExtendedSprite, x: Int, y: Int) : Void{
+        var mirror = game.player.mirrorHolding;
+        if(mirror != null){
+            var pull : ActionElement = ActionElement.pushpull(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), pushMirrorDirection);
+            game.executeAction(pull);
+        }
+    }
+
+
+    private function rotateCWCallback(obj :FlxExtendedSprite, x: Int, y: Int) : Void{
         var mirror = game.player.mirrorHolding;
         if (mirror != null){
-            mirror.rotateCounterClockwise();
+            var action : ActionElement = ActionElement.rotate(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), true);
+            game.executeAction(action);
+        }
+    }
+
+    private function rotateCCWCallback(obj :FlxExtendedSprite, x: Int, y: Int) : Void{
+        var mirror = game.player.mirrorHolding;
+        if (mirror != null){
+            var action: ActionElement = ActionElement.rotate(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), false);
+            game.executeAction(action);
         }
     }
 
