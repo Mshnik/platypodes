@@ -63,6 +63,8 @@ class GameState extends FlxState {
   private var hud : TopBar;
   private var hudCamera : FlxCamera;
 
+  private var sndWin : FlxSound;
+
   public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int, savedZoom : Float = -1,
                       savedActionStack : ActionStack = null) {
     super();
@@ -224,16 +226,16 @@ class GameState extends FlxState {
     //Only collide player with stuff she isn't holding a mirror
     if (player.mirrorHolding == null) {
 
-      level.collideWithLevel(player, false);  // Collides player with walls
+      level.collideWithLevel(player, false, function(a, a){player.playCollisionSound();});  // Collides player with walls
 
-      FlxG.collide(player, lightBulbs);
-      FlxG.collide(player, lightSwitches);
+      FlxG.collide(player, lightBulbs, function(a, a){player.playCollisionSound();});
+      FlxG.collide(player, lightSwitches, function(a, a){player.playCollisionSound();});
 
       //Collide player with light - don't kill player, just don't let them walk into it
-      FlxG.collide(player, lightSprites);
+      FlxG.collide(player, lightSprites, function(a, a){player.playCollisionSound();});
 
       //Collide with mirrors - don't let player walk through mirrors
-      FlxG.collide(player, mirrors);
+      FlxG.collide(player, mirrors, function(a, a){player.playCollisionSound();});
     } else {
       //Only collide player with the mirror they are holding
       FlxG.collide(player, player.mirrorHolding);
@@ -394,6 +396,7 @@ class GameState extends FlxState {
 
   public function killPlayer() {
     player.mirrorHolding = null;
+    player.deathSound.play();
     player.animation.play(Character.DEATH_ANIMATION_KEY, false);
     actionStack.addDie();
     deadText = new FlxText(0, 0, 800, "You died - press Space to undo or R to reset", 40);
