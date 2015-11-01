@@ -7,7 +7,7 @@ import flixel.util.FlxPoint;
  * in a grid-based game.
  *
  * All access to the Direction class should be done through the public static final fields
- * that represent the directions. (No new instances should be constructed outside of the
+ * that represent the directions. (No TopBar instances should be constructed outside of the
  * Direction class).
  * Because there is only one of each Direction, each is unique and can thus be compared
  * using == and != for equality/inequality.
@@ -16,15 +16,15 @@ import flixel.util.FlxPoint;
  **/
 class Direction extends FlxPoint {
 
-  private static inline var NONE_VAL = 0x0000;
-  private static inline var LEFT_VAL = 0x0001; //FlxObject.LEFT;
-  private static inline var RIGHT_VAL = 0x0010; //FlxObject.RIGHT;
-  private static inline var UP_VAL = 0x0100; //FlxObject.UP;
-  private static inline var DOWN_VAL = 0x1000; //FlxObject.DOWN;
-  private static inline var UP_LEFT_VAL = 0x0101;
-  private static inline var UP_RIGHT_VAL = 0x0110;
-  private static inline var DOWN_LEFT_VAL = 0x1001;
-  private static inline var DOWN_RIGHT_VAL = 0x1010;
+  public static inline var NONE_VAL = 0x0000;
+  public static inline var LEFT_VAL = 0x0001; //FlxObject.LEFT;
+  public static inline var RIGHT_VAL = 0x0010; //FlxObject.RIGHT;
+  public static inline var UP_VAL = 0x0100; //FlxObject.UP;
+  public static inline var DOWN_VAL = 0x1000; //FlxObject.DOWN;
+  public static inline var UP_LEFT_VAL = 0x0101;
+  public static inline var UP_RIGHT_VAL = 0x0110;
+  public static inline var DOWN_LEFT_VAL = 0x1001;
+  public static inline var DOWN_RIGHT_VAL = 0x1010;
 
   @final public static var None : Direction = new Direction(0, 0, NONE_VAL, "None");
   @final public static var Up : Direction = new Direction(0, -1, UP_VAL, "Up");
@@ -50,7 +50,7 @@ class Direction extends FlxPoint {
   /** The simple string value that represents this direction */
   @final public var simpleString(default, null) : String;
 
-  /** Construct a new Direction with the given x and y components, then lock the components */
+  /** Construct a TopBar Direction with the given x and y components, then lock the components */
   private function new(x : Float, y : Float, d : Int, s : String){
     super(Std.int(x),Std.int(y));
     simpleDirec = d;

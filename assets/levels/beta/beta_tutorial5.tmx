@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="24" height="24" tilewidth="128" tileheight="128" nextobjectid="70">
+ <tileset firstgid="1" name="walls" tilewidth="128" tileheight="128" tilecount="50">
+  <image source="../../images/friends_release/wallSheet.png" width="640" height="1280"/>
+ </tileset>
+ <tileset firstgid="51" name="light" tilewidth="128" tileheight="128" tilecount="32">
+  <image source="../../images/friends_release/light_sheet.png" width="512" height="1028"/>
+ </tileset>
+ <tileset firstgid="83" name="exit" tilewidth="128" tileheight="128" tilecount="1">
+  <image source="../../images/friends_release/gate_closed.png" width="128" height="128"/>
+ </tileset>
+ <tileset firstgid="84" name="floors" tilewidth="128" tileheight="128" tilecount="4">
+  <image source="../../images/friends_release/floor_sheet.png" width="512" height="128"/>
+ </tileset>
+ <tileset firstgid="88" name="holes" tilewidth="128" tileheight="128" tilecount="18">
+  <image source="../../images/friends_release/hole_sheet.png" width="768" height="384"/>
+ </tileset>
+ <tileset firstgid="106" name="tutorialImages" tilewidth="128" tileheight="128" tilecount="64">
+  <image source="../../images/friends_release/tutorialSheet.png" width="512" height="2048"/>
+ </tileset>
+ <layer name="Floor" width="24" height="24">
+  <properties>
+   <property name="tileset" value="floors"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjAQQhoRDkdjUNj8UikOgNLUAzM2ZaHZRC4DcGw41PwRqfggVzYe5P51G5sPCJJ0BETbUNH8UjILhBgBhVgxM
+  </data>
+ </layer>
+ <layer name="Holes" width="24" height="24">
+  <properties>
+   <property name="tileset" value="holes"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIKhA+JpbH4cjc1PobH5qTQ2fxSMguECALUzAYc=
+  </data>
+ </layer>
+ <layer name="Walls" width="24" height="24">
+  <properties>
+   <property name="tileset" value="walls"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYBzFo3gUwzE3ELOhYS4qms/JgAmUsNhJrt3YzFfDIgYD7KPmj5pPwHwtIFaHYmUg5kDCvCSaz4OmH4RVKHAvqX6ihfnIfiI1PEbxwGEA23kE5Q==
+  </data>
+ </layer>
+ <layer name="Tutorial Images" width="24" height="24">
+  <properties>
+   <property name="tileset" value="tutorialImages"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztzFsOQ1AABuGzZkXVndLWXUnYrlmA118iOZN8r2OMzWa7OgcPuPAEfx9PBHgJ/iEixEgE/xQZchSCf4k3KtSC/wdf/NAI/i069BgE/xETZvwF/7MWrML/hl34t92vAzWYEoM=
+  </data>
+ </layer>
+ <objectgroup name="Objects"/>
+ <objectgroup name="Mirrors">
+  <object id="67" type="mirror" gid="59" x="1536" y="1792" width="128" height="128">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Light">
+  <object id="68" type="lightOrb" gid="69" x="2048" y="1408" width="128" height="128"/>
+  <object id="69" type="lightSwitch" gid="71" x="1792" y="1792" width="128" height="128"/>
+ </objectgroup>
+ <objectgroup color="#141ba4" name="player_start">
+  <properties>
+   <property name="initial_zoom" value="0.5"/>
+  </properties>
+  <object id="60" type="player_start" x="1408" y="1918" width="128" height="128">
+   <properties>
+    <property name="initial_zoom" value="0.5"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup color="#71a400" name="Exit">
+  <object id="64" type="exit" gid="83" x="2048" y="2048" width="128" height="128"/>
+ </objectgroup>
+</map>
