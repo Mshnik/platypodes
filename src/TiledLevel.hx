@@ -1,4 +1,5 @@
 package ;
+import elements.Direction;
 import flixel.FlxBasic;
 import haxe.io.Path;
 import flixel.FlxG;
@@ -10,6 +11,8 @@ import flixel.addons.editors.tiled.TiledObject;
 import flixel.addons.editors.tiled.TiledObjectGroup;
 import flixel.addons.editors.tiled.TiledTileSet;
 
+typedef Loc = {row : Int, col : Int};
+
 /**
  * @author Samuel Batista
  */
@@ -19,6 +22,8 @@ class TiledLevel extends TiledMap {
   @final public inline static var HOLE_LAYER_NAME = "Holes";
   @final public inline static var WALL_LAYER_NAME = "Walls";
   @final public inline static var TUTORIAL_LAYER_NAME = "Tutorial Images";
+
+  @final public var state : GameState;
 
   private var tileMaps : Array<FlxTilemap>;
 
@@ -54,8 +59,10 @@ class TiledLevel extends TiledMap {
     return o.gid != -1 && o.gid & TiledObject.FLIPPED_VERTICALLY_FLAG != 0;
   }
 
-  public function new(tiledLevel:Dynamic) {
+  public function new(state : GameState, tiledLevel:Dynamic) {
     super(tiledLevel);
+
+    this.state = state;
 
     tileMaps = new Array<FlxTilemap>();
     floorTiles = new FlxGroup();
@@ -202,5 +209,71 @@ class TiledLevel extends TiledMap {
     return max;
   }
 
+  /** Return an array of cardinal directions from here tile to the destination tile.
+   * On the walkableMap
+   **/
+  public function shortestPath(startRow : Int, startCol : Int, endRow : Int, endCol : Int) : Array<Direction> {
+    if(startRow < 0 || startRow >= walkableMap.heightInTiles || startCol < 0 || startCol >= walkableMap.widthInTiles
+    || endRow < 0 || endRow >= walkableMap.heightInTiles || endCol < 0 || endCol >= walkableMap.widthInTiles) {
+      throw "Can't find shortest path from (" + startRow + "," + startCol + ") to (" + endRow + "," + endCol + ") - OOB";
+    }
+
+    if(! isWalkable(startCol, startRow) || ! isWalkable(endCol, endRow)) {
+      throw "Can't find shortest path from (" + startRow + "," + startCol + ") to (" + endRow + "," + endCol + ") - invalid start/end";
+    }
+
+    trace("(" + startRow + "," + startCol + ") to (" + endRow + "," + endCol + ")");
+
+    var directionArray = [Direction.Up, Direction.Right, Direction.Down, Direction.Left];
+
+    var distVals : Array<Array<Int>> = new Array<Array<Int>>();
+    var prev : Array<Array<Loc>> = new Array<Array<Loc>>();
+    for(r in 0...walkableMap.heightInTiles) {
+      distVals.push(new Array<Int>());
+      prev.push(new Array<Loc>());
+      for(c in 0...walkableMap.widthInTiles) {
+        distVals[r].push(walkableMap.totalTiles + 1); //This is effectively max val - no path can take this many tiles
+        prev[r].push(null);
+      }
+    }
+
+    distVals[startRow][startCol] = 0;
+    var pQueue = new Array<Loc>();
+    pQueue.push({row:startRow, col:startCol});
+
+    while(pQueue.length > 0) {
+      pQueue.sort(function(a : Loc, b : Loc){return distVals[b.row][b.col] - distVals[a.row][a.col];});
+      var currentLoc : Loc = pQueue.pop(); //Pop removes from the end. WTF?
+
+      //Handle end case - found path. Assemble direction array and return
+      if(currentLoc.row == endRow && currentLoc.col == endCol) {
+        var arr : Array<Direction> = new Array<Direction>();
+        var loc = currentLoc;
+        while(loc.row != startRow || loc.col != startCol) {
+          trace("Pushing " + loc);
+          var prevLoc = prev[loc.row][loc.col];
+          arr.insert(0, Direction.getDirection(loc.col - prevLoc.col, loc.row - prevLoc.row));
+          loc = prevLoc;
+        }
+        trace("Pushing " + loc);
+        return arr;
+      }
+
+      var currentDist = distVals[currentLoc.row][currentLoc.col];
+      for(d in directionArray) {
+        var destLoc : Loc = {row: Std.int(d.y) + currentLoc.row, col: Std.int(d.x) + currentLoc.col};
+        var destDist = distVals[destLoc.row][destLoc.col];
+        if(isWalkable(destLoc.col, destLoc.row) && currentDist + 1 < destDist) { //TODO - handle not walking through objects
+          distVals[destLoc.row][destLoc.col] = currentDist + 1;
+          prev[destLoc.row][destLoc.col] = currentLoc;
+          pQueue.push(destLoc);
+        } else {
+        }
+      }
+    }
+
+    //No path found
+    return null;
+  }
 
 }

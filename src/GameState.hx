@@ -25,7 +25,7 @@ import flash.Lib;
 
 class GameState extends FlxState {
 
-  private static inline var DISPLAY_COORDINATES = false;
+  private static inline var DISPLAY_COORDINATES = true;
 
   private static inline var INITAL_ZOOM_PROPERTY = "initial_zoom";
   public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
@@ -86,7 +86,7 @@ class GameState extends FlxState {
     super.create();
 
     // Load the level's tilemaps
-    level = new TiledLevel(levelPaths[levelPathIndex]);
+    level = new TiledLevel(this, levelPaths[levelPathIndex]);
 
     // Add tilemaps
     add(level.floorTiles);
@@ -104,7 +104,7 @@ class GameState extends FlxState {
 
     //Either create a TopBar action stack for the player, or set the saved action stack to use the TopBar player
     if (actionStack == null) {
-      //Logging.getSingleton().recordLevelStart(levelPathIndex); //TODO - add more?
+      Logging.getSingleton().recordLevelStart(levelPathIndex); //TODO - add more?
       actionStack = new ActionStack(player);
     } else {
       actionStack.character = player;
@@ -220,7 +220,7 @@ class GameState extends FlxState {
       actionStackTimer.stop();
       FlxG.switchState(new LevelSelectMenuState());
     } else if(won && NEXT_LEVEL_BUTTON() && levelPathIndex + 1 < levelPaths.length){
-      //Logging.getSingleton().recordLevelEnd();
+      Logging.getSingleton().recordLevelEnd();
       actionStackTimer.stop();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {

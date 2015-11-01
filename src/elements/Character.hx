@@ -1,4 +1,6 @@
 package elements;
+import flixel.FlxSprite;
+import flixel.util.FlxPoint;
 import flixel.system.FlxSound;
 import flixel.FlxObject;
 import flixel.addons.editors.tiled.TiledObject;
@@ -115,6 +117,11 @@ class Character extends MovingElement {
   /** The old x value of the mirror this is holding before it started moving */
   private var mirrorHoldingOldY : Int;
 
+  /** The list of move instructions to execute in the case of mouse movement */
+  private var moveList : List<Direction>;
+
+  private var moveSprites : Array<FlxSprite>;
+
   /** Constructs a TopBar character, belonging to the given state and represented by the given TiledObject */
   public function new(state : GameState, o : TiledObject) {
     super(state, o, false, MOVE_SPEED);
@@ -178,6 +185,9 @@ class Character extends MovingElement {
       if(directionFacing.equals(Direction.Down)) return LEFT_SINGLE();
       return false;
     };
+
+    moveList = new List<Direction>();
+    moveSprites = new Array<FlxSprite>();
 
     isDying = false;
     collisionSound = FlxG.sound.load(AssetPaths.Collision8Bit__mp3);
@@ -401,6 +411,14 @@ class Character extends MovingElement {
         }
       }
     }
+
+    if(FlxG.mouse.justReleased) {
+      var tileLoc = state.worldToTileCoordinates(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
+      var row = Std.int(tileLoc.y);
+      var col = Std.int(tileLoc.x);
+      setMoveTo(row, col);
+    }
+
     super.update();
   }
 
@@ -420,6 +438,71 @@ class Character extends MovingElement {
     } else if(! tileLocked && mirrorHolding != null) {
       state.actionStack.addPushpull(oldCol, oldRow, mirrorHoldingOldX, mirrorHoldingOldY);
       resetMirrorHoldingOldCoords();
+    }
+  }
+
+  public function setMoveTo(row : Int, col : Int) {
+    if (! state.level.isWalkable(col, row)) {
+      var elm = state.getElementAt(row, col);
+      if(elm != null && ! Std.is(elm, Exit)) {
+        //Can't go to a non walkable tile
+        return;
+      }
+    }
+
+    if(tileLocked) {
+      return; //TODO - allow changing of destination mid way
+    }
+
+    var nodes:Array<Direction> = state.level.shortestPath(getRow(), getCol(), row, col);
+    if(nodes == null){
+      trace("No Path found");
+      return;
+    } else {
+      moveList = new List<Direction>();
+      for(d in nodes) {
+        moveList.add(d);
+      }
+      for(spr in moveSprites) {
+        state.remove(spr);
+      }
+      moveSprites = new Array<FlxSprite>();
+
+      var y = getRow();
+      var x = getCol();
+      var spr = new FlxSprite(x * state.level.tileWidth, y * state.level.tileHeight);
+      spr.makeGraphic(state.level.tileWidth, state.level.tileHeight);
+      state.add(spr);
+      moveSprites.push(spr);
+      for(d in nodes) {
+        x += Std.int(d.x);
+        y += Std.int(d.y);
+        spr = new FlxSprite(x * state.level.tileWidth, y * state.level.tileHeight);
+        spr.makeGraphic(state.level.tileWidth, state.level.tileHeight);
+        state.add(spr);
+        moveSprites.push(spr);
+      }
+
+      trace(nodes);
+      return;
+//          var tilesToTraverse:List<FlxPoint> = new List<FlxPoint>();
+//          var lastTileInList;
+////Populate list of tile coordinates to traverse
+//          for (worldPoint in nodes){
+//            lastTileInList = tilesToTraverse.last();
+//            var tileCoord = worldToTileCoordinates(worldPoint);
+//            if (tileCoord != lastTileInList){
+//              tilesToTraverse.add(tileCoord);
+//            }
+//          }
+////Create ActionElements for each tile to traverse
+//          for (point in tilesToTraverse.iterator()){
+//            var dx = point.x - player.getRow();
+//            var dy = point.y - player.getCol();
+//            var dir = Direction.getDirection(dx, dy);
+//            executeAction(ActionElement.move(player.getRow(), player.getCol(), player.directionFacing, dir));
+//          }
+//        }
     }
   }
 

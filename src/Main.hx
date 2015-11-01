@@ -58,8 +58,8 @@ class Main extends Sprite
 	}
 	
 	private function setupGame():Void {
-    //Logging.getSingleton().initialize(TEAM_ID, VERSION_ID, DEBUG_MODE);
-    //Logging.getSingleton().recordPageLoad(""); //TODO?
+    Logging.getSingleton().initialize(TEAM_ID, VERSION_ID, DEBUG_MODE);
+    Logging.getSingleton().recordPageLoad(""); //TODO?
 
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
