@@ -186,9 +186,6 @@ class Character extends MovingElement {
       return false;
     };
 
-    moveList = new List<Direction>();
-    moveSprites = new Array<FlxSprite>();
-
     isDying = false;
     collisionSound = FlxG.sound.load(AssetPaths.Collision8Bit__mp3);
     deathSound = FlxG.sound.load(AssetPaths.crackle__mp3);
@@ -312,24 +309,37 @@ class Character extends MovingElement {
         moveSpeed = MOVE_SPEED;
         moveDirection = Direction.None;
         resetMirrorHoldingOldCoords();
-      } else if (mirrorHolding == null) {
-        moveDirection = Direction.None;
-
-        if(UP_PRESSED()) {
-          moveDirection = moveDirection.addDirec(Direction.Up);
-        }
-        if(DOWN_PRESSED()) {
-          moveDirection = moveDirection.addDirec(Direction.Down);
-        }
-        if(RIGHT_PRESSED()) {
-          moveDirection = moveDirection.addDirec(Direction.Right);
-        }
-        if(LEFT_PRESSED()) {
-          moveDirection = moveDirection.addDirec(Direction.Left);
-        }
-
-        if (!moveDirection.equals(Direction.None)) {
+      } else if (moveList != null) {
+        if(! tileLocked) {
+          tileLocked = true;
+          moveDirection = moveList.pop();
           directionFacing = moveDirection;
+        }
+      } else if (mirrorHolding == null) {
+        if(FlxG.mouse.justReleased) {
+          var tileLoc = state.worldToTileCoordinates(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
+          var row = Std.int(tileLoc.y);
+          var col = Std.int(tileLoc.x);
+          setMoveTo(row, col);
+        } else {
+          moveDirection = Direction.None;
+
+          if(UP_PRESSED()) {
+            moveDirection = moveDirection.addDirec(Direction.Up);
+          }
+          if(DOWN_PRESSED()) {
+            moveDirection = moveDirection.addDirec(Direction.Down);
+          }
+          if(RIGHT_PRESSED()) {
+            moveDirection = moveDirection.addDirec(Direction.Right);
+          }
+          if(LEFT_PRESSED()) {
+            moveDirection = moveDirection.addDirec(Direction.Left);
+          }
+
+          if (!moveDirection.equals(Direction.None)) {
+            directionFacing = moveDirection;
+          }
         }
       } else {
         if (GRAB() && mirrorHolding.destTile == null) {
@@ -412,13 +422,6 @@ class Character extends MovingElement {
       }
     }
 
-    if(FlxG.mouse.justReleased) {
-      var tileLoc = state.worldToTileCoordinates(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
-      var row = Std.int(tileLoc.y);
-      var col = Std.int(tileLoc.x);
-      setMoveTo(row, col);
-    }
-
     super.update();
   }
 
@@ -429,6 +432,9 @@ class Character extends MovingElement {
   public override function destinationReached() {
     super.destinationReached();
     tileLocked = false;
+    if(moveList != null && moveList.isEmpty()) {
+      moveList = null;
+    }
   }
 
   public override function locationReached(oldRow : Int, oldCol : Int) {
@@ -462,25 +468,6 @@ class Character extends MovingElement {
       moveList = new List<Direction>();
       for(d in nodes) {
         moveList.add(d);
-      }
-      for(spr in moveSprites) {
-        state.remove(spr);
-      }
-      moveSprites = new Array<FlxSprite>();
-
-      var y = getRow();
-      var x = getCol();
-      var spr = new FlxSprite(x * state.level.tileWidth, y * state.level.tileHeight);
-      spr.makeGraphic(state.level.tileWidth, state.level.tileHeight);
-      state.add(spr);
-      moveSprites.push(spr);
-      for(d in nodes) {
-        x += Std.int(d.x);
-        y += Std.int(d.y);
-        spr = new FlxSprite(x * state.level.tileWidth, y * state.level.tileHeight);
-        spr.makeGraphic(state.level.tileWidth, state.level.tileHeight);
-        state.add(spr);
-        moveSprites.push(spr);
       }
 
       trace(nodes);
