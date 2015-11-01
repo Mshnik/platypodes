@@ -14,6 +14,7 @@ import flixel.group.FlxTypedGroup;
 import flixel.FlxBasic;
 import flixel.addons.editors.tiled.TiledObjectGroup;
 import flixel.addons.editors.tiled.TiledObject;
+import flixel.addons.plugin.FlxMouseControl;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxObject;
@@ -46,6 +47,7 @@ class GameState extends FlxState {
   private var savedZoom : Float; //The zoom that the player had before restarting
 
   public var player:Character;
+  public var tooltip:Tooltip;
 
   public var actionStack : ActionStack;
   private static inline var RE_LOGGING_TIME = 5000; //time in ms between whole stack (redundant) loggings
@@ -80,7 +82,7 @@ class GameState extends FlxState {
 
   override public function create():Void {
     FlxG.mouse.visible = true;
-    won = false;
+    FlxG.plugins.add(new FlxMouseControl());
     sndWin = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
 
     super.create();
@@ -112,6 +114,9 @@ class GameState extends FlxState {
     actionStackTimer = new Timer(RE_LOGGING_TIME);
     actionStackTimer.run = actionStack.logStack;
 
+    //Create Tooltip
+    tooltip = new Tooltip(this);
+
     //Make sure non-player objects are added to level after player is added to level
     //For ordering of the update loop
     add(exit);
@@ -120,6 +125,7 @@ class GameState extends FlxState {
     add(lightBulbs);
     add(lightSwitches);
     add(player);
+    add(tooltip);
 
     UNDO = function(){
       return ! player.tileLocked && FlxG.keys.justPressed.BACKSPACE;
@@ -258,6 +264,7 @@ class GameState extends FlxState {
       //Only collide player with the mirror they are holding
       FlxG.collide(player, player.mirrorHolding);
     }
+
 
     //Check for victory
     if(! exit.isOpen) {

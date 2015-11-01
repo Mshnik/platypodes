@@ -256,12 +256,12 @@ class Character extends MovingElement {
         default:
       }
       mirrorHolding = m;
-      setMirrorHoldingOldChords();
+      setMirrorHoldingOldCoords();
       return mirrorHolding;
     }
   }
 
-  private function setMirrorHoldingOldChords() {
+  private function setMirrorHoldingOldCoords() {
     if(mirrorHoldingOldX == -1 && mirrorHoldingOldY == -1 ){
       mirrorHoldingOldX = mirrorHolding.getCol();
       mirrorHoldingOldY = mirrorHolding.getRow();
@@ -370,7 +370,7 @@ class Character extends MovingElement {
               }
             }
           }
-          setMirrorHoldingOldChords();
+          setMirrorHoldingOldCoords();
         }
         moveDirection = mirrorHolding.moveDirection;
         moveSpeed = mirrorHolding.moveSpeed;
@@ -419,7 +419,6 @@ class Character extends MovingElement {
         }
       }
     }
-
     super.update();
   }
 
