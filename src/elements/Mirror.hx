@@ -19,9 +19,7 @@ class Mirror extends MovingElement implements Lightable{
 
   /** The sprite for an unlit two sided mirror */
   private static inline var UNLIT_SPRITE_TWO_SIDED = ""; //TODO
-
-  /** The sprite for a lit two sided mirror */
-  private static inline var LIT_SPRITE_TWO_SIDED = ""; //TODO
+  /** A two sided mirror is a subclass with obsoleted fields.*/
 
   /** The speed mirrors move with when being pushed or pulled by a character */
   public inline static var MOVE_SPEED = 400;

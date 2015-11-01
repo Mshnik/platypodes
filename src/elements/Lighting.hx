@@ -10,6 +10,7 @@ class Lighting {
   public static inline var VERTICAL = 2; //Represents light going vertically through a tile
   //3 left for both horizontal and vertical together.
   public static inline var LIT_MIRROR = 4; //Represents light hitting an object and stopping here
+  public static inline var LIT_CRYSTAL=16; //Represents light hitting a crystal on a 4 way split.
 
   private static inline var HORIZONTAL_SPRITE = AssetPaths.light_sheet_0_0__png;
   private static inline var VERTICAL_SPRITE = AssetPaths.light_sheet_1_0__png;
@@ -75,11 +76,15 @@ class Lighting {
     if (! direction.isCardinal()) {
       throw "Illegal direction in trace light";
     }
-
     if (state.level.hasWallAt(x,y)){
+      if(state.level.transparentAt(x,y)){
+        light_trace[x][y]+=getVerticalOrHorizontal(direction);
+        var nonCollision=trace_light(x+Std.int(direction.x),y+Std.int(direction.y),direction);
+        var light_sprite=createLightForSquare(x,y,direction,nonCollision);
+        state.lightSprites.add(light_sprite);
+        return true;}
       light_trace[x][y] = TERMINARY;
-      return false;
-    }
+      return false;}
     var e:Element = state.getElementAt(y, x);
 
     if (e == null || Std.is(e, Character)) {

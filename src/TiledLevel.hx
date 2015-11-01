@@ -157,6 +157,10 @@ class TiledLevel extends TiledMap {
   public function hasWallAt(x : Int, y : Int) : Bool {
     return wallMap.getTile(x,y) != -1;
   }
+  //to be implemented later for glass walls.
+  public function transparentAt(x:Int,y:Int):Bool{
+    return !hasWallAt(x,y);
+  }
 
   public function updateBuffers() : Void {
     for(tilemap in tileMaps) {
