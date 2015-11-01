@@ -445,7 +445,7 @@ class Character extends MovingElement {
   }
 
   public function setMoveTo(row : Int, col : Int) {
-    if (! state.level.isWalkable(col, row) || ! state.isSpaceWalkable(row, col)) {
+    if (!state.level.isWalkable(col, row) || !state.isSpaceWalkable(row, col) || (mirrorHolding != null)) {
       return;
     }
 
