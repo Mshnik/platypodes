@@ -18,6 +18,8 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxObject;
 import flixel.group.FlxGroup;
+import flixel.util.FlxPoint;
+import flixel.util.FlxPath;
 import flash.Lib;
 
 
@@ -77,13 +79,14 @@ class GameState extends FlxState {
   }
 
   override public function create():Void {
+    FlxG.mouse.visible = true;
     won = false;
     sndWin = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
 
     super.create();
 
     // Load the level's tilemaps
-    level = new TiledLevel(levelPaths[levelPathIndex]);
+    level = new TiledLevel(this, levelPaths[levelPathIndex]);
 
     // Add tilemaps
     add(level.floorTiles);
@@ -96,7 +99,7 @@ class GameState extends FlxState {
     lightSwitches = new FlxTypedGroup<LightSwitch>();
     lightSprites = new FlxTypedGroup<LightSprite>();
 
-// Load all objects
+    // Load all objects
     level.loadObjects(onAddObject);
 
     //Either create a TopBar action stack for the player, or set the saved action stack to use the TopBar player
@@ -172,6 +175,17 @@ class GameState extends FlxState {
     return null;
   }
 
+  /** Return true if the current space is open or contains a walkable element (character, exit) */
+  public function isSpaceWalkable(row : Int, col : Int) : Bool {
+    var elm = getElementAt(row, col);
+    return elm == null || Std.is(elm, Exit) || Std.is(elm, Character);
+  }
+
+  /** Returns the tile coordinates of the tile that contains the given world coordinates */
+  public function worldToTileCoordinates(worldCoord : FlxPoint) : FlxPoint{
+    return new FlxPoint(worldCoord.x / level.tileWidth, worldCoord.y / level.tileHeight);
+  }
+
   /** Return true iff the given row and col is lighted.
    * This return true if the location has a lightbulb, lighted mirror, or a light beam on it.
    **/
@@ -244,7 +258,6 @@ class GameState extends FlxState {
       //Only collide player with the mirror they are holding
       FlxG.collide(player, player.mirrorHolding);
     }
-
 
     //Check for victory
     if(! exit.isOpen) {
