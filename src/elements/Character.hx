@@ -1,6 +1,5 @@
 package elements;
-import openfl.Assets;
-import openfl.media.Sound;
+import flixel.system.FlxSound;
 import flixel.FlxObject;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.FlxG;
@@ -61,10 +60,10 @@ class Character extends MovingElement {
   public var isDying(default, null) : Bool;
 
   /** Death sound */
-  public var deathSound(default, null) : Sound;
+  public var deathSound(default, null) : FlxSound;
 
   /** Collision sound */
-  public var collisionSound(default, null) : Sound;
+  public var collisionSound(default, null) : FlxSound;
 
   /** The custom property on the Character object in Tiled maps that denotes the intial direction facing.
    * Valid values are 1 (Up), 3 (Right), 5 (Down), 7 (Left).
@@ -181,8 +180,8 @@ class Character extends MovingElement {
     };
 
     isDying = false;
-    collisionSound = Assets.getSound(AssetPaths.Collision8Bit__mp3);
-    deathSound = Assets.getSound(AssetPaths.crackle__mp3);
+    collisionSound = FlxG.sound.load(AssetPaths.Collision8Bit__mp3);
+    deathSound = FlxG.sound.load(AssetPaths.crackle__mp3);
     resetMirrorHoldingOldCoords();
   }
 

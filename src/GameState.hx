@@ -30,6 +30,8 @@ class GameState extends FlxState {
   public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
   public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
 
+  private static var BACKGROUND_THEME : FlxSound;
+
   public var UNDO : Void -> Bool;
 
   private static var ZOOM_IN = function() : Bool { return FlxG.keys.pressed.ONE; };
@@ -135,8 +137,10 @@ class GameState extends FlxState {
     hud = new TopBar(this, hudCamera);
     add(hud);
 
-    var song = Assets.getSound(AssetPaths.BasicBackground__wav);
-    song.play();
+    if(BACKGROUND_THEME == null) {
+      BACKGROUND_THEME = FlxG.sound.load(AssetPaths.Background__mp3, 0.8, true);
+      BACKGROUND_THEME.play();
+    }
   }
 
   /** Returns a rectangle representing the given tile */

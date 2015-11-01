@@ -1,5 +1,6 @@
 package elements;
-import openfl.media.Sound;
+import flixel.FlxG;
+import flixel.system.FlxSound;
 import openfl.Assets;
 import flixel.addons.editors.tiled.TiledObject;
 
@@ -29,7 +30,7 @@ class Mirror extends MovingElement implements Lightable{
   public inline static var MOVE_SPEED = 400;
 
   /** The sound played when a mirror is pushed/pulled/rotated */
-  public var moveSound(default, null) : Sound;
+  public var moveSound(default, null) : FlxSound;
 
   /** The number of sides this mirror has that reflect light. Must be 1 or 2 */
   @final public var sides : Int;
@@ -55,7 +56,7 @@ class Mirror extends MovingElement implements Lightable{
       directionFacing = Direction.Up_Right;
     }
 
-    moveSound = Assets.getSound(AssetPaths.Scrape__wav);
+    moveSound = FlxG.sound.load(AssetPaths.Scrape__wav);
   }
 
   /** Return the sprite that represents this mirror intitially. Used in construction */
