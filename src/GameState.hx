@@ -175,6 +175,12 @@ class GameState extends FlxState {
     return null;
   }
 
+  /** Return true if the current space is open or contains a walkable element (character, exit) */
+  public function isSpaceWalkable(row : Int, col : Int) : Bool {
+    var elm = getElementAt(row, col);
+    return elm == null || Std.is(elm, Exit) || Std.is(elm, Character);
+  }
+
   /** Returns the tile coordinates of the tile that contains the given world coordinates */
   public function worldToTileCoordinates(worldCoord : FlxPoint) : FlxPoint{
     return new FlxPoint(worldCoord.x / level.tileWidth, worldCoord.y / level.tileHeight);

@@ -215,14 +215,15 @@ class TiledLevel extends TiledMap {
   public function shortestPath(startRow : Int, startCol : Int, endRow : Int, endCol : Int) : Array<Direction> {
     if(startRow < 0 || startRow >= walkableMap.heightInTiles || startCol < 0 || startCol >= walkableMap.widthInTiles
     || endRow < 0 || endRow >= walkableMap.heightInTiles || endCol < 0 || endCol >= walkableMap.widthInTiles) {
-      throw "Can't find shortest path from (" + startRow + "," + startCol + ") to (" + endRow + "," + endCol + ") - OOB";
+      trace("Can't find shortest path from (" + startRow + "," + startCol + ") to (" + endRow + "," + endCol + ") - OOB");
+      return null;
     }
 
-    if(! isWalkable(startCol, startRow) || ! isWalkable(endCol, endRow)) {
-      throw "Can't find shortest path from (" + startRow + "," + startCol + ") to (" + endRow + "," + endCol + ") - invalid start/end";
+    if(! isWalkable(startCol, startRow) || ! isWalkable(endCol, endRow) ||
+       ! state.isSpaceWalkable(startRow, startCol) || ! state.isSpaceWalkable(endRow, endCol)) {
+      trace("Can't find shortest path from (" + startRow + "," + startCol + ") to (" + endRow + "," + endCol + ") - invalid start/end");
+      return null;
     }
-
-    trace("(" + startRow + "," + startCol + ") to (" + endRow + "," + endCol + ")");
 
     var directionArray = [Direction.Up, Direction.Right, Direction.Down, Direction.Left];
 
@@ -250,12 +251,10 @@ class TiledLevel extends TiledMap {
         var arr : Array<Direction> = new Array<Direction>();
         var loc = currentLoc;
         while(loc.row != startRow || loc.col != startCol) {
-          trace("Pushing " + loc);
           var prevLoc = prev[loc.row][loc.col];
           arr.insert(0, Direction.getDirection(loc.col - prevLoc.col, loc.row - prevLoc.row));
           loc = prevLoc;
         }
-        trace("Pushing " + loc);
         return arr;
       }
 
@@ -263,7 +262,7 @@ class TiledLevel extends TiledMap {
       for(d in directionArray) {
         var destLoc : Loc = {row: Std.int(d.y) + currentLoc.row, col: Std.int(d.x) + currentLoc.col};
         var destDist = distVals[destLoc.row][destLoc.col];
-        if(isWalkable(destLoc.col, destLoc.row) && currentDist + 1 < destDist) { //TODO - handle not walking through objects
+        if(isWalkable(destLoc.col, destLoc.row) && currentDist + 1 < destDist && state.isSpaceWalkable(destLoc.row, destLoc.col)) {
           distVals[destLoc.row][destLoc.col] = currentDist + 1;
           prev[destLoc.row][destLoc.col] = currentLoc;
           pQueue.push(destLoc);
