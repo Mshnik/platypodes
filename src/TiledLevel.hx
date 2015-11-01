@@ -22,13 +22,18 @@ class TiledLevel extends TiledMap {
 
   private var tileMaps : Array<FlxTilemap>;
 
-  public var floorTiles : FlxGroup;
-  public var floorMap : FlxTilemap;
-  public var holeTiles : FlxGroup;
-  private var holeMap : FlxTilemap;
-  public var wallTiles : FlxGroup;
-  private var wallMap : FlxTilemap;
-  public var tutorialTiles : FlxGroup;
+  public var floorTiles(default, null) : FlxGroup;
+  public var floorMap(default, null) : FlxTilemap;
+  public var holeTiles(default, null) : FlxGroup;
+  private var holeMap(default, null) : FlxTilemap;
+  public var wallTiles(default, null) : FlxGroup;
+  private var wallMap(default, null) : FlxTilemap;
+  public var tutorialTiles(default, null) : FlxGroup;
+
+  private var walkableTileWidth : Int;
+  private var walkableTileHeight : Int;
+  private var walkableImagePath : String;
+  public var walkableMap : FlxTilemap;
 
   /** For non -1 gids, upper 4 bits are flags for flipping. Remove those bits for regular Gid */
   public static function fixGid(gid : Int) : Int {
@@ -97,6 +102,9 @@ class TiledLevel extends TiledMap {
         case FLOOR_LAYER_NAME:
           floorTiles.add(tilemap);
           floorMap = tilemap;
+          walkableImagePath = processedPath;
+          walkableTileWidth = tileSet.tileWidth;
+          walkableTileHeight = tileSet.tileHeight;
 
         case HOLE_LAYER_NAME:
           holeTiles.add(tilemap);
@@ -113,6 +121,21 @@ class TiledLevel extends TiledMap {
           throw "Unexpected tilelayer name " + tileLayer.name;
       }
     }
+
+
+    walkableMap = new FlxTilemap();
+    walkableMap.widthInTiles = width;
+    walkableMap.heightInTiles = height;
+
+    var arr : Array<Int> = new Array<Int>();
+    for(r in 0...height) {
+      for(c in 0...width) {
+        arr.push(isWalkable(c, r) ? 1 : -1);
+      }
+    }
+
+    walkableMap.loadMap(arr, walkableImagePath, walkableTileWidth, walkableTileHeight, 0, 1, 1, 1);
+    walkableMap.setTileProperties(1, FlxObject.NONE);
   }
 
   public function loadObjects(processCallback:TiledObject->TiledObjectGroup->Void) {
@@ -152,6 +175,10 @@ class TiledLevel extends TiledMap {
 
   public function hasHoleAt(x : Int, y : Int) : Bool {
     return holeMap.getTile(x,y) != -1;
+  }
+
+  public function isWalkable(x : Int, y : Int) : Bool {
+    return hasFloorAt(x, y) || hasHoleAt(x, y);
   }
 
   public function hasWallAt(x : Int, y : Int) : Bool {
