@@ -33,7 +33,7 @@ class Mirror extends MovingElement implements Lightable{
   /** True iff this is currently reflecting light (on either of its sides), false otherwise */
   public var isLit(default,set):Bool;
 
-  /** Constructs a new mirror belonging to the given game state and representing the given TiledObject */
+  /** Constructs a TopBar mirror belonging to the given game state and representing the given TiledObject */
   public function new(state : GameState, o : TiledObject) {
     super(state, o, true, MOVE_SPEED, setSidesAndGetInitialSprite(o));
 
@@ -59,7 +59,7 @@ class Mirror extends MovingElement implements Lightable{
     }
   }
 
-  /** Sets the value of isLit. Updates the sprite to reflect the new lit status */
+  /** Sets the value of isLit. Updates the sprite to reflect the TopBar lit status */
   public function set_isLit(lit : Bool) : Bool {
     if(sides == 1) {
       if(lit) {
@@ -161,7 +161,7 @@ class Mirror extends MovingElement implements Lightable{
 
   /** Sets the holding player to the given character.
    * Updates the Character's mirrorHolding field to this,
-   * and if the new character is null, updates the old character's mirrorHolding field to null.
+   * and if the TopBar character is null, updates the old character's mirrorHolding field to null.
    **/
   public function set_holdingPlayer(p : Character) {
     if(holdingPlayer != null) {
