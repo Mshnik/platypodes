@@ -1,4 +1,7 @@
 package elements;
+import flixel.FlxG;
+import flixel.system.FlxSound;
+import openfl.Assets;
 import flixel.addons.editors.tiled.TiledObject;
 
 /** A mirror is a moveable element that reflects light.
@@ -26,6 +29,9 @@ class Mirror extends MovingElement implements Lightable{
   /** The speed mirrors move with when being pushed or pulled by a character */
   public inline static var MOVE_SPEED = 400;
 
+  /** The sound played when a mirror is pushed/pulled/rotated */
+  public var moveSound(default, null) : FlxSound;
+
   /** The number of sides this mirror has that reflect light. Must be 1 or 2 */
   @final public var sides : Int;
 
@@ -49,6 +55,8 @@ class Mirror extends MovingElement implements Lightable{
     } else {
       directionFacing = Direction.Up_Right;
     }
+
+    moveSound = FlxG.sound.load(AssetPaths.Scrape__wav);
   }
 
   /** Return the sprite that represents this mirror intitially. Used in construction */
@@ -113,6 +121,7 @@ class Mirror extends MovingElement implements Lightable{
    **/
   public override function destinationSet() {
     super.destinationSet();
+    moveSound.play();
     if(holdingPlayer != null) {
       holdingPlayer.velocity.x = velocity.x;
       holdingPlayer.velocity.y = velocity.y;
@@ -140,6 +149,7 @@ class Mirror extends MovingElement implements Lightable{
 			directionFacing = Direction.Up_Left;
 			flipY = ! flipY;
 		}
+    moveSound.play();
     state.updateLight();
   }
 
@@ -158,6 +168,7 @@ class Mirror extends MovingElement implements Lightable{
 			directionFacing = Direction.Down_Left;
 			flipY = ! flipY;
 		}
+    moveSound.play();
     state.updateLight();
   }
 
