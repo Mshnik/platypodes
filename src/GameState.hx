@@ -88,13 +88,6 @@ class GameState extends FlxState {
     // Load the level's tilemaps
     level = new TiledLevel(levelPaths[levelPathIndex]);
 
-
-    if(level.floorMap != null){
-      for (i in 0...TiledLevel.getMaxTileIndex(level.floorMap)) {
-        level.floorMap.setTileProperties(i, FlxObject.NONE);
-      }
-    }
-
     // Add tilemaps
     add(level.floorTiles);
     add(level.holeTiles);
@@ -106,12 +99,12 @@ class GameState extends FlxState {
     lightSwitches = new FlxTypedGroup<LightSwitch>();
     lightSprites = new FlxTypedGroup<LightSprite>();
 
-// Load all objects
+    // Load all objects
     level.loadObjects(onAddObject);
 
     //Either create a TopBar action stack for the player, or set the saved action stack to use the TopBar player
     if (actionStack == null) {
-      Logging.getSingleton().recordLevelStart(levelPathIndex); //TODO - add more?
+      //Logging.getSingleton().recordLevelStart(levelPathIndex); //TODO - add more?
       actionStack = new ActionStack(player);
     } else {
       actionStack.character = player;
@@ -182,6 +175,11 @@ class GameState extends FlxState {
     return null;
   }
 
+  /** Returns the tile coordinates of the tile that contains the given world coordinates */
+  public function worldToTileCoordinates(worldCoord : FlxPoint) : FlxPoint{
+    return new FlxPoint(worldCoord.x / level.tileWidth, worldCoord.y / level.tileHeight);
+  }
+
   /** Return true iff the given row and col is lighted.
    * This return true if the location has a lightbulb, lighted mirror, or a light beam on it.
    **/
@@ -222,7 +220,7 @@ class GameState extends FlxState {
       actionStackTimer.stop();
       FlxG.switchState(new LevelSelectMenuState());
     } else if(won && NEXT_LEVEL_BUTTON() && levelPathIndex + 1 < levelPaths.length){
-      Logging.getSingleton().recordLevelEnd();
+      //Logging.getSingleton().recordLevelEnd();
       actionStackTimer.stop();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {
@@ -233,41 +231,6 @@ class GameState extends FlxState {
       zoomIn();
     } else if (ZOOM_OUT()) {
       zoomOut();
-    }
-
-    //Check mouse clicks and process possible movements
-    if(FlxG.mouse.justReleased){
-
-
-      trace("yao");
-      var tileCoordX:Int = Math.floor(FlxG.mouse.x / level.tileWidth);
-      var tileCoordY:Int = Math.floor(FlxG.mouse.y / level.tileHeight);
-      if (level.floorMap.getTile(tileCoordX, tileCoordY) >= 0) {
-        var nodes:Array<FlxPoint> = level.floorMap.findPath(FlxPoint.get(player.x + player.width/2, player.y + player.height/2), FlxPoint.get(tileCoordX * level.tileWidth + (level.tileWidth/2), level.tileHeight + (level.tileHeight/2)));
-        if(nodes == null){
-          trace("POOP....");
-        }
-        else{
-          var tilesToTraverse:List<FlxPoint> = new List<FlxPoint>();
-          var lastTileInList;
-          //Populate list of tile coordinates to traverse
-          for (worldPoint in nodes){
-            lastTileInList = tilesToTraverse.last();
-            var tileCoord = worldToTileCoordinates(worldPoint);
-            if (tileCoord != lastTileInList){
-              tilesToTraverse.add(tileCoord);
-            }
-          }
-          //Create ActionElements for each tile to traverse
-          for (point in tilesToTraverse.iterator()){
-            var dx = point.x - player.getRow();
-            var dy = point.y - player.getCol();
-            var dir = Direction.getDirection(dx, dy);
-            executeAction(ActionElement.move(player.getRow(), player.getCol(), player.directionFacing, dir));
-          }
-        }
-      }
-
     }
 
     super.update();
@@ -289,8 +252,6 @@ class GameState extends FlxState {
       //Only collide player with the mirror they are holding
       FlxG.collide(player, player.mirrorHolding);
     }
-
-
 
     //Check for victory
     if(! exit.isOpen) {
@@ -468,12 +429,5 @@ class GameState extends FlxState {
     add(winText);
     player.kill();
   }
-
-  //Returns the tile coordinates of the tile that contains the given world coordinates
-  public function worldToTileCoordinates(worldCoord : FlxPoint) : FlxPoint{
-    return new FlxPoint(worldCoord.x / level.tileWidth, worldCoord.y / level.tileHeight);
-  }
-
-
 
 }
