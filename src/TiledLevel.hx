@@ -225,6 +225,10 @@ class TiledLevel extends TiledMap {
       return null;
     }
 
+    if (startRow == endRow && startCol == endCol) {
+      return [];
+    }
+
     var directionArray = [Direction.Up, Direction.Right, Direction.Down, Direction.Left];
 
     var distVals : Array<Array<Int>> = new Array<Array<Int>>();

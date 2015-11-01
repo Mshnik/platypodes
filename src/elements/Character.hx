@@ -310,36 +310,34 @@ class Character extends MovingElement {
         moveDirection = Direction.None;
         resetMirrorHoldingOldCoords();
       } else if (moveList != null) {
-        if(! tileLocked) {
-          tileLocked = true;
-          moveDirection = moveList.pop();
-          directionFacing = moveDirection;
-        }
+        tileLocked = true;
+        moveDirection = moveList.pop();
+        directionFacing = moveDirection;
+      } else if(FlxG.mouse.justReleased) {
+        moveDirection = Direction.None;
+        tileLocked = false;
+        var tileLoc = state.worldToTileCoordinates(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
+        var row = Std.int(tileLoc.y);
+        var col = Std.int(tileLoc.x);
+        setMoveTo(row, col);
       } else if (mirrorHolding == null) {
-        if(FlxG.mouse.justReleased) {
-          var tileLoc = state.worldToTileCoordinates(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
-          var row = Std.int(tileLoc.y);
-          var col = Std.int(tileLoc.x);
-          setMoveTo(row, col);
-        } else {
-          moveDirection = Direction.None;
+        moveDirection = Direction.None;
 
-          if(UP_PRESSED()) {
-            moveDirection = moveDirection.addDirec(Direction.Up);
-          }
-          if(DOWN_PRESSED()) {
-            moveDirection = moveDirection.addDirec(Direction.Down);
-          }
-          if(RIGHT_PRESSED()) {
-            moveDirection = moveDirection.addDirec(Direction.Right);
-          }
-          if(LEFT_PRESSED()) {
-            moveDirection = moveDirection.addDirec(Direction.Left);
-          }
+        if(UP_PRESSED()) {
+          moveDirection = moveDirection.addDirec(Direction.Up);
+        }
+        if(DOWN_PRESSED()) {
+          moveDirection = moveDirection.addDirec(Direction.Down);
+        }
+        if(RIGHT_PRESSED()) {
+          moveDirection = moveDirection.addDirec(Direction.Right);
+        }
+        if(LEFT_PRESSED()) {
+          moveDirection = moveDirection.addDirec(Direction.Left);
+        }
 
-          if (!moveDirection.equals(Direction.None)) {
-            directionFacing = moveDirection;
-          }
+        if (!moveDirection.equals(Direction.None)) {
+          directionFacing = moveDirection;
         }
       } else {
         if (GRAB() && mirrorHolding.destTile == null) {
@@ -439,7 +437,7 @@ class Character extends MovingElement {
 
   public override function locationReached(oldRow : Int, oldCol : Int) {
     super.locationReached(oldRow, oldCol);
-    if (!tileLocked && mirrorHolding == null) {
+    if ((!tileLocked && mirrorHolding == null) || moveList != null) {
       state.actionStack.addMove(oldCol, oldRow);
     } else if(! tileLocked && mirrorHolding != null) {
       state.actionStack.addPushpull(oldCol, oldRow, mirrorHoldingOldX, mirrorHoldingOldY);
@@ -448,29 +446,18 @@ class Character extends MovingElement {
   }
 
   public function setMoveTo(row : Int, col : Int) {
-    if (! state.level.isWalkable(col, row)) {
-      var elm = state.getElementAt(row, col);
-      if(elm != null && ! Std.is(elm, Exit)) {
-        //Can't go to a non walkable tile
-        return;
-      }
-    }
-
-    if(tileLocked) {
-      return; //TODO - allow changing of destination mid way
+    if (! state.level.isWalkable(col, row) || ! state.isSpaceWalkable(row, col)) {
+      return;
     }
 
     var nodes:Array<Direction> = state.level.shortestPath(getRow(), getCol(), row, col);
-    if(nodes == null){
-      trace("No Path found");
+    if(nodes == null || nodes.length == 0){
       return;
     } else {
       moveList = new List<Direction>();
       for(d in nodes) {
         moveList.add(d);
       }
-
-      trace(nodes);
       return;
 //          var tilesToTraverse:List<FlxPoint> = new List<FlxPoint>();
 //          var lastTileInList;

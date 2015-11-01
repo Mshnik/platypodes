@@ -25,7 +25,7 @@ import flash.Lib;
 
 class GameState extends FlxState {
 
-  private static inline var DISPLAY_COORDINATES = true;
+  private static inline var DISPLAY_COORDINATES = false;
 
   private static inline var INITAL_ZOOM_PROPERTY = "initial_zoom";
   public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
