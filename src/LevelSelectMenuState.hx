@@ -49,6 +49,8 @@ class LevelSelectMenuState extends FlxState
         y += h + SPACING;
       }
 
+      button.onUp.sound = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
+
       add(button);
     }
   }

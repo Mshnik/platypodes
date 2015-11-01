@@ -4,6 +4,8 @@ import flixel.FlxSprite;
 import logging.ActionElement;
 import haxe.Timer;
 import logging.ActionStack;
+import openfl.Assets;
+import flixel.system.FlxSound;
 import elements.*;
 import flixel.FlxCamera;
 import flixel.util.FlxRect;
@@ -16,6 +18,8 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxObject;
 import flixel.group.FlxGroup;
+import flixel.util.FlxPoint;
+import flixel.util.FlxPath;
 import flash.Lib;
 
 
@@ -27,6 +31,8 @@ class GameState extends FlxState {
   public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
   public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
   public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
+
+  private static var BACKGROUND_THEME : FlxSound;
 
   public var UNDO : Void -> Bool;
 
@@ -61,6 +67,8 @@ class GameState extends FlxState {
   private var hud : TopBar;
   private var hudCamera : FlxCamera;
 
+  private var sndWin : FlxSound;
+
   public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int, savedZoom : Float = -1,
                       savedActionStack : ActionStack = null) {
     super();
@@ -71,12 +79,14 @@ class GameState extends FlxState {
   }
 
   override public function create():Void {
+    FlxG.mouse.visible = true;
     won = false;
+    sndWin = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
 
     super.create();
 
     // Load the level's tilemaps
-    level = new TiledLevel(levelPaths[levelPathIndex]);
+    level = new TiledLevel(this, levelPaths[levelPathIndex]);
 
     // Add tilemaps
     add(level.floorTiles);
@@ -89,7 +99,7 @@ class GameState extends FlxState {
     lightSwitches = new FlxTypedGroup<LightSwitch>();
     lightSprites = new FlxTypedGroup<LightSprite>();
 
-// Load all objects
+    // Load all objects
     level.loadObjects(onAddObject);
 
     //Either create a TopBar action stack for the player, or set the saved action stack to use the TopBar player
@@ -129,6 +139,11 @@ class GameState extends FlxState {
     FlxG.cameras.add(hudCamera);
     hud = new TopBar(this, hudCamera);
     add(hud);
+
+    if(BACKGROUND_THEME == null) {
+      BACKGROUND_THEME = FlxG.sound.load(AssetPaths.Background__mp3, 0.8, true);
+      BACKGROUND_THEME.play();
+    }
   }
 
   /** Returns a rectangle representing the given tile */
@@ -158,6 +173,17 @@ class GameState extends FlxState {
     if (check(exit)) return exit;
     if (check(player)) return player;
     return null;
+  }
+
+  /** Return true if the current space is open or contains a walkable element (character, exit) */
+  public function isSpaceWalkable(row : Int, col : Int) : Bool {
+    var elm = getElementAt(row, col);
+    return elm == null || Std.is(elm, Exit) || Std.is(elm, Character);
+  }
+
+  /** Returns the tile coordinates of the tile that contains the given world coordinates */
+  public function worldToTileCoordinates(worldCoord : FlxPoint) : FlxPoint{
+    return new FlxPoint(worldCoord.x / level.tileWidth, worldCoord.y / level.tileHeight);
   }
 
   /** Return true iff the given row and col is lighted.
@@ -218,21 +244,20 @@ class GameState extends FlxState {
     //Only collide player with stuff she isn't holding a mirror
     if (player.mirrorHolding == null) {
 
-      level.collideWithLevel(player, false);  // Collides player with walls
+      level.collideWithLevel(player, false, function(a, a){player.playCollisionSound();});  // Collides player with walls
 
-      FlxG.collide(player, lightBulbs);
-      FlxG.collide(player, lightSwitches);
+      FlxG.collide(player, lightBulbs, function(a, a){player.playCollisionSound();});
+      FlxG.collide(player, lightSwitches, function(a, a){player.playCollisionSound();});
 
       //Collide player with light - don't kill player, just don't let them walk into it
-      FlxG.collide(player, lightSprites);
+      FlxG.collide(player, lightSprites, function(a, a){player.playCollisionSound();});
 
       //Collide with mirrors - don't let player walk through mirrors
-      FlxG.collide(player, mirrors);
+      FlxG.collide(player, mirrors, function(a, a){player.playCollisionSound();});
     } else {
       //Only collide player with the mirror they are holding
       FlxG.collide(player, player.mirrorHolding);
     }
-
 
     //Check for victory
     if(! exit.isOpen) {
@@ -388,6 +413,7 @@ class GameState extends FlxState {
 
   public function killPlayer() {
     player.mirrorHolding = null;
+    player.deathSound.play();
     player.animation.play(Character.DEATH_ANIMATION_KEY, false);
     actionStack.addDie();
     deadText = new FlxText(0, 0, 800, "You died - press Space to undo or R to reset", 40);
@@ -402,6 +428,7 @@ class GameState extends FlxState {
 
     won = true;
     actionStack.addWin();
+    sndWin.play();
     winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? "" : " - Press Space to continue"), 40);
     winText.x = FlxG.camera.scroll.x + (FlxG.camera.width - winText.width) / 2;
     winText.y = FlxG.camera.scroll.y + (FlxG.camera.height - winText.height) / 2;
