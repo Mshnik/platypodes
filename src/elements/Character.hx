@@ -171,22 +171,14 @@ class Character extends MovingElement {
 
     ROT_CLOCKWISE = function() : Bool {
         if (!GRAB()) return false;
-
-        if(directionFacing.equals(Direction.Left)) return DOWN_SINGLE();
-        if(directionFacing.equals(Direction.Up)) return LEFT_SINGLE();
-        if(directionFacing.equals(Direction.Right)) return UP_SINGLE();
-        if(directionFacing.equals(Direction.Down)) return RIGHT_SINGLE();
-        return false;
+        return FlxG.keys.justPressed.A;
     }
 
     ROT_C_CLOCKWISE = function() : Bool {
       if (!GRAB()) return false;
 
-      if(directionFacing.equals(Direction.Left)) return UP_SINGLE();
-      if(directionFacing.equals(Direction.Up)) return RIGHT_SINGLE();
-      if(directionFacing.equals(Direction.Right)) return DOWN_SINGLE();
-      if(directionFacing.equals(Direction.Down)) return LEFT_SINGLE();
-      return false;
+      return FlxG.keys.justPressed.D;
+
     };
 
     isDying = false;
