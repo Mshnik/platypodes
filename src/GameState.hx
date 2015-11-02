@@ -127,7 +127,8 @@ class GameState extends FlxState {
     add(tooltip);
 
     UNDO = function(){
-      return ! player.tileLocked && FlxG.keys.justPressed.BACKSPACE;
+      return FlxG.keys.justPressed.BACKSPACE && ! player.tileLocked &&
+        (player.mirrorHolding == null || player.mirrorHolding.moveDirection.equals(Direction.None));
     };
 
     if(DISPLAY_COORDINATES) {
@@ -146,7 +147,7 @@ class GameState extends FlxState {
     add(hud);
 
     if(BACKGROUND_THEME == null) {
-      BACKGROUND_THEME = FlxG.sound.load(AssetPaths.Background__mp3, 0.8, true);
+      BACKGROUND_THEME = FlxG.sound.load(AssetPaths.Background__mp3, 0.95, true);
       BACKGROUND_THEME.persist = true;
       BACKGROUND_THEME.play();
     }
@@ -381,7 +382,7 @@ class GameState extends FlxState {
 
     if (a.id == ActionElement.PUSHPULL && Std.is(elm, Mirror)) {
       var m : Mirror = Std.instance(elm, Mirror);
-      if (! m.canMoveInDirection(a.moveDirection) || ! player.canMoveInDirectionWithMirror(a.moveDirection, m)) {
+      if (player.alive && (! m.canMoveInDirection(a.moveDirection) || ! player.canMoveInDirectionWithMirror(a.moveDirection, m))) {
         trace("Can't execute action " + a + " can't move mirror " + m + " in direction " + a.moveDirection.simpleString);
         return;
       }
@@ -416,11 +417,11 @@ class GameState extends FlxState {
       var action : ActionElement = actionStack.getHeadSkipDeath();
       if(action != null) {
         actionStack.addUndo();
+        executeAction(action.getOpposite());
         if(! player.alive) {
           player.revive();
           remove(deadText);
         }
-          executeAction(action.getOpposite());
       }
     }
   }

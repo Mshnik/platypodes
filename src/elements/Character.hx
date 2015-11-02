@@ -183,7 +183,7 @@ class Character extends MovingElement {
 
     isDying = false;
     collisionSound = FlxG.sound.load(AssetPaths.Collision8Bit__mp3, 0.5);
-    deathSound = FlxG.sound.load(AssetPaths.crackle__mp3, 0.8);
+    deathSound = FlxG.sound.load(AssetPaths.crackle__mp3, 0.9);
     resetMirrorHoldingOldCoords();
   }
 
@@ -414,6 +414,9 @@ class Character extends MovingElement {
         }
       }
     }
+
+    continueMoving = UP_PRESSED() || DOWN_PRESSED() || LEFT_PRESSED() || RIGHT_PRESSED();
+
     super.update();
   }
 
@@ -423,6 +426,7 @@ class Character extends MovingElement {
 
   public override function destinationReached() {
     super.destinationReached();
+    moveDirection = Direction.None;
     tileLocked = false;
     if(moveList != null && moveList.isEmpty()) {
       moveList = null;
@@ -453,24 +457,6 @@ class Character extends MovingElement {
         moveList.add(d);
       }
       return;
-//          var tilesToTraverse:List<FlxPoint> = new List<FlxPoint>();
-//          var lastTileInList;
-////Populate list of tile coordinates to traverse
-//          for (worldPoint in nodes){
-//            lastTileInList = tilesToTraverse.last();
-//            var tileCoord = worldToTileCoordinates(worldPoint);
-//            if (tileCoord != lastTileInList){
-//              tilesToTraverse.add(tileCoord);
-//            }
-//          }
-////Create ActionElements for each tile to traverse
-//          for (point in tilesToTraverse.iterator()){
-//            var dx = point.x - player.getRow();
-//            var dy = point.y - player.getCol();
-//            var dir = Direction.getDirection(dx, dy);
-//            executeAction(ActionElement.move(player.getRow(), player.getCol(), player.directionFacing, dir));
-//          }
-//        }
     }
   }
 

@@ -37,6 +37,12 @@ import flixel.addons.editors.tiled.TiledObject;
   /** The row this MovingElement was on, before calling super.update() to move */
   private var oldCol : Int;
 
+  /** True if this MovingElement should continue to move for the frame that it hits
+   *  its destination box. Relevant for tileLocked movingElements that should smothly
+   *  move between locations
+   **/
+  public var continueMoving : Bool;
+
   /** Construct a TopBar moving element
    * state - the GameState this element belongs to
    * tileObject - the TiledObject that represents this Element in the level file.
@@ -132,14 +138,21 @@ import flixel.addons.editors.tiled.TiledObject;
       oldCol = getCol();
     }
 
-    //Check if destination is reached
     var boundingBox = getBoundingBox(false);
-    if(destTile != null && Element.rectContainsRect(destTile, boundingBox)) {
+    //Check if we should stop moving
+    if(moveDirection.equals(Direction.None)) {
       velocity.x = 0;
       velocity.y = 0;
+    }
+    //Check if destination is reached
+    else if(destTile != null && Element.rectContainsRect(destTile, boundingBox)) {
       destinationReached();
       moveDirection = Direction.None;
       destTile = null;
+      if(!continueMoving) {
+        velocity.x = 0;
+        velocity.y = 0;
+      }
     }
     //Check if destination is unset and we have a non-None direction to move
     else if (tileLocked && destTile == null && !moveDirection.equals(Direction.None)) {
