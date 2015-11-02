@@ -1,4 +1,6 @@
 package elements;
+import flixel.FlxSprite;
+import flixel.util.FlxPoint;
 import flixel.system.FlxSound;
 import flixel.FlxObject;
 import flixel.addons.editors.tiled.TiledObject;
@@ -115,6 +117,11 @@ class Character extends MovingElement {
   /** The old x value of the mirror this is holding before it started moving */
   private var mirrorHoldingOldY : Int;
 
+  /** The list of move instructions to execute in the case of mouse movement */
+  private var moveList : List<Direction>;
+
+  private var moveSprites : Array<FlxSprite>;
+
   /** Constructs a TopBar character, belonging to the given state and represented by the given TiledObject */
   public function new(state : GameState, o : TiledObject) {
     super(state, o, false, MOVE_SPEED);
@@ -180,8 +187,8 @@ class Character extends MovingElement {
     };
 
     isDying = false;
-    collisionSound = FlxG.sound.load(AssetPaths.Collision8Bit__mp3);
-    deathSound = FlxG.sound.load(AssetPaths.crackle__mp3);
+    collisionSound = FlxG.sound.load(AssetPaths.Collision8Bit__mp3, 0.5);
+    deathSound = FlxG.sound.load(AssetPaths.crackle__mp3, 0.8);
     resetMirrorHoldingOldCoords();
   }
 
@@ -249,12 +256,12 @@ class Character extends MovingElement {
         default:
       }
       mirrorHolding = m;
-      setMirrorHoldingOldChords();
+      setMirrorHoldingOldCoords();
       return mirrorHolding;
     }
   }
 
-  private function setMirrorHoldingOldChords() {
+  private function setMirrorHoldingOldCoords() {
     if(mirrorHoldingOldX == -1 && mirrorHoldingOldY == -1 ){
       mirrorHoldingOldX = mirrorHolding.getCol();
       mirrorHoldingOldY = mirrorHolding.getRow();
@@ -302,6 +309,17 @@ class Character extends MovingElement {
         moveSpeed = MOVE_SPEED;
         moveDirection = Direction.None;
         resetMirrorHoldingOldCoords();
+      } else if (moveList != null) {
+        tileLocked = true;
+        moveDirection = moveList.pop();
+        directionFacing = moveDirection;
+      } else if(FlxG.mouse.justReleased) {
+        moveDirection = Direction.None;
+        tileLocked = false;
+        var tileLoc = state.worldToTileCoordinates(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
+        var row = Std.int(tileLoc.y);
+        var col = Std.int(tileLoc.x);
+        setMoveTo(row, col);
       } else if (mirrorHolding == null) {
         moveDirection = Direction.None;
 
@@ -352,7 +370,7 @@ class Character extends MovingElement {
               }
             }
           }
-          setMirrorHoldingOldChords();
+          setMirrorHoldingOldCoords();
         }
         moveDirection = mirrorHolding.moveDirection;
         moveSpeed = mirrorHolding.moveSpeed;
@@ -411,15 +429,53 @@ class Character extends MovingElement {
   public override function destinationReached() {
     super.destinationReached();
     tileLocked = false;
+    if(moveList != null && moveList.isEmpty()) {
+      moveList = null;
+    }
   }
 
   public override function locationReached(oldRow : Int, oldCol : Int) {
     super.locationReached(oldRow, oldCol);
-    if (!tileLocked && mirrorHolding == null) {
+    if ((!tileLocked && mirrorHolding == null) || moveList != null) {
       state.actionStack.addMove(oldCol, oldRow);
     } else if(! tileLocked && mirrorHolding != null) {
       state.actionStack.addPushpull(oldCol, oldRow, mirrorHoldingOldX, mirrorHoldingOldY);
       resetMirrorHoldingOldCoords();
+    }
+  }
+
+  public function setMoveTo(row : Int, col : Int) {
+    if (!state.level.isWalkable(col, row) || !state.isSpaceWalkable(row, col) || (mirrorHolding != null)) {
+      return;
+    }
+
+    var nodes:Array<Direction> = state.level.shortestPath(getRow(), getCol(), row, col);
+    if(nodes == null || nodes.length == 0){
+      return;
+    } else {
+      moveList = new List<Direction>();
+      for(d in nodes) {
+        moveList.add(d);
+      }
+      return;
+//          var tilesToTraverse:List<FlxPoint> = new List<FlxPoint>();
+//          var lastTileInList;
+////Populate list of tile coordinates to traverse
+//          for (worldPoint in nodes){
+//            lastTileInList = tilesToTraverse.last();
+//            var tileCoord = worldToTileCoordinates(worldPoint);
+//            if (tileCoord != lastTileInList){
+//              tilesToTraverse.add(tileCoord);
+//            }
+//          }
+////Create ActionElements for each tile to traverse
+//          for (point in tilesToTraverse.iterator()){
+//            var dx = point.x - player.getRow();
+//            var dy = point.y - player.getCol();
+//            var dir = Direction.getDirection(dx, dy);
+//            executeAction(ActionElement.move(player.getRow(), player.getCol(), player.directionFacing, dir));
+//          }
+//        }
     }
   }
 

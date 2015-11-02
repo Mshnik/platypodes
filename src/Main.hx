@@ -25,6 +25,8 @@ class Main extends Sprite
 	var skipSplash:Bool = false; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 
+
+
   public static inline var TEAM_ID = 626; //THIS SHOULD NEVER CHANGE EVER EVER EVER
   public static inline var VERSION_ID = 1; //This can change when we do a big update
   public static inline var DEBUG_MODE = true; //Make sure this is false when we submit

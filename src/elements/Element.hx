@@ -1,4 +1,5 @@
 package elements;
+import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.util.FlxStringUtil;
@@ -73,6 +74,15 @@ import flixel.FlxSprite;
   /** Return the col of the board this element is currently occupying. The top-left tile is (0,0) */
   public inline function getCol() : Int {
     return Std.int( (this.x + this.origin.x) / state.level.tileWidth);
+  }
+
+  /** Return a point representing the graphical center of this Element */
+  public inline function getCenter(createNew : Bool = false) : FlxPoint {
+    if(createNew) {
+      return new FlxPoint(x + origin.x, y + origin.y);
+    } else {
+      return FlxPoint.get(x + origin.x, y + origin.y);
+    }
   }
 
   public function centerInTile() {

@@ -14,10 +14,13 @@ import flixel.group.FlxTypedGroup;
 import flixel.FlxBasic;
 import flixel.addons.editors.tiled.TiledObjectGroup;
 import flixel.addons.editors.tiled.TiledObject;
+import flixel.addons.plugin.FlxMouseControl;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxObject;
 import flixel.group.FlxGroup;
+import flixel.util.FlxPoint;
+import flixel.util.FlxPath;
 import flash.Lib;
 
 
@@ -29,8 +32,6 @@ class GameState extends FlxState {
   public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
   public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
   public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
-
-  private static var BACKGROUND_THEME : FlxSound;
 
   public var UNDO : Void -> Bool;
 
@@ -44,6 +45,7 @@ class GameState extends FlxState {
   private var savedZoom : Float; //The zoom that the player had before restarting
 
   public var player:Character;
+  public var tooltip:Tooltip;
 
   public var actionStack : ActionStack;
   private static inline var RE_LOGGING_TIME = 5000; //time in ms between whole stack (redundant) loggings
@@ -77,13 +79,14 @@ class GameState extends FlxState {
   }
 
   override public function create():Void {
-    won = false;
+    FlxG.mouse.visible = true;
+    FlxG.plugins.add(new FlxMouseControl());
     sndWin = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
 
     super.create();
 
     // Load the level's tilemaps
-    level = new TiledLevel(levelPaths[levelPathIndex]);
+    level = new TiledLevel(this, levelPaths[levelPathIndex]);
 
     // Add tilemaps
     add(level.floorTiles);
@@ -96,7 +99,7 @@ class GameState extends FlxState {
     lightSwitches = new FlxTypedGroup<LightSwitch>();
     lightSprites = new FlxTypedGroup<LightSprite>();
 
-// Load all objects
+    // Load all objects
     level.loadObjects(onAddObject);
 
     //Either create a TopBar action stack for the player, or set the saved action stack to use the TopBar player
@@ -109,6 +112,9 @@ class GameState extends FlxState {
     actionStackTimer = new Timer(RE_LOGGING_TIME);
     actionStackTimer.run = actionStack.logStack;
 
+    //Create Tooltip
+    tooltip = new Tooltip(this);
+
     //Make sure non-player objects are added to level after player is added to level
     //For ordering of the update loop
     add(exit);
@@ -117,6 +123,7 @@ class GameState extends FlxState {
     add(lightBulbs);
     add(lightSwitches);
     add(player);
+    add(tooltip);
 
     UNDO = function(){
       return ! player.tileLocked && FlxG.keys.justPressed.BACKSPACE;
@@ -137,10 +144,8 @@ class GameState extends FlxState {
     hud = new TopBar(this, hudCamera);
     add(hud);
 
-    if(BACKGROUND_THEME == null) {
-      BACKGROUND_THEME = FlxG.sound.load(AssetPaths.Background__mp3, 0.8, true);
-      BACKGROUND_THEME.play();
-    }
+    var BACKGROUND_THEME = FlxG.sound.load(AssetPaths.Background__mp3, 0.8, true);
+    BACKGROUND_THEME.play();
   }
 
   /** Returns a rectangle representing the given tile */
@@ -170,6 +175,17 @@ class GameState extends FlxState {
     if (check(exit)) return exit;
     if (check(player)) return player;
     return null;
+  }
+
+  /** Return true if the current space is open or contains a walkable element (character, exit) */
+  public function isSpaceWalkable(row : Int, col : Int) : Bool {
+    var elm = getElementAt(row, col);
+    return elm == null || Std.is(elm, Exit) || Std.is(elm, Character);
+  }
+
+  /** Returns the tile coordinates of the tile that contains the given world coordinates */
+  public function worldToTileCoordinates(worldCoord : FlxPoint) : FlxPoint{
+    return new FlxPoint(worldCoord.x / level.tileWidth, worldCoord.y / level.tileHeight);
   }
 
   /** Return true iff the given row and col is lighted.
