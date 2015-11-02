@@ -187,6 +187,10 @@ class Mirror extends MovingElement implements Lightable{
   }
 
   override public function update() {
+    if (holdingPlayer != null) {
+      continueMoving = holdingPlayer.canMoveInDirectionWithMirror(moveDirection, this) &&
+                       holdingPlayer.continueMoving;
+    }
 		super.update();
   }
 }

@@ -127,7 +127,8 @@ class GameState extends FlxState {
     add(tooltip);
 
     UNDO = function(){
-      return ! player.tileLocked && FlxG.keys.justPressed.BACKSPACE;
+      return FlxG.keys.justPressed.BACKSPACE && ! player.tileLocked &&
+        (player.mirrorHolding == null || player.mirrorHolding.moveDirection.equals(Direction.None));
     };
 
     if(DISPLAY_COORDINATES) {
