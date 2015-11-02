@@ -68,6 +68,7 @@ class Mirror extends MovingElement implements Lightable{
                 loadGraphic(UNLIT_SPRITE_ONE_SIDED, false, Std.int(width), Std.int(height));
             }
         } else {
+
 //TODO
         }
 
@@ -172,7 +173,25 @@ class Mirror extends MovingElement implements Lightable{
         }
         return holdingPlayer = p;
     }
-///
+    ///light functions
+    private function calc_out(d:Direction){
+        if(directionFacing.equals(Direction.Down_Left)){
+            if(d.equals(Direction.Up)){return Direction.Left;}
+            else if(d.equals(Direction.Right)){return Direction.Down;}
+            else{return Direction.None;}}
+        else if(directionFacing.equals(Direction.Down_Right)){
+            if(d.equals(Direction.Up)){return Direction.Right;}
+            else if(d.equals(Direction.Left)){return Direction.Down;}
+            else{return Direction.None;}}
+        else if(directionFacing.equals(Direction.Up_Left)){
+            if(d.equals(Direction.Down)){return Direction.Left;}
+            else if(d.equals(Direction.Right)){return Direction.Up;}
+            else{return Direction.None;}}
+        else if(directionFacing.equals(Direction.Up_Right)){
+            if(d.equals(Direction.Down)){return Direction.Right;}
+            else if(d.equals(Direction.Left)){return Direction.Up;}
+            else{return Direction.None;}}
+        else{return Direction.None;}}
     override public function update() {
         super.update();
     }

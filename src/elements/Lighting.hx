@@ -8,7 +8,7 @@ class Lighting {
   public static inline var NONE = 0; //Represents no light going through a tile
   public static inline var HORIZONTAL = 1; //Represents light going horizontally through a tile
   public static inline var VERTICAL = 2; //Represents light going vertically through a tile
-  //3 left for both horizontal and vertical together.
+//3 left for both horizontal and vertical together.
   public static inline var LIT_MIRROR = 4; //Represents light hitting an object and stopping here
   public static inline var LIT_CRYSTAL=16; //Represents light hitting a crystal on a 4 way split.
 
@@ -94,7 +94,7 @@ class Lighting {
       state.lightSprites.add(light_sprite);
       return true;
     } else if (Std.is(e, Mirror)) {
-      // the mirror is assumed to only be one sided
+// the mirror is assumed to only be one sided
       var m:Mirror = Std.instance(e, Mirror);
       if (direction.equals(Direction.Right)) {
         if (m.directionFacing.equals(Direction.Up_Left)) {
@@ -163,7 +163,9 @@ class Lighting {
     } else if (Std.is(e, LightSwitch)) {
       var lightSwitch : LightSwitch = Std.instance(e, LightSwitch);
       lightSwitch.isLit = true;
-      return true;
+      return true;}
+    else if(Std.is(e,Barrel)){
+      return false;
     }
 
     return false;
@@ -184,7 +186,7 @@ class Lighting {
     trace_light(start_x + Std.int(start_direction.x), start_y + Std.int(start_direction.y), start_direction);
   }
 
- /**
+/**
   * Returns the light going through the given grid coordinates.
   * Possible return values are NONE, HORIZONTAL, VERTICAL, HORIZONTAL_AND_VERTICAL.
   **/
@@ -192,7 +194,7 @@ class Lighting {
     return light_trace[x][y];
   }
 
-  //we shouldnt need this function until we implement crystal walls
+//we shouldnt need this function until we implement crystal walls
   private function light_exists(direction:Direction):Bool {
     return false;
   }
