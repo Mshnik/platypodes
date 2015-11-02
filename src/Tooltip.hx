@@ -49,8 +49,8 @@ class Tooltip extends FlxGroup {
     /** THE PIXELS OF SPACE BETWEEN EACH PIECE OF THE TOOL TIP **/
     private inline static var PIXEL_SPACE_EX_LARGE = 125;
     private inline static var PIXEL_SPACE_LARGE = 100;
+    private inline static var PIXEL_SPACE_SMALL = 50;
     private inline static var PIXEL_SPACE_MED = 50;
-    private inline static var PIXEL_SPACE_SMALL = 35;
     private inline static var PIXEL_SPACE_EX_SMALL = 25;
 
 
@@ -154,7 +154,7 @@ class Tooltip extends FlxGroup {
         else if (player.getCol() == mirror.getCol()){
             if(player.getRow() < mirror.getRow()){
                 //PLAYER ABOVE MIRROR
-                pullArrowButton.setPosition(mirror.x, player.y - PIXEL_SPACE_EX_LARGE);
+                pullArrowButton.setPosition(mirror.x, player.y - (PIXEL_SPACE_SMALL + PIXEL_SPACE_LARGE));
                 pullArrowButton.angle = 0;
                 pullMirrorDirection = Direction.Up;
 
