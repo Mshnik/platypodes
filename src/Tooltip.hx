@@ -46,14 +46,6 @@ class Tooltip extends FlxGroup {
   private inline static var KEY_GLOW_ANIMATION_KEY = "glow";
   private inline static var KEY_SPRITE_SIZE = 150; //(unscaled)
 
-/** THE PIXELS OF SPACE BETWEEN EACH PIECE OF THE TOOL TIP **/
-  private inline static var PIXEL_SPACE_EX_LARGE = 0;
-  private inline static var PIXEL_SPACE_LARGE = 0;
-  private inline static var PIXEL_SPACE_MED = 0;
-  private inline static var PIXEL_SPACE_SMALL = 0;
-  private inline static var PIXEL_SPACE_EX_SMALL = 0;
-
-
   public function new(currGame:GameState) {
     super();
     this.visible = false;
@@ -137,6 +129,8 @@ class Tooltip extends FlxGroup {
     dKeySprite.animation.play(KEY_GLOW_ANIMATION_KEY);
 
     var mBox = mirror.getBoundingBox();
+    var mWidthDiv2 = mBox.width/2;
+    var mHeightDiv2 = mBox.height/2;
 
     if (player.getRow() == mirror.getRow()) {
       if (player.getCol() < mirror.getCol()) {
@@ -164,21 +158,21 @@ class Tooltip extends FlxGroup {
     else if (player.getCol() == mirror.getCol()) {
       if (player.getRow() < mirror.getRow()) {
 //PLAYER ABOVE MIRROR
-        pullArrowButton.setPosition(mBox.left, player.y - pullArrowButton.height);
+        pullArrowButton.setPosition(mBox.left + mWidthDiv2 - (pullArrowButton.width/2), player.y - player.offset.y - pullArrowButton.height);
         pullArrowButton.angle = 0;
         pullMirrorDirection = Direction.Up;
 
-        pushArrowButton.setPosition(mBox.left, mBox.bottom);
+        pushArrowButton.setPosition(mBox.left + mWidthDiv2 - (pushArrowButton.width/2), mBox.bottom);
         pushArrowButton.angle = 180;
         pushMirrorDirection = Direction.Down;
       }
       else if (player.getRow() > mirror.getRow()) {
 //PLAYER BELOW MIRROR
-        pullArrowButton.setPosition(mBox.left, player.y);
+        pullArrowButton.setPosition(mBox.left + mWidthDiv2 - (pullArrowButton.width/2), player.y + player.height);
         pullArrowButton.angle = 180;
         pullMirrorDirection = Direction.Down;
 
-        pushArrowButton.setPosition(mBox.left, mBox.top - pushArrowButton.height);
+        pushArrowButton.setPosition(mBox.left+ mWidthDiv2 - (pushArrowButton.width/2), mBox.top - pushArrowButton.height);
         pushArrowButton.angle = 0;
         pushMirrorDirection = Direction.Up;
       }
