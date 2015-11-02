@@ -71,10 +71,14 @@ class Lighting {
     }
     draw_light();
   }
-
+//hopefully this doesn't cause infinite recursion.
   private function trace_light(x:Int, y:Int, direction:Direction):Bool {
     if (! direction.isCardinal()) {
       throw "Illegal direction in trace light";
+    }
+    if(light_exists(x,y,direction)){
+      //what should i return here?
+      return true;
     }
     if (state.level.hasWallAt(x,y)){
       if(state.level.transparentAt(x,y)){
@@ -96,76 +100,26 @@ class Lighting {
     } else if (Std.is(e, Mirror)) {
 // the mirror is assumed to only be one sided
       var m:Mirror = Std.instance(e, Mirror);
-      if (direction.equals(Direction.Right)) {
-        if (m.directionFacing.equals(Direction.Up_Left)) {
-          light_trace[x][y] = LIT_MIRROR;
-          m.isLit = true;
-          trace_light(x, y - 1, Direction.Up);
-          return true;
-        }
-        else if (m.directionFacing.equals(Direction.Down_Left)) {
-          light_trace[x][y] = LIT_MIRROR;
-          m.isLit = true;
-          trace_light(x, y + 1, Direction.Down);
-          return true;
-        }
-
-        return false;
-      }
-      else if (direction.equals(Direction.Left)) {
-        if (m.directionFacing.equals(Direction.Down_Right)) {
-          light_trace[x][y] = LIT_MIRROR;
-          m.isLit = true;
-          trace_light(x, y + 1, Direction.Down);
-          return true;
-        }
-        else if (m.directionFacing.equals(Direction.Up_Right)) {
-          light_trace[x][y] = LIT_MIRROR;
-          m.isLit = true;
-          trace_light(x, y - 1, Direction.Up);
-          return true;
-        }
-
-        return false;
-      }
-      else if (direction.equals(Direction.Up)) {
-        if (m.directionFacing.equals(Direction.Down_Right)) {
-          light_trace[x][y] = LIT_MIRROR;
-          m.isLit = true;
-          trace_light(x + 1, y, Direction.Right);
-          return true;
-        }
-        else if (m.directionFacing.equals(Direction.Down_Left)) {
-          light_trace[x][y] = LIT_MIRROR;
-          m.isLit = true;
-          trace_light(x - 1, y, Direction.Left);
-          return true;
-        }
-
-        return false;
-      }
-      else if (direction.equals(Direction.Down)) {
-        if (m.directionFacing.equals(Direction.Up_Left)) {
-          light_trace[x][y] = LIT_MIRROR;
-          m.isLit = true;
-          trace_light(x - 1, y, Direction.Left);
-          return true;
-        }
-        else if (m.directionFacing.equals(Direction.Up_Right)) {
-          light_trace[x][y] = LIT_MIRROR;
-          m.isLit = true;
-          trace_light(x + 1, y, Direction.Right);
-          return true;
-        }
-
-        return false;
-      }
-    } else if (Std.is(e, LightSwitch)) {
+      var dOut:Direction=m.process_light(direction);
+      if(dOut.equals(Direction.None)){return false;}
+      else{
+        trace_light(x+Std.int(dOut.x),y+Std.int(dOut.y),dOut);
+        light_trace[x][y]=LIT_MIRROR;
+        return true;}}
+    else if (Std.is(e, LightSwitch)) {
       var lightSwitch : LightSwitch = Std.instance(e, LightSwitch);
       lightSwitch.isLit = true;
       return true;}
     else if(Std.is(e,Barrel)){
       return false;
+    }
+    else if(Std.is(e,Crystal)){
+      trace_light(x+1,y,Direction.Right);
+      trace_light(x-1,y,Direction.Left);
+      trace_light(x,y+1,Direction.Up);
+      trace_light(x,y-1,Direction.Down);
+      light_trace[x][y]=LIT_CRYSTAL;
+      return true;
     }
 
     return false;
@@ -195,7 +149,14 @@ class Lighting {
   }
 
 //we shouldnt need this function until we implement crystal walls
-  private function light_exists(direction:Direction):Bool {
-    return false;
-  }
+  private function light_exists(x:Int,y:Int,direction:Direction):Bool {
+    if(Std.is(state.getElementAt(x,y),Crystal)){
+      return light_trace[x][y]==LIT_CRYSTAL;}
+    var hv:Int=getVerticalOrHorizontal(direction);
+    if(hv==VERTICAL){
+      return light_trace[x][y]==VERTICAL||
+             light_trace[x][y]==VERTICAL+HORIZONTAL;}
+    else{
+      return light_trace[x][y]==HORIZONTAL||
+             light_trace[x][y]==VERTICAL+HORIZONTAL;}}
 }

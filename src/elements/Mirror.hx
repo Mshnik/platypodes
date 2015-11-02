@@ -173,7 +173,18 @@ class Mirror extends MovingElement implements Lightable{
         }
         return holdingPlayer = p;
     }
-    ///light functions
+    /** Processes a light beam coming in direciton d.*/
+    public function process_light(d:Direction):Direction{
+        if(!d.isCardinal()){throw "Non cardinal input";}
+        if(sides==2){
+            var t:TwoSidedMirror=Std.instance(this,TwoSidedMirror);
+            return t.process_light(d);}
+        else{
+            var out:Direction=calc_out(d);
+            if(!out.equals(Direction.None)){set_isLit(true);}
+            return out;}}
+
+    ///light tracing functions
     private function calc_out(d:Direction){
         if(directionFacing.equals(Direction.Down_Left)){
             if(d.equals(Direction.Up)){return Direction.Left;}
