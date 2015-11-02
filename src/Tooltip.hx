@@ -47,8 +47,11 @@ class Tooltip extends FlxGroup {
     private inline static var KEY_SPRITE_SIZE = 150; //(unscaled)
 
     /** THE PIXELS OF SPACE BETWEEN EACH PIECE OF THE TOOL TIP **/
+    private inline static var PIXEL_SPACE_EX_LARGE = 125;
     private inline static var PIXEL_SPACE_LARGE = 100;
-    private inline static var PIXEL_SPACE_SMALL = 50;
+    private inline static var PIXEL_SPACE_MED = 50;
+    private inline static var PIXEL_SPACE_SMALL = 35;
+    private inline static var PIXEL_SPACE_EX_SMALL = 25;
 
 
     public function new(currGame : GameState) {
@@ -137,7 +140,7 @@ class Tooltip extends FlxGroup {
             else if (player.getCol() > mirror.getCol()){
 
                 //PLAYER TO THE RIGHT OF MIRROR
-                pullArrowButton.setPosition(player.x + PIXEL_SPACE_LARGE, mirror.y);
+                pullArrowButton.setPosition(player.x + PIXEL_SPACE_EX_SMALL, mirror.y);
                 pullArrowButton.angle = 90;
                 pullMirrorDirection = Direction.Right;
 
@@ -151,7 +154,7 @@ class Tooltip extends FlxGroup {
         else if (player.getCol() == mirror.getCol()){
             if(player.getRow() < mirror.getRow()){
                 //PLAYER ABOVE MIRROR
-                pullArrowButton.setPosition(mirror.x, player.y - PIXEL_SPACE_LARGE);
+                pullArrowButton.setPosition(mirror.x, player.y - PIXEL_SPACE_EX_LARGE);
                 pullArrowButton.angle = 0;
                 pullMirrorDirection = Direction.Up;
 
@@ -163,7 +166,7 @@ class Tooltip extends FlxGroup {
             }
             else if (player.getRow() > mirror.getRow()){
                 //PLAYER BELOW MIRROR
-                pullArrowButton.setPosition(mirror.x, player.y + PIXEL_SPACE_LARGE);
+                pullArrowButton.setPosition(mirror.x, player.y + PIXEL_SPACE_SMALL);
                 pullArrowButton.angle = 180;
                 pullMirrorDirection = Direction.Down;
 
@@ -190,7 +193,7 @@ class Tooltip extends FlxGroup {
             ccwArrowButton.angle= 270;
 
             aKeySprite.setPosition(mirror.x, cwArrowButton.y - PIXEL_SPACE_LARGE);
-            zKeySprite.setPosition(mirror.x, ccwArrowButton.y + PIXEL_SPACE_SMALL);
+            zKeySprite.setPosition(mirror.x, ccwArrowButton.y + PIXEL_SPACE_MED);
         }
         else{
             cwArrowButton.setPosition(mirror.x - PIXEL_SPACE_LARGE, mirror.y);
@@ -199,16 +202,12 @@ class Tooltip extends FlxGroup {
             ccwArrowButton.setPosition(mirror.x + PIXEL_SPACE_LARGE, mirror.y);
             ccwArrowButton.angle = 0;
 
-            aKeySprite.setPosition(cwArrowButton.x - PIXEL_SPACE_SMALL, mirror.y);
-            zKeySprite.setPosition(ccwArrowButton.x + PIXEL_SPACE_SMALL, mirror.y);
+            aKeySprite.setPosition(cwArrowButton.x - PIXEL_SPACE_MED, mirror.y);
+            zKeySprite.setPosition(ccwArrowButton.x + PIXEL_SPACE_MED, mirror.y);
 
 
         }
     }
-
-    //  public static function pushpull(startX : Int, startY : Int, directionFacing : Direction,
-//    elmX : Int, elmY : Int, moveDirection : Direction) : ActionElement {
-//return new ActionElement(PUSHPULL, startX, startY, directionFacing, elmX, elmY, moveDirection, false);
 
     private function pullMirrorCallback(obj :FlxExtendedSprite, x: Int, y: Int) : Void{
         var mirror = game.player.mirrorHolding;
