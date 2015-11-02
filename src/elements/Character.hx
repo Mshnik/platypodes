@@ -16,10 +16,11 @@ class Character extends MovingElement {
   @final private static var MOVE_SPEED = 600;
 
   /** The clippng on the bounding box of the sprite, to make fitting though a one tile wide path easier */
-  @final private static inline var BOUNDING_BOX_MARGIN_X = 30;
-  @final private static inline var BOUNDING_BOX_MARGIN_Y = 5;
+  private static inline var BOUNDING_BOX_MARGIN_X = 30;
+  private static inline var BOUNDING_BOX_MARGIN_TOP = 50;
+  private static inline var BOUNDING_BOX_MARGIN_BOTTOM = 0;
 
-  /** Size of each character sprite, in px */
+/** Size of each character sprite, in px */
   @final private static var CHARACTER_SPRITE_SIZE = 128;
 
   /** Animated character sprite sheet location */
@@ -73,7 +74,7 @@ class Character extends MovingElement {
   @final private static var INITIAL_DIRECTION_FACING_PROPERTY = "direction_facing";
 
   /** The highlight for the tile the Character is occupying, in 0xAARRGGBB format */
-  @final private static var HIGHLIGHT_COLOR = 0x88FF00FF; //Change to a value to see square character occupies
+  @final private static var HIGHLIGHT_COLOR = 0x00000000; //Change to a value to see square character occupies
 
   /** Return true iff the up key is pressed */
   public static var UP_PRESSED = function() : Bool { return FlxG.keys.pressed.UP; };
@@ -153,11 +154,13 @@ class Character extends MovingElement {
 
     //Make bounding box slightly smaller than sprite for ease of movement
     this.offset.x += BOUNDING_BOX_MARGIN_X;
-    this.offset.y += BOUNDING_BOX_MARGIN_Y;
-    this.x += BOUNDING_BOX_MARGIN_X;
-    this.y += BOUNDING_BOX_MARGIN_Y;
+    this.offset.y += BOUNDING_BOX_MARGIN_TOP;
     this.width -= 2 * BOUNDING_BOX_MARGIN_X;
-    this.height -= 2 * BOUNDING_BOX_MARGIN_Y;
+    this.height -= (BOUNDING_BOX_MARGIN_TOP + BOUNDING_BOX_MARGIN_BOTTOM);
+    this.centerOrigin();
+
+    this.x += BOUNDING_BOX_MARGIN_X;
+    this.y += BOUNDING_BOX_MARGIN_TOP;
 
     var d = o.custom.get(INITIAL_DIRECTION_FACING_PROPERTY);
     if (d == null) {
