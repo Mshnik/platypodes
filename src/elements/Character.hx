@@ -27,7 +27,7 @@ class Character extends MovingElement {
   private inline static var CHARACTER_SPRITE_SHEET = AssetPaths.playerSheet__png;
 
   /** Standard speed of animations for the Character class */
-  public inline static var ANIMATION_SPEED = 15;
+  public inline static var ANIMATION_SPEED = 10;
 
   /** The walking animation keys */
   public inline static var WALK_LEFT_RIGHT_ANIMATION_KEY = "Left-Right";

@@ -185,6 +185,9 @@ class GameState extends FlxState {
 
   /** Return true if the current space is open or contains a walkable element (character, exit) */
   public function isSpaceWalkable(row : Int, col : Int) : Bool {
+    if(isLit(row, col)) {
+      return false;
+    }
     var elm = getElementAt(row, col);
     return elm == null || Std.is(elm, Exit) || Std.is(elm, Character);
   }
@@ -425,10 +428,10 @@ class GameState extends FlxState {
     player.deathSound.play();
     player.animation.play(Character.DEATH_ANIMATION_KEY, false);
     actionStack.addDie();
-    deadText = new FlxText(0, 0, 800, "You died - press Space to undo or R to reset", 40);
+    deadText = new FlxText(0, 0, Std.int(400 / FlxG.camera.zoom), "You died - press Backspace to undo or R to reset", Std.int(30 / FlxG.camera.zoom));
     deadText.x = FlxG.camera.scroll.x + (FlxG.camera.width - deadText.width) / 2;
-    deadText.y = FlxG.camera.scroll.y + (FlxG.camera.height - deadText.height) / 2 + player.height;
-    deadText.color = 0xFFFF0022;
+    deadText.y = FlxG.camera.scroll.y + deadText.height;
+    deadText.color = 0xFFCC0022;
     add(deadText);
   }
 
@@ -442,9 +445,9 @@ class GameState extends FlxState {
       BACKGROUND_THEME.resume();
     }
     sndWin.play();
-    winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? "" : " - Press Space to continue"), 40);
+    winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? "" : " - Press Space to continue"), Std.int(30 / FlxG.camera.zoom));
     winText.x = FlxG.camera.scroll.x + (FlxG.camera.width - winText.width) / 2;
-    winText.y = FlxG.camera.scroll.y + (FlxG.camera.height - winText.height) / 2;
+    deadText.y = FlxG.camera.scroll.y + winText.height;
     add(winText);
     player.kill();
   }
