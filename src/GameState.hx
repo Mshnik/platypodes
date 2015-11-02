@@ -62,6 +62,8 @@ class GameState extends FlxState {
   private var winText : FlxText;
   private var deadText : FlxText;
 
+  private static var BACKGROUND_THEME : FlxSound;
+
   public static inline var HUD_HEIGHT = 40;
 
   private var hud : TopBar;
@@ -81,7 +83,6 @@ class GameState extends FlxState {
   override public function create():Void {
     FlxG.mouse.visible = true;
     FlxG.plugins.add(new FlxMouseControl());
-    sndWin = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
 
     super.create();
 
@@ -144,8 +145,13 @@ class GameState extends FlxState {
     hud = new TopBar(this, hudCamera);
     add(hud);
 
-    var BACKGROUND_THEME = FlxG.sound.load(AssetPaths.Background__mp3, 0.8, true);
-    BACKGROUND_THEME.play();
+    if(BACKGROUND_THEME == null) {
+      BACKGROUND_THEME = FlxG.sound.load(AssetPaths.Background__mp3, 0.8, true);
+      BACKGROUND_THEME.persist = true;
+      BACKGROUND_THEME.play();
+    }
+
+    sndWin = FlxG.sound.load(AssetPaths.Victory__m4a);
   }
 
   /** Returns a rectangle representing the given tile */
