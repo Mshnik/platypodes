@@ -151,7 +151,7 @@ class GameState extends FlxState {
       BACKGROUND_THEME.play();
     }
 
-    sndWin = FlxG.sound.load(AssetPaths.Victory__m4a);
+    sndWin = FlxG.sound.load(AssetPaths.Victory__mp3);
   }
 
   /** Returns a rectangle representing the given tile */
@@ -437,6 +437,10 @@ class GameState extends FlxState {
 
     won = true;
     actionStack.addWin();
+    BACKGROUND_THEME.pause();
+    sndWin.onComplete = function() {
+      BACKGROUND_THEME.resume();
+    }
     sndWin.play();
     winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? "" : " - Press Space to continue"), 40);
     winText.x = FlxG.camera.scroll.x + (FlxG.camera.width - winText.width) / 2;
