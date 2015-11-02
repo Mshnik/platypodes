@@ -151,7 +151,7 @@ class Tooltip extends FlxGroup {
         else if (player.getCol() == mirror.getCol()){
             if(player.getRow() < mirror.getRow()){
                 //PLAYER ABOVE MIRROR
-                pullArrowButton.setPosition(mirror.x, player.y - PIXEL_SPACE_LARGE);
+                pullArrowButton.setPosition(mirror.x, player.y - (PIXEL_SPACE_SMALL + PIXEL_SPACE_LARGE));
                 pullArrowButton.angle = 0;
                 pullMirrorDirection = Direction.Up;
 
@@ -163,7 +163,7 @@ class Tooltip extends FlxGroup {
             }
             else if (player.getRow() > mirror.getRow()){
                 //PLAYER BELOW MIRROR
-                pullArrowButton.setPosition(mirror.x, player.y + PIXEL_SPACE_LARGE);
+                pullArrowButton.setPosition(mirror.x, player.y + PIXEL_SPACE_SMALL);
                 pullArrowButton.angle = 180;
                 pullMirrorDirection = Direction.Down;
 
