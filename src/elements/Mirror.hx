@@ -56,7 +56,7 @@ class Mirror extends MovingElement implements Lightable{
       directionFacing = Direction.Up_Right;
     }
 
-    moveSound = FlxG.sound.load(AssetPaths.Scrape__wav);
+    moveSound = FlxG.sound.load(AssetPaths.Scrape__wav, 0.9);
   }
 
   /** Return the sprite that represents this mirror intitially. Used in construction */
