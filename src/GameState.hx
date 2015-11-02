@@ -285,6 +285,8 @@ class GameState extends FlxState {
         win();
       }
     }
+
+    FlxG.mouse.load();
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup) {
@@ -447,7 +449,7 @@ class GameState extends FlxState {
     sndWin.play();
     winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? "" : " - Press Space to continue"), Std.int(30 / FlxG.camera.zoom));
     winText.x = FlxG.camera.scroll.x + (FlxG.camera.width - winText.width) / 2;
-    deadText.y = FlxG.camera.scroll.y + winText.height;
+    winText.y = FlxG.camera.scroll.y + winText.height;
     add(winText);
     player.kill();
   }
