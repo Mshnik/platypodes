@@ -187,8 +187,8 @@ class Character extends MovingElement {
     };
 
     isDying = false;
-    collisionSound = FlxG.sound.load(AssetPaths.Collision8Bit__mp3);
-    deathSound = FlxG.sound.load(AssetPaths.crackle__mp3);
+    collisionSound = FlxG.sound.load(AssetPaths.Collision8Bit__mp3, 0.5);
+    deathSound = FlxG.sound.load(AssetPaths.crackle__mp3, 0.8);
     resetMirrorHoldingOldCoords();
   }
 
@@ -445,7 +445,7 @@ class Character extends MovingElement {
   }
 
   public function setMoveTo(row : Int, col : Int) {
-    if (! state.level.isWalkable(col, row) || ! state.isSpaceWalkable(row, col)) {
+    if (!state.level.isWalkable(col, row) || !state.isSpaceWalkable(row, col) || (mirrorHolding != null)) {
       return;
     }
 
