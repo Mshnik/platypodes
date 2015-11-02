@@ -183,7 +183,7 @@ class Tooltip extends FlxGroup {
         pushMirrorDirection = Direction.Up;
       }
     }
-    //configureRotateArrows(pushMirrorDirection, mBox);
+    configureRotateArrows(pushMirrorDirection, mBox);
     mBox.put();
     super.update();
   }
@@ -194,41 +194,41 @@ class Tooltip extends FlxGroup {
   private function configureRotateArrows(d:Direction, mBox : FlxRect):Void {
     var mirror = game.player.mirrorHolding;
     if (d.equals(Direction.Right)) {
-      cwArrowButton.setPosition(mBox.x, mBox.y - PIXEL_SPACE_LARGE);
+      cwArrowButton.setPosition(mBox.left, mBox.top - cwArrowButton.height);
       cwArrowButton.angle = 90;
 
-      ccwArrowButton.setPosition(mBox.x, mBox.y + PIXEL_SPACE_LARGE);
+      ccwArrowButton.setPosition(mBox.left, mBox.bottom);
       ccwArrowButton.angle = 270;
 
-      aKeySprite.setPosition(mBox.x, cwArrowButton.y - PIXEL_SPACE_MED);
-      dKeySprite.setPosition(mBox.x, ccwArrowButton.y + PIXEL_SPACE_MED);
+      aKeySprite.setPosition(cwArrowButton.x, cwArrowButton.y - aKeySprite.height);
+      dKeySprite.setPosition(ccwArrowButton.x, ccwArrowButton.y + ccwArrowButton.height);
     } else if (d.equals(Direction.Left)) {
-      cwArrowButton.setPosition(mBox.x, mBox.y + PIXEL_SPACE_LARGE);
-      cwArrowButton.angle = 270;
-
-      ccwArrowButton.setPosition(mBox.x, mBox.y - PIXEL_SPACE_LARGE);
+      ccwArrowButton.setPosition(mBox.right - ccwArrowButton.width, mBox.top - cwArrowButton.height);
       ccwArrowButton.angle = 90;
 
-      aKeySprite.setPosition(mirror.x, cwArrowButton.y + PIXEL_SPACE_MED);
-      dKeySprite.setPosition(mirror.x, ccwArrowButton.y - PIXEL_SPACE_MED);
+      cwArrowButton.setPosition(mBox.right - ccwArrowButton.width, mBox.bottom);
+      cwArrowButton.angle = 270;
+
+      aKeySprite.setPosition(cwArrowButton.x, cwArrowButton.y + cwArrowButton.height);
+      dKeySprite.setPosition(ccwArrowButton.x, ccwArrowButton.y - dKeySprite.height);
     } else if (d.equals(Direction.Up)) {
-      cwArrowButton.setPosition(mBox.x - PIXEL_SPACE_LARGE, mBox.y);
+      cwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - cwArrowButton.height);
       cwArrowButton.angle = 0;
 
-      ccwArrowButton.setPosition(mBox.x + PIXEL_SPACE_LARGE, mBox.y);
+      ccwArrowButton.setPosition(mBox.right, mBox.bottom - ccwArrowButton.height);
       ccwArrowButton.angle = 0;
 
-      aKeySprite.setPosition(cwArrowButton.x - PIXEL_SPACE_MED - aKeySprite.width / 2, mBox.y);
-      dKeySprite.setPosition(ccwArrowButton.x + PIXEL_SPACE_MED + dKeySprite.width / 2, mBox.y);
+      aKeySprite.setPosition(cwArrowButton.x - aKeySprite.width, cwArrowButton.y);
+      dKeySprite.setPosition(ccwArrowButton.x + ccwArrowButton.width, ccwArrowButton.y);
     } else {
-      cwArrowButton.setPosition(mBox.x - PIXEL_SPACE_LARGE, mBox.y);
-      cwArrowButton.angle = 0;
+      cwArrowButton.setPosition(mBox.right, mBox.top);
+      cwArrowButton.angle = 180;
 
-      ccwArrowButton.setPosition(mBox.x + PIXEL_SPACE_LARGE, mBox.y);
-      ccwArrowButton.angle = 0;
+      ccwArrowButton.setPosition(mBox.left - ccwArrowButton.width, mBox.top);
+      ccwArrowButton.angle = 180;
 
-      aKeySprite.setPosition(cwArrowButton.x - aKeySprite.width, mBox.y);
-      dKeySprite.setPosition(ccwArrowButton.x + ccwArrowButton.width, mBox.y);
+      aKeySprite.setPosition(cwArrowButton.x + cwArrowButton.width, cwArrowButton.y);
+      dKeySprite.setPosition(ccwArrowButton.x - dKeySprite.width, ccwArrowButton.y);
     }
   }
 
