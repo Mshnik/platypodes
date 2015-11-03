@@ -90,6 +90,11 @@ class Lighting {
       var nonCollision = trace_light(x + Std.int(direction.x), y + Std.int(direction.y), direction);
       var light_sprite = createLightForSquare(x,y, direction, nonCollision);
       state.lightSprites.add(light_sprite);
+      var nextE = state.getElementAt(y + Std.int(direction.y), x + Std.int(direction.x));
+      if (Std.is(nextE, Mirror)){
+        var m : Mirror = Std.instance(nextE, Mirror);
+        light_sprite.mirror = m;
+      }
       return true;
     } else if (Std.is(e, Mirror)) {
       // the mirror is assumed to only be one sided
