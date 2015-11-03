@@ -119,8 +119,8 @@ class GameState extends FlxState {
     //Make sure non-player objects are added to level after player is added to level
     //For ordering of the update loop
     add(exit);
-    add(lightSprites);
     add(mirrors);
+    add(lightSprites);
     add(lightBulbs);
     add(lightSwitches);
     add(player);
