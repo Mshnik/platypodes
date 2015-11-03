@@ -29,7 +29,7 @@ class GameState extends FlxState {
   private static inline var DISPLAY_COORDINATES = false;
 
   private static inline var INITAL_ZOOM_PROPERTY = "initial_zoom";
-  public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
+  public static var MENU_BUTTON = function() : Bool { return false; }; //TODO - reinstate after friends
   public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
   public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
 
