@@ -65,7 +65,9 @@ class Mirror extends MovingElement implements Lightable{
     switch sides {
       case 1: return UNLIT_SPRITE_ONE_SIDED;
       case 2: return UNLIT_SPRITE_TWO_SIDED;
-      default: throw "Illegal values of sides " + sides;
+      default:
+        if(PMain.DEBUG_MODE) throw "Illegal values of sides " + sides;
+        else return UNLIT_SPRITE_ONE_SIDED;
     }
   }
 

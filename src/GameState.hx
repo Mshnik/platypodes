@@ -241,8 +241,6 @@ class GameState extends FlxState {
       actionStackTimer.stop();
       FlxG.switchState(new LevelSelectMenuState());
     } else if(won && NEXT_LEVEL_BUTTON() && levelPathIndex + 1 < levelPaths.length){
-      Logging.getSingleton().recordLevelEnd();
-      actionStackTimer.stop();
       BACKGROUND_THEME.resume();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {
@@ -457,6 +455,8 @@ class GameState extends FlxState {
     winText.y = FlxG.camera.scroll.y + winText.height;
     add(winText);
     player.kill();
+    Logging.getSingleton().recordLevelEnd();
+    actionStackTimer.stop();
   }
 
 }

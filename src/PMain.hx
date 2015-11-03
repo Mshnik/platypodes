@@ -9,7 +9,7 @@ import flash.Lib;
 import flixel.FlxGame;
 import flixel.FlxState;
 
-class Main extends Sprite 
+class PMain extends Sprite
 {
 	public static var gameWidth:Int = 640; // Initial Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	public static var gameHeight:Int = 320; // Initial Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
@@ -29,7 +29,7 @@ class Main extends Sprite
 	// You can pretty much ignore everything from here on - your code should go in your states.
 	
 	public static function main():Void {
-		Lib.current.addChild(new Main());
+		Lib.current.addChild(new PMain());
 	}
 	
 	public function new() {
@@ -63,18 +63,13 @@ class Main extends Sprite
 
 		FlxG.sound.playMusic(AssetPaths.BasicBackground__wav, 1, true);
 
-		if (zoom == -1)
-		{
+		if (zoom == -1) {
 			var ratioX:Float = stageWidth / gameWidth;
 			var ratioY:Float = stageHeight / gameHeight;
 			zoom = Math.min(ratioX, ratioY);
 			gameWidth = Math.ceil(stageWidth / zoom);
 			gameHeight = Math.ceil(stageHeight / zoom);
 		}
-
-		var x = ActionElement.move(9, 6, Direction.Up_Left, Direction.Down_Right);
-    trace(x);
-    trace(ActionElement.deserialize(x.serialize()));
 
 		var g = new FlxGame(gameWidth, gameHeight, initialState, zoom, updateFrameRate, drawFrameRate, skipSplash, startFullscreen);
 		addChild(g);

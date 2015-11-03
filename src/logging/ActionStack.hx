@@ -18,7 +18,7 @@ class ActionStack {
   private function add(a : ActionElement) {
     elms.push(a);
     trace(a);
-    Logging.getSingleton().recordEvent(a.serialize(), "");
+    Logging.getSingleton().recordEvent(a.serialize(), a.toString());
   }
 
   public function logStack() {

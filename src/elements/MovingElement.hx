@@ -70,7 +70,7 @@ import flixel.addons.editors.tiled.TiledObject;
   /** Sets the movement speed of this element. If negative, throws an exception */
   public function set_moveSpeed(speed : Int) {
     if (speed < 0) {
-      throw "Can't set speed to negative number";
+      if(PMain.DEBUG_MODE) throw "Can't set speed to negative number";
     }
     return moveSpeed = speed;
   }
@@ -102,7 +102,8 @@ import flixel.addons.editors.tiled.TiledObject;
    * Should always return true for Direction.None
    **/
   public function canMoveInDirection(direction : Direction) : Bool {
-    throw "canMove should be overridden in subclass";
+    if(PMain.DEBUG_MODE) throw "canMove should be overridden in subclass";
+    return true;
   }
 
   /** Called when the destination of a tileLocked movingElement is set.
