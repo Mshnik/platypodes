@@ -25,6 +25,10 @@ class LevelSelectMenuState extends FlxState
     FlxG.mouse.visible = true;
 
     levels = new Array<Dynamic>();
+    levels.push(AssetPaths.olivial0__tmx);
+    levels.push(AssetPaths.olivial1__tmx);
+    levels.push(AssetPaths.olivial2__tmx);
+    levels.push(AssetPaths.olivial3__tmx);
     levels.push(AssetPaths.l0__tmx);
     levels.push(AssetPaths.l1__tmx);
     levels.push(AssetPaths.l2__tmx);
