@@ -1,4 +1,5 @@
 package ;
+import flixel.system.FlxSound;
 import flixel.ui.FlxButton;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -9,6 +10,8 @@ class StartState extends FlxState{
   private static inline var SPLASH_HEIGHT = 480;
 
   var playButton : FlxButton;
+
+  public static var WIND_SOUND : FlxSound;
 
   public function new() {
     super();
@@ -43,6 +46,7 @@ class StartState extends FlxState{
     levels.push(AssetPaths.l6__tmx);
 
     playButton = new FlxButton(0,0,"Play", function(){
+      WIND_SOUND.fadeOut(5, 0);
       FlxG.switchState(new GameState(levels, 0));
     });
     playButton.setPosition(470, 240);
@@ -51,5 +55,9 @@ class StartState extends FlxState{
     var startSound = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
     startSound.persist = true;
     startSound.play();
+
+    WIND_SOUND = FlxG.sound.load(AssetPaths.wind__mp3, 0.5, true);
+    WIND_SOUND.persist = true;
+    WIND_SOUND.play();
   }
 }
