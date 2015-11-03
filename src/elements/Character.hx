@@ -415,7 +415,7 @@ class Character extends MovingElement {
       }
     }
 
-    continueMoving = UP_PRESSED() || DOWN_PRESSED() || LEFT_PRESSED() || RIGHT_PRESSED();
+    continueMoving = GRAB() && (UP_PRESSED() || DOWN_PRESSED() || LEFT_PRESSED() || RIGHT_PRESSED());
 
     super.update();
   }
