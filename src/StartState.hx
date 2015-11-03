@@ -38,12 +38,13 @@ class StartState extends FlxState{
     levels.push(AssetPaths.l5__tmx);
 
     playButton = new FlxButton(0,0,"Play", function(){
-      var startSound = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
-      startSound.persist = true;
-      startSound.play();
       FlxG.switchState(new GameState(levels, 0));
     });
     playButton.setPosition((FlxG.width - playButton.width)/2, FlxG.height - (FlxG.height - splash.height)/4 - playButton.height/2);
     add(playButton);
+
+    var startSound = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
+    startSound.persist = true;
+    startSound.play();
   }
 }
