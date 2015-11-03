@@ -69,6 +69,11 @@ class Mirror extends MovingElement implements Lightable{
     }
   }
 
+  /** Sets the move direction of this mirror, and deletes light sprites that occur after this chain */
+  public override function set_moveDirection(d : Direction) {
+    return super.set_moveDirection(d);
+  }
+
   /** Sets the value of isLit. Updates the sprite to reflect the TopBar lit status */
   public function set_isLit(lit : Bool) : Bool {
     if(sides == 1) {

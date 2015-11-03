@@ -7,13 +7,17 @@ class LightSprite extends FlxSprite implements Lightable{
   public var isLit(default, null) : Bool;
 
   /** The mirror this is directly leading into. May be used for resizing in update */
-  public var mirror(default, default) : Mirror;
+  public var leadingMirror(default, default) : Mirror;
 
-  public function new(state : GameState, row : Int, col : Int, d : Direction, spr : Dynamic) {
+  /** The mirror this is following. May be used for movement in update */
+  public var followingMirror(default, default) : Mirror;
+
+  public function new(state : GameState, row : Int, col : Int, d : Direction, m : Mirror, spr : Dynamic) {
     super(col * state.level.tileWidth, row * state.level.tileHeight, spr);
     this.state = state;
     isLit = true;
     immovable = true;
+    followingMirror = m;
   }
 
   /** Return the row of the board this element is currently occupying. The top-left tile is (0,0) */
@@ -27,15 +31,20 @@ class LightSprite extends FlxSprite implements Lightable{
   }
 
   public override function update(){
-    if(mirror != null && mirror.moveDirection.isNonNone()) {
-      var mirrorDelta : Direction = Direction.getDirection(mirror.getCol() - getCol(), mirror.getRow() - getRow());
-      if(mirrorDelta.isHorizontal() && mirror.moveDirection.isHorizontal()) {
-        var diff : Float = Math.abs(mirror.x - x);
+    if(leadingMirror != null) {
+      if(getRow() == leadingMirror.getRow() && leadingMirror.moveDirection.isHorizontal()) {
+        var diff : Float = Math.abs(leadingMirror.x - x);
         scale.x = diff/frameWidth;
-      } else if(mirrorDelta.isVertical() && mirror.moveDirection.isVertical()) {
-        var diff : Float = Math.abs(mirror.y - y);
+        updateHitbox();
+      } else if(getCol() == leadingMirror.getCol() && leadingMirror.moveDirection.isVertical()) {
+        var diff : Float = Math.abs(leadingMirror.y - y);
         scale.y = diff/frameHeight;
+        updateHitbox();
       }
+    }
+    if(followingMirror != null) {
+      velocity.x = followingMirror.velocity.x;
+      velocity.y = followingMirror.velocity.y;
     }
     super.update();
   }
