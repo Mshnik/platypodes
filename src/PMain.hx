@@ -22,7 +22,7 @@ class PMain extends Sprite
 	
   public static inline var TEAM_ID = 626; //THIS SHOULD NEVER CHANGE EVER EVER EVER
   public static inline var VERSION_ID = 102; //This can change when we do a big update
-  public static inline var DEBUG_MODE = false; //Make sure this is false when we submit
+  public static inline var DEBUG_MODE = true; //Make sure this is false when we submit
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 	
