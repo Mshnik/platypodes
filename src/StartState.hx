@@ -26,6 +26,10 @@ class StartState extends FlxState{
     add(splash);
 
     var levels = new Array<Dynamic>();
+    levels.push(AssetPaths.t0__tmx);
+    levels.push(AssetPaths.t1__tmx);
+    levels.push(AssetPaths.t2__tmx);
+    levels.push(AssetPaths.t3__tmx);
     levels.push(AssetPaths.olivial0__tmx);
     levels.push(AssetPaths.olivial1__tmx);
     levels.push(AssetPaths.olivial2__tmx);
