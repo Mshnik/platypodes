@@ -1,4 +1,5 @@
 package ;
+import flixel.text.FlxText;
 import flixel.FlxCamera;
 import flixel.util.FlxPoint;
 import flixel.ui.FlxButton;
@@ -44,7 +45,6 @@ class TopBar extends FlxTypedGroup<FlxSprite>{
       spr.scrollFactor.set();
       spr.cameras = [camera];
     });
-
   }
 
   public override function update() {
