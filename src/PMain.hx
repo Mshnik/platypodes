@@ -12,16 +12,14 @@ import flixel.FlxState;
 class PMain extends Sprite
 {
 	public static var gameWidth:Int = 640; // Initial Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
-	public static var gameHeight:Int = 320; // Initial Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
+	public static var gameHeight:Int = 480; // Initial Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	var initialState:Class<FlxState> = StartState; // The FlxState the game starts with.
 	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
 	var updateFrameRate:Int = 60; // How many frames per second the game should run at.
 	var drawFrameRate:Int = 60;
 	var skipSplash:Bool = false; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
-
-
-
+	
   public static inline var TEAM_ID = 626; //THIS SHOULD NEVER CHANGE EVER EVER EVER
   public static inline var VERSION_ID = 100; //This can change when we do a big update
   public static inline var DEBUG_MODE = false; //Make sure this is false when we submit
