@@ -1,4 +1,7 @@
 package elements;
+import flixel.FlxSprite;
+import flixel.util.FlxPoint;
+import flixel.system.FlxSound;
 import flixel.FlxObject;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.FlxG;
@@ -13,17 +16,18 @@ class Character extends MovingElement {
   @final private static var MOVE_SPEED = 600;
 
   /** The clippng on the bounding box of the sprite, to make fitting though a one tile wide path easier */
-  @final private static inline var BOUNDING_BOX_MARGIN_X = 30;
-  @final private static inline var BOUNDING_BOX_MARGIN_Y = 5;
+  private static inline var BOUNDING_BOX_MARGIN_X = 30;
+  private static inline var BOUNDING_BOX_MARGIN_TOP = 50;
+  private static inline var BOUNDING_BOX_MARGIN_BOTTOM = 0;
 
-  /** Size of each character sprite, in px */
+/** Size of each character sprite, in px */
   @final private static var CHARACTER_SPRITE_SIZE = 128;
 
   /** Animated character sprite sheet location */
   private inline static var CHARACTER_SPRITE_SHEET = AssetPaths.playerSheet__png;
 
   /** Standard speed of animations for the Character class */
-  public inline static var ANIMATION_SPEED = 15;
+  public inline static var ANIMATION_SPEED = 10;
 
   /** The walking animation keys */
   public inline static var WALK_LEFT_RIGHT_ANIMATION_KEY = "Left-Right";
@@ -57,6 +61,12 @@ class Character extends MovingElement {
 
   /** True when the dying animation is playing */
   public var isDying(default, null) : Bool;
+
+  /** Death sound */
+  public var deathSound(default, null) : FlxSound;
+
+  /** Collision sound */
+  public var collisionSound(default, null) : FlxSound;
 
   /** The custom property on the Character object in Tiled maps that denotes the intial direction facing.
    * Valid values are 1 (Up), 3 (Right), 5 (Down), 7 (Left).
@@ -102,7 +112,18 @@ class Character extends MovingElement {
   /** The mirror this character is currently holding, null if none */
   public var mirrorHolding(default, set) : Mirror;
 
-  /** Constructs a new character, belonging to the given state and represented by the given TiledObject */
+  /** The old x value of the mirror this is holding before it started moving */
+  private var mirrorHoldingOldX : Int;
+
+  /** The old x value of the mirror this is holding before it started moving */
+  private var mirrorHoldingOldY : Int;
+
+  /** The list of move instructions to execute in the case of mouse movement */
+  private var moveList : List<Direction>;
+
+  private var moveSprites : Array<FlxSprite>;
+
+  /** Constructs a TopBar character, belonging to the given state and represented by the given TiledObject */
   public function new(state : GameState, o : TiledObject) {
     super(state, o, false, MOVE_SPEED);
 
@@ -133,11 +154,13 @@ class Character extends MovingElement {
 
     //Make bounding box slightly smaller than sprite for ease of movement
     this.offset.x += BOUNDING_BOX_MARGIN_X;
-    this.offset.y += BOUNDING_BOX_MARGIN_Y;
-    this.x += BOUNDING_BOX_MARGIN_X;
-    this.y += BOUNDING_BOX_MARGIN_Y;
+    this.offset.y += BOUNDING_BOX_MARGIN_TOP;
     this.width -= 2 * BOUNDING_BOX_MARGIN_X;
-    this.height -= 2 * BOUNDING_BOX_MARGIN_Y;
+    this.height -= (BOUNDING_BOX_MARGIN_TOP + BOUNDING_BOX_MARGIN_BOTTOM);
+    this.centerOrigin();
+
+    this.x += BOUNDING_BOX_MARGIN_X;
+    this.y += BOUNDING_BOX_MARGIN_TOP;
 
     var d = o.custom.get(INITIAL_DIRECTION_FACING_PROPERTY);
     if (d == null) {
@@ -148,25 +171,33 @@ class Character extends MovingElement {
 
     ROT_CLOCKWISE = function() : Bool {
         if (!GRAB()) return false;
-
-        if(directionFacing.equals(Direction.Left)) return DOWN_SINGLE();
-        if(directionFacing.equals(Direction.Up)) return LEFT_SINGLE();
-        if(directionFacing.equals(Direction.Right)) return UP_SINGLE();
-        if(directionFacing.equals(Direction.Down)) return RIGHT_SINGLE();
-        return false;
+        return FlxG.keys.justPressed.A;
     }
 
     ROT_C_CLOCKWISE = function() : Bool {
       if (!GRAB()) return false;
 
-      if(directionFacing.equals(Direction.Left)) return UP_SINGLE();
-      if(directionFacing.equals(Direction.Up)) return RIGHT_SINGLE();
-      if(directionFacing.equals(Direction.Right)) return DOWN_SINGLE();
-      if(directionFacing.equals(Direction.Down)) return LEFT_SINGLE();
-      return false;
+      return FlxG.keys.justPressed.D;
+
     };
 
     isDying = false;
+    collisionSound = FlxG.sound.load(AssetPaths.Collision8Bit__mp3, 0.5);
+    deathSound = FlxG.sound.load(AssetPaths.crackle__mp3, 0.9);
+    resetMirrorHoldingOldCoords();
+  }
+
+  public override function canMoveInDirection(d : Direction) : Bool {
+    if (d.equals(Direction.None)) {
+      return true;
+    }
+
+    var destRow = Std.int(getRow() + d.y);
+    var destCol = Std.int(getCol() + d.x);
+    var elm = state.getElementAt(destRow, destCol);
+
+    return !state.level.hasWallAt(destCol, destRow) && (elm == null || Std.is(elm, Exit))
+            && !state.isLit(destRow, destCol);
   }
 
   /** Return true iff this character can move in direction d,
@@ -187,10 +218,9 @@ class Character extends MovingElement {
    * equal to null), resets the movementspeed so this can move quickly again.
    **/
   public function set_mirrorHolding(m : Mirror) {
-    if(isDying) return mirrorHolding;
+    if(! alive || isDying) return mirrorHolding = m;
 
     if (m == null) {
-      moveSpeed = MOVE_SPEED;
       isChangingGrabStatus = true;
       switch (this.directionFacing.simpleString) {
         //need release up sprites
@@ -204,7 +234,8 @@ class Character extends MovingElement {
           animation.play(RELEASE_LEFT_RIGHT_ANIMATION_KEY);
         default:
       }
-      return mirrorHolding = m;
+      mirrorHolding = m;
+      return mirrorHolding;
     } else {
       isChangingGrabStatus = true;
       switch (this.directionFacing.simpleString) {
@@ -219,8 +250,22 @@ class Character extends MovingElement {
           animation.play(GRAB_LEFT_RIGHT_ANIMATION_KEY);
         default:
       }
-      return mirrorHolding = m;
+      mirrorHolding = m;
+      setMirrorHoldingOldCoords();
+      return mirrorHolding;
     }
+  }
+
+  private function setMirrorHoldingOldCoords() {
+    if(mirrorHoldingOldX == -1 && mirrorHoldingOldY == -1 ){
+      mirrorHoldingOldX = mirrorHolding.getCol();
+      mirrorHoldingOldY = mirrorHolding.getRow();
+    }
+  }
+
+  private function resetMirrorHoldingOldCoords() {
+    mirrorHoldingOldX = -1;
+    mirrorHoldingOldY = -1;
   }
 
   /** Updates the character for this frame
@@ -232,69 +277,103 @@ class Character extends MovingElement {
     * - calls super.update() to move the character based on calculated move direction
     */
   override public function update() {
-
-    if (directionFacing.isCardinal()) {
-      var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
-      if (elm != null && Std.is(elm, Mirror)) {
-        var mirror : Mirror = Std.instance(elm, Mirror);
-        if(ROT_CLOCKWISE()) {
-          mirror.rotateClockwise();
+    if(!tileLocked) {
+      if (directionFacing.isCardinal() && alive && ! isDying) {
+        var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
+        if (elm != null && Std.is(elm, Mirror)) {
+          var mirror : Mirror = Std.instance(elm, Mirror);
+          if(mirror.destTile == null && ROT_CLOCKWISE()) {
+            state.actionStack.addRotate(mirror, true);
+            mirror.rotateClockwise();
+          }
+          if(mirror.destTile == null && ROT_C_CLOCKWISE()) {
+            state.actionStack.addRotate(mirror, false);
+            mirror.rotateCounterClockwise();
+          }
+          if(GRAB() && mirrorHolding == null) {
+            mirror.moveDirection = Direction.None;
+            mirror.holdingPlayer = this;
+          }
         }
-        if(ROT_C_CLOCKWISE()) {
-          mirror.rotateCounterClockwise();
-        }
-        if(GRAB() && mirrorHolding == null) {
-          mirror.moveDirection = Direction.None;
-          mirror.holdingPlayer = this;
-        }
-      }
-    }
-
-    if(!GRAB() && mirrorHolding != null && mirrorHolding.destTile == null) {
-      mirrorHolding.holdingPlayer = null;
-    }
-
-    if (mirrorHolding == null) {
-      moveDirection = Direction.None;
-
-      if(UP_PRESSED()) {
-        moveDirection = moveDirection.addDirec(Direction.Up);
-      }
-      if(DOWN_PRESSED()) {
-        moveDirection = moveDirection.addDirec(Direction.Down);
-      }
-      if(RIGHT_PRESSED()) {
-        moveDirection = moveDirection.addDirec(Direction.Right);
-      }
-      if(LEFT_PRESSED()) {
-        moveDirection = moveDirection.addDirec(Direction.Left);
       }
 
-      if (!moveDirection.equals(Direction.None)) {
+      if (isDying || ! alive) {
+        moveDirection = Direction.None;
+      } else if(mirrorHolding != null &&  (isDying || !GRAB() && mirrorHolding.destTile == null)) {
+        mirrorHolding.holdingPlayer = null;
+        moveSpeed = MOVE_SPEED;
+        moveDirection = Direction.None;
+        resetMirrorHoldingOldCoords();
+      } else if (moveList != null) {
+        tileLocked = true;
+        moveDirection = moveList.pop();
         directionFacing = moveDirection;
-      }
-    } else {
-      if (GRAB() && mirrorHolding.destTile == null) {
-        if (directionFacing.isHorizontal()) {
-          if (LEFT_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Left)) {
-            mirrorHolding.moveDirection = Direction.Left;
-          } else if (RIGHT_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Right)) {
-            mirrorHolding.moveDirection = Direction.Right;
-          }
-        } else if (directionFacing.isVertical()) {
-          if (UP_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Up)) {
-            mirrorHolding.moveDirection = Direction.Up;
-          } else if (DOWN_PRESSED() && mirrorHolding.canMoveInDirection(Direction.Down)) {
-            mirrorHolding.moveDirection = Direction.Down;
-          }
+      } else if(FlxG.mouse.justReleased) {
+        moveDirection = Direction.None;
+        tileLocked = false;
+        var tileLoc = state.worldToTileCoordinates(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
+        var row = Std.int(tileLoc.y);
+        var col = Std.int(tileLoc.x);
+        setMoveTo(row, col);
+      } else if (mirrorHolding == null) {
+        moveDirection = Direction.None;
+
+        if(UP_PRESSED()) {
+          moveDirection = moveDirection.addDirec(Direction.Up);
         }
+        if(DOWN_PRESSED()) {
+          moveDirection = moveDirection.addDirec(Direction.Down);
+        }
+        if(RIGHT_PRESSED()) {
+          moveDirection = moveDirection.addDirec(Direction.Right);
+        }
+        if(LEFT_PRESSED()) {
+          moveDirection = moveDirection.addDirec(Direction.Left);
+        }
+
+        if (!moveDirection.equals(Direction.None)) {
+          directionFacing = moveDirection;
+        }
+      } else {
+        if (GRAB() && mirrorHolding.destTile == null) {
+          if (directionFacing.isHorizontal()) {
+            if (LEFT_PRESSED()) {
+              if(mirrorHolding.canMoveInDirection(Direction.Left)) {
+                mirrorHolding.moveDirection = Direction.Left;
+              } else {
+                playCollisionSound();
+              }
+            } else if (RIGHT_PRESSED()) {
+              if (mirrorHolding.canMoveInDirection(Direction.Right)) {
+                mirrorHolding.moveDirection = Direction.Right;
+              } else {
+                playCollisionSound();
+              }
+            }
+          } else if (directionFacing.isVertical()) {
+            if (UP_PRESSED()) {
+              if (mirrorHolding.canMoveInDirection(Direction.Up)) {
+                mirrorHolding.moveDirection = Direction.Up;
+              } else {
+                playCollisionSound();
+              }
+            } else if (DOWN_PRESSED()) {
+              if (mirrorHolding.canMoveInDirection(Direction.Down)) {
+                mirrorHolding.moveDirection = Direction.Down;
+              } else {
+                playCollisionSound();
+              }
+            }
+          }
+          setMirrorHoldingOldCoords();
+        }
+        moveDirection = mirrorHolding.moveDirection;
+        moveSpeed = mirrorHolding.moveSpeed;
       }
-      moveDirection = mirrorHolding.moveDirection;
-      moveSpeed = mirrorHolding.moveSpeed;
     }
 
     //Play the appropriate animation
-    if(!isChangingGrabStatus && !isDying) {
+    if(!isChangingGrabStatus && alive) {
       if (mirrorHolding != null) {
         switch (directionFacing.simpleString) {
           case "Up":
@@ -336,13 +415,71 @@ class Character extends MovingElement {
       }
     }
 
+    continueMoving = UP_PRESSED() || DOWN_PRESSED() || LEFT_PRESSED() || RIGHT_PRESSED();
+
     super.update();
+  }
+
+  public override function destinationSet() {
+    super.destinationSet();
+  }
+
+  public override function destinationReached() {
+    super.destinationReached();
+    moveDirection = Direction.None;
+    tileLocked = false;
+    if(moveList != null && moveList.isEmpty()) {
+      moveList = null;
+    }
+  }
+
+  public override function locationReached(oldRow : Int, oldCol : Int) {
+    super.locationReached(oldRow, oldCol);
+    if ((!tileLocked && mirrorHolding == null) || moveList != null) {
+      state.actionStack.addMove(oldCol, oldRow);
+    } else if(! tileLocked && mirrorHolding != null) {
+      state.actionStack.addPushpull(oldCol, oldRow, mirrorHoldingOldX, mirrorHoldingOldY);
+      resetMirrorHoldingOldCoords();
+    }
+  }
+
+  public function setMoveTo(row : Int, col : Int) {
+    if (!state.level.isWalkable(col, row) || !state.isSpaceWalkable(row, col) || (mirrorHolding != null)) {
+      return;
+    }
+
+    var nodes:Array<Direction> = state.level.shortestPath(getRow(), getCol(), row, col);
+    if(nodes == null || nodes.length == 0){
+      return;
+    } else {
+      moveList = new List<Direction>();
+      for(d in nodes) {
+        moveList.add(d);
+      }
+      return;
+    }
+  }
+
+  public function playCollisionSound() {
+    collisionSound.play();
+  }
+
+  public override function revive() {
+    super.revive();
+    visible = true;
+    isDying = false;
+  }
+
+  public override function kill() {
+    super.kill();
+    isDying = false;
+    isChangingGrabStatus = false;
   }
 
   private function animationCallback(key : String, frameNumber : Int, frameIndex : Int) : Void {
     if(key == DEATH_ANIMATION_KEY) {
       isDying = true;
-      if(animation.finished) {
+      if(frameNumber == 8) {
         kill();
       }
     }

@@ -1,4 +1,5 @@
 package elements;
+import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.util.FlxStringUtil;
@@ -29,7 +30,7 @@ import flixel.FlxSprite;
    **/
   @final public var squareHighlight : FlxSprite;
 
-  /** Construct a new element
+  /** Construct a TopBar element
    * state - the GameState this element belongs to
    * tileObject - the TiledObject that represents this Element in the level file.
    *              the Element's initial x and y coordinates, along with the graphical
@@ -75,8 +76,24 @@ import flixel.FlxSprite;
     return Std.int( (this.x + this.origin.x) / state.level.tileWidth);
   }
 
+  /** Return a point representing the graphical center of this Element */
+  public inline function getCenter(createNew : Bool = false) : FlxPoint {
+    if(createNew) {
+      return new FlxPoint(x + origin.x, y + origin.y);
+    } else {
+      return FlxPoint.get(x + origin.x, y + origin.y);
+    }
+  }
+
+  public function centerInTile() {
+    var tile = state.getRectangleFor(getRow(), getCol());
+    x = (tile.x + tile.width/2) - (width - offset.x) / 2;
+    y = (tile.y + tile.height/2) - (height - offset.y) / 2;
+    tile.put();
+  }
+
   /** Return a bounding box for this element.
-   * By default, a new FlxRect is created. If createNew = false, FlxRect.get(..) is used.
+   * By default, a TopBar FlxRect is created. If createNew = false, FlxRect.get(..) is used.
    * This is more efficient, but has side-effects of possibly being modified after the method
    * call finishes, and remember to call .put() after using the boundingBox.
    **/
@@ -92,11 +109,12 @@ import flixel.FlxSprite;
   @final private static var RECT_TOLERANCE = 0.01;
 
   /** Return true if rect a contains rect b, with respect to the above tolerance */
-  public static inline function rectContainsRect(outer : FlxRect, inner : FlxRect) {
-    return outer.left - inner.left < RECT_TOLERANCE &&
-           outer.right - inner.right > -RECT_TOLERANCE  &&
-           outer.top - inner.top < RECT_TOLERANCE &&
-           outer.bottom - inner.bottom > -RECT_TOLERANCE;
+  public static inline function rectContainsRect(outer : FlxRect, inner : FlxRect, tolerance : Int = 0) {
+    var t = Math.max(RECT_TOLERANCE, tolerance);
+    return outer.left - inner.left < t &&
+           outer.right - inner.right > - t  &&
+           outer.top - inner.top < t &&
+           outer.bottom - inner.bottom > - t;
   }
 
   /** Return true iff the bounding box for e is entirely contained in the bounding box of this */
@@ -126,13 +144,13 @@ import flixel.FlxSprite;
   }
 
   /** Updates this element:
+   * - moves the squareHighlight to the TopBar row and col.
    * - calls super.update().
-   * - moves the squareHighlight to the new row and col.
    */
   public override function update() {
-    super.update();
-
     squareHighlight.x = getCol() * state.level.tileWidth;
     squareHighlight.y = getRow() * state.level.tileHeight;
+
+    super.update();
   }
 }

@@ -2,7 +2,7 @@
 <project>
 	<!------------------------------APPLICATION SETTINGS---------------------------->
 	
-	<app title="platypodes" file="platypodes" main="Main" version="0.0.1" company="HaxeFlixel" />
+	<app title="platypodes" file="platypodes" main="PMain" version="0.0.1" company="HaxeFlixel" />
 	
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 	<!--or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"!-->
@@ -33,12 +33,16 @@
 	
 	<!--------------------------------LIBRARIES------------------------------------->
 
-	<haxelib name="flixel"/>
+    <haxelib name="flixel"/>
 	
 	<!--In case you want to use the addons package-->
 	<haxelib name="flixel-addons"/>
-	
-	<!--In case you want to use the ui package-->
+
+	<haxelib name="swf"/>
+    <haxedef name="network-sandbox" />
+    <haxeflag name="-swf-lib" value="../assets/libraries/Logging.swc" />
+
+    <!--In case you want to use the ui package-->
 	<!--haxelib name="flixel-ui"/-->
 	
 	<!--In case you want to use nape with flixel-->

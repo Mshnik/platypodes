@@ -8,3 +8,6 @@
 #IntelliJ things
 .idea/**
 **.iml
+
+##Garage band large files
+**.band

@@ -30,5 +30,3 @@ submit your feature branch to develop **after it has been checked**
 - git merge \<NameOfFeature\> --no-ff
 - Note - in the merge message, write a list of the features the merge of this branch is adding.
 
-
-
