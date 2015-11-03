@@ -44,7 +44,11 @@
  </layer>
  <objectgroup name="Objects"/>
  <objectgroup name="Mirrors">
-  <object id="82" type="mirror" gid="2147483707" x="768" y="1024" width="128" height="128"/>
+  <object id="82" type="mirror" gid="2147483707" x="768" y="1024" width="128" height="128">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Light">
   <object id="55" type="lightSwitch" gid="71" x="1280" y="1024" width="128" height="128"/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="128" tileheight="128" nextobjectid="77">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="128" tileheight="128" nextobjectid="78">
  <tileset firstgid="1" name="walls" tilewidth="128" tileheight="128" tilecount="50">
   <image source="../../images/friends_release/wallSheet.png" width="640" height="1280"/>
  </tileset>
@@ -50,21 +50,24 @@
    eJxjYBgFo2DwgSIgLgbiEiAupYJ5ZUBcDsQVQFxJBfNGwSgYBQwMAMhEA60=
   </data>
  </layer>
- <objectgroup name="Objects">
-  <object id="76" gid="69" x="1151.15" y="894.303" width="128" height="128"/>
- </objectgroup>
+ <objectgroup name="Objects"/>
  <objectgroup name="Mirrors">
-  <object id="72" type="mirror" gid="59" x="640.727" y="893.697" width="128" height="128">
+  <object id="72" type="mirror" gid="59" x="640" y="896" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="55" type="lightSwitch" gid="71" x="1027.15" y="512" width="128" height="128"/>
+  <object id="55" type="lightSwitch" gid="71" x="1024" y="512" width="128" height="128"/>
+  <object id="77" type="lightOrb" gid="69" x="1152" y="896" width="128" height="128">
+   <properties>
+    <property name="direction" value="1"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
-  <object id="45" type="player_start" x="508.97" y="1148.24" width="128" height="128">
+  <object id="45" type="player_start" x="512" y="1152" width="128" height="128">
    <properties>
     <property name="direction_facing" value="16"/>
     <property name="initial_zoom" value="0.7"/>
