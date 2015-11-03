@@ -302,7 +302,7 @@ class GameState extends FlxState {
           var initialZoom = o.custom.get(INITAL_ZOOM_PROPERTY);
           if (initialZoom == null) {
             trace(INITAL_ZOOM_PROPERTY + " unset for this level");
-            setZoom(FlxG.camera.zoom);
+            setZoom(0.4);
           } else {
             setZoom(Std.parseFloat(initialZoom));
           }
@@ -344,7 +344,7 @@ class GameState extends FlxState {
 
   private function setZoom(zoom:Float) {
     //Check for min and max zoom
-    if (zoom < 0.25) zoom = 0.25;
+    if (zoom < 0.35) zoom = 0.35;
     if (zoom > 1) zoom = 1;
 
     FlxG.camera.zoom = zoom;
