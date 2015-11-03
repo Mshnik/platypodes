@@ -109,11 +109,12 @@ import flixel.FlxSprite;
   @final private static var RECT_TOLERANCE = 0.01;
 
   /** Return true if rect a contains rect b, with respect to the above tolerance */
-  public static inline function rectContainsRect(outer : FlxRect, inner : FlxRect) {
-    return outer.left - inner.left < RECT_TOLERANCE &&
-           outer.right - inner.right > -RECT_TOLERANCE  &&
-           outer.top - inner.top < RECT_TOLERANCE &&
-           outer.bottom - inner.bottom > -RECT_TOLERANCE;
+  public static inline function rectContainsRect(outer : FlxRect, inner : FlxRect, tolerance : Int = 0) {
+    var t = Math.max(RECT_TOLERANCE, tolerance);
+    return outer.left - inner.left < t &&
+           outer.right - inner.right > - t  &&
+           outer.top - inner.top < t &&
+           outer.bottom - inner.bottom > - t;
   }
 
   /** Return true iff the bounding box for e is entirely contained in the bounding box of this */

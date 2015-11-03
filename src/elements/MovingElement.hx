@@ -32,10 +32,10 @@ import flixel.addons.editors.tiled.TiledObject;
   public var directionFacing(default, set) : Direction;
 
   /** The row this MovingElement was on, before calling super.update() to move */
-  private var oldRow : Int;
+  public var oldRow(default, null) : Int;
 
   /** The row this MovingElement was on, before calling super.update() to move */
-  private var oldCol : Int;
+  public var oldCol(default, null) : Int;
 
   /** True if this MovingElement should continue to move for the frame that it hits
    *  its destination box. Relevant for tileLocked movingElements that should smothly
@@ -120,6 +120,8 @@ import flixel.addons.editors.tiled.TiledObject;
    **/
   public function locationReached(oldRow : Int, oldCol : Int){}
 
+  private static inline var CONTAINS_TOLERANCE = 5;
+
   /** Updates this element:
    * Check for location move. If moved, call locationReached, update oldRow and oldCol
    * If TileLocked:
@@ -145,7 +147,7 @@ import flixel.addons.editors.tiled.TiledObject;
       velocity.y = 0;
     }
     //Check if destination is reached
-    else if(destTile != null && Element.rectContainsRect(destTile, boundingBox)) {
+    else if(destTile != null && Element.rectContainsRect(destTile, boundingBox, CONTAINS_TOLERANCE)) {
       destinationReached();
       moveDirection = Direction.None;
       destTile = null;
