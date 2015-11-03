@@ -32,10 +32,10 @@ import flixel.addons.editors.tiled.TiledObject;
   public var directionFacing(default, set) : Direction;
 
   /** The row this MovingElement was on, before calling super.update() to move */
-  private var oldRow : Int;
+  public var oldRow(default, null) : Int;
 
   /** The row this MovingElement was on, before calling super.update() to move */
-  private var oldCol : Int;
+  public var oldCol(default, null) : Int;
 
   /** True if this MovingElement should continue to move for the frame that it hits
    *  its destination box. Relevant for tileLocked movingElements that should smothly
@@ -70,7 +70,7 @@ import flixel.addons.editors.tiled.TiledObject;
   /** Sets the movement speed of this element. If negative, throws an exception */
   public function set_moveSpeed(speed : Int) {
     if (speed < 0) {
-      throw "Can't set speed to negative number";
+      if(PMain.DEBUG_MODE) throw "Can't set speed to negative number";
     }
     return moveSpeed = speed;
   }
@@ -102,7 +102,8 @@ import flixel.addons.editors.tiled.TiledObject;
    * Should always return true for Direction.None
    **/
   public function canMoveInDirection(direction : Direction) : Bool {
-    throw "canMove should be overridden in subclass";
+    if(PMain.DEBUG_MODE) throw "canMove should be overridden in subclass";
+    return true;
   }
 
   /** Called when the destination of a tileLocked movingElement is set.
@@ -119,6 +120,8 @@ import flixel.addons.editors.tiled.TiledObject;
    * super first, in case something is put here
    **/
   public function locationReached(oldRow : Int, oldCol : Int){}
+
+  private static inline var CONTAINS_TOLERANCE = 5;
 
   /** Updates this element:
    * Check for location move. If moved, call locationReached, update oldRow and oldCol
@@ -145,7 +148,7 @@ import flixel.addons.editors.tiled.TiledObject;
       velocity.y = 0;
     }
     //Check if destination is reached
-    else if(destTile != null && Element.rectContainsRect(destTile, boundingBox)) {
+    else if(destTile != null && Element.rectContainsRect(destTile, boundingBox, CONTAINS_TOLERANCE)) {
       destinationReached();
       moveDirection = Direction.None;
       destTile = null;

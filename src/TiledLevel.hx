@@ -77,7 +77,7 @@ class TiledLevel extends TiledMap {
       var tileSheetName:String = tileLayer.properties.get("tileset");
 
       if (tileSheetName == null)
-        throw "'tileset' property not defined for the '" + tileLayer.name + "' layer. Please add the property to the layer.";
+        if(PMain.DEBUG_MODE) throw "'tileset' property not defined for the '" + tileLayer.name + "' layer. Please add the property to the layer.";
 
       var tileSet:TiledTileSet = null;
       for (ts in tilesets) {
@@ -88,7 +88,7 @@ class TiledLevel extends TiledMap {
       }
 
       if (tileSet == null)
-        throw "Tileset '" + tileSheetName + " not found. Did you mispell the 'tilesheet' property in " + tileLayer.name + "' layer?";
+        if(PMain.DEBUG_MODE) throw "Tileset '" + tileSheetName + " not found. Did you mispell the 'tilesheet' property in " + tileLayer.name + "' layer?";
 
       var imagePath = new Path(tileSet.imageSource);
       var processedPath = AssetPaths.IMAGE_ROOT + imagePath.file + "." + imagePath.ext;

@@ -61,7 +61,7 @@ class Direction extends FlxPoint {
   /** Set the x value of this Direction to x. Can only be done during construction */
   public override function set_x(x : Float) : Float  {
     if(lockComponents) {
-      throw "Can't alter x value of direction after construction";
+      if(PMain.DEBUG_MODE) throw "Can't alter x value of direction after construction";
     }
     return super.set_x(x);
   }
@@ -69,7 +69,7 @@ class Direction extends FlxPoint {
   /** Set the y value of this Direction to y. Can only be done during construction */
   public override function set_y(y : Float) : Float  {
     if(lockComponents) {
-      throw "Can't alter y value of direction after construction";
+      if(PMain.DEBUG_MODE) throw "Can't alter y value of direction after construction";
     }
     return super.set_y(y);
   }
@@ -81,7 +81,7 @@ class Direction extends FlxPoint {
 
   /** Throws an exception. Make sure that Directions are never added to a pool so they are not mutated */
   public override function put() {
-    throw "Can't put a Direction into the pool - can't mutate them";
+    if(PMain.DEBUG_MODE) throw "Can't put a Direction into the pool - can't mutate them";
   }
 
   /** Returns the opposite of this Direction, in 2D geometry.
@@ -112,7 +112,8 @@ class Direction extends FlxPoint {
       if(y == 1) return Direction.Up_Left;
       if(y == -1) return Direction.Down_Left;
     }
-    throw "Really bad problem - illegal direction created! " + this;
+    if(PMain.DEBUG_MODE) throw "Really bad problem - illegal direction created! " + this;
+    return Direction.None;
   }
 
   /** Return the direction corresponding to p's components.
@@ -139,7 +140,8 @@ class Direction extends FlxPoint {
       if(dy == 1) return Direction.Down_Right;
       if(dy == -1) return Direction.Up_Right;
     }
-    throw "Can't make direction from " + Std.string(dx) + ", " + Std.string(dy);
+    if(PMain.DEBUG_MODE) throw "Can't make direction from " + Std.string(dx) + ", " + Std.string(dy);
+    return Direction.None;
   }
 
   /** Returns the direction corresponding to the given simpleDirection value.
@@ -158,7 +160,9 @@ class Direction extends FlxPoint {
       case DOWN_LEFT_VAL: return Direction.Down_Left;
       case LEFT_VAL: return Direction.Left;
       case UP_LEFT_VAL: return Direction.Up_Left;
-      default: throw "Can't get direction for simpleVal " + Std.string(i);
+      default:
+        if(PMain.DEBUG_MODE) throw "Can't get direction for simpleVal " + Std.string(i);
+        else return Direction.None;
     }
   }
 

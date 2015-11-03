@@ -94,7 +94,7 @@ class ActionElement {
     ID_MASK = bitMaskOfSize(ID_SIZE, 0) << ID_SHIFT;
 
     if(bits > 32) {
-      throw "Too many bits used";
+      if(PMain.DEBUG_MODE) throw "Too many bits used";
     }
   }
 
@@ -134,13 +134,13 @@ class ActionElement {
   private function new(id : Int, startX : Int, startY : Int, directionFacing : Direction,
                        elmX : Int, elmY : Int, moveDirection : Direction, rotateClockwise : Bool) {
     if (id != RESET && id != UNDO && id != MOVE && id != PUSHPULL && id != ROTATE && id != DIE && id != WIN) {
-      throw "Illegal id " + id;
+      if(PMain.DEBUG_MODE) throw "Illegal id " + id;
     }
     if (startX < 0 || startX > Math.pow(2,POS_SIZE) - 1 || startY < 0 || startY > Math.pow(2, POS_SIZE) - 1) {
-      throw "Start x or y out of bounds " + startX + ", " + startY;
+      if(PMain.DEBUG_MODE) throw "Start x or y out of bounds " + startX + ", " + startY;
     }
     if (elmX < 0 || elmX > Math.pow(2,POS_SIZE) - 1 || elmY < 0 || elmY > Math.pow(2,POS_SIZE) - 1) {
-      throw "Elm x or y out of bounds " + elmX + ", " + elmY;
+      if(PMain.DEBUG_MODE) throw "Elm x or y out of bounds " + elmX + ", " + elmY;
     }
     this.id = id;
     this.startX = startX;
@@ -221,7 +221,9 @@ class ActionElement {
       case Direction.DOWN_LEFT_VAL: return 6;
       case Direction.LEFT_VAL: return 7;
       case Direction.UP_LEFT_VAL: return 8;
-      default: throw "Illegal direction constructed " + d;
+      default:
+        if(PMain.DEBUG_MODE) throw "Illegal direction constructed " + d;
+        return 9;
       }
     }
 
@@ -237,7 +239,9 @@ class ActionElement {
       case 6: return Direction.Down_Left;
       case 7: return Direction.Left;
       case 8: return Direction.Up_Left;
-      default: throw "Can't get direction for simpleVal " + Std.string(i);
+      default:
+        if(PMain.DEBUG_MODE) throw "Can't get direction for simpleVal " + Std.string(i);
+        return Direction.None;
     }
   }
 
@@ -301,7 +305,8 @@ class ActionElement {
                   moveDirection.opposite());
     }
 
-    throw "Illegal ID for " + this;
+    if(PMain.DEBUG_MODE) throw "Illegal ID for " + this;
+    return null;
   }
 
 }

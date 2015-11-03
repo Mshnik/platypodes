@@ -31,21 +31,22 @@ class LightSprite extends FlxSprite implements Lightable{
   }
 
   public override function update(){
-    if(leadingMirror != null) {
-      if(getRow() == leadingMirror.getRow() && leadingMirror.moveDirection.isHorizontal()) {
-        var diff : Float = Math.abs(leadingMirror.x - x);
-        scale.x = diff/frameWidth;
-        updateHitbox();
-      } else if(getCol() == leadingMirror.getCol() && leadingMirror.moveDirection.isVertical()) {
-        var diff : Float = Math.abs(leadingMirror.y - y);
-        scale.y = diff/frameHeight;
-        updateHitbox();
-      }
-    }
-    if(followingMirror != null) {
-      velocity.x = followingMirror.velocity.x;
-      velocity.y = followingMirror.velocity.y;
-    }
+    //TODO - reinstate after friends
+//    if(leadingMirror != null) {
+//      if(getRow() == leadingMirror.getRow() && leadingMirror.moveDirection.isHorizontal()) {
+//        var diff : Float = Math.abs(leadingMirror.x - x);
+//        scale.x = diff/frameWidth;
+//        updateHitbox();
+//      } else if(getCol() == leadingMirror.getCol() && leadingMirror.moveDirection.isVertical()) {
+//        var diff : Float = Math.abs(leadingMirror.y - y);
+//        scale.y = diff/frameHeight;
+//        updateHitbox();
+//      }
+//    }
+//    if(followingMirror != null) {
+//      velocity.x = followingMirror.velocity.x;
+//      velocity.y = followingMirror.velocity.y;
+//    }
     super.update();
   }
 }

@@ -29,7 +29,7 @@ class Lighting {
   private function createLightForSquare(x : Int, y : Int, d : Direction,
                                         nonCollision : Bool, mostRecentMirror : Mirror) : LightSprite {
     if (! d.isCardinal()) {
-      throw "Can't make light for non-cardinal direction";
+      if(PMain.DEBUG_MODE) throw "Can't make light for non-cardinal direction";
     }
 
     var spr : Dynamic = null;
@@ -76,7 +76,7 @@ class Lighting {
 
   private function trace_light(x:Int, y:Int, direction:Direction, mostRecentMirror : Mirror):Bool {
     if (! direction.isCardinal()) {
-      throw "Illegal direction in trace light";
+      if(PMain.DEBUG_MODE) throw "Illegal direction in trace light";
     }
 
     if (state.level.hasWallAt(x,y)){
@@ -184,7 +184,8 @@ class Lighting {
     else if (direction.isHorizontal()) {
       return HORIZONTAL;
     }
-    throw "Got non-cardinal direction - bad time!";
+    if(PMain.DEBUG_MODE) throw "Got non-cardinal direction - bad time!";
+    return VERTICAL;
   }
 
   private function draw_light() {

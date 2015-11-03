@@ -26,7 +26,9 @@ class LightBulb extends Element implements Lightable{
       case "Down": loadGraphic(DEFAULT_SPRITE[1]);
       case "Left": loadGraphic(DEFAULT_SPRITE[2]);
       case "Right": loadGraphic(DEFAULT_SPRITE[3]);
-      default: throw "IllegalDirection for " + this;
+      default:
+        if(PMain.DEBUG_MODE) throw "IllegalDirection for " + this;
+        else loadGraphic(DEFAULT_SPRITE[3]);
     }
 
     light_dirty = true;

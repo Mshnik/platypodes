@@ -29,7 +29,7 @@ class GameState extends FlxState {
   private static inline var DISPLAY_COORDINATES = false;
 
   private static inline var INITAL_ZOOM_PROPERTY = "initial_zoom";
-  public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
+  public static var MENU_BUTTON = function() : Bool { return false; }; //TODO - reinstate after friends
   public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
   public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
 
@@ -63,8 +63,6 @@ class GameState extends FlxState {
   private var deadText : FlxText;
 
   private static var BACKGROUND_THEME : FlxSound;
-
-  public static inline var HUD_HEIGHT = 40;
 
   private var hud : TopBar;
   private var hudCamera : FlxCamera;
@@ -141,10 +139,15 @@ class GameState extends FlxState {
 
     setZoom(FlxG.camera.zoom);
 
-    hudCamera = new FlxCamera(0, 0, FlxG.width, HUD_HEIGHT, 1.0);
+    hudCamera = new FlxCamera(0, 0, FlxG.width, TopBar.HEIGHT, 1.0);
     FlxG.cameras.add(hudCamera);
     hud = new TopBar(this, hudCamera);
     add(hud);
+
+    level.wallTiles.forEachOfType(FlxObject, function(ob : FlxObject){
+      ob.cameras = [FlxG.camera];
+    });
+
 
     if(BACKGROUND_THEME == null) {
       BACKGROUND_THEME = FlxG.sound.load(AssetPaths.Background__mp3, 0.95, true);
@@ -238,8 +241,7 @@ class GameState extends FlxState {
       actionStackTimer.stop();
       FlxG.switchState(new LevelSelectMenuState());
     } else if(won && NEXT_LEVEL_BUTTON() && levelPathIndex + 1 < levelPaths.length){
-      Logging.getSingleton().recordLevelEnd();
-      actionStackTimer.stop();
+      BACKGROUND_THEME.resume();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {
       resetState();
@@ -448,11 +450,13 @@ class GameState extends FlxState {
       BACKGROUND_THEME.resume();
     }
     sndWin.play();
-    winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? "" : " - Press Space to continue"), Std.int(30 / FlxG.camera.zoom));
+    winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? " Thanks for playing!!" : " - Press Space to continue"), Std.int(30 / FlxG.camera.zoom));
     winText.x = FlxG.camera.scroll.x + (FlxG.camera.width - winText.width) / 2;
     winText.y = FlxG.camera.scroll.y + winText.height;
     add(winText);
     player.kill();
+    Logging.getSingleton().recordLevelEnd();
+    actionStackTimer.stop();
   }
 
 }
