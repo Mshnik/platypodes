@@ -62,7 +62,6 @@
   <object id="45" type="player_start" x="512" y="1152" width="128" height="128">
    <properties>
     <property name="direction_facing" value="16"/>
-    <property name="initial_zoom" value="0.7"/>
    </properties>
   </object>
  </objectgroup>

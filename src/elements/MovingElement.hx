@@ -43,6 +43,8 @@ import flixel.addons.editors.tiled.TiledObject;
    **/
   public var continueMoving : Bool;
 
+  private static inline var TOLERANCE = 5;
+
   /** Construct a TopBar moving element
    * state - the GameState this element belongs to
    * tileObject - the TiledObject that represents this Element in the level file.
@@ -148,7 +150,8 @@ import flixel.addons.editors.tiled.TiledObject;
       velocity.y = 0;
     }
     //Check if destination is reached
-    else if(destTile != null && Element.rectContainsRect(destTile, boundingBox, CONTAINS_TOLERANCE)) {
+    else if(destTile != null && ((moveDirection.isHorizontal() && destTile.left - TOLERANCE <= x && destTile.right + TOLERANCE >= x + width)
+            || (moveDirection.isVertical() && destTile.top - TOLERANCE <= y && destTile.bottom + TOLERANCE >= y + height))) {
       destinationReached();
       moveDirection = Direction.None;
       destTile = null;

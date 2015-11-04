@@ -70,11 +70,10 @@
   <object id="45" type="player_start" x="512" y="1152" width="128" height="128">
    <properties>
     <property name="direction_facing" value="16"/>
-    <property name="initial_zoom" value="0.7"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="47" type="exit" gid="83" x="767.152" y="516.485" width="128" height="128"/>
+  <object id="47" type="exit" gid="83" x="768" y="512" width="128" height="128"/>
  </objectgroup>
 </map>

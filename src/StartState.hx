@@ -1,4 +1,5 @@
 package ;
+import flixel.text.FlxText;
 import flixel.system.FlxSound;
 import flixel.ui.FlxButton;
 import flixel.FlxG;
@@ -59,5 +60,8 @@ class StartState extends FlxState{
     WIND_SOUND = FlxG.sound.load(AssetPaths.wind__mp3, 0.5, true);
     WIND_SOUND.persist = true;
     WIND_SOUND.play();
+
+    var f = new FlxText(10,10, 200, "Ver-"+PMain.VERSION_ID);
+    add(f);
   }
 }

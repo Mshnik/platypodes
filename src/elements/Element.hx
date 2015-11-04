@@ -30,6 +30,8 @@ import flixel.FlxSprite;
    **/
   @final public var squareHighlight : FlxSprite;
 
+  public var bbox : FlxSprite;
+
   /** Construct a TopBar element
    * state - the GameState this element belongs to
    * tileObject - the TiledObject that represents this Element in the level file.
@@ -150,6 +152,11 @@ import flixel.FlxSprite;
   public override function update() {
     squareHighlight.x = getCol() * state.level.tileWidth;
     squareHighlight.y = getRow() * state.level.tileHeight;
+
+    if(bbox != null) {
+      bbox.x = x;
+      bbox.y = y;
+    }
 
     super.update();
   }

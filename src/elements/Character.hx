@@ -211,7 +211,7 @@ class Character extends MovingElement {
     var elm = state.getElementAt(destRow, destCol);
 
     return !state.level.hasWallAt(destCol, destRow) && (elm== null || elm == m || Std.is(elm, Exit))
-            && !state.isLit(destRow, destCol);
+            && (elm == m || !state.isLit(destRow, destCol));
   }
 
   /** Sets the mirrorHolding of this character to m. If this is used to release a mirror (by setting
@@ -415,7 +415,7 @@ class Character extends MovingElement {
       }
     }
 
-    continueMoving = UP_PRESSED() || DOWN_PRESSED() || LEFT_PRESSED() || RIGHT_PRESSED();
+    continueMoving = GRAB() && (UP_PRESSED() || DOWN_PRESSED() || LEFT_PRESSED() || RIGHT_PRESSED());
 
     super.update();
   }
