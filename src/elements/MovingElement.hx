@@ -56,7 +56,7 @@ import flixel.addons.editors.tiled.TiledObject;
    * img - the image to display for this element. If more complex than a simple image, don't supply here;
    *  change the graph content after calling this constructor.
    */
-  public function new(state : GameState, tileObject : TiledObject, tileLocked : Bool = true,
+  private function new(state : GameState, tileObject : TiledObject, tileLocked : Bool = true,
                       moveSpeed : Int = 0, ?img : Dynamic) {
     super(state, tileObject, img);
 

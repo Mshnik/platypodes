@@ -46,6 +46,30 @@ class TwoSidedMirror extends AbsMirror {
     return (litWest ? 1 : 0) + (litEast ? 1 : 0);
   }
 
+  public override function getReflection(directionIn : Direction) : Array<Direction> {
+    var comD = directionIn.simpleString + " - " + directionFacing.simpleString;
+    switch (comD) {
+      case "Left - Up_Left": return [Direction.Up];
+      case "Left - Down_Left" : return [Direction.Down];
+      case "Up - Up_Left" : return [Direction.Left];
+      case "Up - Up_Right" : return [Direction.Right];
+      case "Right - Up_Right" : return [Direction.Up];
+      case "Right - Down_Right" : return [Direction.Down];
+      case "Down - Down_Right" : return [Direction.Right];
+      case "Down - Down_Left" : return [Direction.Left];
+
+      case "Right - Up_Left": return [Direction.Down];
+      case "Right - Down_Left" : return [Direction.Up];
+      case "Down - Up_Left" : return [Direction.Right];
+      case "Down - Up_Right" : return [Direction.Left];
+      case "Left - Up_Right" : return [Direction.Down];
+      case "Left - Down_Right" : return [Direction.Up];
+      case "Up - Down_Right" : return [Direction.Left];
+      case "Up - Down_Left" : return [Direction.Right];
+      default: return [];
+    }
+  }
+
   public override function process_light(i:Direction):Direction {
     var mainDir:Direction = calc_out(i);
     var oppDir:Direction = calc_out(i.opposite());
