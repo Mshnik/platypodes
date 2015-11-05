@@ -4,6 +4,8 @@ import flixel.FlxSprite;
 import logging.ActionElement;
 import haxe.Timer;
 import logging.ActionStack;
+import openfl.Assets;
+import flixel.system.FlxSound;
 import elements.*;
 import flixel.FlxCamera;
 import flixel.util.FlxRect;
@@ -12,10 +14,13 @@ import flixel.group.FlxTypedGroup;
 import flixel.FlxBasic;
 import flixel.addons.editors.tiled.TiledObjectGroup;
 import flixel.addons.editors.tiled.TiledObject;
+import flixel.addons.plugin.FlxMouseControl;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxObject;
 import flixel.group.FlxGroup;
+import flixel.util.FlxPoint;
+import flixel.util.FlxPath;
 import flash.Lib;
 
 
@@ -24,7 +29,7 @@ class GameState extends FlxState {
   private static inline var DISPLAY_COORDINATES = false;
 
   private static inline var INITAL_ZOOM_PROPERTY = "initial_zoom";
-  public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; };
+  public static var MENU_BUTTON = function() : Bool { return false; }; //TODO - reinstate after friends
   public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
   public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
 
@@ -40,6 +45,7 @@ class GameState extends FlxState {
   private var savedZoom : Float; //The zoom that the player had before restarting
 
   public var player:Character;
+  public var tooltip:Tooltip;
 
   public var actionStack : ActionStack;
   private static inline var RE_LOGGING_TIME = 5000; //time in ms between whole stack (redundant) loggings
@@ -56,10 +62,12 @@ class GameState extends FlxState {
   private var winText : FlxText;
   private var deadText : FlxText;
 
-  public static inline var HUD_HEIGHT = 40;
+  private static var BACKGROUND_THEME : FlxSound;
 
   private var hud : TopBar;
   private var hudCamera : FlxCamera;
+
+  private var sndWin : FlxSound;
 
   public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int, savedZoom : Float = -1,
                       savedActionStack : ActionStack = null) {
@@ -71,12 +79,13 @@ class GameState extends FlxState {
   }
 
   override public function create():Void {
-    won = false;
+    FlxG.mouse.visible = true;
+    FlxG.plugins.add(new FlxMouseControl());
 
     super.create();
 
     // Load the level's tilemaps
-    level = new TiledLevel(levelPaths[levelPathIndex]);
+    level = new TiledLevel(this, levelPaths[levelPathIndex]);
 
     // Add tilemaps
     add(level.floorTiles);
@@ -89,7 +98,7 @@ class GameState extends FlxState {
     lightSwitches = new FlxTypedGroup<LightSwitch>();
     lightSprites = new FlxTypedGroup<LightSprite>();
 
-// Load all objects
+    // Load all objects
     level.loadObjects(onAddObject);
 
     //Either create a TopBar action stack for the player, or set the saved action stack to use the TopBar player
@@ -102,17 +111,22 @@ class GameState extends FlxState {
     actionStackTimer = new Timer(RE_LOGGING_TIME);
     actionStackTimer.run = actionStack.logStack;
 
+    //Create Tooltip
+    tooltip = new Tooltip(this);
+
     //Make sure non-player objects are added to level after player is added to level
     //For ordering of the update loop
     add(exit);
-    add(lightSprites);
     add(mirrors);
+    add(lightSprites);
     add(lightBulbs);
     add(lightSwitches);
     add(player);
+    add(tooltip);
 
     UNDO = function(){
-      return ! player.tileLocked && FlxG.keys.justPressed.BACKSPACE;
+      return FlxG.keys.justPressed.BACKSPACE && ! player.tileLocked &&
+        (player.mirrorHolding == null || player.mirrorHolding.moveDirection.equals(Direction.None));
     };
 
     if(DISPLAY_COORDINATES) {
@@ -125,10 +139,23 @@ class GameState extends FlxState {
 
     setZoom(FlxG.camera.zoom);
 
-    hudCamera = new FlxCamera(0, 0, FlxG.width, HUD_HEIGHT, 1.0);
+    hudCamera = new FlxCamera(0, 0, FlxG.width, TopBar.HEIGHT, 1.0);
     FlxG.cameras.add(hudCamera);
     hud = new TopBar(this, hudCamera);
     add(hud);
+
+    level.wallTiles.forEachOfType(FlxObject, function(ob : FlxObject){
+      ob.cameras = [FlxG.camera];
+    });
+
+
+    if(BACKGROUND_THEME == null) {
+      BACKGROUND_THEME = FlxG.sound.load(AssetPaths.Background__mp3, 0.95, true);
+      BACKGROUND_THEME.persist = true;
+      BACKGROUND_THEME.play();
+    }
+
+    sndWin = FlxG.sound.load(AssetPaths.Victory__mp3);
   }
 
   /** Returns a rectangle representing the given tile */
@@ -158,6 +185,20 @@ class GameState extends FlxState {
     if (check(exit)) return exit;
     if (check(player)) return player;
     return null;
+  }
+
+  /** Return true if the current space is open or contains a walkable element (character, exit) */
+  public function isSpaceWalkable(row : Int, col : Int) : Bool {
+    if(isLit(row, col)) {
+      return false;
+    }
+    var elm = getElementAt(row, col);
+    return elm == null || Std.is(elm, Exit) || Std.is(elm, Character);
+  }
+
+  /** Returns the tile coordinates of the tile that contains the given world coordinates */
+  public function worldToTileCoordinates(worldCoord : FlxPoint) : FlxPoint{
+    return new FlxPoint(worldCoord.x / level.tileWidth, worldCoord.y / level.tileHeight);
   }
 
   /** Return true iff the given row and col is lighted.
@@ -200,8 +241,7 @@ class GameState extends FlxState {
       actionStackTimer.stop();
       FlxG.switchState(new LevelSelectMenuState());
     } else if(won && NEXT_LEVEL_BUTTON() && levelPathIndex + 1 < levelPaths.length){
-      Logging.getSingleton().recordLevelEnd();
-      actionStackTimer.stop();
+      BACKGROUND_THEME.resume();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {
       resetState();
@@ -218,16 +258,16 @@ class GameState extends FlxState {
     //Only collide player with stuff she isn't holding a mirror
     if (player.mirrorHolding == null) {
 
-      level.collideWithLevel(player, false);  // Collides player with walls
+      level.collideWithLevel(player, false, function(a, a){player.playCollisionSound();});  // Collides player with walls
 
-      FlxG.collide(player, lightBulbs);
-      FlxG.collide(player, lightSwitches);
+      FlxG.collide(player, lightBulbs, function(a, a){player.playCollisionSound();});
+      FlxG.collide(player, lightSwitches, function(a, a){player.playCollisionSound();});
 
       //Collide player with light - don't kill player, just don't let them walk into it
-      FlxG.collide(player, lightSprites);
+      FlxG.collide(player, lightSprites, function(a, a){player.playCollisionSound();});
 
       //Collide with mirrors - don't let player walk through mirrors
-      FlxG.collide(player, mirrors);
+      FlxG.collide(player, mirrors, function(a, a){player.playCollisionSound();});
     } else {
       //Only collide player with the mirror they are holding
       FlxG.collide(player, player.mirrorHolding);
@@ -248,6 +288,8 @@ class GameState extends FlxState {
         win();
       }
     }
+
+    FlxG.mouse.load();
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup) {
@@ -260,7 +302,7 @@ class GameState extends FlxState {
           var initialZoom = o.custom.get(INITAL_ZOOM_PROPERTY);
           if (initialZoom == null) {
             trace(INITAL_ZOOM_PROPERTY + " unset for this level");
-            setZoom(FlxG.camera.zoom);
+            setZoom(0.4);
           } else {
             setZoom(Std.parseFloat(initialZoom));
           }
@@ -302,7 +344,7 @@ class GameState extends FlxState {
 
   private function setZoom(zoom:Float) {
     //Check for min and max zoom
-    if (zoom < 0.25) zoom = 0.25;
+    if (zoom < 0.35) zoom = 0.35;
     if (zoom > 1) zoom = 1;
 
     FlxG.camera.zoom = zoom;
@@ -342,7 +384,7 @@ class GameState extends FlxState {
 
     if (a.id == ActionElement.PUSHPULL && Std.is(elm, Mirror)) {
       var m : Mirror = Std.instance(elm, Mirror);
-      if (! m.canMoveInDirection(a.moveDirection) || ! player.canMoveInDirectionWithMirror(a.moveDirection, m)) {
+      if (player.alive && (! m.canMoveInDirection(a.moveDirection) || ! player.canMoveInDirectionWithMirror(a.moveDirection, m))) {
         trace("Can't execute action " + a + " can't move mirror " + m + " in direction " + a.moveDirection.simpleString);
         return;
       }
@@ -377,23 +419,24 @@ class GameState extends FlxState {
       var action : ActionElement = actionStack.getHeadSkipDeath();
       if(action != null) {
         actionStack.addUndo();
+        executeAction(action.getOpposite());
         if(! player.alive) {
           player.revive();
           remove(deadText);
         }
-          executeAction(action.getOpposite());
       }
     }
   }
 
   public function killPlayer() {
     player.mirrorHolding = null;
+    player.deathSound.play();
     player.animation.play(Character.DEATH_ANIMATION_KEY, false);
     actionStack.addDie();
-    deadText = new FlxText(0, 0, 800, "You died - press Space to undo or R to reset", 40);
+    deadText = new FlxText(0, 0, Std.int(400 / FlxG.camera.zoom), "You died - press Backspace to undo or R to reset", Std.int(30 / FlxG.camera.zoom));
     deadText.x = FlxG.camera.scroll.x + (FlxG.camera.width - deadText.width) / 2;
-    deadText.y = FlxG.camera.scroll.y + (FlxG.camera.height - deadText.height) / 2 + player.height;
-    deadText.color = 0xFFFF0022;
+    deadText.y = FlxG.camera.scroll.y + deadText.height;
+    deadText.color = 0xFFCC0022;
     add(deadText);
   }
 
@@ -402,11 +445,18 @@ class GameState extends FlxState {
 
     won = true;
     actionStack.addWin();
-    winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? "" : " - Press Space to continue"), 40);
+    BACKGROUND_THEME.pause();
+    sndWin.onComplete = function() {
+      BACKGROUND_THEME.resume();
+    }
+    sndWin.play();
+    winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? " Thanks for playing!!" : " - Press Space to continue"), Std.int(30 / FlxG.camera.zoom));
     winText.x = FlxG.camera.scroll.x + (FlxG.camera.width - winText.width) / 2;
-    winText.y = FlxG.camera.scroll.y + (FlxG.camera.height - winText.height) / 2;
+    winText.y = FlxG.camera.scroll.y + winText.height;
     add(winText);
     player.kill();
+    Logging.getSingleton().recordLevelEnd();
+    actionStackTimer.stop();
   }
 
 }

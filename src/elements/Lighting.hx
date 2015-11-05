@@ -1,4 +1,3 @@
-//first push
 package elements;
 import flixel.FlxSprite;
 import elements.LightSwitch;
@@ -8,9 +7,8 @@ class Lighting {
   public static inline var NONE = 0; //Represents no light going through a tile
   public static inline var HORIZONTAL = 1; //Represents light going horizontally through a tile
   public static inline var VERTICAL = 2; //Represents light going vertically through a tile
-//3 left for both horizontal and vertical together.
+  //3 left for both horizontal and vertical together.
   public static inline var LIT_MIRROR = 4; //Represents light hitting an object and stopping here
-  public static inline var LIT_CRYSTAL=16; //Represents light hitting a crystal on a 4 way split.
 
   private static inline var HORIZONTAL_SPRITE = AssetPaths.light_sheet_0_0__png;
   private static inline var VERTICAL_SPRITE = AssetPaths.light_sheet_1_0__png;
@@ -26,9 +24,12 @@ class Lighting {
   private var start_y:Int;
   private var start_direction:Direction;
 
-  private function createLightForSquare(x : Int, y : Int, d : Direction, nonCollision : Bool) : LightSprite {
+  public var lightSprites(default, null) : List<LightSprite>;
+
+  private function createLightForSquare(x : Int, y : Int, d : Direction,
+                                        nonCollision : Bool, mostRecentMirror : Mirror) : LightSprite {
     if (! d.isCardinal()) {
-      throw "Can't make light for non-cardinal direction";
+      if(PMain.DEBUG_MODE) throw "Can't make light for non-cardinal direction";
     }
 
     var spr : Dynamic = null;
@@ -43,7 +44,7 @@ class Lighting {
       }
     }
 
-    var light = new LightSprite(state, y, x, d, spr);
+    var light = new LightSprite(state, y, x, d, mostRecentMirror, spr);
     return light;
   }
 
@@ -61,6 +62,7 @@ class Lighting {
     start_x = lightBulb.getCol();
     start_y = lightBulb.getRow();
     start_direction = lightBulb.directionFacing;
+    lightSprites = new List<LightSprite>();
   }
 
   public function redraw_light() {
@@ -71,10 +73,10 @@ class Lighting {
     }
     draw_light();
   }
-//hopefully this doesn't cause infinite recursion.
-  private function trace_light(x:Int, y:Int, direction:Direction):Bool {
+
+  private function trace_light(x:Int, y:Int, direction:Direction, mostRecentMirror : Mirror):Bool {
     if (! direction.isCardinal()) {
-      throw "Illegal direction in trace light";
+      if(PMain.DEBUG_MODE) throw "Illegal direction in trace light";
     }
     if(light_exists(x,y,direction)){
       //what should i return here?
@@ -93,20 +95,84 @@ class Lighting {
     if (e == null || Std.is(e, Character)) {
       if(Std.is(e, Character)) {state.killPlayer();}
       light_trace[x][y] += getVerticalOrHorizontal(direction);
-      var nonCollision = trace_light(x + Std.int(direction.x), y + Std.int(direction.y), direction);
-      var light_sprite = createLightForSquare(x,y, direction, nonCollision);
+      var nonCollision = trace_light(x + Std.int(direction.x), y + Std.int(direction.y), direction, mostRecentMirror);
+      var light_sprite = createLightForSquare(x,y, direction, nonCollision, mostRecentMirror);
+      lightSprites.push(light_sprite);
       state.lightSprites.add(light_sprite);
+      var nextE = state.getElementAt(y + Std.int(direction.y), x + Std.int(direction.x));
+      if (Std.is(nextE, Mirror)){
+        var m : Mirror = Std.instance(nextE, Mirror);
+        light_sprite.leadingMirror = m;
+      }
       return true;
     } else if (Std.is(e, Mirror)) {
 // the mirror is assumed to only be one sided
       var m:Mirror = Std.instance(e, Mirror);
-      var dOut:Direction=m.process_light(direction);
-      if(dOut.equals(Direction.None)){return false;}
-      else{
-        trace_light(x+Std.int(dOut.x),y+Std.int(dOut.y),dOut);
-        light_trace[x][y]=LIT_MIRROR;
-        return true;}}
-    else if (Std.is(e, LightSwitch)) {
+      if (direction.equals(Direction.Right)) {
+        if (m.directionFacing.equals(Direction.Up_Left)) {
+          light_trace[x][y] = LIT_MIRROR;
+          m.isLit = true;
+          trace_light(x, y - 1, Direction.Up, m);
+          return true;
+        }
+        else if (m.directionFacing.equals(Direction.Down_Left)) {
+          light_trace[x][y] = LIT_MIRROR;
+          m.isLit = true;
+          trace_light(x, y + 1, Direction.Down, m);
+          return true;
+        }
+
+        return false;
+      }
+      else if (direction.equals(Direction.Left)) {
+        if (m.directionFacing.equals(Direction.Down_Right)) {
+          light_trace[x][y] = LIT_MIRROR;
+          m.isLit = true;
+          trace_light(x, y + 1, Direction.Down, m);
+          return true;
+        }
+        else if (m.directionFacing.equals(Direction.Up_Right)) {
+          light_trace[x][y] = LIT_MIRROR;
+          m.isLit = true;
+          trace_light(x, y - 1, Direction.Up, m);
+          return true;
+        }
+
+        return false;
+      }
+      else if (direction.equals(Direction.Up)) {
+        if (m.directionFacing.equals(Direction.Down_Right)) {
+          light_trace[x][y] = LIT_MIRROR;
+          m.isLit = true;
+          trace_light(x + 1, y, Direction.Right, m);
+          return true;
+        }
+        else if (m.directionFacing.equals(Direction.Down_Left)) {
+          light_trace[x][y] = LIT_MIRROR;
+          m.isLit = true;
+          trace_light(x - 1, y, Direction.Left, m);
+          return true;
+        }
+
+        return false;
+      }
+      else if (direction.equals(Direction.Down)) {
+        if (m.directionFacing.equals(Direction.Up_Left)) {
+          light_trace[x][y] = LIT_MIRROR;
+          m.isLit = true;
+          trace_light(x - 1, y, Direction.Left, m);
+          return true;
+        }
+        else if (m.directionFacing.equals(Direction.Up_Right)) {
+          light_trace[x][y] = LIT_MIRROR;
+          m.isLit = true;
+          trace_light(x + 1, y, Direction.Right, m);
+          return true;
+        }
+
+        return false;
+      }
+    } else if (Std.is(e, LightSwitch)) {
       var lightSwitch : LightSwitch = Std.instance(e, LightSwitch);
       lightSwitch.isLit = true;
       return true;}
@@ -132,12 +198,13 @@ class Lighting {
     else if (direction.isHorizontal()) {
       return HORIZONTAL;
     }
-    throw "Got non-cardinal direction - bad time!";
+    if(PMain.DEBUG_MODE) throw "Got non-cardinal direction - bad time!";
+    return VERTICAL;
   }
 
   private function draw_light() {
     state.lightSprites.clear();
-    trace_light(start_x + Std.int(start_direction.x), start_y + Std.int(start_direction.y), start_direction);
+    trace_light(start_x + Std.int(start_direction.x), start_y + Std.int(start_direction.y), start_direction, null);
   }
 
 /**
