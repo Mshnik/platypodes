@@ -1,4 +1,4 @@
-package elements;
+package elements.impl;
 import flixel.addons.editors.tiled.TiledObject;
 class Crystal extends Element implements Lightable{
     /**The sprite for an unlit crystal*/

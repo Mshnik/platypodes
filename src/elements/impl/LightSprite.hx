@@ -1,4 +1,4 @@
-package elements;
+package elements.impl;
 
 import flixel.FlxSprite;
 class LightSprite extends FlxSprite implements Lightable{

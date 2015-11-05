@@ -1,4 +1,4 @@
-package elements;
+package elements.impl;
 import flixel.addons.editors.tiled.TiledObject;
 
 class Exit extends Element {

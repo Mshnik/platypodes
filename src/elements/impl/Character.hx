@@ -1,4 +1,4 @@
-package elements;
+package elements.impl;
 import flixel.FlxSprite;
 import flixel.util.FlxPoint;
 import flixel.system.FlxSound;

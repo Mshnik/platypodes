@@ -1,30 +1,12 @@
 package elements;
 import flixel.FlxG;
-import flixel.system.FlxSound;
-import openfl.Assets;
+import flixel.FlxSprite;
 import flixel.addons.editors.tiled.TiledObject;
-
-/** A mirror is a moveable element that reflects light.
- * It is tile locked, thus movement occurs in increments of tiles.
- * Each mirror has a reflective surface on either one or both of its sides, that
- * reflects light in 90 degree angles.
- **/
-class Mirror extends MovingElement implements Lightable{
+import flixel.system.FlxSound;
+@abstract class AbsMirror extends InteractableElement implements Lightable {
 
   /** The property in Tiled that denotes how many sides a mirror has. Valid values are 1 and 2 */
   private static inline var SIDES_PROPERTY_KEY = "sides";
-
-  /** The sprite for an unlit one sided mirror */
-  private static inline var UNLIT_SPRITE_ONE_SIDED = AssetPaths.light_sheet_0_2__png;
-
-  /** The sprite for a lit one sided mirror */
-  private static inline var LIT_SPRITE_ONE_SIDED = AssetPaths.light_sheet_1_2__png;
-
-  /** The sprite for an unlit two sided mirror */
-  private static inline var UNLIT_SPRITE_TWO_SIDED = ""; //TODO
-
-  /** The sprite for a lit two sided mirror */
-  private static inline var LIT_SPRITE_TWO_SIDED = ""; //TODO
 
   /** The speed mirrors move with when being pushed or pulled by a character */
   public inline static var MOVE_SPEED = 400;
@@ -33,17 +15,17 @@ class Mirror extends MovingElement implements Lightable{
   public var moveSound(default, null) : FlxSound;
 
   /** The number of sides this mirror has that reflect light. Must be 1 or 2 */
-  @final public var sides : Int;
+  @final public var sides(default, null) : Int;
 
   /** The character that is currently holding this mirror. Null if none */
   public var holdingPlayer(default, set) : Character;
 
-  /** True iff this is currently reflecting light (on either of its sides), false otherwise */
-  public var isLit(default,set):Bool;
+  /** The direction is is receiving light from */
+  public var lightInDirection : Direction;
 
   /** Constructs a TopBar mirror belonging to the given game state and representing the given TiledObject */
-  public function new(state : GameState, o : TiledObject) {
-    super(state, o, true, MOVE_SPEED, setSidesAndGetInitialSprite(o));
+  private function new(state : GameState, o : TiledObject, unlitSprite : FlxSprite) {
+    super(state, o, true, MOVE_SPEED, unlitSprite);
 
     //Read the flipX and flipY fields to determine intial direction facing
     if (flipX && flipY) {
@@ -56,19 +38,22 @@ class Mirror extends MovingElement implements Lightable{
       directionFacing = Direction.Up_Right;
     }
 
+    sides = Std.parseInt(o.custom.get(SIDES_PROPERTY_KEY));
+    if(sides != 1 && sides != 2 && PMain.DEBUG_MODE) throw "Illegal values of sides " + sides;
     moveSound = FlxG.sound.load(AssetPaths.Scrape__wav, 0.75);
   }
 
-  /** Return the sprite that represents this mirror intitially. Used in construction */
-  private function setSidesAndGetInitialSprite(o : TiledObject) : Dynamic {
-    sides = Std.parseInt(o.custom.get(SIDES_PROPERTY_KEY));
-    switch sides {
-      case 1: return UNLIT_SPRITE_ONE_SIDED;
-      case 2: return UNLIT_SPRITE_TWO_SIDED;
-      default:
-        if(PMain.DEBUG_MODE) throw "Illegal values of sides " + sides;
-        else return UNLIT_SPRITE_ONE_SIDED;
+  public function isLightingTo(directionOut : Direction) : Bool {
+    for(d in getReflection(lightInDirection)) {
+      if(directionOut.equals(d)) {
+        return true;
+      }
     }
+    return false;
+  }
+
+  public function getReflection(directionIn : Direction) : Array<Direction> {
+    throw "NOT IMPLEMENTED - MUST BE OVERRIDDEN";
   }
 
   /** Sets the move direction of this mirror, and deletes light sprites that occur after this chain */
@@ -76,20 +61,6 @@ class Mirror extends MovingElement implements Lightable{
     return super.set_moveDirection(d);
   }
 
-  /** Sets the value of isLit. Updates the sprite to reflect the TopBar lit status */
-  public function set_isLit(lit : Bool) : Bool {
-    if(sides == 1) {
-      if(lit) {
-        loadGraphic(LIT_SPRITE_ONE_SIDED, false, Std.int(width), Std.int(height));
-      } else {
-        loadGraphic(UNLIT_SPRITE_ONE_SIDED, false, Std.int(width), Std.int(height));
-      }
-    } else {
-      //TODO
-    }
-
-    return this.isLit = lit;
-  }
 
   /** Return true iff this mirror can move in direction D.
    *    - If null or none, return true, as this mirror can stay where it is now
@@ -142,39 +113,39 @@ class Mirror extends MovingElement implements Lightable{
   }
 
   /** Rotate this mirror once clockwise, and update the directionFacing */
-	public function rotateClockwise() {
-		if (directionFacing.equals(Direction.Up_Left)) {
-			directionFacing = Direction.Up_Right;
-			flipX = ! flipX;
-		} else if (directionFacing.equals(Direction.Up_Right)) {
-			directionFacing = Direction.Down_Right;
-			flipY = ! flipY;
-		} else if (directionFacing.equals(Direction.Down_Right)) {
-			directionFacing = Direction.Down_Left;
-			flipX = ! flipX;
-		} else if (directionFacing.equals(Direction.Down_Left)) {
-			directionFacing = Direction.Up_Left;
-			flipY = ! flipY;
-		}
+  public function rotateClockwise() {
+    if (directionFacing.equals(Direction.Up_Left)) {
+      directionFacing = Direction.Up_Right;
+      flipX = ! flipX;
+    } else if (directionFacing.equals(Direction.Up_Right)) {
+      directionFacing = Direction.Down_Right;
+      flipY = ! flipY;
+    } else if (directionFacing.equals(Direction.Down_Right)) {
+      directionFacing = Direction.Down_Left;
+      flipX = ! flipX;
+    } else if (directionFacing.equals(Direction.Down_Left)) {
+      directionFacing = Direction.Up_Left;
+      flipY = ! flipY;
+    }
     moveSound.play();
     state.updateLight();
   }
 
   /** Rotate this mirror once counter clockwise, and update the directionFacing */
   public function rotateCounterClockwise() {
-		if (directionFacing.equals(Direction.Up_Right)) {
-			directionFacing = Direction.Up_Left;
-			flipX = ! flipX;
-		} else if (directionFacing.equals(Direction.Down_Right)) {
-			directionFacing = Direction.Up_Right;
-			flipY = ! flipY;
-		} else if (directionFacing.equals(Direction.Down_Left)) {
-			directionFacing = Direction.Down_Right;
-			flipX = ! flipX;
-		} else if (directionFacing.equals(Direction.Up_Left)) {
-			directionFacing = Direction.Down_Left;
-			flipY = ! flipY;
-		}
+    if (directionFacing.equals(Direction.Up_Right)) {
+      directionFacing = Direction.Up_Left;
+      flipX = ! flipX;
+    } else if (directionFacing.equals(Direction.Down_Right)) {
+      directionFacing = Direction.Up_Right;
+      flipY = ! flipY;
+    } else if (directionFacing.equals(Direction.Down_Left)) {
+      directionFacing = Direction.Down_Right;
+      flipX = ! flipX;
+    } else if (directionFacing.equals(Direction.Up_Left)) {
+      directionFacing = Direction.Down_Left;
+      flipY = ! flipY;
+    }
     moveSound.play();
     state.updateLight();
   }
@@ -196,8 +167,8 @@ class Mirror extends MovingElement implements Lightable{
   override public function update() {
     if (holdingPlayer != null) {
       continueMoving = holdingPlayer.canMoveInDirectionWithMirror(moveDirection, this) &&
-                       holdingPlayer.continueMoving;
+      holdingPlayer.continueMoving;
     }
-		super.update();
+    super.update();
   }
 }
