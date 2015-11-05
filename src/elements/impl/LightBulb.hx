@@ -15,6 +15,7 @@ class LightBulb extends Element implements Lightable{
   private var lighting : Lighting; //The Lighting object that represents the lighting of this bulb
   private var light_dirty : Bool;  //True if the lighting needs to be recalculated on the next update
 
+  public var lightInDirection(default, set) : Direction;
   public var isLit(default, null) : Bool;
 
   /** Constructs a light bulb, light source, with the given level, and initial row and col */
@@ -36,6 +37,16 @@ class LightBulb extends Element implements Lightable{
     isLit = true;
   }
 
+  /** Returns true iff this is giving out light from the given side */
+  public function isLightingTo(directionOut : Direction) : Bool {
+    return directionFacing.equals(directionOut);
+  }
+
+  /** Returns the directions light should be outputted if this is hit with light from the given direction */
+  public function getReflection(directionIn : Direction) : Array<Direction> {
+    return [directionFacing];
+  }
+
   /** Mark this bulb as having to update lighting on the next frame */
   public function markLightDirty() {
     light_dirty = true;
@@ -50,4 +61,9 @@ class LightBulb extends Element implements Lightable{
 
     super.update();
   }
+
+  public function set_lightInDirection(d : Direction) {
+    return lightInDirection = d;
+  }
+
 }

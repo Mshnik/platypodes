@@ -16,7 +16,7 @@ import flixel.system.FlxSound;
   public var lightInDirection(default, set) : Direction;
 
   /** Constructs a TopBar mirror belonging to the given game state and representing the given TiledObject */
-  private function new(state : GameState, o : TiledObject, unlitSprite : FlxSprite) {
+  private function new(state : GameState, o : TiledObject, unlitSprite : Dynamic) {
     super(state, o, true, unlitSprite);
 
     //Read the flipX and flipY fields to determine intial direction facing
@@ -32,6 +32,8 @@ import flixel.system.FlxSound;
 
     sides = Std.parseInt(o.custom.get(SIDES_PROPERTY_KEY));
     if(sides != 1 && sides != 2 && PMain.DEBUG_MODE) throw "Illegal values of sides " + sides;
+    lightInDirection = Direction.None;
+    isLit = false;
   }
 
   public function isLightingTo(directionOut : Direction) : Bool {

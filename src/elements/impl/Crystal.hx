@@ -7,15 +7,17 @@ class Crystal extends Element implements Lightable {
   /**The sprite for a lite crystal*/
   private static inline var LIT_CRYSTAL = "";
 
-  public var isLit(default, set):Bool;
+  public var isLit(default, null):Bool;
 
-  public var lightInDirection(default, null) : Direction;
+  public var lightInDirection(default, set) : Direction;
 
   public function new(state:GameState, o:TiledObject) {
     super(state, o, UNLIT_CRYSTAL);
+    lightInDirection = Direction.None;
+    isLit = false;
   }
 
-  public function set_isLit(light:Bool):Bool {
+  private function updateGraphic(light:Bool):Bool {
     if (light) {
       loadGraphic(LIT_CRYSTAL, false, Std.int(width), Std.int(height));
     }
@@ -23,6 +25,12 @@ class Crystal extends Element implements Lightable {
       loadGraphic(UNLIT_CRYSTAL, false, Std.int(width), Std.int(height));
     }
     return isLit = light;
+  }
+
+  public function set_lightInDirection(d : Direction) {
+    if(d == null) d = Direction.None;
+    updateGraphic(d != null && d.isNonNone());
+    return lightInDirection = d;
   }
 
   /** Returns true iff this is giving out light from the given side */

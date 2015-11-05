@@ -6,10 +6,12 @@ class Barrel extends InteractableElement implements Lightable {
 
   public var isLit(default, null) : Bool;
 
-  public var lightInDirection(default, null) : Direction;
+  public var lightInDirection(default, set) : Direction;
 
   public function new(state:GameState,o:TiledObject){
     super(state,o,true,SPRITE);
+    lightInDirection = Direction.None;
+    isLit = false;
   }
 
   /** Returns true iff this is giving out light from the given side */
@@ -21,4 +23,10 @@ class Barrel extends InteractableElement implements Lightable {
   public function getReflection(directionIn : Direction) : Array<Direction> {
     return [];
   }
+
+  public function set_lightInDirection(d : Direction) {
+    isLit = (d != null && d.isNonNone());
+    return lightInDirection = d;
+  }
+
 }
