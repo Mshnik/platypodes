@@ -8,8 +8,8 @@ class TwoSidedMirror extends AbsMirror {
   private static inline var LIT_SPRITE_WEST = "";//TODO
   private static inline var LIT_SPRITE_BOTH_SIDES = ""; //TODO
 
-  public var litWest(default, set):Bool;
-  public var litEast(default, set):Bool;
+  public var litWest(default, null):Bool;
+  public var litEast(default, null):Bool;
 
   public function new(state:GameState, o:TiledObject) {
     super(state, o, UNLIT_SPRITE);
@@ -30,16 +30,21 @@ class TwoSidedMirror extends AbsMirror {
     }
   }
 
-  public function set_litWest(lit:Bool):Bool {
-    litWest = lit;
-    updateSprite();
-    return lit;
-  }
+  public override function setIsLit(lit : Bool) {
+    if(!lit) {
+      set_litWest(false);
+      set_litEast(false);
+      updateSprite();
+      return isLit = lit;
+    }
 
-  public function set_litEast(lit:Bool):Bool {
-    litEast = lit;
-    updateSprite();
-    return lit;
+    if(lightInDirection.equals(Direction.Right) || getReflection(lightInDirection)[0].equals(Direction.Right)) {
+      set_litWest(true);
+      updateSprite();
+    } else {
+      set_litEast(true);
+      updateSprite();
+    }
   }
 
   public function sides_lit():Int {

@@ -23,13 +23,12 @@ class Mirror extends AbsMirror {
   }
 
   /** Sets the value of isLit. Updates the sprite to reflect the TopBar lit status */
-  public function set_isLit(lit : Bool) : Bool {
+  private override function setIsLit (lit : Bool) {
     if(lit) {
       loadGraphic(LIT_SPRITE_ONE_SIDED, false, Std.int(width), Std.int(height));
     } else {
       loadGraphic(UNLIT_SPRITE_ONE_SIDED, false, Std.int(width), Std.int(height));
     }
-    return this.isLit = lit;
   }
 
   public override function getReflection(directionIn : Direction) : Array<Direction> {

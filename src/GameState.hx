@@ -1,12 +1,12 @@
 package;
 
-import flixel.FlxSprite;
+import elements.InteractableElement;
 import logging.ActionElement;
 import haxe.Timer;
 import logging.ActionStack;
-import openfl.Assets;
 import flixel.system.FlxSound;
 import elements.*;
+import elements.impl.*;
 import flixel.FlxCamera;
 import flixel.util.FlxRect;
 import flixel.text.FlxText;
@@ -20,7 +20,6 @@ import flixel.FlxState;
 import flixel.FlxObject;
 import flixel.group.FlxGroup;
 import flixel.util.FlxPoint;
-import flixel.util.FlxPath;
 import flash.Lib;
 
 
@@ -393,7 +392,7 @@ class GameState extends FlxState {
       m.moveDirection = a.moveDirection;
       player.moveDirection = a.moveDirection;
       player.directionFacing = a.directionFacing;
-      player.moveSpeed = Mirror.MOVE_SPEED;
+      player.moveSpeed = InteractableElement.MOVE_SPEED;
       player.tileLocked = true;
       return;
     }

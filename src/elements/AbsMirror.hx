@@ -10,8 +10,10 @@ import flixel.system.FlxSound;
   /** The number of sides this mirror has that reflect light. Must be 1 or 2 */
   @final public var sides(default, null) : Int;
 
+  public var isLit(default, null) : Bool;
+
   /** The direction is is receiving light from */
-  public var lightInDirection : Direction;
+  public var lightInDirection(default, set) : Direction;
 
   /** Constructs a TopBar mirror belonging to the given game state and representing the given TiledObject */
   private function new(state : GameState, o : TiledObject, unlitSprite : FlxSprite) {
@@ -42,6 +44,18 @@ import flixel.system.FlxSound;
       }
     }
     return false;
+  }
+
+  /** Set to Direction.None or null to turn off light */
+  public function set_lightInDirection(d : Direction) : Direction {
+    if(d == null) d = Direction.None;
+    lightInDirection = d;
+    setIsLit(lightInDirection.isNonNone());
+    return lightInDirection;
+  }
+
+  private function setIsLit(lit : Bool) {
+    throw "NOT IMPLEMENTED - MUST BE OVERRIDDEN";
   }
 
   public function getReflection(directionIn : Direction) : Array<Direction> {

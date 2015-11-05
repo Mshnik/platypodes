@@ -9,7 +9,7 @@ interface Lightable {
   public var isLit(default, null) : Bool;
 
   /** The direction this is lit from. Set whenever lighting is recalculated */
-  public var lightInDirection(default, default) : Direction;
+  public var lightInDirection(default, null) : Direction;
 
   /** Returns true iff this is giving out light from the given side */
   public function isLightingTo(directionOut : Direction) : Bool;

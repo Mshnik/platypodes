@@ -1,15 +1,12 @@
 package;
 import logging.ActionElement;
-import flixel.FlxObject;
 import flixel.util.FlxPoint;
 import flixel.addons.display.FlxExtendedSprite;
 import flixel.group.FlxGroup;
 import flixel.util.FlxRect;
 import flixel.FlxSprite;
-import flixel.FlxG;
-import elements.Character;
-import elements.Mirror;
-import elements.Direction;
+import elements.*;
+import elements.impl.*;
 
 class Tooltip extends FlxGroup {
 
@@ -20,7 +17,7 @@ class Tooltip extends FlxGroup {
   private var pullArrowButton:FlxExtendedSprite; //pull arrow
   private var pushArrowButton:FlxExtendedSprite; //push arrow
   private var aKeySprite:FlxExtendedSprite; //A key CORRESPONDS TO CLOCKWISE ARROW
-  private var dKeySprite:FlxExtendedSprite; //Z key CORRESPONDS TO COUNTERCLOCKWISE ARROW
+  private var dKeySprite:FlxExtendedSprite; //D key CORRESPONDS TO COUNTERCLOCKWISE ARROW
   private var pushMirrorDirection:Direction;
   private var pullMirrorDirection:Direction;
 

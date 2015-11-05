@@ -1,6 +1,4 @@
 package elements.impl;
-import flixel.FlxSprite;
-import elements.LightSwitch;
 class Lighting {
 
   public static inline var TERMINARY = -1; //Represents light hitting a terminating tile (wall/switch)

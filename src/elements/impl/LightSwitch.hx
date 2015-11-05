@@ -5,6 +5,8 @@ class LightSwitch extends Element implements Lightable {
   private static inline var UNLIT_SPRITE = AssetPaths.light_sheet_0_5__png;
   private static inline var LIT_SPRITE = AssetPaths.light_sheet_0_6__png;
 
+  public var lightInDirection(default, set) : Direction;
+
   public var isLit(default, set) : Bool;
 
   /** Constructs a TopBar light switch, with the given level, and initial row and col */
@@ -25,4 +27,9 @@ class LightSwitch extends Element implements Lightable {
   override public function update() {
     super.update();
   }
+
+  public function set_lightInDirection(d : Direction) {
+   return lightInDirection = d;
+  }
+
 }

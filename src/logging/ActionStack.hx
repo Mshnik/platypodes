@@ -1,10 +1,10 @@
 package logging;
 
 
+import elements.impl.Character;
 import logging.ActionElement;
 import elements.Element;
 import elements.Direction;
-import elements.Character;
 class ActionStack {
 
   public var character : Character;
