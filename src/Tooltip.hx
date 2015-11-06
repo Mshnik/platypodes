@@ -113,7 +113,7 @@ class Tooltip extends FlxGroup {
   override public function update():Void {
 
     var player = game.player;
-    var mirror = game.player.mirrorHolding;
+    var mirror = game.player.elmHolding;
 
     if ((mirror == null) || (player == null) || (mirror.holdingPlayer == null) || (mirror.moveDirection != Direction.None)) {
       this.visible = false;
@@ -183,7 +183,7 @@ class Tooltip extends FlxGroup {
     Otherwise, horizontal = false.***/
 
   private function configureRotateArrows(d:Direction, mBox : FlxRect):Void {
-    var mirror = game.player.mirrorHolding;
+    var mirror = game.player.elmHolding;
     if (d.equals(Direction.Right)) {
       cwArrowButton.setPosition(mBox.left, mBox.top - cwArrowButton.height);
       cwArrowButton.angle = 90;
@@ -224,7 +224,7 @@ class Tooltip extends FlxGroup {
   }
 
   private function pullMirrorCallback(obj:FlxExtendedSprite, x:Int, y:Int):Void {
-    var mirror = game.player.mirrorHolding;
+    var mirror = game.player.elmHolding;
     if (mirror != null) {
       var pull:ActionElement = ActionElement.pushpull(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), pullMirrorDirection);
       game.executeAction(pull);
@@ -232,7 +232,7 @@ class Tooltip extends FlxGroup {
   }
 
   private function pushMirrorCallback(obj:FlxExtendedSprite, x:Int, y:Int):Void {
-    var mirror = game.player.mirrorHolding;
+    var mirror = game.player.elmHolding;
     if (mirror != null) {
       var pull:ActionElement = ActionElement.pushpull(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), pushMirrorDirection);
       game.executeAction(pull);
@@ -241,7 +241,7 @@ class Tooltip extends FlxGroup {
 
 
   private function rotateCWCallback(obj:FlxExtendedSprite, x:Int, y:Int):Void {
-    var mirror = game.player.mirrorHolding;
+    var mirror = game.player.elmHolding;
     if (mirror != null) {
       var action:ActionElement = ActionElement.rotate(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), true);
       game.executeAction(action);
@@ -249,7 +249,7 @@ class Tooltip extends FlxGroup {
   }
 
   private function rotateCCWCallback(obj:FlxExtendedSprite, x:Int, y:Int):Void {
-    var mirror = game.player.mirrorHolding;
+    var mirror = game.player.elmHolding;
     if (mirror != null) {
       var action:ActionElement = ActionElement.rotate(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), false);
       game.executeAction(action);

@@ -53,7 +53,7 @@ import elements.impl.Character;
       return true;
     } else if (Std.is(elm, Character)) {
       var player:Character = Std.instance(elm, Character);
-      return player.canMoveInDirectionWithMirror(d, this);
+      return player.canMoveInDirectionWithElement(d, this);
     } else {
       return false;
     }
@@ -77,17 +77,17 @@ import elements.impl.Character;
    **/
   public function set_holdingPlayer(p : Character) {
     if(holdingPlayer != null) {
-      holdingPlayer.mirrorHolding = null;
+      holdingPlayer.elmHolding = null;
     }
     if(p != null) {
-      p.mirrorHolding = this;
+      p.elmHolding = this;
     }
     return holdingPlayer = p;
   }
 
   override public function update() {
     if (holdingPlayer != null) {
-      continueMoving = holdingPlayer.canMoveInDirectionWithMirror(moveDirection, this) &&
+      continueMoving = holdingPlayer.canMoveInDirectionWithElement(moveDirection, this) &&
       holdingPlayer.continueMoving;
     }
     super.update();

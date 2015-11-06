@@ -125,7 +125,7 @@ class GameState extends FlxState {
 
     UNDO = function(){
       return FlxG.keys.justPressed.BACKSPACE && ! player.tileLocked &&
-        (player.mirrorHolding == null || player.mirrorHolding.moveDirection.equals(Direction.None));
+        (player.elmHolding == null || player.elmHolding.moveDirection.equals(Direction.None));
     };
 
     if(DISPLAY_COORDINATES) {
@@ -255,7 +255,7 @@ class GameState extends FlxState {
     super.update();
 
     //Only collide player with stuff she isn't holding a mirror
-    if (player.mirrorHolding == null) {
+    if (player.elmHolding == null) {
 
       level.collideWithLevel(player, false, function(a, a){player.playCollisionSound();});  // Collides player with walls
 
@@ -269,7 +269,7 @@ class GameState extends FlxState {
       FlxG.collide(player, mirrors, function(a, a){player.playCollisionSound();});
     } else {
       //Only collide player with the mirror they are holding
-      FlxG.collide(player, player.mirrorHolding);
+      FlxG.collide(player, player.elmHolding);
     }
 
 
@@ -383,7 +383,7 @@ class GameState extends FlxState {
 
     if (a.id == ActionElement.PUSHPULL && Std.is(elm, Mirror)) {
       var m : Mirror = Std.instance(elm, Mirror);
-      if (player.alive && (! m.canMoveInDirection(a.moveDirection) || ! player.canMoveInDirectionWithMirror(a.moveDirection, m))) {
+      if (player.alive && (! m.canMoveInDirection(a.moveDirection) || ! player.canMoveInDirectionWithElement(a.moveDirection, m))) {
         trace("Can't execute action " + a + " can't move mirror " + m + " in direction " + a.moveDirection.simpleString);
         return;
       }
@@ -428,7 +428,7 @@ class GameState extends FlxState {
   }
 
   public function killPlayer() {
-    player.mirrorHolding = null;
+    player.elmHolding = null;
     player.deathSound.play();
     player.animation.play(Character.DEATH_ANIMATION_KEY, false);
     actionStack.addDie();
