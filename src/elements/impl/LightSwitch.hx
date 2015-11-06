@@ -5,14 +5,14 @@ class LightSwitch extends Element implements Lightable {
   private static inline var UNLIT_SPRITE = AssetPaths.light_sheet_0_5__png;
   private static inline var LIT_SPRITE = AssetPaths.light_sheet_0_6__png;
 
-  public var lightInDirection(default, set) : Direction;
+  public var lightInDirection(default, null) : Array<Direction>;
 
   public var isLit(default, null) : Bool;
 
   /** Constructs a TopBar light switch, with the given level, and initial row and col */
   public function new(state : GameState, o : TiledObject) {
     super(state, o);
-    lightInDirection = Direction.None;
+    resetLightInDirection();
     isLit = false;
   }
 
@@ -30,10 +30,17 @@ class LightSwitch extends Element implements Lightable {
     return [];
   }
 
-  public function set_lightInDirection(d : Direction) {
-    if(d == null) d = Direction.None;
-    updateGraphic(d.isNonNone());
-   return lightInDirection = d;
+  public function resetLightInDirection() {
+    lightInDirection = [];
+  }
+
+/** Set to Direction.None or null to turn off light */
+  public function addLightInDirection(d : Direction) {
+    if(d == null || d == Direction.None) {
+      return;
+    }
+    lightInDirection.push(d);
+    updateGraphic(true);
   }
 
   private function updateGraphic(isLit : Bool) : Bool {

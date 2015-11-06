@@ -13,7 +13,7 @@ import flixel.system.FlxSound;
   public var isLit(default, null) : Bool;
 
   /** The direction is is receiving light from */
-  public var lightInDirection(default, set) : Direction;
+  public var lightInDirection(default, null) : Array<Direction>;
 
   /** Constructs a TopBar mirror belonging to the given game state and representing the given TiledObject */
   private function new(state : GameState, o : TiledObject, unlitSprite : Dynamic) {
@@ -32,7 +32,7 @@ import flixel.system.FlxSound;
 
     sides = Std.parseInt(o.custom.get(SIDES_PROPERTY_KEY));
     if(sides != 1 && sides != 2 && PMain.DEBUG_MODE) throw "Illegal values of sides " + sides;
-    lightInDirection = Direction.None;
+    resetLightInDirection();
     isLit = false;
   }
 
@@ -40,20 +40,32 @@ import flixel.system.FlxSound;
     if(! isLit) {
       return false;
     }
-    for(d in getReflection(lightInDirection)) {
-      if(directionOut.equals(d)) {
-        return true;
+    for(d in lightInDirection) {
+      if(d.equals(directionOut)){
+        return false;
+      }
+    }
+    for(d in lightInDirection) {
+      for(d2 in getReflection(d)) {
+        if(directionOut.equals(d)) {
+          return true;
+        }
       }
     }
     return false;
   }
 
+  public function resetLightInDirection() {
+    lightInDirection = [];
+  }
+
   /** Set to Direction.None or null to turn off light */
-  public function set_lightInDirection(d : Direction) : Direction {
-    if(d == null) d = Direction.None;
-    lightInDirection = d;
-    setIsLit(lightInDirection.isNonNone());
-    return lightInDirection;
+  public function addLightInDirection(d : Direction) {
+    if(d == null || d == Direction.None) {
+      return;
+    }
+    lightInDirection.push(d);
+    setIsLit(lightInDirection.length > 0);
   }
 
   private function setIsLit(lit : Bool) {

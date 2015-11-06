@@ -223,11 +223,11 @@ class GameState extends FlxState {
     exit.isOpen = false;
 
     mirrors.forEach(function(m : Mirror){
-      m.lightInDirection = Direction.None;
+      m.resetLightInDirection();
     });
 
     lightSwitches.forEach(function(l : LightSwitch) {
-      l.lightInDirection = Direction.None;
+      l.resetLightInDirection();
     });
 
     lightBulbs.forEach(function(l : LightBulb) {

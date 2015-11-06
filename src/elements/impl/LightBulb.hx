@@ -15,7 +15,7 @@ class LightBulb extends Element implements Lightable{
   private var lighting : Lighting; //The Lighting object that represents the lighting of this bulb
   private var light_dirty : Bool;  //True if the lighting needs to be recalculated on the next update
 
-  public var lightInDirection(default, set) : Direction;
+  public var lightInDirection(default, null) : Array<Direction>;
   public var isLit(default, null) : Bool;
 
   /** Constructs a light bulb, light source, with the given level, and initial row and col */
@@ -62,8 +62,16 @@ class LightBulb extends Element implements Lightable{
     super.update();
   }
 
-  public function set_lightInDirection(d : Direction) {
-    return lightInDirection = d;
+  public function resetLightInDirection() {
+    lightInDirection = [];
+  }
+
+  /** Set to Direction.None or null to turn off light */
+  public function addLightInDirection(d : Direction) {
+    if(d == null || d == Direction.None) {
+      return;
+    }
+    lightInDirection.push(d);
   }
 
 }

@@ -9,11 +9,11 @@ class Crystal extends Element implements Lightable {
 
   public var isLit(default, null):Bool;
 
-  public var lightInDirection(default, set) : Direction;
+  public var lightInDirection(default, null) : Array<Direction>;
 
   public function new(state:GameState, o:TiledObject) {
     super(state, o, UNLIT_CRYSTAL);
-    lightInDirection = Direction.None;
+    resetLightInDirection();
     isLit = false;
   }
 
@@ -27,15 +27,30 @@ class Crystal extends Element implements Lightable {
     return isLit = light;
   }
 
-  public function set_lightInDirection(d : Direction) {
-    if(d == null) d = Direction.None;
-    updateGraphic(d != null && d.isNonNone());
-    return lightInDirection = d;
+  public function resetLightInDirection() {
+    lightInDirection = [];
+  }
+
+/** Set to Direction.None or null to turn off light */
+  public function addLightInDirection(d : Direction) {
+    if(d == null || d == Direction.None) {
+      return;
+    }
+    lightInDirection.push(d);
+    updateGraphic(true);
   }
 
   /** Returns true iff this is giving out light from the given side */
   public function isLightingTo(directionOut : Direction) : Bool {
-    return isLit && ! directionOut.equals(lightInDirection);
+    if(! isLit) {
+      return false;
+    }
+    for(d in lightInDirection) {
+      if(d.equals(directionOut)){
+        return false;
+      }
+    }
+    return true;
   }
 
 
