@@ -1,23 +1,16 @@
-package elements;
+package elements.impl;
 
 import flixel.FlxSprite;
-class LightSprite extends FlxSprite implements Lightable{
+class LightSprite extends FlxSprite {
 
   public var state : GameState;
   public var isLit(default, null) : Bool;
 
-  /** The mirror this is directly leading into. May be used for resizing in update */
-  public var leadingMirror(default, default) : Mirror;
-
-  /** The mirror this is following. May be used for movement in update */
-  public var followingMirror(default, default) : Mirror;
-
-  public function new(state : GameState, row : Int, col : Int, d : Direction, m : Mirror, spr : Dynamic) {
+  public function new(state : GameState, row : Int, col : Int, d : Direction, spr : Dynamic) {
     super(col * state.level.tileWidth, row * state.level.tileHeight, spr);
     this.state = state;
     isLit = true;
     immovable = true;
-    followingMirror = m;
   }
 
   /** Return the row of the board this element is currently occupying. The top-left tile is (0,0) */

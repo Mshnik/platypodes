@@ -1,12 +1,12 @@
 package;
 
-import flixel.FlxSprite;
+import elements.InteractableElement;
 import logging.ActionElement;
 import haxe.Timer;
 import logging.ActionStack;
-import openfl.Assets;
 import flixel.system.FlxSound;
 import elements.*;
+import elements.impl.*;
 import flixel.FlxCamera;
 import flixel.util.FlxRect;
 import flixel.text.FlxText;
@@ -20,7 +20,6 @@ import flixel.FlxState;
 import flixel.FlxObject;
 import flixel.group.FlxGroup;
 import flixel.util.FlxPoint;
-import flixel.util.FlxPath;
 import flash.Lib;
 
 
@@ -29,7 +28,7 @@ class GameState extends FlxState {
   private static inline var DISPLAY_COORDINATES = false;
 
   private static inline var INITAL_ZOOM_PROPERTY = "initial_zoom";
-  public static var MENU_BUTTON = function() : Bool { return false; }; //TODO - reinstate after friends
+  public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; }; //TODO - reinstate after friends
   public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
   public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
 
@@ -56,7 +55,8 @@ class GameState extends FlxState {
   public var lightBulbs:FlxTypedGroup<LightBulb>;
   public var lightSwitches:FlxTypedGroup<LightSwitch>;
   public var lightSprites:FlxTypedGroup<LightSprite>;
-  public var mirrors:FlxTypedGroup<Mirror>;
+
+  public var interactables:FlxTypedGroup<InteractableElement>;
 
   private var won : Bool;
   private var winText : FlxText;
@@ -93,7 +93,7 @@ class GameState extends FlxState {
     add(level.wallTiles);
     add(level.tutorialTiles);
 
-    mirrors = new FlxTypedGroup<Mirror>();
+    interactables = new FlxTypedGroup<InteractableElement>();
     lightBulbs = new FlxTypedGroup<LightBulb>();
     lightSwitches = new FlxTypedGroup<LightSwitch>();
     lightSprites = new FlxTypedGroup<LightSprite>();
@@ -117,7 +117,7 @@ class GameState extends FlxState {
     //Make sure non-player objects are added to level after player is added to level
     //For ordering of the update loop
     add(exit);
-    add(mirrors);
+    add(interactables);
     add(lightSprites);
     add(lightBulbs);
     add(lightSwitches);
@@ -126,7 +126,7 @@ class GameState extends FlxState {
 
     UNDO = function(){
       return FlxG.keys.justPressed.BACKSPACE && ! player.tileLocked &&
-        (player.mirrorHolding == null || player.mirrorHolding.moveDirection.equals(Direction.None));
+        (player.elmHolding == null || player.elmHolding.moveDirection.equals(Direction.None));
     };
 
     if(DISPLAY_COORDINATES) {
@@ -176,7 +176,7 @@ class GameState extends FlxState {
     for(lightSwitch in lightSwitches.members) {
       if (check(lightSwitch)) return lightSwitch;
     }
-    for(mirror in mirrors.members) {
+    for(mirror in interactables.members) {
       if (check(mirror)) return mirror;
     }
     for(lightBulb in lightBulbs.members) {
@@ -223,12 +223,12 @@ class GameState extends FlxState {
   public function updateLight() : Void {
     exit.isOpen = false;
 
-    mirrors.forEach(function(m : Mirror){
-      m.isLit = false;
+    interactables.forEachOfType(Lightable, function(l : Lightable){
+      l.resetLightInDirection();
     });
 
     lightSwitches.forEach(function(l : LightSwitch) {
-      l.isLit = false;
+      l.resetLightInDirection();
     });
 
     lightBulbs.forEach(function(l : LightBulb) {
@@ -256,7 +256,7 @@ class GameState extends FlxState {
     super.update();
 
     //Only collide player with stuff she isn't holding a mirror
-    if (player.mirrorHolding == null) {
+    if (player.elmHolding == null) {
 
       level.collideWithLevel(player, false, function(a, a){player.playCollisionSound();});  // Collides player with walls
 
@@ -267,10 +267,10 @@ class GameState extends FlxState {
       FlxG.collide(player, lightSprites, function(a, a){player.playCollisionSound();});
 
       //Collide with mirrors - don't let player walk through mirrors
-      FlxG.collide(player, mirrors, function(a, a){player.playCollisionSound();});
+      FlxG.collide(player, interactables, function(a, a){player.playCollisionSound();});
     } else {
       //Only collide player with the mirror they are holding
-      FlxG.collide(player, player.mirrorHolding);
+      FlxG.collide(player, player.elmHolding);
     }
 
 
@@ -311,9 +311,19 @@ class GameState extends FlxState {
         }
 
       case "mirror":
-        var mirror = new Mirror(this, o);
+        var mirror = AbsMirror.createMirror(this, o);
         mirror.immovable = true;
-        mirrors.add(mirror);
+        interactables.add(mirror);
+
+      case "crystal":
+        var crystal = new Crystal(this, o);
+        crystal.immovable = true;
+        interactables.add(crystal);
+
+      case "barrel":
+        var barrel = new Barrel(this, o);
+        barrel.immovable = true;
+        interactables.add(barrel);
 
       case "lightorb":
         var lightBulb = new LightBulb(this, o);
@@ -384,7 +394,7 @@ class GameState extends FlxState {
 
     if (a.id == ActionElement.PUSHPULL && Std.is(elm, Mirror)) {
       var m : Mirror = Std.instance(elm, Mirror);
-      if (player.alive && (! m.canMoveInDirection(a.moveDirection) || ! player.canMoveInDirectionWithMirror(a.moveDirection, m))) {
+      if (player.alive && (! m.canMoveInDirection(a.moveDirection) || ! player.canMoveInDirectionWithElement(a.moveDirection, m))) {
         trace("Can't execute action " + a + " can't move mirror " + m + " in direction " + a.moveDirection.simpleString);
         return;
       }
@@ -393,7 +403,7 @@ class GameState extends FlxState {
       m.moveDirection = a.moveDirection;
       player.moveDirection = a.moveDirection;
       player.directionFacing = a.directionFacing;
-      player.moveSpeed = Mirror.MOVE_SPEED;
+      player.moveSpeed = InteractableElement.MOVE_SPEED;
       player.tileLocked = true;
       return;
     }
@@ -429,7 +439,7 @@ class GameState extends FlxState {
   }
 
   public function killPlayer() {
-    player.mirrorHolding = null;
+    player.elmHolding = null;
     player.deathSound.play();
     player.animation.play(Character.DEATH_ANIMATION_KEY, false);
     actionStack.addDie();
