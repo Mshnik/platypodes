@@ -1,6 +1,6 @@
 package elements.impl;
 import flixel.addons.editors.tiled.TiledObject;
-class Crystal extends Element implements Lightable {
+class Crystal extends InteractableElement implements Lightable {
 
   /**The sprite for an unlit crystal*/
   private static inline var UNLIT_CRYSTAL = "";
@@ -12,7 +12,7 @@ class Crystal extends Element implements Lightable {
   public var lightInDirection(default, null) : Array<Direction>;
 
   public function new(state:GameState, o:TiledObject) {
-    super(state, o, UNLIT_CRYSTAL);
+    super(state, o, true, UNLIT_CRYSTAL);
     resetLightInDirection();
     isLit = false;
   }

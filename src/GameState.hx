@@ -55,7 +55,8 @@ class GameState extends FlxState {
   public var lightBulbs:FlxTypedGroup<LightBulb>;
   public var lightSwitches:FlxTypedGroup<LightSwitch>;
   public var lightSprites:FlxTypedGroup<LightSprite>;
-  public var mirrors:FlxTypedGroup<Mirror>;
+
+  public var interactables:FlxTypedGroup<InteractableElement>;
 
   private var won : Bool;
   private var winText : FlxText;
@@ -92,7 +93,7 @@ class GameState extends FlxState {
     add(level.wallTiles);
     add(level.tutorialTiles);
 
-    mirrors = new FlxTypedGroup<Mirror>();
+    interactables = new FlxTypedGroup<InteractableElement>();
     lightBulbs = new FlxTypedGroup<LightBulb>();
     lightSwitches = new FlxTypedGroup<LightSwitch>();
     lightSprites = new FlxTypedGroup<LightSprite>();
@@ -116,7 +117,7 @@ class GameState extends FlxState {
     //Make sure non-player objects are added to level after player is added to level
     //For ordering of the update loop
     add(exit);
-    add(mirrors);
+    add(interactables);
     add(lightSprites);
     add(lightBulbs);
     add(lightSwitches);
@@ -175,7 +176,7 @@ class GameState extends FlxState {
     for(lightSwitch in lightSwitches.members) {
       if (check(lightSwitch)) return lightSwitch;
     }
-    for(mirror in mirrors.members) {
+    for(mirror in interactables.members) {
       if (check(mirror)) return mirror;
     }
     for(lightBulb in lightBulbs.members) {
@@ -222,8 +223,8 @@ class GameState extends FlxState {
   public function updateLight() : Void {
     exit.isOpen = false;
 
-    mirrors.forEach(function(m : Mirror){
-      m.resetLightInDirection();
+    interactables.forEachOfType(Lightable, function(l : Lightable){
+      l.resetLightInDirection();
     });
 
     lightSwitches.forEach(function(l : LightSwitch) {
@@ -266,7 +267,7 @@ class GameState extends FlxState {
       FlxG.collide(player, lightSprites, function(a, a){player.playCollisionSound();});
 
       //Collide with mirrors - don't let player walk through mirrors
-      FlxG.collide(player, mirrors, function(a, a){player.playCollisionSound();});
+      FlxG.collide(player, interactables, function(a, a){player.playCollisionSound();});
     } else {
       //Only collide player with the mirror they are holding
       FlxG.collide(player, player.elmHolding);
@@ -310,9 +311,19 @@ class GameState extends FlxState {
         }
 
       case "mirror":
-        var mirror = new Mirror(this, o);
+        var mirror = AbsMirror.createMirror(this, o);
         mirror.immovable = true;
-        mirrors.add(mirror);
+        interactables.add(mirror);
+
+      case "crystal":
+        var crystal = new Crystal(this, o);
+        crystal.immovable = true;
+        interactables.add(crystal);
+
+      case "barrel":
+        var barrel = new Barrel(this, o);
+        barrel.immovable = true;
+        interactables.add(barrel);
 
       case "lightorb":
         var lightBulb = new LightBulb(this, o);

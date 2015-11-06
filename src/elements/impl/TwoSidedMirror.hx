@@ -8,18 +8,19 @@ class TwoSidedMirror extends AbsMirror {
   private static inline var LIT_SPRITE_WEST = "";//TODO
   private static inline var LIT_SPRITE_BOTH_SIDES = ""; //TODO
 
-  public var litWest(default, null):Bool;
-  public var litEast(default, null):Bool;
+  public var litMain(default, null):Bool;
+  public var litSec(default, null):Bool;
 
   public function new(state:GameState, o:TiledObject) {
     super(state, o, UNLIT_SPRITE);
+    resetLightInDirection();
   }
 
-  private function updateSprite() {
-    isLit = litWest || litEast;
+  private function updateGraphic() {
+    isLit = litMain || litSec;
     if (sides_lit() == 0) {
       loadGraphic(UNLIT_SPRITE, false, Std.int(width), Std.int(height));
-    } else if (sides_lit() == 1 && litWest) {
+    } else if (sides_lit() == 1 && litMain) {
       loadGraphic(LIT_SPRITE_WEST, false, Std.int(width), Std.int(height));
     } else if (sides_lit() == 1) { //litEast
       loadGraphic(LIT_SPRITE_EAST, false, Std.int(width), Std.int(height));
@@ -30,25 +31,30 @@ class TwoSidedMirror extends AbsMirror {
     }
   }
 
-  public override function setIsLit(lit : Bool) {
-    if(!lit) {
-      litWest = false;
-      litEast = false;
-      updateSprite();
-      return isLit = lit;
-    }
+  public override function resetLightInDirection() {
+    super.resetLightInDirection();
+    litMain = false;
+    litSec = false;
+    updateGraphic();
+  }
 
-    if(lightInDirection.equals(Direction.Right) || getReflection(lightInDirection)[0].equals(Direction.Right)) {
-      litWest = true;
-      updateSprite();
-    } else {
-      litEast = true;
-      updateSprite();
+  public override function addLightInDirection(d : Direction) {
+    super.addLightInDirection(d);
+
+    litMain = false;
+    litSec = false;
+    for(d2 in lightInDirection) {
+      if(d2.opposite().simpleDirec & directionFacing.simpleDirec != 0) {
+        litMain = true;
+      } else if (d.simpleDirec & directionFacing.simpleDirec != 0) {
+        litSec = true;
+      }
     }
+    updateGraphic();
   }
 
   public function sides_lit():Int {
-    return (litWest ? 1 : 0) + (litEast ? 1 : 0);
+    return (litMain ? 1 : 0) + (litSec ? 1 : 0);
   }
 
   public override function getReflection(directionIn : Direction) : Array<Direction> {

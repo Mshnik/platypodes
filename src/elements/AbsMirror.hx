@@ -1,4 +1,6 @@
 package elements;
+import elements.impl.TwoSidedMirror;
+import elements.impl.Mirror;
 import flixel.FlxSprite;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.system.FlxSound;
@@ -14,6 +16,19 @@ import flixel.system.FlxSound;
 
   /** The direction is is receiving light from */
   public var lightInDirection(default, null) : Array<Direction>;
+
+  public static function createMirror(state : GameState, o : TiledObject) : AbsMirror {
+    var s = Std.parseInt(o.custom.get(SIDES_PROPERTY_KEY));
+    if(s == 1){
+      return new Mirror(state, o);
+    } else if(s == 2) {
+      return new TwoSidedMirror(state, o);
+    } else if(PMain.DEBUG_MODE) {
+      throw "Illegal values of sides " + s;
+    } else {
+      return null;
+    }
+  }
 
   /** Constructs a TopBar mirror belonging to the given game state and representing the given TiledObject */
   private function new(state : GameState, o : TiledObject, unlitSprite : Dynamic) {
