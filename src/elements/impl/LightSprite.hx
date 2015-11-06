@@ -1,7 +1,7 @@
 package elements.impl;
 
 import flixel.FlxSprite;
-class LightSprite extends FlxSprite implements Lightable{
+class LightSprite extends FlxSprite {
 
   public var state : GameState;
   public var isLit(default, null) : Bool;

@@ -1,12 +1,14 @@
 package elements.impl;
 class Lighting {
 
-  public static inline var TERMINARY = -1; //Represents light hitting a terminating tile (wall/switch)
+  public static inline var TERMINARY = -1; //Represents light hitting a terminating tile (wall/switch/barrel)
   public static inline var NONE = 0; //Represents no light going through a tile
   public static inline var HORIZONTAL = 1; //Represents light going horizontally through a tile
   public static inline var VERTICAL = 2; //Represents light going vertically through a tile
-  //3 left for both horizontal and vertical together.
+  //3 reserved for both horizontal and vertical together.
   public static inline var LIT_MIRROR = 4; //Represents light hitting an object and stopping here
+  //8 reserved for a doubly-lit mirror
+  public static inline var LIT_CRYSTAL = 16;
 
   private static inline var HORIZONTAL_SPRITE = AssetPaths.light_sheet_0_0__png;
   private static inline var VERTICAL_SPRITE = AssetPaths.light_sheet_1_0__png;
@@ -72,26 +74,38 @@ class Lighting {
     draw_light();
   }
 
-  private function trace_light(x:Int, y:Int, direction:Direction, mostRecentMirror : Mirror):Bool {
-    if (! direction.isCardinal()) {
-      if(PMain.DEBUG_MODE) throw "Illegal direction in trace light";
+  private static inline var OK = 0; //Returned if the previous call is good to make a sprite
+  private static inline var HIT_WALL = 1; //Returned iff this call hit a wall, previous call should make a hit wall sprite
+  private static inline var DUPLICATE = 2;//Returned iff this was an overlap
+
+  private function trace_light(x:Int, y:Int, direction:Direction, mostRecentMirror : Mirror):Int {
+    if (! direction.isCardinal() && PMain.DEBUG_MODE) {
+      throw "Illegal direction in trace light";
     }
+
     if(light_exists(x,y,direction)){
-      //what should i return here?
-      return true;
+      return DUPLICATE;
     }
-    if (state.level.hasWallAt(x,y)){
-      if(state.level.transparentAt(x,y)){
-        light_trace[x][y]+=getVerticalOrHorizontal(direction);
-        var nonCollision=trace_light(x+Std.int(direction.x),y+Std.int(direction.y),direction);
-        var light_sprite=createLightForSquare(x,y,direction,nonCollision);
-        state.lightSprites.add(light_sprite);
-        return true;}
-      light_trace[x][y] = TERMINARY;
-      return false;}
+
+//    light_trace[x][y]+=getVerticalOrHorizontal(direction);
+//    var nonCollision=trace_light(x+Std.int(direction.x),y+Std.int(direction.y),direction);
+//    var light_sprite=createLightForSquare(x,y,direction,nonCollision);
+//    state.lightSprites.add(light_sprite);
+//    return true;
+//
     var e:Element = state.getElementAt(y, x);
-    if (e == null || Std.is(e, Character)) {
-      if(Std.is(e, Character)) {state.killPlayer();}
+
+    if (state.level.hasOpaqueWallAt(x,y)) {
+      light_trace[x][y] = TERMINARY;
+      return HIT_WALL;
+    } else if (state.level.hasGlassWallAt(x,y)) {
+      //TODO - make this glass wall light up
+      trace_light(x+Std.int(direction.x),y+Std.int(direction.y),direction);
+      return OK;
+    } else if (e == null || Std.is(e, Character)) {
+      if(Std.is(e, Character)) {
+        state.killPlayer();
+      }
       light_trace[x][y] += getVerticalOrHorizontal(direction);
       var nonCollision = trace_light(x + Std.int(direction.x), y + Std.int(direction.y), direction, mostRecentMirror);
       var light_sprite = createLightForSquare(x,y, direction, nonCollision, mostRecentMirror);
