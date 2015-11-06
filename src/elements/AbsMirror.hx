@@ -59,17 +59,14 @@ import flixel.system.FlxSound;
     lightInDirection = [];
   }
 
-  /** Set to Direction.None or null to turn off light */
+  /** Set to Direction.None or null to turn off light.
+   * Should be overridden in subclasses to add graphic switch behavior
+   **/
   public function addLightInDirection(d : Direction) {
     if(d == null || d == Direction.None) {
       return;
     }
     lightInDirection.push(d);
-    setIsLit(lightInDirection.length > 0);
-  }
-
-  private function setIsLit(lit : Bool) {
-    throw "NOT IMPLEMENTED - MUST BE OVERRIDDEN";
   }
 
   public function getReflection(directionIn : Direction) : Array<Direction> {

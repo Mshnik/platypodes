@@ -108,7 +108,7 @@ class Lighting {
       for(dNext in l.getReflection(direction)) {
         trace_light(x+Std.int(dNext.x),y+Std.int(dNext.y),dNext);
       }
-      return Std.is(l, Barrel) ? HIT_WALL : OK;
+      return Std.is(l, Barrel) || Std.is(l, Exit) ? HIT_WALL : OK;
     } else if (e == null || Std.is(e, Character)) {
       if(Std.is(e, Character)) {
         state.killPlayer();

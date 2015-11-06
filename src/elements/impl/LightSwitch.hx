@@ -32,6 +32,7 @@ class LightSwitch extends Element implements Lightable {
 
   public function resetLightInDirection() {
     lightInDirection = [];
+    updateGraphic(false);
   }
 
 /** Set to Direction.None or null to turn off light */
