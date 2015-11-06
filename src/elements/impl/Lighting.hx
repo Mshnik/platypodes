@@ -27,8 +27,7 @@ class Lighting {
 
   public var lightSprites(default, null) : List<LightSprite>;
 
-  private function createLightForSquare(x : Int, y : Int, d : Direction,
-                                        nonCollision : Bool, mostRecentMirror : AbsMirror) : LightSprite {
+  private function createLightForSquare(x : Int, y : Int, d : Direction, nonCollision : Bool) : LightSprite {
     if (! d.isCardinal()) {
       if(PMain.DEBUG_MODE) throw "Can't make light for non-cardinal direction";
     }
@@ -45,7 +44,7 @@ class Lighting {
       }
     }
 
-    var light = new LightSprite(state, y, x, d, mostRecentMirror, spr);
+    var light = new LightSprite(state, y, x, d, spr);
     return light;
   }
 
@@ -79,7 +78,7 @@ class Lighting {
   private static inline var HIT_WALL = 1; //Returned iff this call hit a wall, previous call should make a hit wall sprite
   private static inline var DUPLICATE = 2;//Returned iff this was an overlap
 
-  private function trace_light(x:Int, y:Int, direction:Direction, mostRecentMirror : AbsMirror):Int {
+  private function trace_light(x:Int, y:Int, direction:Direction):Int {
     if (! direction.isCardinal() && PMain.DEBUG_MODE) {
       throw "Illegal direction in trace light";
     }
@@ -104,35 +103,25 @@ class Lighting {
       trace_light(x+Std.int(direction.x),y+Std.int(direction.y),direction);
       return OK;
     } else if(Std.is(e, Lightable)) {
-      var l : Lightable = Std.instance(e, Lightable);
-      l.lightInDirection = direction;
+      var l : Lightable = (cast e:Lightable);
+      l.addLightInDirection(direction);
       for(dNext in l.getReflection(direction)) {
         trace_light(x+Std.int(dNext.x),y+Std.int(dNext.y),dNext);
       }
       return Std.is(l, Barrel) ? HIT_WALL : OK;
-    }
-
-
-
-
-    else if (e == null || Std.is(e, Character)) {
+    } else if (e == null || Std.is(e, Character)) {
       if(Std.is(e, Character)) {
         state.killPlayer();
       }
       light_trace[x][y] += getVerticalOrHorizontal(direction);
-      var nonCollision = trace_light(x + Std.int(direction.x), y + Std.int(direction.y), direction, mostRecentMirror);
-      var light_sprite = createLightForSquare(x,y, direction, nonCollision != HIT_WALL, mostRecentMirror);
+      var nonCollision = trace_light(x + Std.int(direction.x), y + Std.int(direction.y), direction);
+      var light_sprite = createLightForSquare(x,y, direction, nonCollision != HIT_WALL);
       lightSprites.push(light_sprite);
       state.lightSprites.add(light_sprite);
-      var nextE = state.getElementAt(y + Std.int(direction.y), x + Std.int(direction.x));
-      if (Std.is(nextE, AbsMirror)){
-        var m : AbsMirror = Std.instance(nextE, AbsMirror);
-        light_sprite.followingMirror = m;
-      }
-      return true;
+      return OK;
     }
 
-    return false;
+    return OK;
   }
 
   private function getVerticalOrHorizontal(direction:Direction) : Int {
@@ -148,7 +137,7 @@ class Lighting {
 
   private function draw_light() {
     state.lightSprites.clear();
-    trace_light(start_x + Std.int(start_direction.x), start_y + Std.int(start_direction.y), start_direction, null);
+    trace_light(start_x + Std.int(start_direction.x), start_y + Std.int(start_direction.y), start_direction);
   }
 
 /**
