@@ -81,9 +81,9 @@ import flixel.FlxSprite;
   /** Return a point representing the graphical center of this Element */
   public inline function getCenter(createNew : Bool = false) : FlxPoint {
     if(createNew) {
-      return new FlxPoint(x + origin.x, y + origin.y);
+      return new FlxPoint(x + origin.x - offset.x, y + origin.y - offset.y);
     } else {
-      return FlxPoint.get(x + origin.x, y + origin.y);
+      return FlxPoint.get(x + origin.x - offset.x, y + origin.y - offset.y);
     }
   }
 
@@ -154,8 +154,10 @@ import flixel.FlxSprite;
     squareHighlight.y = getRow() * state.level.tileHeight;
 
     if(bbox != null) {
-      bbox.x = x;
-      bbox.y = y;
+      var center = getCenter();
+      bbox.x = center.x - bbox.width/2;
+      bbox.y = center.y - bbox.height/2;
+      center.put();
     }
 
     super.update();

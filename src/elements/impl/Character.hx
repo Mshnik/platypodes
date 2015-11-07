@@ -13,7 +13,13 @@ import flixel.FlxG;
 class Character extends MovingElement {
 
   /** The Character's default move speed, when not interacting with anything */
-  @final private static var MOVE_SPEED = 600;
+  private static inline var MOVE_SPEED = 600;
+
+  /** The distance the character moves per frame. This is the value when at 60FPS, how the math works out */
+  private static inline var MOVE_DIST_PER_FRAME = 9.6;
+
+  /** True iff mouse movement should be allowed */
+  private static inline var ALLOW_MOUSE_MOVEMENT = false;
 
   /** The clippng on the bounding box of the sprite, to make fitting though a one tile wide path easier */
   private static inline var BOUNDING_BOX_MARGIN_X = 30;
@@ -304,11 +310,11 @@ class Character extends MovingElement {
         moveSpeed = MOVE_SPEED;
         moveDirection = Direction.None;
         resetElmHoldingOldCoords();
-      } else if (moveList != null) {
+      } else if (ALLOW_MOUSE_MOVEMENT && moveList != null) {
         tileLocked = true;
         moveDirection = moveList.pop();
         directionFacing = moveDirection;
-      } else if(FlxG.mouse.justReleased) {
+      } else if(ALLOW_MOUSE_MOVEMENT && FlxG.mouse.justReleased) {
         moveDirection = Direction.None;
         tileLocked = false;
         var tileLoc = state.worldToTileCoordinates(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
@@ -369,6 +375,34 @@ class Character extends MovingElement {
         }
         moveDirection = elmHolding.moveDirection;
         moveSpeed = elmHolding.moveSpeed;
+      }
+    }
+
+    //If move direction is none, move towards center of tile
+    if(moveDirection.equals(Direction.None)) {
+      var center = getCenter(false);
+      var centerX = center.x;
+      var centerY = center.y;
+      var tileCenter = state.getRectangleFor(getRow(), getCol());
+      var tileCenterX = tileCenter.x + tileCenter.width/2;
+      var tileCenterY = tileCenter.y + tileCenter.height/2;
+
+      center.put();
+      tileCenter.put();
+
+      var bestDist : Float = state.level.tileHeight * state.level.tileWidth; //Effectively maxval.
+
+      for(d in Direction.VALS) {
+        var newCenterX = centerX + MOVE_DIST_PER_FRAME * d.x;
+        var newCenterY = centerY + MOVE_DIST_PER_FRAME * d.y;
+        var newDist = Math.sqrt((tileCenterX - newCenterX) * (tileCenterX - newCenterX) + (tileCenterY - newCenterY) * (tileCenterY - newCenterY));
+        if (newDist < bestDist) {
+          moveDirection = d;
+          bestDist = newDist;
+        }
+      }
+      if (moveDirection.isNonNone()) {
+        directionFacing = moveDirection;
       }
     }
 

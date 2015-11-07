@@ -36,6 +36,10 @@ class Direction extends FlxPoint {
   @final public static var Left : Direction = new Direction(-1, 0, LEFT_VAL, "Left");
   @final public static var Up_Left : Direction = new Direction(-1, -1, UP_LEFT_VAL, "Up_Left");
 
+  @final public static var VALS : Array<Direction> = [
+    None, Up, Up_Right, Right, Down_Right, Down, Down_Left, Left, Up_Left
+  ];
+
   /**
    * True iff the x and y coordinates of this direction can no longer be changed.
    * True after construction, so that x and y are locked in their starting values.
