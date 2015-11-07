@@ -17,6 +17,7 @@ class ActionStack {
 
   private function add(a : ActionElement) {
     elms.push(a);
+    trace(a);
     Logging.getSingleton().recordEvent(a.serialize(), a.toString());
   }
 
@@ -24,19 +25,28 @@ class ActionStack {
     Logging.getSingleton().recordEvent(Std.int(Math.pow(2, 32) - 1), elms.toString());
   }
 
-  public function getHeadSkipDeath() : ActionElement {
-    return resolveSkipDeath(elms.iterator());
+  public function getFirst() : ActionElement {
+    if (elms.isEmpty()) return null;
+    else return elms.first();
   }
 
-  private function resolveSkipDeath(iter : Iterator<ActionElement>) : ActionElement {
+  public function getFirstUndoable() : ActionElement {
+    return resolveFirstUndoable(elms.iterator(), 0);
+  }
+
+  private function resolveFirstUndoable(iter : Iterator<ActionElement>, undoCount : Int) : ActionElement {
     if(! iter.hasNext()) {
       return null;
     }
     var e : ActionElement = iter.next();
-    if (e.id == ActionElement.UNDO) {
-      return resolveSkipDeath(iter).getOpposite();
+    if(e.id == ActionElement.RESET) {
+      return null;
+    } else if (e.id == ActionElement.UNDO) {
+      return resolveFirstUndoable(iter, undoCount + 1);
     } else if (e.id == ActionElement.DIE){
-      return resolveSkipDeath(iter);
+      return resolveFirstUndoable(iter, undoCount);
+    } else if (undoCount > 0){
+      return resolveFirstUndoable(iter, undoCount - 1);
     } else {
       return e;
     }

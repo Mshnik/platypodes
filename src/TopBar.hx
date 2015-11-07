@@ -1,9 +1,7 @@
 package ;
-import flixel.text.FlxText;
 import flixel.FlxCamera;
 import flixel.util.FlxPoint;
 import flixel.ui.FlxButton;
-import flixel.util.FlxColor;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
@@ -15,10 +13,13 @@ class TopBar extends FlxTypedGroup<FlxSprite>{
   @final public var state : GameState;
 
   public var back(default, null) : FlxSprite;
-  private var resetButton : FlxButton;
-  private var undoButton : FlxButton;
-  private var zoomOutButton : FlxButton;
-  private var zoomInButton : FlxButton;
+
+  public var doReset(default, null) : Bool;
+
+  public var resetButton(default, null) : FlxButton;
+  public var undoButton(default, null) : FlxButton;
+  public var zoomOutButton(default, null) : FlxButton;
+  public var zoomInButton(default, null) : FlxButton;
 
   public function new(state : GameState, camera : FlxCamera) {
     super();
@@ -26,8 +27,9 @@ class TopBar extends FlxTypedGroup<FlxSprite>{
     this.state = state;
     back = new FlxSprite().loadGraphic(AssetPaths.control_bar_icons_off__png, false, FlxG.width, HEIGHT);
 
-    resetButton = new FlxButton(0, 0, "Reset (R)", state.resetState);
-    undoButton = new FlxButton(0, 0, "Undo (Bksp)", state.undoMove);
+    //Button events (pressed, ispressed, etc) are handled in GameState to unify with keyboard commands easily.
+    resetButton = new FlxButton(0, 0, "Reset (R)", function(){doReset = true;});
+    undoButton = new FlxButton(0, 0, "Undo (Bksp)");
     zoomInButton = new FlxButton(0, 0, "Zoom In (1)");
     zoomOutButton = new FlxButton(0, 0, "Zoom Out (2)");
 
@@ -45,14 +47,5 @@ class TopBar extends FlxTypedGroup<FlxSprite>{
       spr.scrollFactor.set();
       spr.cameras = [camera];
     });
-  }
-
-  public override function update() {
-    super.update();
-    if(zoomOutButton.status == FlxButton.PRESSED) {
-      state.zoomOut();
-    } else if(zoomInButton.status == FlxButton.PRESSED) {
-      state.zoomIn();
-    }
   }
 }
