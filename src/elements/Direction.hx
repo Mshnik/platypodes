@@ -192,7 +192,7 @@ class Direction extends FlxPoint {
 
   /** Returns true iff this direction is not None */
   public inline function isNonNone() : Bool {
-    return x != 0 && y != 0;
+    return !equals(Direction.None);
   }
 
   /** Returns the direction that results from adding v to this direction, by componenet */

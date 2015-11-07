@@ -15,8 +15,12 @@ class Character extends MovingElement {
   /** The Character's default move speed, when not interacting with anything */
   private static inline var MOVE_SPEED = 600;
 
-  /** The distance the character moves per frame. This is the value when at 60FPS, how the math works out */
-  private static inline var MOVE_DIST_PER_FRAME = 9.6;
+  /** The Character's move speed when automatically moving towards center of tile */
+  private static inline var AUTOMOVE_SPEED = 300;
+
+  /** The distance the character moves per frame. This is the value when moving at velocity of 300
+   * 60FPS, how the math works out */
+  private static inline var MOVE_DIST_PER_FRAME = 4.8;
 
   /** True iff mouse movement should be allowed */
   private static inline var ALLOW_MOUSE_MOVEMENT = false;
@@ -323,6 +327,7 @@ class Character extends MovingElement {
         setMoveTo(row, col);
       } else if (elmHolding == null) {
         moveDirection = Direction.None;
+        moveSpeed = MOVE_SPEED;
 
         if(UP_PRESSED()) {
           moveDirection = moveDirection.addDirec(Direction.Up);
@@ -379,7 +384,7 @@ class Character extends MovingElement {
     }
 
     //If move direction is none, move towards center of tile
-    if(moveDirection.equals(Direction.None)) {
+    if(elmHolding == null && moveDirection.equals(Direction.None)) {
       var center = getCenter(false);
       var centerX = center.x;
       var centerY = center.y;
@@ -401,6 +406,9 @@ class Character extends MovingElement {
           bestDist = newDist;
         }
       }
+
+      moveSpeed = AUTOMOVE_SPEED;
+
       if (moveDirection.isNonNone()) {
         directionFacing = moveDirection;
       }
