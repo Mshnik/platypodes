@@ -1,5 +1,7 @@
 package;
 
+import flixel.addons.display.FlxBackdrop;
+import flixel.ui.FlxButton;
 import elements.InteractableElement;
 import logging.ActionElement;
 import haxe.Timer;
@@ -30,12 +32,12 @@ class GameState extends FlxState {
   private static inline var INITAL_ZOOM_PROPERTY = "initial_zoom";
   public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; }; //TODO - reinstate after friends
   public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
-  public static var RESET = function() : Bool { return FlxG.keys.pressed.R; };
 
-  public var UNDO : Void -> Bool;
+  public var RESET : Void -> Bool;
+  private var UNDO : Void -> Bool;
+  private var ZOOM_IN : Void -> Bool;
+  private var ZOOM_OUT : Void -> Bool;
 
-  private static var ZOOM_IN = function() : Bool { return FlxG.keys.pressed.ONE; };
-  private static var ZOOM_OUT = function() : Bool { return FlxG.keys.pressed.TWO;  };
   private static inline var ZOOM_MULT : Float = 1.02;
 
   @final private var levelPaths : Array<Dynamic>;
@@ -124,10 +126,23 @@ class GameState extends FlxState {
     add(player);
     add(tooltip);
 
+    RESET = function(){
+      return FlxG.keys.justPressed.R || hud.doReset;
+    }
+
     UNDO = function(){
-      return FlxG.keys.pressed.BACKSPACE && ! player.tileLocked &&
-        (player.elmHolding == null || player.elmHolding.moveDirection.equals(Direction.None));
+      return (FlxG.keys.pressed.BACKSPACE || hud.undoButton.status == FlxButton.PRESSED)
+        && ! player.tileLocked
+        && (player.elmHolding == null || player.elmHolding.moveDirection.equals(Direction.None));
     };
+
+    ZOOM_IN = function() {
+      return FlxG.keys.pressed.ONE || hud.zoomInButton.status == FlxButton.PRESSED;
+    }
+
+    ZOOM_OUT = function() {
+      return FlxG.keys.pressed.TWO || hud.zoomOutButton.status == FlxButton.PRESSED;
+    }
 
     if(DISPLAY_COORDINATES) {
       for(r in 0...level.height) {

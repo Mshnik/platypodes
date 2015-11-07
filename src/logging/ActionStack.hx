@@ -25,6 +25,11 @@ class ActionStack {
     Logging.getSingleton().recordEvent(Std.int(Math.pow(2, 32) - 1), elms.toString());
   }
 
+  public function getFirst() : ActionElement {
+    if (elms.isEmpty()) return null;
+    else return elms.first();
+  }
+
   public function getFirstUndoable() : ActionElement {
     return resolveFirstUndoable(elms.iterator(), 0);
   }
