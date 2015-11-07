@@ -297,7 +297,7 @@ class ActionElement {
     }
     if (id == MOVE) {
       return move(Std.int(startX + moveDirection.x), Std.int(startY + moveDirection.y),
-                  directionFacing.opposite(), moveDirection.opposite());
+                  moveDirection.opposite(), moveDirection.opposite());
     }
     if (id == PUSHPULL) {
       return pushpull(Std.int(startX + moveDirection.x), Std.int(startY + moveDirection.y),

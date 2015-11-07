@@ -125,7 +125,7 @@ class GameState extends FlxState {
     add(tooltip);
 
     UNDO = function(){
-      return FlxG.keys.justPressed.BACKSPACE && ! player.tileLocked &&
+      return FlxG.keys.pressed.BACKSPACE && ! player.tileLocked &&
         (player.elmHolding == null || player.elmHolding.moveDirection.equals(Direction.None));
     };
 
@@ -426,7 +426,7 @@ class GameState extends FlxState {
 
   public function undoMove() {
     if(!player.isDying) {
-      var action : ActionElement = actionStack.getHeadSkipDeath();
+      var action : ActionElement = actionStack.getFirstUndoable();
       if(action != null) {
         actionStack.addUndo();
         executeAction(action.getOpposite());
