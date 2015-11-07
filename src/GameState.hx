@@ -38,7 +38,7 @@ class GameState extends FlxState {
   private var ZOOM_IN : Void -> Bool;
   private var ZOOM_OUT : Void -> Bool;
 
-  private static inline var ZOOM_MULT : Float = 1.02;
+  private static inline var ZOOM_MULT : Float = 1.03;
 
   @final private var levelPaths : Array<Dynamic>;
   @final private var levelPathIndex : Int;
