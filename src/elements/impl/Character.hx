@@ -13,7 +13,17 @@ import flixel.FlxG;
 class Character extends MovingElement {
 
   /** The Character's default move speed, when not interacting with anything */
-  @final private static var MOVE_SPEED = 600;
+  private static inline var MOVE_SPEED = 600;
+
+  /** The Character's move speed when automatically moving towards center of tile */
+  private static inline var AUTOMOVE_SPEED = 200;
+
+  /** The distance the character moves per frame. This is the value when moving at velocity of 300
+   * 60FPS, how the math works out */
+  private static inline var MOVE_DIST_PER_FRAME = 3.2;
+
+  /** True iff mouse movement should be allowed */
+  private static inline var ALLOW_MOUSE_MOVEMENT = false;
 
   /** The clippng on the bounding box of the sprite, to make fitting though a one tile wide path easier */
   private static inline var BOUNDING_BOX_MARGIN_X = 30;
@@ -304,11 +314,11 @@ class Character extends MovingElement {
         moveSpeed = MOVE_SPEED;
         moveDirection = Direction.None;
         resetElmHoldingOldCoords();
-      } else if (moveList != null) {
+      } else if (ALLOW_MOUSE_MOVEMENT && moveList != null) {
         tileLocked = true;
         moveDirection = moveList.pop();
         directionFacing = moveDirection;
-      } else if(FlxG.mouse.justReleased) {
+      } else if(ALLOW_MOUSE_MOVEMENT && FlxG.mouse.justReleased) {
         moveDirection = Direction.None;
         tileLocked = false;
         var tileLoc = state.worldToTileCoordinates(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
@@ -317,6 +327,7 @@ class Character extends MovingElement {
         setMoveTo(row, col);
       } else if (elmHolding == null) {
         moveDirection = Direction.None;
+        moveSpeed = MOVE_SPEED;
 
         if(UP_PRESSED()) {
           moveDirection = moveDirection.addDirec(Direction.Up);
@@ -372,52 +383,88 @@ class Character extends MovingElement {
       }
     }
 
-    //Play the appropriate animation
-    if(!isChangingGrabStatus && alive) {
-      if (elmHolding != null) {
-        switch (directionFacing.simpleString) {
-          case "Up":
-            animation.play(PUSH_PULL_UP_ANIMATION_KEY);
-          case "Up_Right":
-            animation.play(PUSH_PULL_UP_ANIMATION_KEY);
-          case "Up_Left":
-            animation.play(PUSH_PULL_UP_ANIMATION_KEY);
-          case "Down":
-            animation.play(PUSH_PULL_DOWN_ANIMATION_KEY);
-          case "Down_Right":
-            animation.play(PUSH_PULL_DOWN_ANIMATION_KEY);
-          case "Down_Left":
-            animation.play(PUSH_PULL_DOWN_ANIMATION_KEY);
-          case "Left":
-            animation.play(PUSH_PULL_LEFT_RIGHT_ANIMATION_KEY);
-          case "Right":
-            animation.play(PUSH_PULL_LEFT_RIGHT_ANIMATION_KEY);
-        }
-      } else {
-        switch (directionFacing.simpleString) {
-          case "Up":
-            animation.play(WALK_UP_ANIMATION_KEY);
-          case "Up_Right":
-            animation.play(WALK_UP_ANIMATION_KEY);
-          case "Up_Left":
-            animation.play(WALK_UP_ANIMATION_KEY);
-          case "Down":
-            animation.play(WALK_DOWN_ANIMATION_KEY);
-          case "Down_Right":
-            animation.play(WALK_DOWN_ANIMATION_KEY);
-          case "Down_Left":
-            animation.play(WALK_DOWN_ANIMATION_KEY);
-          case "Left":
-            animation.play(WALK_LEFT_RIGHT_ANIMATION_KEY);
-          case "Right":
-            animation.play(WALK_LEFT_RIGHT_ANIMATION_KEY);
+    //If move direction is none, move towards center of tile
+    if(elmHolding == null && moveDirection.equals(Direction.None)) {
+      var center = getCenter(false);
+      var centerX = center.x;
+      var centerY = center.y;
+      var tileCenter = state.getRectangleFor(getRow(), getCol());
+      var tileCenterX = tileCenter.x + tileCenter.width/2;
+      var tileCenterY = tileCenter.y + tileCenter.height/2;
+
+      center.put();
+      tileCenter.put();
+
+      var bestDist : Float = state.level.tileHeight * state.level.tileWidth; //Effectively maxval.
+
+      for(d in Direction.VALS) {
+        var newCenterX = centerX + MOVE_DIST_PER_FRAME * d.x;
+        var newCenterY = centerY + MOVE_DIST_PER_FRAME * d.y;
+        var newDist = Math.sqrt((tileCenterX - newCenterX) * (tileCenterX - newCenterX) + (tileCenterY - newCenterY) * (tileCenterY - newCenterY));
+        if (newDist < bestDist) {
+          moveDirection = d;
+          bestDist = newDist;
         }
       }
+
+      moveSpeed = AUTOMOVE_SPEED;
+
+      //Don't change directionfacing when AUTO_MOVING, only the appearance thereof
+      if (moveDirection.isNonNone()) {
+        playMovementAnimation(moveDirection, false);
+      }
+    }
+
+    //Play the appropriate animation
+    if(!isChangingGrabStatus && alive && moveSpeed != AUTOMOVE_SPEED) {
+      playMovementAnimation(directionFacing, elmHolding != null);
     }
 
     continueMoving = GRAB() && (UP_PRESSED() || DOWN_PRESSED() || LEFT_PRESSED() || RIGHT_PRESSED());
 
     super.update();
+  }
+
+  private function playMovementAnimation(d : Direction, holdingElm : Bool) {
+    if (holdingElm) {
+      switch (d.simpleString) {
+        case "Up":
+          animation.play(PUSH_PULL_UP_ANIMATION_KEY);
+        case "Up_Right":
+          animation.play(PUSH_PULL_UP_ANIMATION_KEY);
+        case "Up_Left":
+          animation.play(PUSH_PULL_UP_ANIMATION_KEY);
+        case "Down":
+          animation.play(PUSH_PULL_DOWN_ANIMATION_KEY);
+        case "Down_Right":
+          animation.play(PUSH_PULL_DOWN_ANIMATION_KEY);
+        case "Down_Left":
+          animation.play(PUSH_PULL_DOWN_ANIMATION_KEY);
+        case "Left":
+          animation.play(PUSH_PULL_LEFT_RIGHT_ANIMATION_KEY);
+        case "Right":
+          animation.play(PUSH_PULL_LEFT_RIGHT_ANIMATION_KEY);
+      }
+    } else {
+      switch (d.simpleString) {
+        case "Up":
+          animation.play(WALK_UP_ANIMATION_KEY);
+        case "Up_Right":
+          animation.play(WALK_UP_ANIMATION_KEY);
+        case "Up_Left":
+          animation.play(WALK_UP_ANIMATION_KEY);
+        case "Down":
+          animation.play(WALK_DOWN_ANIMATION_KEY);
+        case "Down_Right":
+          animation.play(WALK_DOWN_ANIMATION_KEY);
+        case "Down_Left":
+          animation.play(WALK_DOWN_ANIMATION_KEY);
+        case "Left":
+          animation.play(WALK_LEFT_RIGHT_ANIMATION_KEY);
+        case "Right":
+          animation.play(WALK_LEFT_RIGHT_ANIMATION_KEY);
+      }
+    }
   }
 
   public override function destinationSet() {
