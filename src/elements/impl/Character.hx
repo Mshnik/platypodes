@@ -16,11 +16,11 @@ class Character extends MovingElement {
   private static inline var MOVE_SPEED = 600;
 
   /** The Character's move speed when automatically moving towards center of tile */
-  private static inline var AUTOMOVE_SPEED = 300;
+  private static inline var AUTOMOVE_SPEED = 200;
 
   /** The distance the character moves per frame. This is the value when moving at velocity of 300
    * 60FPS, how the math works out */
-  private static inline var MOVE_DIST_PER_FRAME = 4.8;
+  private static inline var MOVE_DIST_PER_FRAME = 3.2;
 
   /** True iff mouse movement should be allowed */
   private static inline var ALLOW_MOUSE_MOVEMENT = false;
@@ -409,57 +409,62 @@ class Character extends MovingElement {
 
       moveSpeed = AUTOMOVE_SPEED;
 
+      //Don't change directionfacing when AUTO_MOVING, only the appearance thereof
       if (moveDirection.isNonNone()) {
-        directionFacing = moveDirection;
+        playMovementAnimation(moveDirection, false);
       }
     }
 
     //Play the appropriate animation
-    if(!isChangingGrabStatus && alive) {
-      if (elmHolding != null) {
-        switch (directionFacing.simpleString) {
-          case "Up":
-            animation.play(PUSH_PULL_UP_ANIMATION_KEY);
-          case "Up_Right":
-            animation.play(PUSH_PULL_UP_ANIMATION_KEY);
-          case "Up_Left":
-            animation.play(PUSH_PULL_UP_ANIMATION_KEY);
-          case "Down":
-            animation.play(PUSH_PULL_DOWN_ANIMATION_KEY);
-          case "Down_Right":
-            animation.play(PUSH_PULL_DOWN_ANIMATION_KEY);
-          case "Down_Left":
-            animation.play(PUSH_PULL_DOWN_ANIMATION_KEY);
-          case "Left":
-            animation.play(PUSH_PULL_LEFT_RIGHT_ANIMATION_KEY);
-          case "Right":
-            animation.play(PUSH_PULL_LEFT_RIGHT_ANIMATION_KEY);
-        }
-      } else {
-        switch (directionFacing.simpleString) {
-          case "Up":
-            animation.play(WALK_UP_ANIMATION_KEY);
-          case "Up_Right":
-            animation.play(WALK_UP_ANIMATION_KEY);
-          case "Up_Left":
-            animation.play(WALK_UP_ANIMATION_KEY);
-          case "Down":
-            animation.play(WALK_DOWN_ANIMATION_KEY);
-          case "Down_Right":
-            animation.play(WALK_DOWN_ANIMATION_KEY);
-          case "Down_Left":
-            animation.play(WALK_DOWN_ANIMATION_KEY);
-          case "Left":
-            animation.play(WALK_LEFT_RIGHT_ANIMATION_KEY);
-          case "Right":
-            animation.play(WALK_LEFT_RIGHT_ANIMATION_KEY);
-        }
-      }
+    if(!isChangingGrabStatus && alive && moveSpeed != AUTOMOVE_SPEED) {
+      playMovementAnimation(directionFacing, elmHolding != null);
     }
 
     continueMoving = GRAB() && (UP_PRESSED() || DOWN_PRESSED() || LEFT_PRESSED() || RIGHT_PRESSED());
 
     super.update();
+  }
+
+  private function playMovementAnimation(d : Direction, holdingElm : Bool) {
+    if (holdingElm) {
+      switch (d.simpleString) {
+        case "Up":
+          animation.play(PUSH_PULL_UP_ANIMATION_KEY);
+        case "Up_Right":
+          animation.play(PUSH_PULL_UP_ANIMATION_KEY);
+        case "Up_Left":
+          animation.play(PUSH_PULL_UP_ANIMATION_KEY);
+        case "Down":
+          animation.play(PUSH_PULL_DOWN_ANIMATION_KEY);
+        case "Down_Right":
+          animation.play(PUSH_PULL_DOWN_ANIMATION_KEY);
+        case "Down_Left":
+          animation.play(PUSH_PULL_DOWN_ANIMATION_KEY);
+        case "Left":
+          animation.play(PUSH_PULL_LEFT_RIGHT_ANIMATION_KEY);
+        case "Right":
+          animation.play(PUSH_PULL_LEFT_RIGHT_ANIMATION_KEY);
+      }
+    } else {
+      switch (d.simpleString) {
+        case "Up":
+          animation.play(WALK_UP_ANIMATION_KEY);
+        case "Up_Right":
+          animation.play(WALK_UP_ANIMATION_KEY);
+        case "Up_Left":
+          animation.play(WALK_UP_ANIMATION_KEY);
+        case "Down":
+          animation.play(WALK_DOWN_ANIMATION_KEY);
+        case "Down_Right":
+          animation.play(WALK_DOWN_ANIMATION_KEY);
+        case "Down_Left":
+          animation.play(WALK_DOWN_ANIMATION_KEY);
+        case "Left":
+          animation.play(WALK_LEFT_RIGHT_ANIMATION_KEY);
+        case "Right":
+          animation.play(WALK_LEFT_RIGHT_ANIMATION_KEY);
+      }
+    }
   }
 
   public override function destinationSet() {

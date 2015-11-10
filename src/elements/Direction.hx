@@ -172,22 +172,22 @@ class Direction extends FlxPoint {
 
   /** Returns true iff this is a cardinal direction: Up, Left, Down, Right */
   public inline function isCardinal() : Bool {
-    return Math.abs(x) + Math.abs(y) == 1;
+    return isHorizontal() || isVertical();
   }
 
   /** Returns true iff this is a diagonal direction: Up_Left, Up_Right, Down_Left, Down_Right */
   public inline function isDiagonal() : Bool {
-    return Math.abs(x) + Math.abs(y) == 2;
+    return isNonNone() && ! isCardinal();
   }
 
   /** Returns true iff this is a horizontal direction: Left, Right */
   public inline function isHorizontal() : Bool {
-    return y == 0 && x != 0;
+    return equals(Direction.Left) || equals(Direction.Right);
   }
 
   /** Returns true iff this is a vertical direction: Up, Down */
   public inline function isVertical() : Bool {
-    return x == 0 && y != 0;
+    return equals(Direction.Up) || equals(Direction.Down);
   }
 
   /** Returns true iff this direction is not None */
