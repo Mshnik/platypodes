@@ -70,6 +70,7 @@ class GameState extends FlxState {
   private var hudCamera : FlxCamera;
 
   private var sndWin : FlxSound;
+  private var sndWinDone : Bool;
 
   public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int, savedZoom : Float = -1,
                       savedActionStack : ActionStack = null) {
@@ -255,7 +256,7 @@ class GameState extends FlxState {
     if(MENU_BUTTON()) {
       actionStackTimer.stop();
       FlxG.switchState(new LevelSelectMenuState());
-    } else if(won && NEXT_LEVEL_BUTTON() && levelPathIndex + 1 < levelPaths.length){
+    } else if(won && (NEXT_LEVEL_BUTTON() || sndWinDone) && levelPathIndex + 1 < levelPaths.length){
       BACKGROUND_THEME.resume();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {
@@ -473,6 +474,7 @@ class GameState extends FlxState {
     BACKGROUND_THEME.pause();
     sndWin.onComplete = function() {
       BACKGROUND_THEME.resume();
+      sndWinDone = true;
     }
     sndWin.play();
     winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? " Thanks for playing!!" : " - Press Space to continue"), Std.int(30 / FlxG.camera.zoom));
