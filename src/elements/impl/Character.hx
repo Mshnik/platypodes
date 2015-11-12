@@ -111,7 +111,10 @@ class Character extends MovingElement {
   public static var LEFT_SINGLE = function() : Bool { return FlxG.keys.justPressed.LEFT; };
 
   /** Return true iff the grab key is pressed */
-  public static var GRAB = function() : Bool { return FlxG.keys.pressed.SPACE; };
+//  public static var GRAB = function() : Bool { return true; }; //Getting rid of the spacebar
+
+  /** Trying "just press space once" */
+  public static var SPACE_SINGLE = function() : Bool {return FlxG.keys.justPressed.SPACE;};
 
   /** Return true when the rotate clockwise key is intially pressed */
   public var ROT_CLOCKWISE : Void -> Bool;
@@ -132,6 +135,19 @@ class Character extends MovingElement {
   private var moveList : List<Direction>;
 
   private var moveSprites : Array<FlxSprite>;
+
+  private var grabbing : Bool;
+
+  public function check_grab (): Void{
+    if(SPACE_SINGLE()){
+      grabbing = !grabbing;
+    }
+  }
+
+  public function GRAB() : Bool {
+    return grabbing;
+  }
+  
 
   /** Constructs a TopBar character, belonging to the given state and represented by the given TiledObject */
   public function new(state : GameState, o : TiledObject) {
@@ -287,6 +303,9 @@ class Character extends MovingElement {
     * - calls super.update() to move the character based on calculated move direction
     */
   override public function update() {
+
+    check_grab();
+
     if(!tileLocked) {
       if (directionFacing.isCardinal() && alive && ! isDying) {
         var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
@@ -347,6 +366,7 @@ class Character extends MovingElement {
         }
       } else {
         if (GRAB() && elmHolding.destTile == null) {
+          //TODO: PUSH AND PULL
           if (directionFacing.isHorizontal()) {
             if (LEFT_PRESSED()) {
               if(elmHolding.canMoveInDirection(Direction.Left)) {
