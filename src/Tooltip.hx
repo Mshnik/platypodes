@@ -102,8 +102,8 @@ class Tooltip extends FlxGroup {
     this.add(pushArrowButton);
     this.add(cwArrowButton);
     this.add(ccwArrowButton);
-    this.add(aKeySprite);
-    this.add(dKeySprite);
+    //this.add(aKeySprite); GET RID OF KEYS
+    //this.add(dKeySprite);
 
     game = currGame;
 
@@ -131,7 +131,7 @@ class Tooltip extends FlxGroup {
 
     if (player.getRow() == mirror.getRow()) {
       if (player.getCol() < mirror.getCol()) {
-//PLAYER TO THE LEFT OF MIRROR
+        //PLAYER TO THE LEFT OF MIRROR
         pullArrowButton.setPosition(player.x - pullArrowButton.width, mBox.top + pullArrowButton.height/2);
         pullArrowButton.angle = 270;
         pullMirrorDirection = Direction.Left;
@@ -184,43 +184,44 @@ class Tooltip extends FlxGroup {
 
   private function configureRotateArrows(d:Direction, mBox : FlxRect):Void {
     var mirror = game.player.elmHolding;
-    if (d.equals(Direction.Right)) {
+    if (d.isHorizontal()) {
       cwArrowButton.setPosition(mBox.left, mBox.top - cwArrowButton.height);
-      cwArrowButton.angle = 90;
-
-      ccwArrowButton.setPosition(mBox.left, mBox.bottom);
-      ccwArrowButton.angle = 270;
-
-      aKeySprite.setPosition(cwArrowButton.x, cwArrowButton.y - aKeySprite.height);
-      dKeySprite.setPosition(ccwArrowButton.x, ccwArrowButton.y + ccwArrowButton.height);
-    } else if (d.equals(Direction.Left)) {
-      ccwArrowButton.setPosition(mBox.right - ccwArrowButton.width, mBox.top - cwArrowButton.height);
-      ccwArrowButton.angle = 90;
-
-      cwArrowButton.setPosition(mBox.right - ccwArrowButton.width, mBox.bottom);
-      cwArrowButton.angle = 270;
-
-      aKeySprite.setPosition(cwArrowButton.x, cwArrowButton.y + cwArrowButton.height);
-      dKeySprite.setPosition(ccwArrowButton.x, ccwArrowButton.y - dKeySprite.height);
-    } else if (d.equals(Direction.Up)) {
-      cwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - cwArrowButton.height);
       cwArrowButton.angle = 0;
 
-      ccwArrowButton.setPosition(mBox.right, mBox.bottom - ccwArrowButton.height);
-      ccwArrowButton.angle = 0;
-
-      aKeySprite.setPosition(cwArrowButton.x - aKeySprite.width, cwArrowButton.y);
-      dKeySprite.setPosition(ccwArrowButton.x + ccwArrowButton.width, ccwArrowButton.y);
-    } else {
-      cwArrowButton.setPosition(mBox.right, mBox.top);
-      cwArrowButton.angle = 180;
-
-      ccwArrowButton.setPosition(mBox.left - ccwArrowButton.width, mBox.top);
+      ccwArrowButton.setPosition(mBox.left, mBox.bottom);
       ccwArrowButton.angle = 180;
 
-      aKeySprite.setPosition(cwArrowButton.x + cwArrowButton.width, cwArrowButton.y);
-      dKeySprite.setPosition(ccwArrowButton.x - dKeySprite.width, ccwArrowButton.y);
+      //aKeySprite.setPosition(cwArrowButton.x, cwArrowButton.y - aKeySprite.height);
+      //dKeySprite.setPosition(ccwArrowButton.x, ccwArrowButton.y + ccwArrowButton.height);
+//    } else if (d.equals(Direction.Left)) {
+//      ccwArrowButton.setPosition(mBox.right - ccwArrowButton.width, mBox.top - cwArrowButton.height);
+//      ccwArrowButton.angle = 90;
+//
+//      cwArrowButton.setPosition(mBox.right - ccwArrowButton.width, mBox.bottom);
+//      cwArrowButton.angle = 270;
+//
+//      aKeySprite.setPosition(cwArrowButton.x, cwArrowButton.y + cwArrowButton.height);
+//      dKeySprite.setPosition(ccwArrowButton.x, ccwArrowButton.y - dKeySprite.height);
+    } else if (d.isVertical()) {
+      ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - cwArrowButton.height);
+      ccwArrowButton.angle = 270;
+
+      cwArrowButton.setPosition(mBox.right, mBox.bottom - ccwArrowButton.height);
+      cwArrowButton.angle = 90;
+
+//      aKeySprite.setPosition(cwArrowButton.x - aKeySprite.width, cwArrowButton.y);
+//      dKeySprite.setPosition(ccwArrowButton.x + ccwArrowButton.width, ccwArrowButton.y);
     }
+//    else {
+//      cwArrowButton.setPosition(mBox.right, mBox.top);
+//      cwArrowButton.angle = 180;
+//
+//      ccwArrowButton.setPosition(mBox.left - ccwArrowButton.width, mBox.top);
+//      ccwArrowButton.angle = 180;
+//
+//      aKeySprite.setPosition(cwArrowButton.x + cwArrowButton.width, cwArrowButton.y);
+//      dKeySprite.setPosition(ccwArrowButton.x - dKeySprite.width, ccwArrowButton.y);
+//    }
   }
 
   private function pullMirrorCallback(obj:FlxExtendedSprite, x:Int, y:Int):Void {

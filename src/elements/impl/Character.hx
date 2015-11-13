@@ -110,11 +110,9 @@ class Character extends MovingElement {
   /** Return true when the up key is pressed (once per press) */
   public static var LEFT_SINGLE = function() : Bool { return FlxG.keys.justPressed.LEFT; };
 
-  /** Return true iff the grab key is pressed */
-//  public static var GRAB = function() : Bool { return true; }; //Getting rid of the spacebar
 
-  /** Trying "just press space once" */
-  public static var SPACE_SINGLE = function() : Bool {return FlxG.keys.justPressed.SPACE;};
+  /** Return true iff the grab key is pressed */
+  public static var GRAB = function() : Bool {return FlxG.keys.pressed.SPACE;};
 
   /** Return true when the rotate clockwise key is intially pressed */
   public var ROT_CLOCKWISE : Void -> Bool;
@@ -138,15 +136,6 @@ class Character extends MovingElement {
 
   private var grabbing : Bool;
 
-  public function check_grab (): Void{
-    if(SPACE_SINGLE()){
-      grabbing = !grabbing;
-    }
-  }
-
-  public function GRAB() : Bool {
-    return grabbing;
-  }
   
 
   /** Constructs a TopBar character, belonging to the given state and represented by the given TiledObject */
@@ -196,14 +185,31 @@ class Character extends MovingElement {
     }
 
     ROT_CLOCKWISE = function() : Bool {
-        if (!GRAB()) return false;
-        return FlxG.keys.justPressed.A;
+      if (!GRAB() || (elmHolding == null)) return false;
+
+      if (this.getRow() == this.elmHolding.getRow()) {
+        //PLAYER TO THE LEFT OR RIGHT OF MIRROR
+        return UP_SINGLE();
+      }
+      if (this.getCol() == this.elmHolding.getCol()){
+        //PLAYER ABOVE OR BELOW MIRROR
+        return RIGHT_SINGLE();
+      }
+      return false;
+
     }
 
     ROT_C_CLOCKWISE = function() : Bool {
-      if (!GRAB()) return false;
+      if (!GRAB() || (elmHolding == null)) return false;
 
-      return FlxG.keys.justPressed.D;
+      if (this.getRow() == this.elmHolding.getRow()) {
+        //PLAYER TO THE LEFT OR RIGHT OF MIRROR
+        return DOWN_SINGLE();
+      }
+      if (this.getCol() == this.elmHolding.getCol()){
+        return LEFT_SINGLE();
+      }
+      return false;
 
     };
 
@@ -303,8 +309,6 @@ class Character extends MovingElement {
     * - calls super.update() to move the character based on calculated move direction
     */
   override public function update() {
-
-    check_grab();
 
     if(!tileLocked) {
       if (directionFacing.isCardinal() && alive && ! isDying) {
