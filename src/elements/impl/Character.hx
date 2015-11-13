@@ -112,7 +112,7 @@ class Character extends MovingElement {
 
 
   /** Return true iff the grab key is pressed */
-  public static var GRAB = function() : Bool {return FlxG.keys.pressed.SPACE;};
+  public static var SINGLE_SPACE = function() : Bool {return FlxG.keys.justPressed.SPACE ; };
 
   /** Return true when the rotate clockwise key is intially pressed */
   public var ROT_CLOCKWISE : Void -> Bool;
@@ -135,6 +135,16 @@ class Character extends MovingElement {
   private var moveSprites : Array<FlxSprite>;
 
   private var grabbing : Bool;
+
+  public function check_grab() : Void{
+    if (SINGLE_SPACE()){
+      grabbing = !grabbing;
+    }
+  }
+
+  public function GRAB() : Bool{
+    return grabbing;
+  }
 
   
 
@@ -309,6 +319,8 @@ class Character extends MovingElement {
     * - calls super.update() to move the character based on calculated move direction
     */
   override public function update() {
+
+    check_grab();
 
     if(!tileLocked) {
       if (directionFacing.isCardinal() && alive && ! isDying) {
