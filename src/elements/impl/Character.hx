@@ -408,15 +408,10 @@ class Character extends MovingElement {
       }
 
       moveSpeed = AUTOMOVE_SPEED;
-
-      //Don't change directionfacing when AUTO_MOVING, only the appearance thereof
-      if (moveDirection.isNonNone()) {
-        playMovementAnimation(moveDirection, false);
-      }
     }
 
     //Play the appropriate animation
-    if(!isChangingGrabStatus && alive && moveSpeed != AUTOMOVE_SPEED) {
+    if(!isChangingGrabStatus && alive) {
       playMovementAnimation(directionFacing, elmHolding != null);
     }
 
