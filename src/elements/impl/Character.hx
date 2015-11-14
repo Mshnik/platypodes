@@ -13,10 +13,10 @@ import flixel.FlxG;
 class Character extends MovingElement {
 
   /** The Character's default move speed, when not interacting with anything */
-  private static inline var MOVE_SPEED = 600;
+  public static inline var MOVE_SPEED = 600;
 
   /** The Character's move speed when automatically moving towards center of tile */
-  private static inline var AUTOMOVE_SPEED = 200;
+  public static inline var AUTOMOVE_SPEED = 200;
 
   /** The distance the character moves per frame. This is the value when moving at velocity of 300
    * 60FPS, how the math works out */
@@ -404,7 +404,7 @@ class Character extends MovingElement {
     }
 
     //If move direction is none, move towards center of tile
-    if(elmHolding == null && moveDirection.equals(Direction.None)) {
+    if(elmHolding == null && !tileLocked && moveDirection.equals(Direction.None)) {
       var center = getCenter(false);
       var centerX = center.x;
       var centerY = center.y;
@@ -428,15 +428,10 @@ class Character extends MovingElement {
       }
 
       moveSpeed = AUTOMOVE_SPEED;
-
-      //Don't change directionfacing when AUTO_MOVING, only the appearance thereof
-      if (moveDirection.isNonNone()) {
-        playMovementAnimation(moveDirection, false);
-      }
     }
 
     //Play the appropriate animation
-    if(!isChangingGrabStatus && alive && moveSpeed != AUTOMOVE_SPEED) {
+    if(!isChangingGrabStatus && alive) {
       playMovementAnimation(directionFacing, elmHolding != null);
     }
 

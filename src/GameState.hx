@@ -1,6 +1,5 @@
 package;
 
-import flixel.addons.display.FlxBackdrop;
 import flixel.ui.FlxButton;
 import elements.InteractableElement;
 import logging.ActionElement;
@@ -35,6 +34,10 @@ class GameState extends FlxState {
 
   public var RESET : Void -> Bool;
   private var UNDO : Void -> Bool;
+
+  private static inline var UNDO_THROTTLE = 0.5; //At most 2 undos per second
+  private var mostRecentUndoTimeStamp : Float = -1;
+
   private var ZOOM_IN : Void -> Bool;
   private var ZOOM_OUT : Void -> Bool;
 
@@ -70,6 +73,7 @@ class GameState extends FlxState {
   private var hudCamera : FlxCamera;
 
   private var sndWin : FlxSound;
+  private var sndWinDone : Bool;
 
   public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int, savedZoom : Float = -1,
                       savedActionStack : ActionStack = null) {
@@ -255,13 +259,13 @@ class GameState extends FlxState {
     if(MENU_BUTTON()) {
       actionStackTimer.stop();
       FlxG.switchState(new LevelSelectMenuState());
-    } else if(won && NEXT_LEVEL_BUTTON() && levelPathIndex + 1 < levelPaths.length){
+    } else if(won && (NEXT_LEVEL_BUTTON() || sndWinDone) && levelPathIndex + 1 < levelPaths.length){
       BACKGROUND_THEME.resume();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {
       resetState();
     } else if (UNDO() && !player.isDying) {
-      undoMove();
+      undoAction();
     } else if (ZOOM_IN()) {
       zoomIn();
     } else if (ZOOM_OUT()) {
@@ -397,6 +401,7 @@ class GameState extends FlxState {
       }
       player.moveDirection = a.moveDirection;
       player.directionFacing = a.directionFacing;
+      player.moveSpeed = Character.MOVE_SPEED;
       player.tileLocked = true;
       return;
     }
@@ -439,12 +444,14 @@ class GameState extends FlxState {
     FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom, actionStack));
   }
 
-  public function undoMove() {
+  public function undoAction() {
     if(!player.isDying) {
       var action : ActionElement = actionStack.getFirstUndoable();
-      if(action != null) {
+      var t = Timer.stamp();
+      if(action != null && t - mostRecentUndoTimeStamp >= UNDO_THROTTLE) {
         actionStack.addUndo();
         executeAction(action.getOpposite());
+        mostRecentUndoTimeStamp = t;
         if(! player.alive) {
           player.revive();
           remove(deadText);
@@ -473,6 +480,7 @@ class GameState extends FlxState {
     BACKGROUND_THEME.pause();
     sndWin.onComplete = function() {
       BACKGROUND_THEME.resume();
+      sndWinDone = true;
     }
     sndWin.play();
     winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? " Thanks for playing!!" : " - Press Space to continue"), Std.int(30 / FlxG.camera.zoom));
