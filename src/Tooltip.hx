@@ -21,24 +21,24 @@ class Tooltip extends FlxGroup {
   private var pushMirrorDirection:Direction;
   private var pullMirrorDirection:Direction;
 
-/** Rotation arrow graphic **/
+  /** Rotation arrow graphic **/
   private inline static var ROTATE_ARROW_PATH = AssetPaths.rotate_arrow__png; //clockwise
 
-/** Pull/push arrow graphic **/
+  /** Pull/push arrow graphic **/
   private inline static var PUSH_ARROW_PATH = AssetPaths.push_arrow__png; //pointing up
 
 
-/** Animated sheet for A  key (rotate clockwise) **/
+  /** Animated sheet for A  key (rotate clockwise) **/
   private inline static var A_KEY_SHEET = AssetPaths.contraleft__png;
 
-/** Animated sheet for Z key (rotate counterclockwise) **/
+  /** Animated sheet for Z key (rotate counterclockwise) **/
   private inline static var Z_KEY_SHEET = AssetPaths.contraright__png;
 
-/** Scale factor for arrow and key sprite images **/
-  private inline static var ARROW_SPRITE_SCALE = 0.7;
-  private inline static var KEY_SPRITE_SCALE = 0.4;
+  /** Scale factor for arrow and key sprite images **/
+  private inline static var ARROW_SPRITE_SCALE = 0.9;
+  private inline static var KEY_SPRITE_SCALE = 0.5;
 
-/** A and D Key sprites **/
+  /** A and D Key sprites **/
   private inline static var KEY_ANIMATION_SPEED = 7;
   private inline static var KEY_GLOW_ANIMATION_KEY = "glow";
   private inline static var KEY_SPRITE_SIZE = 150; //(unscaled)

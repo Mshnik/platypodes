@@ -261,7 +261,7 @@ class GameState extends FlxState {
       FlxG.switchState(new LevelSelectMenuState());
     } else if(won && (NEXT_LEVEL_BUTTON() || sndWinDone) && levelPathIndex + 1 < levelPaths.length){
       BACKGROUND_THEME.resume();
-      FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
+      FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1, savedZoom));
     } else if(RESET()) {
       resetState();
     } else if (UNDO() && !player.isDying) {
@@ -374,7 +374,7 @@ class GameState extends FlxState {
   private function setZoom(zoom:Float) {
     //Check for min and max zoom
     if (zoom < 0.35) zoom = 0.35;
-    if (zoom > 1) zoom = 1;
+    if (zoom > 0.7) zoom = 0.7;
 
     FlxG.camera.zoom = zoom;
     FlxG.camera.setSize(Std.int(Lib.current.stage.stageWidth / zoom),
