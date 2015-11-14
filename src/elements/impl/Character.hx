@@ -87,28 +87,52 @@ class Character extends MovingElement {
   @final private static var HIGHLIGHT_COLOR = 0x00000000; //Change to a value to see square character occupies
 
   /** Return true iff the up key is pressed */
-  public static var UP_PRESSED = function() : Bool { return FlxG.keys.pressed.UP; };
+  public static var UP_PRESSED = function() : Bool {
+    if(PMain.A_VERSION) return FlxG.keys.pressed.UP;
+    else return FlxG.keys.pressed.W;
+  };
 
   /** Return true when the up key is pressed (once per press) */
-  public static var UP_SINGLE = function() : Bool { return FlxG.keys.justPressed.UP; };
+  public static var UP_SINGLE = function() : Bool {
+    if(PMain.A_VERSION) return FlxG.keys.justPressed.UP;
+    else return FlxG.keys.justPressed.W;
+  };
 
   /** Return true iff the down key is pressed */
-  public static var DOWN_PRESSED = function() : Bool { return FlxG.keys.pressed.DOWN; };
+  public static var DOWN_PRESSED = function() : Bool {
+    if(PMain.A_VERSION) return FlxG.keys.pressed.DOWN;
+    else return FlxG.keys.pressed.S;
+  };
 
   /** Return true when the up key is pressed (once per press) */
-  public static var DOWN_SINGLE = function() : Bool { return FlxG.keys.justPressed.DOWN; };
+  public static var DOWN_SINGLE = function() : Bool {
+    if(PMain.A_VERSION) return FlxG.keys.justPressed.DOWN;
+    else return FlxG.keys.justPressed.S;
+  };
 
   /** Return true iff the right key is pressed */
-  public static var RIGHT_PRESSED = function() : Bool { return FlxG.keys.pressed.RIGHT; };
+  public static var RIGHT_PRESSED = function() : Bool {
+    if(PMain.A_VERSION) return FlxG.keys.pressed.RIGHT;
+    else return FlxG.keys.pressed.D;
+  };
 
   /** Return true when the up key is pressed (once per press) */
-  public static var RIGHT_SINGLE = function() : Bool { return FlxG.keys.justPressed.RIGHT; };
+  public static var RIGHT_SINGLE = function() : Bool {
+    if(PMain.A_VERSION) return FlxG.keys.justPressed.RIGHT;
+    else return FlxG.keys.justPressed.D;
+  };
 
   /** Return true iff the left key is pressed */
-  public static var LEFT_PRESSED = function() : Bool { return FlxG.keys.pressed.LEFT; };
+  public static var LEFT_PRESSED = function() : Bool {
+    if(PMain.A_VERSION) return FlxG.keys.pressed.LEFT;
+    else return FlxG.keys.pressed.A;
+  };
 
   /** Return true when the up key is pressed (once per press) */
-  public static var LEFT_SINGLE = function() : Bool { return FlxG.keys.justPressed.LEFT; };
+  public static var LEFT_SINGLE = function() : Bool {
+    if(PMain.A_VERSION) return FlxG.keys.justPressed.LEFT;
+    else return FlxG.keys.justPressed.A;
+  };
 
   /** Return true iff the grab key is pressed */
 //  public static var GRAB = function() : Bool { return true; }; //Getting rid of the spacebar
@@ -196,12 +220,12 @@ class Character extends MovingElement {
     }
 
     ROT_CLOCKWISE = function() : Bool {
-        if (!GRAB()) return false;
+        if (!grabbing) return false;
         return FlxG.keys.justPressed.A;
     }
 
     ROT_C_CLOCKWISE = function() : Bool {
-      if (!GRAB()) return false;
+      if (!grabbing) return false;
 
       return FlxG.keys.justPressed.D;
 

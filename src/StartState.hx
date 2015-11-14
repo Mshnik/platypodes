@@ -61,7 +61,7 @@ class StartState extends FlxState{
     WIND_SOUND.persist = true;
     WIND_SOUND.play();
 
-    var f = new FlxText(10,10, 200, "Ver-"+PMain.VERSION_ID);
+    var f = new FlxText(10,10, 200, "Ver-"+PMain.VERSION_ID + (PMain.A_VERSION ? ".1" : ".2"));
     add(f);
   }
 }
