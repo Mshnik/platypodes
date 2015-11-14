@@ -134,8 +134,29 @@ class Character extends MovingElement {
     else return FlxG.keys.justPressed.A;
   };
 
-  /** Return true iff the grab key is pressed */
-//  public static var GRAB = function() : Bool { return true; }; //Getting rid of the spacebar
+  /** Return true when this should push/pull an element left */
+  public static var PUSHPULL_LEFT = function() : Bool {
+    if(PMain.A_VERSION) return LEFT_PRESSED();
+    else return false;
+  };
+
+  /** Return true when this should push/pull an element up */
+  public static var PUSHPULL_UP = function() : Bool {
+    if(PMain.A_VERSION) return UP_PRESSED();
+    else return false;
+  };
+
+  /** Return true when this should push/pull an element right */
+  public static var PUSHPULL_RIGHT = function() : Bool {
+    if(PMain.A_VERSION) return RIGHT_PRESSED();
+    else return false;
+  };
+
+  /** Return true when this should push/pull an element right */
+  public static var PUSHPULL_DOWN = function() : Bool {
+    if(PMain.A_VERSION) return DOWN_PRESSED();
+    else return false;
+  };
 
   /** Trying "just press space once" */
   public static var SPACE_SINGLE = function() : Bool {return FlxG.keys.justPressed.SPACE;};
@@ -220,13 +241,12 @@ class Character extends MovingElement {
     }
 
     ROT_CLOCKWISE = function() : Bool {
-        if (!grabbing) return false;
+        if (!grabbing || ! PMain.A_VERSION) return false;
         return FlxG.keys.justPressed.A;
     }
 
     ROT_C_CLOCKWISE = function() : Bool {
-      if (!grabbing) return false;
-
+      if (!grabbing || !PMain.A_VERSION) return false;
       return FlxG.keys.justPressed.D;
 
     };
@@ -392,13 +412,13 @@ class Character extends MovingElement {
         if (GRAB() && elmHolding.destTile == null) {
           //TODO: PUSH AND PULL
           if (directionFacing.isHorizontal()) {
-            if (LEFT_PRESSED()) {
+            if (PUSHPULL_LEFT()) {
               if(elmHolding.canMoveInDirection(Direction.Left)) {
                 elmHolding.moveDirection = Direction.Left;
               } else {
                 playCollisionSound();
               }
-            } else if (RIGHT_PRESSED()) {
+            } else if (PUSHPULL_RIGHT()) {
               if (elmHolding.canMoveInDirection(Direction.Right)) {
                 elmHolding.moveDirection = Direction.Right;
               } else {
@@ -406,13 +426,13 @@ class Character extends MovingElement {
               }
             }
           } else if (directionFacing.isVertical()) {
-            if (UP_PRESSED()) {
+            if (PUSHPULL_UP()) {
               if (elmHolding.canMoveInDirection(Direction.Up)) {
                 elmHolding.moveDirection = Direction.Up;
               } else {
                 playCollisionSound();
               }
-            } else if (DOWN_PRESSED()) {
+            } else if (PUSHPULL_DOWN()) {
               if (elmHolding.canMoveInDirection(Direction.Down)) {
                 elmHolding.moveDirection = Direction.Down;
               } else {

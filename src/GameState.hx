@@ -384,7 +384,7 @@ class GameState extends FlxState {
     savedZoom = zoom;
   }
 
-  public function executeAction(a : ActionElement) {
+  public function executeAction(a : ActionElement, playSounds : Bool = false) {
     if(! a.isExecutable()) {
       trace("Can't execute non-executable action " + a);
       return;
@@ -397,6 +397,9 @@ class GameState extends FlxState {
     if (a.id == ActionElement.MOVE) {
       if (! player.canMoveInDirection(a.moveDirection)) {
         trace("Can't execute action " + a + " can't move in direction " + a.moveDirection.simpleString);
+        if(playSounds) {
+          player.playCollisionSound();
+        }
         return;
       }
       player.moveDirection = a.moveDirection;
@@ -416,6 +419,9 @@ class GameState extends FlxState {
       var m : Mirror = Std.instance(elm, Mirror);
       if (player.alive && (! m.canMoveInDirection(a.moveDirection) || ! player.canMoveInDirectionWithElement(a.moveDirection, m))) {
         trace("Can't execute action " + a + " can't move mirror " + m + " in direction " + a.moveDirection.simpleString);
+        if(playSounds) {
+          player.playCollisionSound();
+        }
         return;
       }
 

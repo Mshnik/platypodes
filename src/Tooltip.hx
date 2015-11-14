@@ -48,55 +48,59 @@ class Tooltip extends FlxGroup {
     this.visible = false;
 
     pullArrowButton = new FlxExtendedSprite();
-    pullArrowButton.enableMouseClicks(true);
     pullArrowButton.loadRotatedGraphic(PUSH_ARROW_PATH, 4); //Create 4 rotations for the push/pull arrow.
     pullArrowButton.scale.set(ARROW_SPRITE_SCALE, ARROW_SPRITE_SCALE);
-    pullArrowButton.mousePressedCallback = pullMirrorCallback;
     pullArrowButton.updateHitbox();
     pullArrowButton.centerOrigin();
 
     pushArrowButton = new FlxExtendedSprite();
-    pushArrowButton.enableMouseClicks(true);
     pushArrowButton.loadRotatedGraphic(PUSH_ARROW_PATH, 4);
     pushArrowButton.scale.set(ARROW_SPRITE_SCALE, ARROW_SPRITE_SCALE);
-    pushArrowButton.mousePressedCallback = pushMirrorCallback;
     pushArrowButton.updateHitbox();
     pushArrowButton.centerOrigin();
 
     cwArrowButton = new FlxExtendedSprite();
-    cwArrowButton.enableMouseClicks(true);
     cwArrowButton.loadRotatedGraphic(ROTATE_ARROW_PATH, 4); //Create 4 rotations for the rotate arrows
     cwArrowButton.scale.set(ARROW_SPRITE_SCALE, ARROW_SPRITE_SCALE);
-    cwArrowButton.mouseReleasedCallback = rotateCWCallback;
     cwArrowButton.updateHitbox();
     cwArrowButton.centerOrigin();
 
     ccwArrowButton = new FlxExtendedSprite();
-    ccwArrowButton.enableMouseClicks(true);
     ccwArrowButton.loadRotatedGraphic(ROTATE_ARROW_PATH, 4);
     ccwArrowButton.flipX = true;
     ccwArrowButton.scale.set(ARROW_SPRITE_SCALE, ARROW_SPRITE_SCALE);
-    ccwArrowButton.mouseReleasedCallback = rotateCCWCallback;
     ccwArrowButton.updateHitbox();
     ccwArrowButton.centerOrigin();
 
     aKeySprite = new FlxExtendedSprite();
-    aKeySprite.enableMouseClicks(true);
     aKeySprite.loadGraphic(A_KEY_SHEET, true, KEY_SPRITE_SIZE, KEY_SPRITE_SIZE, false);
     aKeySprite.scale.set(KEY_SPRITE_SCALE, KEY_SPRITE_SCALE);
     aKeySprite.animation.add(KEY_GLOW_ANIMATION_KEY, [0, 1, 2, 3], KEY_ANIMATION_SPEED);
-    aKeySprite.mouseReleasedCallback = rotateCWCallback;
     aKeySprite.updateHitbox();
     aKeySprite.centerOrigin();
 
     dKeySprite = new FlxExtendedSprite();
-    dKeySprite.enableMouseClicks(true);
     dKeySprite.loadGraphic(Z_KEY_SHEET, true, KEY_SPRITE_SIZE, KEY_SPRITE_SIZE, false);
     dKeySprite.scale.set(KEY_SPRITE_SCALE, KEY_SPRITE_SCALE);
     dKeySprite.animation.add(KEY_GLOW_ANIMATION_KEY, [0, 1, 2, 3], KEY_ANIMATION_SPEED);
-    dKeySprite.mouseReleasedCallback = rotateCCWCallback;
     dKeySprite.updateHitbox();
     dKeySprite.centerOrigin();
+
+    if(! PMain.A_VERSION){
+      pushArrowButton.enableMouseClicks(true);
+      pullArrowButton.enableMouseClicks(true);
+      ccwArrowButton.enableMouseClicks(true);
+      cwArrowButton.enableMouseClicks(true);
+      aKeySprite.enableMouseClicks(true);
+      dKeySprite.enableMouseClicks(true);
+
+      pullArrowButton.mousePressedCallback = pullMirrorCallback;
+      pushArrowButton.mousePressedCallback = pushMirrorCallback;
+      cwArrowButton.mouseReleasedCallback = rotateCWCallback;
+      aKeySprite.mouseReleasedCallback = rotateCWCallback;
+      ccwArrowButton.mouseReleasedCallback = rotateCCWCallback;
+      dKeySprite.mouseReleasedCallback = rotateCCWCallback;
+    }
 
     this.add(pullArrowButton);
     this.add(pushArrowButton);
@@ -227,7 +231,7 @@ class Tooltip extends FlxGroup {
     var mirror = game.player.elmHolding;
     if (mirror != null) {
       var pull:ActionElement = ActionElement.pushpull(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), pullMirrorDirection);
-      game.executeAction(pull);
+      game.executeAction(pull, true);
     }
   }
 
@@ -235,7 +239,7 @@ class Tooltip extends FlxGroup {
     var mirror = game.player.elmHolding;
     if (mirror != null) {
       var pull:ActionElement = ActionElement.pushpull(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), pushMirrorDirection);
-      game.executeAction(pull);
+      game.executeAction(pull, true);
     }
   }
 
@@ -244,7 +248,7 @@ class Tooltip extends FlxGroup {
     var mirror = game.player.elmHolding;
     if (mirror != null) {
       var action:ActionElement = ActionElement.rotate(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), true);
-      game.executeAction(action);
+      game.executeAction(action, true);
     }
   }
 
@@ -252,7 +256,7 @@ class Tooltip extends FlxGroup {
     var mirror = game.player.elmHolding;
     if (mirror != null) {
       var action:ActionElement = ActionElement.rotate(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), false);
-      game.executeAction(action);
+      game.executeAction(action, true);
     }
   }
 
