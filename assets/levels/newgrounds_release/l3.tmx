@@ -31,7 +31,7 @@
    <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBjZIB4HPVgArd0XC8SRFOhHd08KBWbRAuAKv8Ea36NgFAwlAAAjdQWP
+   eJxjYBgFo2AUjIJRMApIBwAGQAAB
   </data>
  </layer>
  <layer name="Walls" width="20" height="20">
@@ -39,7 +39,7 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYKQD5gZiNiDmooIZIMzKAAFMUL4IGeZzMuAGAkjmE2smNvOEsIixU8F9MHMFgViYDPP48JhNjvvEgZifiu7DB6gRfuSYxwPEHERgXiLNG8WjeKhjAIVdAxk=
+   eJxjZGBgYKQDZgViUSBmooIZIMzHAAG8UD4PlOYiwTwtBtyAE0ozkWAmNvO4sYjJUMF9MHNBbuMnwzw2PGaT4z4RIOagovvwAWqEHznmsQCxMhGYmUjzRvEoHuoYAKYNBTQ=
   </data>
  </layer>
  <objectgroup name="Objects" visible="0"/>
