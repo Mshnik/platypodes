@@ -71,7 +71,7 @@
     <property name="direction" value="1"/>
    </properties>
   </object>
-  <object id="80" type="lightswitch" gid="80" x="1664" y="1024" width="128" height="128"/>
+  <object id="80" type="lightswitch" gid="87" x="1664" y="1024" width="128" height="128"/>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
   <object id="45" type="player_start" x="512" y="1024" width="128" height="128">

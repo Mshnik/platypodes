@@ -18,7 +18,7 @@
  <tileset firstgid="80" name="orb_sheet" tilewidth="128" tileheight="128" tilecount="9">
   <image source="../../images/newgrounds_release/orb_sheet.png" width="384" height="384"/>
  </tileset>
- <tileset firstgid="106" name="tutorialImages" tilewidth="128" tileheight="128" tilecount="64">
+ <tileset firstgid="89" name="tutorialImages" tilewidth="128" tileheight="128" tilecount="64">
   <image source="../../images/newgrounds_release/tutorial_sheet.png" width="512" height="2048"/>
  </tileset>
  <layer name="Floor" width="20" height="20">
@@ -26,7 +26,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztkDsOACAIQzkkn/vfRJYGYlyso7ykMQw+qSJ/ExnLaMa3M0ifH4I3GB92wl724IMHvXtnJ3zacup9C3ohIfUHbN9+39pshG8YhmIBjDkSrA==
+   eJxjYBjZwAKKzaG0JRRbAXE4meZZQc1DpkHiIWSYh24WzI3mFJgHw5YMCP+DcBiF7rNE4puTaR4s/GDmwfwKosnxL0wvLA6Q3RlKhnmjYBSMAgQAABQQDS4=
   </data>
  </layer>
  <layer name="Holes" width="20" height="20">
@@ -42,7 +42,7 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBwimBuI2fBgLhLN42TAD9hHzRs1DwnzADEHHsxLonmjeBQPdQwAwKUCQA==
+   eJxjZGBgYBwimBWIRfFgJhLN02LAD2RGzRs1DwmzALEyHsxMonmjeBQPdQwADMoEwA==
   </data>
  </layer>
  <objectgroup name="Objects"/>
@@ -54,8 +54,8 @@
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="55" type="lightSwitch" gid="71" x="1280" y="1024" width="128" height="128"/>
-  <object id="86" type="lightOrb" gid="68" x="896" y="512" width="128" height="128">
+  <object id="55" type="lightSwitch" gid="87" x="1280" y="1024" width="128" height="128"/>
+  <object id="86" type="lightOrb" gid="85" x="896" y="512" width="128" height="128">
    <properties>
     <property name="direction" value="4096"/>
    </properties>
@@ -69,6 +69,6 @@
   </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="47" type="exit" gid="83" x="1280" y="1280" width="128" height="128"/>
+  <object id="47" type="exit" gid="43" x="1280" y="1280" width="128" height="128"/>
  </objectgroup>
 </map>
