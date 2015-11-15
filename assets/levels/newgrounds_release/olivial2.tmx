@@ -44,42 +44,42 @@
  </layer>
  <objectgroup name="Objects" visible="0"/>
  <objectgroup name="Mirrors">
-  <object id="74" type="mirror" gid="59" x="1280" y="768" width="128" height="128">
+  <object id="74" type="mirror" gid="78" x="1280" y="768" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="110" type="mirror" gid="2147483707" x="1280" y="896" width="128" height="128">
+  <object id="110" type="mirror" gid="78" x="1280" y="896" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="112" type="mirror" gid="59" x="896" y="1152" width="128" height="128">
+  <object id="112" type="mirror" gid="78" x="896" y="1152" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="113" type="mirror" gid="2147483707" x="896" y="896" width="128" height="128">
+  <object id="113" type="mirror" gid="78" x="896" y="896" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="115" type="mirror" gid="1073741883" x="768" y="1024" width="128" height="128">
+  <object id="115" type="mirror" gid="78" x="768" y="1024" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="116" type="mirror" gid="1073741883" x="640" y="1152" width="128" height="128">
+  <object id="116" type="mirror" gid="78" x="640" y="1152" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="117" type="mirror" gid="1073741883" x="1408" y="896" width="128" height="128">
+  <object id="117" type="mirror" gid="78" x="1408" y="896" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="118" type="mirror" gid="59" x="1408" y="1024" width="128" height="128">
+  <object id="118" type="mirror" gid="78" x="1408" y="1024" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>

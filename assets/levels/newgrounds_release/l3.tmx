@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="128" tileheight="128" nextobjectid="109">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="128" tileheight="128" nextobjectid="112">
  <tileset firstgid="1" name="walls" tilewidth="128" tileheight="128" tilecount="42">
   <image source="../../images/newgrounds_release/wall_sheet.png" width="896" height="768"/>
  </tileset>
@@ -23,7 +23,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBi6IIxK5oTgoMPJMCuUAeKucCgbXYwcN6O7B2ZGKBa1xLoP2VyY2SEUmIkMwtBoUgAs3EKR2GFIOAS3VoLuQw8/cuJ3FIyCUYAAAL5ZDQs=
+   eJxjYBi6wILK5sBoKzSaFGCJhmFi5lDzyTUTmTanwH0WWMyDmWXFQF6YWqLxYWaYoyskAlgxIMLOAmoGDCO7nRz3maPxyTFrFIyCUYAAAOUcCKA=
   </data>
  </layer>
  <layer name="Holes" width="20" height="20">
@@ -31,7 +31,7 @@
    <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMApIBwAGQAAB
+   eJxjYBjZwAkHPVgArd3nAMS2FOhHd487BWbRAuAKv8Ea36NgFAwlAAAVDAPd
   </data>
  </layer>
  <layer name="Walls" width="20" height="20">
@@ -39,7 +39,7 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYKQDZgViUSBmooIZIMzHAAG8UD4PlOYiwTwtBtyAE0ozkWAmNvO4sYjJUMF9MHNBbuMnwzw2PGaT4z4RIOagovvwAWqEHznmsQCxMhGYmUjzRvEoHuoYAKYNBTQ=
+   eJxjZGBgYKQDZgViUSBmooIZIMzHAAG8UD4PGeZrMeAGnEjmE2smNvO4sYjJUMF9MHO5gJifDPPY8JhNjvtEgJiDiu7DB6gRfuSYxwLEykRgZiLNG8WjeKhjAIoNBS8=
   </data>
  </layer>
  <objectgroup name="Objects" visible="0"/>
@@ -86,12 +86,12 @@
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="55" type="lightSwitch" gid="71" x="896" y="384" width="128" height="128"/>
-  <object id="77" type="lightOrb" gid="70" x="512" y="1152" width="128" height="128">
+  <object id="110" type="lightorb" gid="82" x="512" y="1152" width="128" height="128">
    <properties>
     <property name="direction" value="16"/>
    </properties>
   </object>
+  <object id="111" type="lightswitch" gid="81" x="896" y="384" width="128" height="128"/>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
   <object id="45" type="player_start" x="896" y="768" width="128" height="128">
@@ -102,6 +102,6 @@
   </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="47" type="exit" gid="83" x="1536" y="1152" width="128" height="128"/>
+  <object id="109" type="exit" gid="43" x="1536" y="1152" width="128" height="128"/>
  </objectgroup>
 </map>

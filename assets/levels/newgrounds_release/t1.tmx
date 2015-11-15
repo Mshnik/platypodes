@@ -55,7 +55,7 @@
  </layer>
  <objectgroup name="Objects"/>
  <objectgroup name="Mirrors">
-  <object id="72" type="mirror" gid="59" x="640" y="896" width="128" height="128">
+  <object id="72" type="mirror" gid="78" x="640" y="896" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>

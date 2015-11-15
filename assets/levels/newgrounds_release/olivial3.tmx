@@ -44,22 +44,22 @@
  </layer>
  <objectgroup name="Objects" visible="0"/>
  <objectgroup name="Mirrors">
-  <object id="112" type="mirror" gid="59" x="640" y="1280" width="128" height="128">
+  <object id="112" type="mirror" gid="78" x="640" y="1280" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="114" type="mirror" gid="1073741883" x="512" y="768" width="128" height="128">
+  <object id="114" type="mirror" gid="78" x="512" y="768" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="115" type="mirror" gid="3221225531" x="640" y="768" width="128" height="128">
+  <object id="115" type="mirror" gid="78" x="640" y="768" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="118" type="mirror" gid="3221225531" x="1536" y="512" width="128" height="128">
+  <object id="118" type="mirror" gid="78" x="1536" y="512" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
