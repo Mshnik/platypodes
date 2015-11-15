@@ -181,7 +181,7 @@ class Character extends MovingElement {
 
   private var moveSprites : Array<FlxSprite>;
 
-  private var grabbing : Bool;
+  public var grabbing : Bool; //This should only be changed outside of Character by AbsMirror's mouse click callback.
 
   public function check_grab() : Void{
     if (SINGLE_SPACE()){

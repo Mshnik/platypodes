@@ -2,6 +2,7 @@ package elements;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 import flixel.addons.editors.tiled.TiledObject;
+import flixel.addons.display.FlxExtendedSprite;
 import flixel.util.FlxStringUtil;
 import flixel.FlxSprite;
 
@@ -17,7 +18,7 @@ import flixel.FlxSprite;
   * Elements that can move during the game should extend MovingElement, an extension of Element
   * that handles movement on top of Element's capabilities.
   **/
-@abstract class Element extends FlxSprite {
+@abstract class Element extends FlxExtendedSprite {
 
   /** The GameState this Element exists within. */
   @final public var state:GameState;
@@ -162,4 +163,5 @@ import flixel.FlxSprite;
 
     super.update();
   }
+
 }
