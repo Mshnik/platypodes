@@ -184,9 +184,23 @@ class Character extends MovingElement {
   public var grabbing : Bool; //This should only be changed outside of Character by AbsMirror's mouse click callback.
 
   public function check_grab() : Void{
-    if (SINGLE_SPACE()){
-      grabbing = !grabbing;
+    if(PMain.A_VERSION){
+      if (SINGLE_SPACE()){
+        grabbing = !grabbing;
+      }
     }
+    else
+    {
+
+      var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
+      if (elm != null && Std.is(elm, AbsMirror)) {
+        trace("CAN GRAB A MIRROR!!!");
+        grabbing = true;
+      } else{
+        grabbing = false;
+      }
+    }
+
   }
 
   public function GRAB() : Bool{
@@ -387,6 +401,7 @@ class Character extends MovingElement {
           if(GRAB() && elmHolding == null) {
             mirror.moveDirection = Direction.None;
             mirror.holdingPlayer = this;
+
           }
         }
       }
@@ -409,7 +424,7 @@ class Character extends MovingElement {
         var row = Std.int(tileLoc.y);
         var col = Std.int(tileLoc.x);
         setMoveTo(row, col);
-      } else if (elmHolding == null) {
+      } else if ( (elmHolding == null) || (!PMain.A_VERSION)){
         moveDirection = Direction.None;
         moveSpeed = MOVE_SPEED;
 
@@ -431,7 +446,6 @@ class Character extends MovingElement {
         }
       } else {
         if (GRAB() && elmHolding.destTile == null) {
-          //TODO: PUSH AND PULL
           if (directionFacing.isHorizontal()) {
             if (PUSHPULL_LEFT()) {
               if(elmHolding.canMoveInDirection(Direction.Left)) {

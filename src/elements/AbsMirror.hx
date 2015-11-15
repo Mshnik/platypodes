@@ -2,7 +2,6 @@ package elements;
 import elements.impl.TwoSidedMirror;
 import elements.impl.Mirror;
 import flixel.FlxSprite;
-import flixel.addons.display.FlxExtendedSprite;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.system.FlxSound;
 @abstract class AbsMirror extends InteractableElement implements Lightable {
@@ -51,11 +50,6 @@ import flixel.system.FlxSound;
     resetLightInDirection();
     isLit = false;
 
-    //Being able to click the mirror to grab in control scheme version B
-    if(!PMain.A_VERSION){
-      this.enableMouseClicks(true);
-      this.mousePressedCallback = this.mouseClickGrab;
-    }
   }
 
   public function isLightingTo(directionOut : Direction) : Bool {
@@ -138,36 +132,4 @@ import flixel.system.FlxSound;
     moveSound.play();
     state.updateLight();
   }
-
-  //
-  private function mouseClickGrab(obj:FlxExtendedSprite, x:Int, y:Int):Void {
-    if(this.state.player != null){
-      if(this.holdingPlayer == null){
-        //Not currently being grabbed by a player
-        if (canPlayerGrabThis()){
-          this.holdingPlayer = this.state.player;
-          this.holdingPlayer.grabbing = true;
-        }
-      } else {
-        //Player already grabbing mirror
-        this.holdingPlayer.grabbing = false;
-        this.holdingPlayer = null;
-
-      }
-    }
-  }
-
-  /** Check to see if the game's player can grab this AbsMirror. Player must be adjacent to and facing the mirror. **/
-  private function canPlayerGrabThis() : Bool{
-    if(state.player != null){
-      var d : Direction = state.player.directionFacing;
-      var newX = d.x + state.player.getCol();
-      var newY = d.y + state.player.getRow();
-      if((newX == this.getCol()) && (newY == this.getRow())){
-        return true;
-      }
-    }
-    return false;
-  }
-
 }
