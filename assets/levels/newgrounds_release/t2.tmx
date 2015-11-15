@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="128" tileheight="128" nextobjectid="86">
+ <tileset firstgid="1" name="walls" tilewidth="128" tileheight="128" tilecount="42">
+  <image source="../../images/newgrounds_release/wall_sheet.png" width="896" height="768"/>
+ </tileset>
+ <tileset firstgid="43" name="exit" tilewidth="128" tileheight="128" tilecount="12">
+  <image source="../../images/newgrounds_release/gate_sheet.png" width="512" height="384"/>
+ </tileset>
+ <tileset firstgid="55" name="floors" tilewidth="128" tileheight="128" tilecount="4">
+  <image source="../../images/newgrounds_release/floor_sheet.png" width="512" height="128"/>
+ </tileset>
+ <tileset firstgid="59" name="holes" tilewidth="128" tileheight="128" tilecount="18">
+  <image source="../../images/newgrounds_release/hole_sheet.png" width="768" height="384"/>
+ </tileset>
+ <tileset firstgid="77" name="mirrors" tilewidth="128" tileheight="128" tilecount="3">
+  <image source="../../images/newgrounds_release/mirror_sheet.png" width="386" height="130"/>
+ </tileset>
+ <tileset firstgid="80" name="orb_sheet" tilewidth="128" tileheight="128" tilecount="9">
+  <image source="../../images/newgrounds_release/orb_sheet.png" width="384" height="384"/>
+ </tileset>
+ <tileset firstgid="106" name="tutorialImages" tilewidth="128" tileheight="128" tilecount="64">
+  <image source="../../images/newgrounds_release/tutorial_sheet.png" width="512" height="2048"/>
+ </tileset>
+ <layer name="Floor" width="20" height="20">
+  <properties>
+   <property name="tileset" value="floors"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBjZIByIQ4E4BMoH0WFIfHLMC4NiZBBKpnnoAOYuSswLp4ZDhghAj4dRMApGAfUAAJQ6BK0=
+  </data>
+ </layer>
+ <layer name="Holes" width="20" height="20">
+  <properties>
+   <property name="tileset" value="holes"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFtAQRQBxFof5IKIaZE02BeakU6MUGYhko8x828yjxHzaQQmXzRsEoGAUQAADwwQSq
+  </data>
+ </layer>
+ <layer name="Walls" width="20" height="20">
+  <properties>
+   <property name="tileset" value="walls"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYBwimBuI2ZCwCBqfi0TzOBlQgRoan51C8wSobB46oMQ8CSBWR8PCFJiHHnaUuo/a5skBMQca5iXRPB4K9I7iUTwcMQDsfwOx
+  </data>
+ </layer>
+ <layer name="Tutorial Images" width="20" height="20">
+  <properties>
+   <property name="tileset" value="tutorialImages"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztzLkRADAMhEDV7lfu2hRxITtDSpWUMWjSoh34HbrU9AI/SVkfwoEELQ==
+  </data>
+ </layer>
+ <objectgroup name="Objects"/>
+ <objectgroup name="Mirrors">
+  <object id="82" type="mirror" gid="78" x="1024" y="768" width="128" height="128">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Light">
+  <object id="55" type="lightSwitch" gid="71" x="1024" y="512" width="128" height="128"/>
+  <object id="85" type="lightOrb" gid="69" x="1280" y="768" width="128" height="128">
+   <properties>
+    <property name="direction" value="1"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup color="#141ba4" name="player_start">
+  <properties>
+   <property name="tileset" value="tutorialImages"/>
+  </properties>
+  <object id="45" type="player_start" x="512" y="1152" width="128" height="128">
+   <properties>
+    <property name="direction_facing" value="16"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup color="#71a400" name="Exit">
+  <object id="47" type="exit" gid="83" x="768" y="512" width="128" height="128"/>
+ </objectgroup>
+</map>
