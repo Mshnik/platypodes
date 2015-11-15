@@ -159,7 +159,7 @@ class Character extends MovingElement {
   };
 
   /** Trying "just press space once" */
-  public static var SPACE_SINGLE = function() : Bool {return FlxG.keys.justPressed.SPACE;};
+  public static var SINGLE_SPACE = function() : Bool {return FlxG.keys.justPressed.SPACE;};
 
   /** Return true when the rotate clockwise key is intially pressed */
   public var ROT_CLOCKWISE : Void -> Bool;
@@ -183,15 +183,16 @@ class Character extends MovingElement {
 
   private var grabbing : Bool;
 
-  public function check_grab (): Void{
-    if(SPACE_SINGLE()){
+  public function check_grab() : Void{
+    if (SINGLE_SPACE()){
       grabbing = !grabbing;
     }
   }
 
-  public function GRAB() : Bool {
+  public function GRAB() : Bool{
     return grabbing;
   }
+
   
 
   /** Constructs a TopBar character, belonging to the given state and represented by the given TiledObject */
@@ -241,13 +242,33 @@ class Character extends MovingElement {
     }
 
     ROT_CLOCKWISE = function() : Bool {
-        if (!grabbing || ! PMain.A_VERSION) return false;
-        return FlxG.keys.justPressed.A;
+      if (!grabbing || ! PMain.A_VERSION) return false;
+      if (!GRAB() || (elmHolding == null)) return false;
+
+      if (this.getRow() == this.elmHolding.getRow()) {
+        //PLAYER TO THE LEFT OR RIGHT OF MIRROR
+        return UP_SINGLE();
+      }
+      if (this.getCol() == this.elmHolding.getCol()){
+        //PLAYER ABOVE OR BELOW MIRROR
+        return RIGHT_SINGLE();
+      }
+      return false;
+
     }
 
     ROT_C_CLOCKWISE = function() : Bool {
       if (!grabbing || !PMain.A_VERSION) return false;
-      return FlxG.keys.justPressed.D;
+      if (!GRAB() || (elmHolding == null)) return false;
+
+      if (this.getRow() == this.elmHolding.getRow()) {
+        //PLAYER TO THE LEFT OR RIGHT OF MIRROR
+        return DOWN_SINGLE();
+      }
+      if (this.getCol() == this.elmHolding.getCol()){
+        return LEFT_SINGLE();
+      }
+      return false;
 
     };
 
