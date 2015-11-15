@@ -23,7 +23,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBjZIBSKw6D8cCRMDghHMpMBzVxyzQujsnnI/gvDo5ZY80KRzAtFokOx6iDOPFicwNxKrjthYQczJwSJHgWjYBRQBgCZZA1z
+   eJztkTEOwDAIA/0rF/7/sGbAitUtdAwnIUKGE3GAu4lVueqpOesumj655Pv2U1i70PywueOj7dP1iCiX8qL1jlv/QewsE/vdp7hDOeo8DMM/XieXCNU=
   </data>
  </layer>
  <layer name="Holes" width="20" height="20">
@@ -31,7 +31,7 @@
    <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFtAbxVDYvjsrmpVDZvCQqmzcKRsEoGJwAAKduAYQ=
+   eJxjYBgFtAZOVDbPkcrmuVPZPA8qmzcKRsEoGJwAALXEARM=
   </data>
  </layer>
  <layer name="Walls" width="20" height="20">
@@ -39,40 +39,40 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBwimBuI2ZCwCBqfi0TzOBlQgRoan30EmScIxIoMpIUhunkCDJiAFDeim4cOmIGYl4rmkRp+PEDMgQeT4rZRPIqHAwYAECwDMQ==
+   eJxjZGBgYBwimBWIRZEwDxqfiUTztBhQgSoaX2YEmccFxJIMpIUhunmcDJiAFDeim4cOpICYmYrmkRp+LECsjAeT4rZRPIqHAwYA2PQFWw==
   </data>
  </layer>
  <objectgroup name="Objects" visible="0"/>
  <objectgroup name="Mirrors">
-  <object id="74" type="mirror" gid="59" x="640" y="1280" width="128" height="128">
+  <object id="74" type="mirror" gid="78" x="640" y="1280" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="75" type="mirror" gid="2147483707" x="1280" y="1152" width="128" height="128">
+  <object id="75" type="mirror" gid="2147483726" x="1280" y="1152" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="105" type="mirror" gid="3221225531" x="640" y="512" width="128" height="128">
+  <object id="105" type="mirror" gid="3221225550" x="640" y="512" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="109" type="mirror" gid="3221225531" x="640" y="896" width="128" height="128">
+  <object id="109" type="mirror" gid="3221225550" x="640" y="896" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="110" type="mirror" gid="2147483707" x="512" y="1152" width="128" height="128">
+  <object id="110" type="mirror" gid="2147483726" x="512" y="1152" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="55" type="lightSwitch" gid="71" x="1280" y="640" width="128" height="128"/>
-  <object id="77" type="lightOrb" gid="70" x="512" y="512" width="128" height="128">
+  <object id="55" type="lightSwitch" gid="87" x="1280" y="640" width="128" height="128"/>
+  <object id="77" type="lightOrb" gid="84" x="512" y="512" width="128" height="128">
    <properties>
     <property name="direction" value="16"/>
    </properties>
@@ -87,6 +87,6 @@
   </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="47" type="exit" gid="83" x="1408" y="1024" width="128" height="128"/>
+  <object id="47" type="exit" gid="43" x="1408" y="1024" width="128" height="128"/>
  </objectgroup>
 </map>

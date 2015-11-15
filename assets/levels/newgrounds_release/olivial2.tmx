@@ -23,7 +23,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBjZIBSKw4A4HA3DxEkBMH2hSOZQAtDdFI4kHkqmeTAQgiYOczep5mHzK0yMkvCDxQklIAzJLSAQAmWHMJDn31EwCkYBAgAANAIPdw==
+   eJztkVEKACAIQ7uVzfsfrIINxK/Kz3ogacGc1trb+IzOMNbrRLg/oVMDQaMC6EfekPrc6AlPOdL7DtpX3pVmP/UoD1G3guYy1vGPFdUen8+rDDbsCmI=
   </data>
  </layer>
  <layer name="Holes" width="20" height="20">
@@ -31,7 +31,7 @@
    <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFtAYRQByJhCkFKRTqB7knCsqOp9AsbIDaZsYyUCf8aOHXUTAKRjIAAM3QBP8=
+   eJxjYBgFtAbWQGwDxbZUMM+RQv3WSO5wotAsbIDaZjowIMLPhgJzaOHXUTAKRjIAABvuA2Q=
   </data>
  </layer>
  <layer name="Walls" width="20" height="20">
@@ -39,55 +39,55 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBwimBuI2YjAXESax8lAHGAfxOYJArEwheYJUdF96GZRah42wMRAXBwTax6xbuQBYg4iMS+Rfh7Fo3goYwAYIwKV
+   eJxjZGBgYBwimBWIRYnATESap8VAHJAZxOZxATE/heZxU9F96GZRah42wMtAXBwTax6xbmQBYmUiMTORfh7Fo3goYwDoyQVE
   </data>
  </layer>
  <objectgroup name="Objects" visible="0"/>
  <objectgroup name="Mirrors">
-  <object id="74" type="mirror" gid="59" x="1280" y="768" width="128" height="128">
+  <object id="74" type="mirror" gid="78" x="1280" y="768" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="110" type="mirror" gid="2147483707" x="1280" y="896" width="128" height="128">
+  <object id="110" type="mirror" gid="2147483726" x="1280" y="896" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="112" type="mirror" gid="59" x="896" y="1152" width="128" height="128">
+  <object id="112" type="mirror" gid="78" x="896" y="1152" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="113" type="mirror" gid="2147483707" x="896" y="896" width="128" height="128">
+  <object id="113" type="mirror" gid="2147483726" x="896" y="896" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="115" type="mirror" gid="1073741883" x="768" y="1024" width="128" height="128">
+  <object id="115" type="mirror" gid="1073741902" x="768" y="1024" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="116" type="mirror" gid="1073741883" x="640" y="1152" width="128" height="128">
+  <object id="116" type="mirror" gid="1073741902" x="640" y="1152" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="117" type="mirror" gid="1073741883" x="1408" y="896" width="128" height="128">
+  <object id="117" type="mirror" gid="1073741902" x="1408" y="896" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="118" type="mirror" gid="59" x="1408" y="1024" width="128" height="128">
+  <object id="118" type="mirror" gid="78" x="1408" y="1024" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="55" type="lightSwitch" gid="71" x="1536" y="896" width="128" height="128"/>
-  <object id="77" type="lightOrb" gid="70" x="512" y="896" width="128" height="128">
+  <object id="55" type="lightSwitch" gid="87" x="1536" y="896" width="128" height="128"/>
+  <object id="77" type="lightOrb" gid="82" x="512" y="896" width="128" height="128">
    <properties>
     <property name="direction" value="16"/>
    </properties>
@@ -102,6 +102,6 @@
   </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="47" type="exit" gid="83" x="1664" y="1280" width="128" height="128"/>
+  <object id="47" type="exit" gid="43" x="1664" y="1280" width="128" height="128"/>
  </objectgroup>
 </map>

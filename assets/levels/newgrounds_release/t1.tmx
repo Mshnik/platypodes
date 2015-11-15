@@ -18,7 +18,7 @@
  <tileset firstgid="80" name="orb_sheet" tilewidth="128" tileheight="128" tilecount="9">
   <image source="../../images/newgrounds_release/orb_sheet.png" width="384" height="384"/>
  </tileset>
- <tileset firstgid="106" name="tutorialImages" tilewidth="128" tileheight="128" tilecount="64">
+ <tileset firstgid="89" name="tutorialImages" tilewidth="128" tileheight="128" tilecount="64">
   <image source="../../images/newgrounds_release/tutorial_sheet.png" width="512" height="2048"/>
  </tileset>
  <layer name="Floor" width="20" height="20">
@@ -26,7 +26,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBjZIByIQ4E4BMoH0WEUmheGZAYym1wQgsYOpcAsmHtg/g5DM59UQIlebIASv2EDlIb9KBgFowA3AAC58wdY
+   eJxjYBjZwAKILaEYxregwDwrqFnmUL45ktnkAgs0NiXmgfTC3AhzJyX+pUTvUDRvFIyCUYAAAEi+BNo=
   </data>
  </layer>
  <layer name="Holes" width="20" height="20">
@@ -42,7 +42,7 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBwimBuI2ZCwCBKbiwzzOBlQgRoSm30QmCcGxPxQ/YJALEVl9yEDSsyTAGJ1NCxMgXnI4UYN91HLPB4g5gBiUSiNjHnJMG8Uj+KhjgHr0gP1
+   eJxjZGBgYBwimBWIRZEwDxKbiQzztBhQgSoSW2YQmCcIxBxQ/VxALEFl9yEDSswTA2IVNMxPgXnI4UYN91HLPBYgVgZiASiNjJnJMG8Uj+KhjgETIgWz
   </data>
  </layer>
  <layer name="Tutorial Images" width="20" height="20">
@@ -50,20 +50,20 @@
    <property name="tileset" value="tutorialImages"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2DwgSIgLgbiEiAupYJ5ZUBcDsQVQFxJBfNGwSgYBQwMAMhEA60=
+   eJxjYBgFo2DwgUQgTgLiZCBOoYJ5qUCcBsTpQJxBBfNGwSgYBQwMAO9WAyU=
   </data>
  </layer>
  <objectgroup name="Objects"/>
  <objectgroup name="Mirrors">
-  <object id="72" type="mirror" gid="59" x="640" y="896" width="128" height="128">
+  <object id="72" type="mirror" gid="78" x="640" y="896" width="128" height="128">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="55" type="lightSwitch" gid="71" x="1024" y="512" width="128" height="128"/>
-  <object id="77" type="lightOrb" gid="69" x="1152" y="896" width="128" height="128">
+  <object id="55" type="lightSwitch" gid="87" x="1024" y="512" width="128" height="128"/>
+  <object id="77" type="lightOrb" gid="84" x="1152" y="896" width="128" height="128">
    <properties>
     <property name="direction" value="1"/>
    </properties>
@@ -77,6 +77,6 @@
   </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="47" type="exit" gid="83" x="768" y="512" width="128" height="128"/>
+  <object id="47" type="exit" gid="43" x="768" y="512" width="128" height="128"/>
  </objectgroup>
 </map>
