@@ -7,6 +7,6 @@ package;
 class AssetPaths {
 
   /** The current root for images. Should change by version */
-  @final static public var IMAGE_ROOT = "assets/images/frineds_release/";
+  static public inline var IMAGE_ROOT = "assets/images/newgrounds_release/";
 
 }

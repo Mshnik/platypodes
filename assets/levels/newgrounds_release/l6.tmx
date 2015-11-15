@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="128" tileheight="128" nextobjectid="124">
  <tileset firstgid="1" name="walls" tilewidth="128" tileheight="128" tilecount="50">
-  <image source="../../images/friends_release/wallSheet.png" width="640" height="1280"/>
+  <image source="../../images/newgrounds_release/wall_sheet.png" width="640" height="1280"/>
  </tileset>
  <tileset firstgid="51" name="light" tilewidth="128" tileheight="128" tilecount="32">
-  <image source="../../images/friends_release/light_sheet.png" width="512" height="1028"/>
+  <image source="../../images/newgrounds_release/light_sheet.png" width="512" height="1028"/>
  </tileset>
  <tileset firstgid="83" name="exit" tilewidth="128" tileheight="128" tilecount="1">
-  <image source="../../images/friends_release/gate_closed.png" width="128" height="128"/>
+  <image source="../../images/newgrounds_release/gate_sheet.png" width="128" height="128"/>
  </tileset>
  <tileset firstgid="84" name="floors" tilewidth="128" tileheight="128" tilecount="4">
-  <image source="../../images/friends_release/floor_sheet.png" width="512" height="128"/>
+  <image source="../../images/newgrounds_release/floor_sheet.png" width="512" height="128"/>
  </tileset>
  <tileset firstgid="88" name="holes" tilewidth="128" tileheight="128" tilecount="18">
-  <image source="../../images/friends_release/hole_sheet.png" width="768" height="384"/>
+  <image source="../../images/newgrounds_release/hole_sheet.png" width="768" height="384"/>
  </tileset>
  <layer name="Floor" width="20" height="20">
   <properties>
