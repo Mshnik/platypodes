@@ -1,5 +1,6 @@
 package;
 
+import PMain;
 import flixel.ui.FlxButton;
 import elements.InteractableElement;
 import logging.ActionElement;
@@ -86,11 +87,7 @@ class GameState extends FlxState {
   }
 
   override public function create():Void {
-    FlxG.mouse.visible = true;
-    FlxG.plugins.add(new FlxMouseControl());
-
     super.create();
-
     // Load the level's tilemaps
     level = new TiledLevel(this, levelPaths[levelPathIndex]);
 
@@ -320,8 +317,6 @@ class GameState extends FlxState {
         win();
       }
     }
-
-    FlxG.mouse.load();
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup) {
@@ -512,6 +507,7 @@ class GameState extends FlxState {
     winText.y = FlxG.camera.scroll.y + winText.height;
     add(winText);
     player.kill();
+    exit.playVictoryAnimation();
     Logging.getSingleton().recordLevelEnd();
     actionStackTimer.stop();
   }

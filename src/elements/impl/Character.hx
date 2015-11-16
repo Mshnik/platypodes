@@ -176,6 +176,12 @@ class Character extends MovingElement {
   /** The old x value of the mirror this is holding before it started moving */
   private var elmHoldingOldY : Int;
 
+  /** The most recent x coordinate of an object this has collided into. Used to prevent overplaying the collision sound */
+  private var mostRecentCollisionX : Int;
+
+  /** The most recent y coordinate of an object this has collided into. Used to prevent overplaying the collision sound */
+  private var mostRecentCollisionY : Int;
+
   /** The list of move instructions to execute in the case of mouse movement */
   private var moveList : List<Direction>;
 
@@ -583,6 +589,8 @@ class Character extends MovingElement {
 
   public override function locationReached(oldRow : Int, oldCol : Int) {
     super.locationReached(oldRow, oldCol);
+    mostRecentCollisionX = 0;
+    mostRecentCollisionY = 0;
     if ((!tileLocked && elmHolding == null) || moveList != null) {
       state.actionStack.addMove(oldCol, oldRow);
     } else if(! tileLocked && elmHolding != null) {
@@ -609,7 +617,13 @@ class Character extends MovingElement {
   }
 
   public function playCollisionSound() {
-    collisionSound.play();
+    var collisionX = getCol() + Std.int(directionFacing.x);
+    var collisionY = getRow() + Std.int(directionFacing.y);
+    if(collisionX != mostRecentCollisionX || collisionY != mostRecentCollisionY) {
+      mostRecentCollisionX = collisionX;
+      mostRecentCollisionY = collisionY;
+      collisionSound.play();
+    }
   }
 
   public override function revive() {

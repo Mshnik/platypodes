@@ -1,14 +1,19 @@
 package elements.impl;
+import flixel.FlxG;
+import flixel.system.FlxSound;
 import flixel.addons.editors.tiled.TiledObject;
 
 class Exit extends Element {
 
   public static inline var OPEN_ANIMATION_KEY = "open";
   public static inline var CLOSE_ANIMATION_KEY = "close";
+  public static inline var VICTORY_ANIMATION_KEY = "victory";
 
   private static inline var ANIMATION_SPEED = 10;
 
   public var isOpen(default, set) : Bool;
+
+  private var openCloseSound : FlxSound;
 
 /** Constructs an exit, with the given level, and initial row and col */
   public function new(level : GameState, o : TiledObject) {
@@ -17,6 +22,13 @@ class Exit extends Element {
     loadGraphic(AssetPaths.gate_sheet__png, true, PMain.SPRITE_SIZE, PMain.SPRITE_SIZE);
     animation.add(OPEN_ANIMATION_KEY, [0,2,4,5,6,8], ANIMATION_SPEED, false);
     animation.add(CLOSE_ANIMATION_KEY, [8,6,5,4,2,0], ANIMATION_SPEED, false);
+    animation.add(VICTORY_ANIMATION_KEY, [9, 10, 3, 1, 8], ANIMATION_SPEED + 5, false);
+
+    openCloseSound = FlxG.sound.load(AssetPaths.gateOpenClose__wav, 1.0);
+  }
+
+  public function playVictoryAnimation() {
+    animation.play(VICTORY_ANIMATION_KEY);
   }
 
   public function set_isOpen(open : Bool) : Bool {
@@ -26,6 +38,7 @@ class Exit extends Element {
       } else {
         animation.play(CLOSE_ANIMATION_KEY);
       }
+      openCloseSound.play(true);
     }
     return this.isOpen = open;
   }
