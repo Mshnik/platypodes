@@ -11,13 +11,13 @@ class Lighting {
   //8 reserved for a doubly-lit mirror
   public static inline var LIT_CRYSTAL = 16;
 
-  private static inline var HORIZONTAL_SPRITE = AssetPaths.light_sheet_0_0__png;
-  private static inline var VERTICAL_SPRITE = AssetPaths.light_sheet_1_0__png;
+  private static inline var HORIZONTAL_SPRITE = AssetPaths.light_horiztonal__png;
+  private static inline var VERTICAL_SPRITE = AssetPaths.light_vertical__png;
 
-  private static inline var HIT_WALL_DOWN_SPRITE = AssetPaths.light_sheet_0_1__png;
-  private static inline var HIT_WALL_UP_SPRITE = AssetPaths.light_sheet_1_1__png;
-  private static inline var HIT_WALL_RIGHT_SPRITE = AssetPaths.light_sheet_2_1__png;
-  private static inline var HIT_WALL_LEFT_SPRITE = AssetPaths.light_sheet_3_1__png;
+  private static inline var HIT_WALL_DOWN_SPRITE = AssetPaths.light_splash_0__png;
+  private static inline var HIT_WALL_UP_SPRITE = AssetPaths.light_splash_3__png;
+  private static inline var HIT_WALL_RIGHT_SPRITE = AssetPaths.light_splash_1__png;
+  private static inline var HIT_WALL_LEFT_SPRITE = AssetPaths.light_splash_2__png;
 
   private var state : GameState;
   private var light_trace:Array<Array<Int>>;
@@ -95,14 +95,11 @@ class Lighting {
 //
     var e:Element = state.getElementAt(y, x);
 
-    if (state.level.hasOpaqueWallAt(x,y)) {
+    if (state.level.hasWallAt(x,y)) {
       light_trace[x][y] = TERMINARY;
       return HIT_WALL;
-    } else if (state.level.hasGlassWallAt(x,y)) {
-      //TODO - make this glass wall light up
-      trace_light(x+Std.int(direction.x),y+Std.int(direction.y),direction);
-      return OK;
     } else if(Std.is(e, Lightable)) {
+      trace("Light hit " + e);
       var l : Lightable = (cast e:Lightable);
       l.addLightInDirection(direction);
       for(dNext in l.getReflection(direction)) {

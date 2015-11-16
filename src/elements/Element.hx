@@ -26,6 +26,9 @@ import flixel.FlxSprite;
   /** The TiledObject that this Element was created from when the level was read from a .tmx file */
   @final private var tileObject:TiledObject;
 
+  /** The GID of the tileObject this Element was created from */
+  public var gID(default, null) : Int;
+
   /** A square highlighting sprite that shows which tile this Element is on.
    * Can be displayed for debugging purposes.
    **/
@@ -45,6 +48,7 @@ import flixel.FlxSprite;
     super(tileObject.x, tileObject.y, img);
     this.tileObject = tileObject;
     this.state = state;
+    this.gID = tileObject.gid;
     centerOrigin();
 
     squareHighlight = new FlxSprite(x, y);

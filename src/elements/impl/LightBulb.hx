@@ -4,10 +4,10 @@ import flixel.addons.editors.tiled.TiledObject;
 class LightBulb extends Element implements Lightable{
 
   @final private static var DEFAULT_SPRITE = [
-    AssetPaths.light_sheet_0_4__png,
-    AssetPaths.light_sheet_1_4__png,
-    AssetPaths.light_sheet_2_4__png,
-    AssetPaths.light_sheet_3_4__png
+    AssetPaths.orb_on_1__png,
+    AssetPaths.orb_on_3__png,
+    AssetPaths.orb_on_2__png,
+    AssetPaths.orb_on_4__png
   ];
   @final private static var DIRECTION_PROPERTY_KEY = "direction"; //Name of direction property in Tiled
 
@@ -25,13 +25,14 @@ class LightBulb extends Element implements Lightable{
     switch directionFacing.simpleString {
       case "Up": loadGraphic(DEFAULT_SPRITE[0]);
       case "Down": loadGraphic(DEFAULT_SPRITE[1]);
-      case "Left": loadGraphic(DEFAULT_SPRITE[2]);
-      case "Right": loadGraphic(DEFAULT_SPRITE[3]);
+      case "Left": loadGraphic(DEFAULT_SPRITE[3]);
+      case "Right": loadGraphic(DEFAULT_SPRITE[2]);
       default:
         if(PMain.DEBUG_MODE) throw "IllegalDirection for " + this;
         else loadGraphic(DEFAULT_SPRITE[3]);
     }
 
+    resetLightInDirection();
     light_dirty = true;
     lighting = new Lighting(state, this);
     isLit = true;

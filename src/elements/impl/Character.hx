@@ -27,8 +27,8 @@ class Character extends MovingElement {
 
   /** The clippng on the bounding box of the sprite, to make fitting though a one tile wide path easier */
   private static inline var BOUNDING_BOX_MARGIN_X = 30;
-  private static inline var BOUNDING_BOX_MARGIN_TOP = 50;
-  private static inline var BOUNDING_BOX_MARGIN_BOTTOM = 0;
+  private static inline var BOUNDING_BOX_MARGIN_TOP = 45;
+  private static inline var BOUNDING_BOX_MARGIN_BOTTOM = 5;
 
 /** Size of each character sprite, in px */
   @final private static var CHARACTER_SPRITE_SIZE = 128;
@@ -184,21 +184,23 @@ class Character extends MovingElement {
   public var grabbing : Bool; //This should only be changed outside of Character by AbsMirror's mouse click callback.
 
   public function check_grab() : Void{
-    if(PMain.A_VERSION){
-      if (SINGLE_SPACE()){
+    if(PMain.A_VERSION) {
+      if (SINGLE_SPACE()) {
         grabbing = !grabbing;
       }
     }
-    else
-    {
-
-      var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
-      if (elm != null && Std.is(elm, AbsMirror)) {
-        trace("CAN GRAB A MIRROR!!!");
+    else {
+      if (elmHolding != null && elmHolding.destTile != null) {
         grabbing = true;
-      } else{
-        grabbing = false;
+      } else {
+        var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
+        if (elm != null && Std.is(elm, InteractableElement)) {
+          grabbing = true;
+        } else{
+          grabbing = false;
+        }
       }
+      trace(grabbing);
     }
 
   }
@@ -206,8 +208,6 @@ class Character extends MovingElement {
   public function GRAB() : Bool{
     return grabbing;
   }
-
-  
 
   /** Constructs a TopBar character, belonging to the given state and represented by the given TiledObject */
   public function new(state : GameState, o : TiledObject) {
@@ -401,7 +401,6 @@ class Character extends MovingElement {
           if(GRAB() && elmHolding == null) {
             mirror.moveDirection = Direction.None;
             mirror.holdingPlayer = this;
-
           }
         }
       }
@@ -424,7 +423,7 @@ class Character extends MovingElement {
         var row = Std.int(tileLoc.y);
         var col = Std.int(tileLoc.x);
         setMoveTo(row, col);
-      } else if ( (elmHolding == null) || (!PMain.A_VERSION)){
+      } else if (elmHolding == null || (!PMain.A_VERSION && elmHolding.destTile == null)){
         moveDirection = Direction.None;
         moveSpeed = MOVE_SPEED;
 

@@ -2,8 +2,8 @@ package elements.impl;
 import flixel.addons.editors.tiled.TiledObject;
 class LightSwitch extends Element implements Lightable {
 
-  private static inline var UNLIT_SPRITE = AssetPaths.light_sheet_0_5__png;
-  private static inline var LIT_SPRITE = AssetPaths.light_sheet_0_6__png;
+  private static inline var UNLIT_SPRITE = AssetPaths.switch_off__png;
+  private static inline var LIT_SPRITE = AssetPaths.switch_on__png;
 
   public var lightInDirection(default, null) : Array<Direction>;
 
