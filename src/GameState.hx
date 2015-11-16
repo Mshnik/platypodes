@@ -28,7 +28,6 @@ class GameState extends FlxState {
 
   private static inline var DISPLAY_COORDINATES = false;
 
-  private static inline var INITAL_ZOOM_PROPERTY = "initial_zoom";
   public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; }; //TODO - reinstate after friends
   public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
 
@@ -46,7 +45,6 @@ class GameState extends FlxState {
   @final private var levelPaths : Array<Dynamic>;
   @final private var levelPathIndex : Int;
   public var level:TiledLevel;
-  private var savedZoom : Float; //The zoom that the player had before restarting
 
   public var player:Character;
   public var tooltip:Tooltip;
@@ -75,12 +73,11 @@ class GameState extends FlxState {
   private var sndWin : FlxSound;
   private var sndWinDone : Bool;
 
-  public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int, savedZoom : Float = -1,
+  public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int,
                       savedActionStack : ActionStack = null, levelStartTime: Float = -1) {
     super();
     this.levelPaths = levelPaths;
     this.levelPathIndex = levelPathIndex;
-    this.savedZoom = savedZoom;
     this.actionStack = savedActionStack;
     this.levelStartTime = levelStartTime;
   }
@@ -154,7 +151,7 @@ class GameState extends FlxState {
       }
     }
 
-    setZoom(FlxG.camera.zoom);
+    setZoom(PMain.zoom);
 
     hudCamera = new FlxCamera(0, 0, FlxG.width, TopBar.HEIGHT, 1.0);
     FlxG.cameras.add(hudCamera);
@@ -267,7 +264,7 @@ class GameState extends FlxState {
       FlxG.switchState(new LevelSelectMenuState());
     } else if(won && (NEXT_LEVEL_BUTTON() || sndWinDone) && levelPathIndex + 1 < levelPaths.length){
       BACKGROUND_THEME.resume();
-      FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1, savedZoom));
+      FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {
       resetState();
     } else if (UNDO() && !player.isDying) {
@@ -322,17 +319,6 @@ class GameState extends FlxState {
         var player = new Character(this, o);
         this.player = player;
         FlxG.camera.follow(player, FlxCamera.STYLE_NO_DEAD_ZONE, 1);
-        if(savedZoom == -1) {
-          var initialZoom = o.custom.get(INITAL_ZOOM_PROPERTY);
-          if (initialZoom == null) {
-            trace(INITAL_ZOOM_PROPERTY + " unset for this level");
-            setZoom(0.4);
-          } else {
-            setZoom(Std.parseFloat(initialZoom));
-          }
-        } else {
-          setZoom(savedZoom);
-        }
 
       case "mirror":
         var mirror = AbsMirror.createMirror(this, o);
@@ -391,7 +377,7 @@ class GameState extends FlxState {
                         Std.int(Lib.current.stage.stageHeight / zoom));
     level.updateBuffers();
     FlxG.camera.focusOn(player.getMidpoint(null));
-    savedZoom = zoom;
+    PMain.zoom = zoom;
   }
 
   public function executeAction(a : ActionElement, playSounds : Bool = false) : Bool {
@@ -458,7 +444,7 @@ class GameState extends FlxState {
 
   public function resetState() {
     actionStack.addReset();
-    FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom, actionStack, levelStartTime));
+    FlxG.switchState(new GameState(levelPaths, levelPathIndex, actionStack, levelStartTime));
   }
 
   public function undoAction() {

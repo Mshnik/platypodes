@@ -49,6 +49,7 @@ class StartState extends FlxState{
 
     playButton = new FlxButton(0,0,"Play", function(){
       WIND_SOUND.fadeOut(5, 0);
+      PMain.zoom = 0.5;
       FlxG.switchState(new GameState(levels, 0));
     });
     playButton.setPosition(470, 240);
