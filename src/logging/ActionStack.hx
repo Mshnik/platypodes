@@ -10,6 +10,10 @@ class ActionStack {
   public var character : Character;
   private var elms : List<ActionElement>;
 
+  private static inline var SINGLE_ACTION_LOGGING_ID = 4;
+  private static inline var LOG_STACK_ACTION_ID = 5;
+
+
   public function new(c : Character) {
     this.character = c;
     elms = new List<ActionElement>();
@@ -17,12 +21,12 @@ class ActionStack {
 
   public function add(a : ActionElement) {
     elms.push(a);
-    trace(a);
-    Logging.getSingleton().recordEvent(a.serialize(), a.toString());
+    trace(a.loggingString());
+    Logging.getSingleton().recordEvent(SINGLE_ACTION_LOGGING_ID, a.loggingString());
   }
 
   public function logStack() {
-    Logging.getSingleton().recordEvent(Std.int(Math.pow(2, 32) - 1), elms.toString());
+    //Do nothing - wasn't useful
   }
 
   public function getFirst() : ActionElement {
