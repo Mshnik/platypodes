@@ -1,4 +1,5 @@
 package ;
+import flixel.addons.plugin.FlxMouseControl;
 import flixel.text.FlxText;
 import flixel.system.FlxSound;
 import flixel.ui.FlxButton;
@@ -20,6 +21,7 @@ class StartState extends FlxState{
 
   public override function create(){
     super.create();
+    FlxG.mouse.visible = true;
 
     var splash = new FlxSprite(0,0);
     splash.loadGraphic(AssetPaths.splashscreen__png);
