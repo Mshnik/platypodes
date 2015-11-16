@@ -16,7 +16,6 @@ import flixel.group.FlxTypedGroup;
 import flixel.FlxBasic;
 import flixel.addons.editors.tiled.TiledObjectGroup;
 import flixel.addons.editors.tiled.TiledObject;
-import flixel.addons.plugin.FlxMouseControl;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxObject;
@@ -53,8 +52,7 @@ class GameState extends FlxState {
   public var tooltip:Tooltip;
 
   public var actionStack : ActionStack;
-  private static inline var RE_LOGGING_TIME = 5000; //time in ms between whole stack (redundant) loggings
-  private var actionStackTimer : Timer;
+  public var levelStartTime : Float;
 
   public var floor:FlxObject;
   public var exit:Exit;
@@ -78,12 +76,13 @@ class GameState extends FlxState {
   private var sndWinDone : Bool;
 
   public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int, savedZoom : Float = -1,
-                      savedActionStack : ActionStack = null) {
+                      savedActionStack : ActionStack = null, levelStartTime: Float = -1) {
     super();
     this.levelPaths = levelPaths;
     this.levelPathIndex = levelPathIndex;
     this.savedZoom = savedZoom;
     this.actionStack = savedActionStack;
+    this.levelStartTime = levelStartTime;
   }
 
   override public function create():Void {
@@ -110,11 +109,10 @@ class GameState extends FlxState {
     if (actionStack == null) {
       Logging.getSingleton().recordLevelStart(levelPathIndex); //TODO - add more?
       actionStack = new ActionStack(player);
+      levelStartTime = Timer.stamp();
     } else {
       actionStack.character = player;
     }
-    actionStackTimer = new Timer(RE_LOGGING_TIME);
-    actionStackTimer.run = actionStack.logStack;
 
     //Create Tooltip
     tooltip = new Tooltip(this);
@@ -266,7 +264,6 @@ class GameState extends FlxState {
 
   override public function update():Void {
     if(MENU_BUTTON()) {
-      actionStackTimer.stop();
       FlxG.switchState(new LevelSelectMenuState());
     } else if(won && (NEXT_LEVEL_BUTTON() || sndWinDone) && levelPathIndex + 1 < levelPaths.length){
       BACKGROUND_THEME.resume();
@@ -397,10 +394,10 @@ class GameState extends FlxState {
     savedZoom = zoom;
   }
 
-  public function executeAction(a : ActionElement, playSounds : Bool = false) {
+  public function executeAction(a : ActionElement, playSounds : Bool = false) : Bool {
     if(! a.isExecutable()) {
       trace("Can't execute non-executable action " + a);
-      return;
+      return false;
     }
 
     if(player.getCol() != a.startX || player.getRow() != a.startY) {
@@ -413,29 +410,30 @@ class GameState extends FlxState {
         if(playSounds) {
           player.playCollisionSound();
         }
-        return;
+        return false;
       }
       player.moveDirection = a.moveDirection;
       player.directionFacing = a.directionFacing;
       player.moveSpeed = Character.MOVE_SPEED;
       player.tileLocked = true;
-      return;
+      return true;
     }
 
     var elm : Element = getElementAt(a.elmY, a.elmX);
     if (elm == null || ! Std.is(elm, Mirror)) {
       trace("Can't execute action " + a + " can't push/rotate " + elm);
-      return;
+      return false;
     }
 
-    if (a.id == ActionElement.PUSHPULL && Std.is(elm, Mirror)) {
-      var m : Mirror = Std.instance(elm, Mirror);
+    if (a.id == ActionElement.PUSHPULL && Std.is(elm, InteractableElement)) {
+      var m : InteractableElement = Std.instance(elm, InteractableElement);
+      trace("Trying to push/pull " + m);
       if (player.alive && (! m.canMoveInDirection(a.moveDirection) || ! player.canMoveInDirectionWithElement(a.moveDirection, m))) {
         trace("Can't execute action " + a + " can't move mirror " + m + " in direction " + a.moveDirection.simpleString);
         if(playSounds) {
           player.playCollisionSound();
         }
-        return;
+        return false;
       }
 
       m.holdingPlayer = player;
@@ -444,7 +442,7 @@ class GameState extends FlxState {
       player.directionFacing = a.directionFacing;
       player.moveSpeed = InteractableElement.MOVE_SPEED;
       player.tileLocked = true;
-      return;
+      return true;
     }
     if (a.id == ActionElement.ROTATE && Std.is(elm, Mirror)) {
       var m : Mirror = Std.instance(elm, Mirror);
@@ -453,14 +451,14 @@ class GameState extends FlxState {
       } else {
         m.rotateCounterClockwise();
       }
-      return;
+      return true;
     }
+    return false;
   }
 
   public function resetState() {
-    actionStackTimer.stop();
     actionStack.addReset();
-    FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom, actionStack));
+    FlxG.switchState(new GameState(levelPaths, levelPathIndex, savedZoom, actionStack, levelStartTime));
   }
 
   public function undoAction() {
@@ -508,8 +506,12 @@ class GameState extends FlxState {
     add(winText);
     player.kill();
     exit.playVictoryAnimation();
+    var compTime = Timer.stamp() - levelStartTime;
+    trace(actionStack.getInteractedActionCount());
+    Logging.getSingleton().recordEvent(ActionStack.LOG_LEVEL_COMPLETION_TIME_ID, "" + compTime);
+    Logging.getSingleton().recordEvent(ActionStack.LOG_ACTION_COUNT_ON_LEVEL_COMPLETE, "" + actionStack.getInteractedActionCount());
     Logging.getSingleton().recordLevelEnd();
-    actionStackTimer.stop();
+    //actionStackTimer.stop();
   }
 
 }
