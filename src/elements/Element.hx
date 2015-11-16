@@ -2,6 +2,7 @@ package elements;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 import flixel.addons.editors.tiled.TiledObject;
+import flixel.addons.display.FlxExtendedSprite;
 import flixel.util.FlxStringUtil;
 import flixel.FlxSprite;
 
@@ -17,7 +18,7 @@ import flixel.FlxSprite;
   * Elements that can move during the game should extend MovingElement, an extension of Element
   * that handles movement on top of Element's capabilities.
   **/
-@abstract class Element extends FlxSprite {
+@abstract class Element extends FlxExtendedSprite {
 
   /** The GameState this Element exists within. */
   @final public var state:GameState;
@@ -25,10 +26,15 @@ import flixel.FlxSprite;
   /** The TiledObject that this Element was created from when the level was read from a .tmx file */
   @final private var tileObject:TiledObject;
 
+  /** The GID of the tileObject this Element was created from */
+  public var gID(default, null) : Int;
+
   /** A square highlighting sprite that shows which tile this Element is on.
    * Can be displayed for debugging purposes.
    **/
   @final public var squareHighlight : FlxSprite;
+
+  public var bbox : FlxSprite;
 
   /** Construct a TopBar element
    * state - the GameState this element belongs to
@@ -42,6 +48,7 @@ import flixel.FlxSprite;
     super(tileObject.x, tileObject.y, img);
     this.tileObject = tileObject;
     this.state = state;
+    this.gID = tileObject.gid;
     centerOrigin();
 
     squareHighlight = new FlxSprite(x, y);
@@ -79,9 +86,9 @@ import flixel.FlxSprite;
   /** Return a point representing the graphical center of this Element */
   public inline function getCenter(createNew : Bool = false) : FlxPoint {
     if(createNew) {
-      return new FlxPoint(x + origin.x, y + origin.y);
+      return new FlxPoint(x + origin.x - offset.x, y + origin.y - offset.y);
     } else {
-      return FlxPoint.get(x + origin.x, y + origin.y);
+      return FlxPoint.get(x + origin.x - offset.x, y + origin.y - offset.y);
     }
   }
 
@@ -109,11 +116,12 @@ import flixel.FlxSprite;
   @final private static var RECT_TOLERANCE = 0.01;
 
   /** Return true if rect a contains rect b, with respect to the above tolerance */
-  public static inline function rectContainsRect(outer : FlxRect, inner : FlxRect) {
-    return outer.left - inner.left < RECT_TOLERANCE &&
-           outer.right - inner.right > -RECT_TOLERANCE  &&
-           outer.top - inner.top < RECT_TOLERANCE &&
-           outer.bottom - inner.bottom > -RECT_TOLERANCE;
+  public static inline function rectContainsRect(outer : FlxRect, inner : FlxRect, tolerance : Int = 0) {
+    var t = Math.max(RECT_TOLERANCE, tolerance);
+    return outer.left - inner.left < t &&
+           outer.right - inner.right > - t  &&
+           outer.top - inner.top < t &&
+           outer.bottom - inner.bottom > - t;
   }
 
   /** Return true iff the bounding box for e is entirely contained in the bounding box of this */
@@ -150,6 +158,14 @@ import flixel.FlxSprite;
     squareHighlight.x = getCol() * state.level.tileWidth;
     squareHighlight.y = getRow() * state.level.tileHeight;
 
+    if(bbox != null) {
+      var center = getCenter();
+      bbox.x = center.x - bbox.width/2;
+      bbox.y = center.y - bbox.height/2;
+      center.put();
+    }
+
     super.update();
   }
+
 }

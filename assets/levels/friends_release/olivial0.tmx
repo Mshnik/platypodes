@@ -20,7 +20,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztj0EKACAIBH1kWVT/f0cdWtqTRB5zYBAEl1Xkb/JWaVe2LxTKBMmZp3I6Qk8eTOQr+LcuG/XM1tFF3lh26qrWkQG68M+YQRD4mDe+DtQ=
+   eJztj0EKACAIBH2k2v9/0qUhD0GkxxwYBJFlFfkbW3rYjWWGETJBi3kuuyNW8lCDWfgX6Gnn8+c8uvr5/Apd4s/MpmlqTNqwDWs=
   </data>
  </layer>
  <layer name="Holes" width="20" height="20">
@@ -28,7 +28,7 @@
    <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMApIBwAGQAAB
+   eJxjYBgFo4ByEAHEUVQ0LwaIo6lo3igYBaOA+gAAYz8Bag==
   </data>
  </layer>
  <layer name="Walls" width="20" height="20">
@@ -64,7 +64,7 @@
  </objectgroup>
  <objectgroup name="Light">
   <object id="55" type="lightSwitch" gid="71" x="1152" y="1280" width="128" height="128"/>
-  <object id="111" gid="67" x="512" y="1280" width="128" height="128">
+  <object id="111" type="lightOrb" gid="67" x="512" y="1280" width="128" height="128">
    <properties>
     <property name="direction" value="256"/>
    </properties>
