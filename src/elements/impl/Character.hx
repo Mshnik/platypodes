@@ -183,6 +183,8 @@ class Character extends MovingElement {
 
   public var grabbing : Bool; //This should only be changed outside of Character by AbsMirror's mouse click callback.
 
+  private var centered : Bool; //Used for grabbing. If the Character's in the center of the tile.
+
   public function check_grab() : Void{
     if(PMain.A_VERSION) {
       if (SINGLE_SPACE()) {
@@ -194,7 +196,7 @@ class Character extends MovingElement {
         grabbing = true;
       } else {
         var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
-        if (elm != null && Std.is(elm, InteractableElement)) {
+        if (elm != null && Std.is(elm, InteractableElement) && centered) {
           grabbing = true;
         } else{
           grabbing = false;
@@ -287,7 +289,7 @@ class Character extends MovingElement {
     };
 
     isDying = false;
-    collisionSound = FlxG.sound.load(AssetPaths.Collision8Bit__wav, 0.8);
+    collisionSound = FlxG.sound.load(AssetPaths.Collision8Bit__wav, 1.1);
     deathSound = FlxG.sound.load(AssetPaths.crackle__mp3, 0.9);
     resetElmHoldingOldCoords();
   }
@@ -506,6 +508,12 @@ class Character extends MovingElement {
       }
 
       moveSpeed = AUTOMOVE_SPEED;
+      
+      if(moveDirection.equals(Direction.None)){
+        this.centered = true;
+      } else{
+        this.centered = false;
+      }
     }
 
     //Play the appropriate animation
