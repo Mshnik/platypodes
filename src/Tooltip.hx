@@ -206,14 +206,30 @@ class Tooltip extends FlxGroup {
     if(pullArrowButton.mouseOver || animate){
       pullArrowButton.animation.play(GLOW_ANIMATION_KEY);
     }
+    else
+    {
+      pullArrowButton.animation.pause();
+    }
     if(pushArrowButton.mouseOver || animate){
       pushArrowButton.animation.play(GLOW_ANIMATION_KEY);
+    }
+    else
+    {
+      pushArrowButton.animation.pause();
     }
     if(cwArrowButton.mouseOver || animate){
       cwArrowButton.animation.play(GLOW_ANIMATION_KEY);
     }
+    else
+    {
+      cwArrowButton.animation.pause();
+    }
     if(ccwArrowButton.mouseOver || animate){
       ccwArrowButton.animation.play(GLOW_ANIMATION_KEY);
+    }
+    else
+    {
+      ccwArrowButton.animation.pause();
     }
   }
 
