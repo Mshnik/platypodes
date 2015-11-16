@@ -28,7 +28,7 @@ class GameState extends FlxState {
 
   private static inline var DISPLAY_COORDINATES = false;
 
-  public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; }; //TODO - reinstate after friends
+  public static var MENU_BUTTON : Void -> Bool;
   public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
 
   public var RESET : Void -> Bool;
@@ -126,24 +126,6 @@ class GameState extends FlxState {
     add(player);
     add(tooltip);
 
-    RESET = function(){
-      return FlxG.keys.justPressed.R || hud.doReset;
-    }
-
-    UNDO = function(){
-      return (FlxG.keys.pressed.BACKSPACE || hud.undoButton.status == FlxButton.PRESSED)
-        && ! player.tileLocked
-        && (player.elmHolding == null || player.elmHolding.moveDirection.equals(Direction.None));
-    };
-
-    ZOOM_IN = function() {
-      return FlxG.keys.pressed.ONE || hud.zoomInButton.status == FlxButton.PRESSED;
-    }
-
-    ZOOM_OUT = function() {
-      return FlxG.keys.pressed.TWO || hud.zoomOutButton.status == FlxButton.PRESSED;
-    }
-
     if(DISPLAY_COORDINATES) {
       for(r in 0...level.height) {
         for(c in 0...level.width) {
@@ -168,8 +150,8 @@ class GameState extends FlxState {
     hudCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height, 1.0);
     hudCamera.bgColor = 0x00000000;
     FlxG.cameras.add(hudCamera);
-    hud = new HUD(this, hudCamera);
-    add(hud);
+    this.hud = new HUD(this, hudCamera);
+    add(this.hud);
 
     if(BACKGROUND_THEME == null) {
       BACKGROUND_THEME = FlxG.sound.load(AssetPaths.Background__mp3, 0.95, true);
@@ -178,6 +160,28 @@ class GameState extends FlxState {
     }
 
     sndWin = FlxG.sound.load(AssetPaths.Victory__mp3);
+
+    MENU_BUTTON = function(){
+      return FlxG.keys.justPressed.ESCAPE || this.hud.doLevelSelect;
+    }
+
+    RESET = function(){
+      return FlxG.keys.justPressed.R || this.hud.doReset;
+    }
+
+    UNDO = function(){
+      return (FlxG.keys.pressed.BACKSPACE || this.hud.undoButton.status == FlxButton.PRESSED)
+      && ! player.tileLocked
+      && (player.elmHolding == null || player.elmHolding.moveDirection.equals(Direction.None));
+    };
+
+    ZOOM_IN = function() {
+      return FlxG.keys.pressed.ONE || this.hud.zoomInButton.status == FlxButton.PRESSED;
+    }
+
+    ZOOM_OUT = function() {
+      return FlxG.keys.pressed.TWO || this.hud.zoomOutButton.status == FlxButton.PRESSED;
+    }
   }
 
   public override function destroy() {
