@@ -31,6 +31,7 @@ class Tooltip extends FlxGroup {
 
   /** Scale factor for arrow and key sprite images **/
   private inline static var B_VERSION_ARROW_SPRITE_SCALE = 0.9;
+  private inline static var B_VERSION_OFFSET = 20;
 
   /** Animation descriptors **/
   private inline static var ANIMATION_SPEED = 7;
@@ -149,10 +150,16 @@ class Tooltip extends FlxGroup {
       if (player.getCol() < mirror.getCol()) {
         //PLAYER TO THE LEFT OF MIRROR
         pullArrowButton.setPosition(player.x - pullArrowButton.width, mBox.top);
+        if(!PMain.A_VERSION){
+          pullArrowButton.setPosition(player.x - pullArrowButton.width, mBox.top - (pullArrowButton.height/4));
+        }
         pullArrowButton.angle = 0;
         pullMirrorDirection = Direction.Left;
 
         pushArrowButton.setPosition(mBox.right, mBox.top);
+        if(!PMain.A_VERSION){
+          pushArrowButton.setPosition(mBox.right, mBox.top - (pushArrowButton.height/4));
+        }
         pushArrowButton.angle = 180;
         pushMirrorDirection = Direction.Right;
       }
@@ -160,10 +167,16 @@ class Tooltip extends FlxGroup {
 
 //PLAYER TO THE RIGHT OF MIRROR
         pullArrowButton.setPosition(player.x + player.width, mBox.top);
+        if(!PMain.A_VERSION){
+          pullArrowButton.setPosition(player.x, mBox.top - (pullArrowButton.height/4));
+        }
         pullArrowButton.angle = 180;
         pullMirrorDirection = Direction.Right;
 
         pushArrowButton.setPosition(mBox.left - pushArrowButton.width, mBox.top);
+        if(!PMain.A_VERSION){
+          pushArrowButton.setPosition(mBox.left - pushArrowButton.width, mBox.top - (pushArrowButton.height/4));
+        }
         pushArrowButton.angle = 0;
         pushMirrorDirection = Direction.Left;
       }
@@ -238,17 +251,24 @@ class Tooltip extends FlxGroup {
 
   private function configureRotateArrows(d:Direction, mBox : FlxRect):Void {
     if (d.isHorizontal()) {
-      cwArrowButton.setPosition(mBox.left, mBox.top - cwArrowButton.height);
+
+      cwArrowButton.setPosition(mBox.left - B_VERSION_OFFSET, mBox.top - cwArrowButton.height);
       cwArrowButton.angle = 0;
 
-      ccwArrowButton.setPosition(mBox.left, mBox.bottom);
+      ccwArrowButton.setPosition(mBox.left - B_VERSION_OFFSET, mBox.bottom);
       ccwArrowButton.angle = 180;
 
     } else if (d.isVertical()) {
-      cwArrowButton.setPosition(mBox.right, mBox.bottom - ccwArrowButton.height);
+      cwArrowButton.setPosition(mBox.right, mBox.bottom - cwArrowButton.height);
+      if(!PMain.A_VERSION){
+        cwArrowButton.setPosition(mBox.right, mBox.bottom - cwArrowButton.height +(cwArrowButton.height/5));
+      }
       cwArrowButton.angle = 90;
 
-      ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - cwArrowButton.height);
+      ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - ccwArrowButton.height);
+      if(!PMain.A_VERSION){
+        ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - ccwArrowButton.height + (ccwArrowButton.height/5));
+      }
       ccwArrowButton.angle = 270;
     }
   }

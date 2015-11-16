@@ -1,4 +1,5 @@
 package elements.impl;
+import PMain;
 import flixel.FlxSprite;
 import flixel.util.FlxPoint;
 import flixel.system.FlxSound;
@@ -199,6 +200,7 @@ class Character extends MovingElement {
     }
     else {
       if (elmHolding != null && elmHolding.destTile != null) {
+        //Currently moving with mirror
         grabbing = true;
       } else {
         var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
@@ -208,7 +210,6 @@ class Character extends MovingElement {
           grabbing = false;
         }
       }
-      trace(grabbing);
     }
 
   }
@@ -396,7 +397,9 @@ class Character extends MovingElement {
     if(!tileLocked) {
       if (directionFacing.isCardinal() && alive && ! isDying) {
         var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
+
         if (elm != null && Std.is(elm, AbsMirror)) {
+
           var mirror : AbsMirror = Std.instance(elm, AbsMirror);
           if(mirror.destTile == null && ROT_CLOCKWISE()) {
             state.actionStack.addRotate(mirror, true);
@@ -406,7 +409,7 @@ class Character extends MovingElement {
             state.actionStack.addRotate(mirror, false);
             mirror.rotateCounterClockwise();
           }
-          if(GRAB() && elmHolding == null) {
+          if(GRAB() && (elmHolding != elm)) {
             mirror.moveDirection = Direction.None;
             mirror.holdingPlayer = this;
           }
@@ -518,7 +521,7 @@ class Character extends MovingElement {
       if(moveDirection.equals(Direction.None)){
         this.centered = true;
       } else{
-        this.centered = false;
+        this.centered = false; 
       }
     }
 

@@ -284,7 +284,7 @@ class GameState extends FlxState {
     super.update();
 
     //Only collide player with stuff she isn't holding a mirror
-    if (player.elmHolding == null) {
+    if (player.elmHolding == null || (player.elmHolding != null && player.elmHolding.destTile == null)) {
 
       level.collideWithLevel(player, false, function(a, a){player.playCollisionSound();});  // Collides player with walls
 
