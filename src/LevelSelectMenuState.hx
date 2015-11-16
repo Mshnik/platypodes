@@ -40,6 +40,7 @@ class LevelSelectMenuState extends FlxState
     levels.push(AssetPaths.l4__tmx);
     levels.push(AssetPaths.l5__tmx);
     levels.push(AssetPaths.l6__tmx);
+    levels.push(AssetPaths.g0__tmx);
 
     var x = MARGIN;
     var y = MARGIN;

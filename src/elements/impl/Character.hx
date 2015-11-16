@@ -27,8 +27,8 @@ class Character extends MovingElement {
 
   /** The clippng on the bounding box of the sprite, to make fitting though a one tile wide path easier */
   private static inline var BOUNDING_BOX_MARGIN_X = 30;
-  private static inline var BOUNDING_BOX_MARGIN_TOP = 50;
-  private static inline var BOUNDING_BOX_MARGIN_BOTTOM = 0;
+  private static inline var BOUNDING_BOX_MARGIN_TOP = 45;
+  private static inline var BOUNDING_BOX_MARGIN_BOTTOM = 5;
 
 /** Size of each character sprite, in px */
   @final private static var CHARACTER_SPRITE_SIZE = 128;

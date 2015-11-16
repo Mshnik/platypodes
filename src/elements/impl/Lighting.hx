@@ -95,14 +95,11 @@ class Lighting {
 //
     var e:Element = state.getElementAt(y, x);
 
-    if (state.level.hasOpaqueWallAt(x,y)) {
+    if (state.level.hasWallAt(x,y)) {
       light_trace[x][y] = TERMINARY;
       return HIT_WALL;
-    } else if (state.level.hasGlassWallAt(x,y)) {
-      //TODO - make this glass wall light up
-      trace_light(x+Std.int(direction.x),y+Std.int(direction.y),direction);
-      return OK;
     } else if(Std.is(e, Lightable)) {
+      trace("Light hit " + e);
       var l : Lightable = (cast e:Lightable);
       l.addLightInDirection(direction);
       for(dNext in l.getReflection(direction)) {
