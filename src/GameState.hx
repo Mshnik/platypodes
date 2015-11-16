@@ -60,6 +60,7 @@ class GameState extends FlxState {
   public var lightBulbs:FlxTypedGroup<LightBulb>;
   public var lightSwitches:FlxTypedGroup<LightSwitch>;
   public var lightSprites:FlxTypedGroup<LightSprite>;
+  public var glassWalls:FlxTypedGroup<GlassWall>;
 
   public var interactables:FlxTypedGroup<InteractableElement>;
 
@@ -103,6 +104,7 @@ class GameState extends FlxState {
     lightBulbs = new FlxTypedGroup<LightBulb>();
     lightSwitches = new FlxTypedGroup<LightSwitch>();
     lightSprites = new FlxTypedGroup<LightSprite>();
+    glassWalls = new FlxTypedGroup<GlassWall>();
 
     // Load all objects
     level.loadObjects(onAddObject);
@@ -122,6 +124,7 @@ class GameState extends FlxState {
 
     //Make sure non-player objects are added to level after player is added to level
     //For ordering of the update loop
+    add(glassWalls);
     add(exit);
     add(interactables);
     add(lightSprites);
@@ -201,6 +204,9 @@ class GameState extends FlxState {
     for(lightBulb in lightBulbs.members) {
       if (check(lightBulb)) return lightBulb;
     }
+    for(glassWall in glassWalls.members) {
+      if (check(glassWall)) return glassWall;
+    }
     if (check(exit)) return exit;
     if (check(player)) return player;
     return null;
@@ -248,6 +254,10 @@ class GameState extends FlxState {
 
     lightSwitches.forEach(function(l : LightSwitch) {
       l.resetLightInDirection();
+    });
+
+    glassWalls.forEach(function(w : GlassWall) {
+      w.resetLightInDirection();
     });
 
     lightBulbs.forEach(function(l : LightBulb) {
@@ -357,6 +367,11 @@ class GameState extends FlxState {
       case "exit":
         var exit = new Exit(this, o);
         this.exit = exit;
+
+      case "glasswall":
+        var wall = new GlassWall(this, o);
+        wall.immovable = true;
+        glassWalls.add(wall);
 
       default:
         trace("Got unknown object " + o.type.toLowerCase());
