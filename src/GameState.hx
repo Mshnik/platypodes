@@ -170,7 +170,8 @@ class GameState extends FlxState {
     }
 
     UNDO = function(){
-      return (FlxG.keys.pressed.BACKSPACE || this.hud.undoButton.status == FlxButton.PRESSED)
+      return (FlxG.keys.pressed.BACKSPACE || this.hud.undoButton.status == FlxButton.PRESSED
+              || (! player.alive && FlxG.keys.pressed.SPACE))
       && ! player.tileLocked
       && (player.elmHolding == null || player.elmHolding.moveDirection.equals(Direction.None));
     };
