@@ -99,7 +99,6 @@ class Lighting {
       light_trace[x][y] = TERMINARY;
       return HIT_WALL;
     } else if(Std.is(e, Lightable)) {
-      trace("Light hit " + e);
       var l : Lightable = (cast e:Lightable);
       l.addLightInDirection(direction);
       var ref = l.getReflection(direction);

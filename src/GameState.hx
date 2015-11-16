@@ -493,7 +493,6 @@ class GameState extends FlxState {
     player.kill();
     exit.playVictoryAnimation();
     var compTime = Timer.stamp() - levelStartTime;
-    trace(actionStack.getInteractedActionCount());
     Logging.getSingleton().recordEvent(ActionStack.LOG_LEVEL_COMPLETION_TIME_ID, "" + compTime);
     Logging.getSingleton().recordEvent(ActionStack.LOG_ACTION_COUNT_ON_LEVEL_COMPLETE, "" + actionStack.getInteractedActionCount());
     Logging.getSingleton().recordLevelEnd();
