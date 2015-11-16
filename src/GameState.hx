@@ -289,14 +289,15 @@ class GameState extends FlxState {
 
       level.collideWithLevel(player, false, function(a, a){player.playCollisionSound();});  // Collides player with walls
 
-      FlxG.collide(player, lightBulbs, function(a, a){player.playCollisionSound();});
-      FlxG.collide(player, lightSwitches, function(a, a){player.playCollisionSound();});
+      FlxG.collide(player, lightBulbs, function(a, b){player.playCollisionSound();});
+      FlxG.collide(player, lightSwitches, function(a, b){player.playCollisionSound();});
+      FlxG.collide(player, glassWalls, function(a, b){player.playCollisionSound();});
 
       //Collide player with light - don't kill player, just don't let them walk into it
-      FlxG.collide(player, lightSprites, function(a, a){player.playCollisionSound();});
+      FlxG.collide(player, lightSprites, function(a, b){player.playCollisionSound();});
 
       //Collide with mirrors - don't let player walk through mirrors
-      FlxG.collide(player, interactables, function(a, a){player.playCollisionSound();});
+      FlxG.collide(player, interactables, function(a, b){player.playCollisionSound();});
     } else {
       //Only collide player with the mirror they are holding
       FlxG.collide(player, player.elmHolding);

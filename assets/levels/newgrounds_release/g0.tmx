@@ -18,10 +18,7 @@
  <tileset firstgid="80" name="orb_sheet" tilewidth="128" tileheight="128" tilecount="9">
   <image source="../../images/newgrounds_release/orb_sheet.png" width="384" height="384"/>
  </tileset>
- <tileset firstgid="89" name="floors" tilewidth="128" tileheight="128" tilecount="4">
-  <image source="../../images/friends_release/floor_sheet.png" width="512" height="128"/>
- </tileset>
- <tileset firstgid="93" name="glass_wall_sheet" tilewidth="128" tileheight="128" tilecount="49">
+ <tileset firstgid="89" name="glass_wall_sheet" tilewidth="128" tileheight="128" tilecount="49">
   <image source="../../images/newgrounds_release/glass_wall_sheet.png" width="896" height="896"/>
  </tileset>
  <layer name="Floor" width="20" height="20">
@@ -29,7 +26,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztkMENgEAIBLcrvesEjv7rEJM1En0JT5lks/CZBIB/s3uGZ4Z9srM+Dfvp3pgM9vCBrpH0iWfhvruKMcKusuhSthR9l8PCrHj/tGma7xxcCQp7
+   eJxjYBjZwAKILYHYColvBaXJNQ+GGaBmmyNhUs1FN48Bao4lme6zZED4mVwz0M2D+cucCuZZIWHk8KIkPpDDHxa3yO4eBaNgFJAHABjtCTo=
   </data>
  </layer>
  <layer name="Holes" width="20" height="20">
@@ -37,7 +34,7 @@
    <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFMOA0SM0CAQcgtgFiWxqZOwpGwSgYBaQCAP7xAbo=
+   eJxjYBgFMOA00A4gAKyB2BZNjFI3OwCxDRLfkULz0IE7lc3zoLJ5o2AUjALyAQDdewJJ
   </data>
  </layer>
  <layer name="Walls" width="20" height="20">
@@ -45,13 +42,13 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBwimBWIRfFgJhLN02LAD2QoNI+byuZR233IQAqImalgHhcQK5JhFj73kepPWpnHAsTKWDA5fh3Fo3g4YADXuwSf
+   eJxjZGBgYBwimBWIRfFgJhLN02LAD3hJNBfdPG4c5spQyX1sVDRPCoiVqGAeFxCrAbEkEMtRyX2caDS1wg8GiDWPBYiVicDMRJo3ikfxUMcA3xsFxA==
   </data>
  </layer>
  <objectgroup name="Objects" visible="0"/>
  <objectgroup name="Glass Walls">
-  <object id="113" type="glassWall" gid="93" x="640" y="768" width="128" height="128"/>
-  <object id="114" type="glassWall" gid="93" x="640" y="1152" width="128" height="128"/>
+  <object id="113" type="glassWall" gid="89" x="640" y="768" width="128" height="128"/>
+  <object id="114" type="glassWall" gid="89" x="640" y="1152" width="128" height="128"/>
  </objectgroup>
  <objectgroup name="Mirrors">
   <object id="74" type="mirror" gid="1073741902" x="640" y="512" width="128" height="128">
@@ -87,6 +84,6 @@
   </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="47" type="exit" gid="43" x="1024" y="1152" width="128" height="128"/>
+  <object id="47" type="exit" gid="43" x="1280" y="1152" width="128" height="128"/>
  </objectgroup>
 </map>

@@ -14,19 +14,17 @@ class GlassWall extends Element implements Lightable{
 
   public function new(level : GameState, o : TiledObject) {
     super(level, o);
-    isLit = false;
-
-    loadGraphic(AssetPaths.glass_wall_sheet__png, true, PMain.SPRITE_SIZE, PMain.SPRITE_SIZE);
-    animation.add(SPR_ANIMATION, [gID  - FIRST_GID], 0, false);
-    animation.play(SPR_ANIMATION);
+    resetLightInDirection();
   }
 
   public function set_isLit(lit : Bool) {
     if(lit) {
       loadGraphic(AssetPaths.light_wall_sheet__png, true, PMain.SPRITE_SIZE, PMain.SPRITE_SIZE);
+      animation.add(SPR_ANIMATION, [gID  - FIRST_GID], 0, false);
       animation.play(SPR_ANIMATION);
     } else {
       loadGraphic(AssetPaths.glass_wall_sheet__png, true, PMain.SPRITE_SIZE, PMain.SPRITE_SIZE);
+      animation.add(SPR_ANIMATION, [gID  - FIRST_GID], 0, false);
       animation.play(SPR_ANIMATION);
     }
     return this.isLit = lit;
@@ -48,7 +46,7 @@ class GlassWall extends Element implements Lightable{
 /** Returns true iff this is giving out light from the given side */
   public function isLightingTo(directionOut : Direction) {
     for(d in lightInDirection) {
-      if(d.opposite().equals(directionOut)) {
+      if(d.equals(directionOut)) {
         return true;
       }
     }
@@ -60,7 +58,7 @@ class GlassWall extends Element implements Lightable{
     if (directionIn == null || directionIn.equals(Direction.None)) {
       return [];
     } else {
-      return [directionIn.opposite()];
+      return [directionIn];
     }
   }
 }
