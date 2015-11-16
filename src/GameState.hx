@@ -255,13 +255,15 @@ class GameState extends FlxState {
     });
   }
 
+
+
   override public function update():Void {
     if(MENU_BUTTON()) {
       actionStackTimer.stop();
       FlxG.switchState(new LevelSelectMenuState());
     } else if(won && (NEXT_LEVEL_BUTTON() || sndWinDone) && levelPathIndex + 1 < levelPaths.length){
       BACKGROUND_THEME.resume();
-      FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
+      FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1, savedZoom));
     } else if(RESET()) {
       resetState();
     } else if (UNDO() && !player.isDying) {
@@ -374,7 +376,7 @@ class GameState extends FlxState {
   private function setZoom(zoom:Float) {
     //Check for min and max zoom
     if (zoom < 0.35) zoom = 0.35;
-    if (zoom > 1) zoom = 1;
+    if (zoom > 0.7) zoom = 0.7;
 
     FlxG.camera.zoom = zoom;
     FlxG.camera.setSize(Std.int(Lib.current.stage.stageWidth / zoom),
@@ -384,7 +386,7 @@ class GameState extends FlxState {
     savedZoom = zoom;
   }
 
-  public function executeAction(a : ActionElement) {
+  public function executeAction(a : ActionElement, playSounds : Bool = false) {
     if(! a.isExecutable()) {
       trace("Can't execute non-executable action " + a);
       return;
@@ -397,6 +399,9 @@ class GameState extends FlxState {
     if (a.id == ActionElement.MOVE) {
       if (! player.canMoveInDirection(a.moveDirection)) {
         trace("Can't execute action " + a + " can't move in direction " + a.moveDirection.simpleString);
+        if(playSounds) {
+          player.playCollisionSound();
+        }
         return;
       }
       player.moveDirection = a.moveDirection;
@@ -416,6 +421,9 @@ class GameState extends FlxState {
       var m : Mirror = Std.instance(elm, Mirror);
       if (player.alive && (! m.canMoveInDirection(a.moveDirection) || ! player.canMoveInDirectionWithElement(a.moveDirection, m))) {
         trace("Can't execute action " + a + " can't move mirror " + m + " in direction " + a.moveDirection.simpleString);
+        if(playSounds) {
+          player.playCollisionSound();
+        }
         return;
       }
 
