@@ -1,7 +1,5 @@
 package;
 
-import elements.Direction;
-import logging.ActionElement;
 import flixel.FlxG;
 import flash.display.Sprite;
 import flash.events.Event;
@@ -23,8 +21,10 @@ class PMain extends Sprite
   public static inline var SPRITE_SIZE = 128;
 
   public static inline var TEAM_ID = 626; //THIS SHOULD NEVER CHANGE EVER EVER EVER
-  public static inline var VERSION_ID = 103; //This can change when we do a big update
+  public static inline var VERSION_ID = 200; //This can change when we do a big update
   public static inline var DEBUG_MODE = true; //Make sure this is false when we submit
+
+	public static var A_VERSION(default, null) : Bool; //True if the game is in version A, false for version B
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 	
@@ -57,8 +57,12 @@ class PMain extends Sprite
 	private function setupGame():Void {
     Logging.getSingleton().initialize(TEAM_ID, VERSION_ID, DEBUG_MODE);
     Logging.getSingleton().recordPageLoad(""); //TODO?
+    var abTestVal = Logging.getSingleton().assignABTestValue(Std.random(2));
+    Logging.getSingleton().recordABTestValue();
 
-		var stageWidth:Int = Lib.current.stage.stageWidth;
+    A_VERSION = (abTestVal == 0);
+
+    var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 
 		FlxG.sound.playMusic(AssetPaths.BasicBackground__wav, 1, true);

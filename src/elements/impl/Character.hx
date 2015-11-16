@@ -27,8 +27,8 @@ class Character extends MovingElement {
 
   /** The clippng on the bounding box of the sprite, to make fitting though a one tile wide path easier */
   private static inline var BOUNDING_BOX_MARGIN_X = 30;
-  private static inline var BOUNDING_BOX_MARGIN_TOP = 50;
-  private static inline var BOUNDING_BOX_MARGIN_BOTTOM = 0;
+  private static inline var BOUNDING_BOX_MARGIN_TOP = 45;
+  private static inline var BOUNDING_BOX_MARGIN_BOTTOM = 5;
 
 /** Size of each character sprite, in px */
   @final private static var CHARACTER_SPRITE_SIZE = 128;
@@ -87,34 +87,79 @@ class Character extends MovingElement {
   @final private static var HIGHLIGHT_COLOR = 0x00000000; //Change to a value to see square character occupies
 
   /** Return true iff the up key is pressed */
-  public static var UP_PRESSED = function() : Bool { return FlxG.keys.pressed.UP; };
+  public static var UP_PRESSED = function() : Bool {
+    if(PMain.A_VERSION) return FlxG.keys.pressed.UP;
+    else return FlxG.keys.pressed.W;
+  };
 
   /** Return true when the up key is pressed (once per press) */
-  public static var UP_SINGLE = function() : Bool { return FlxG.keys.justPressed.UP; };
+  public static var UP_SINGLE = function() : Bool {
+    if(PMain.A_VERSION) return FlxG.keys.justPressed.UP;
+    else return FlxG.keys.justPressed.W;
+  };
 
   /** Return true iff the down key is pressed */
-  public static var DOWN_PRESSED = function() : Bool { return FlxG.keys.pressed.DOWN; };
+  public static var DOWN_PRESSED = function() : Bool {
+    if(PMain.A_VERSION) return FlxG.keys.pressed.DOWN;
+    else return FlxG.keys.pressed.S;
+  };
 
   /** Return true when the up key is pressed (once per press) */
-  public static var DOWN_SINGLE = function() : Bool { return FlxG.keys.justPressed.DOWN; };
+  public static var DOWN_SINGLE = function() : Bool {
+    if(PMain.A_VERSION) return FlxG.keys.justPressed.DOWN;
+    else return FlxG.keys.justPressed.S;
+  };
 
   /** Return true iff the right key is pressed */
-  public static var RIGHT_PRESSED = function() : Bool { return FlxG.keys.pressed.RIGHT; };
+  public static var RIGHT_PRESSED = function() : Bool {
+    if(PMain.A_VERSION) return FlxG.keys.pressed.RIGHT;
+    else return FlxG.keys.pressed.D;
+  };
 
   /** Return true when the up key is pressed (once per press) */
-  public static var RIGHT_SINGLE = function() : Bool { return FlxG.keys.justPressed.RIGHT; };
+  public static var RIGHT_SINGLE = function() : Bool {
+    if(PMain.A_VERSION) return FlxG.keys.justPressed.RIGHT;
+    else return FlxG.keys.justPressed.D;
+  };
 
   /** Return true iff the left key is pressed */
-  public static var LEFT_PRESSED = function() : Bool { return FlxG.keys.pressed.LEFT; };
+  public static var LEFT_PRESSED = function() : Bool {
+    if(PMain.A_VERSION) return FlxG.keys.pressed.LEFT;
+    else return FlxG.keys.pressed.A;
+  };
 
   /** Return true when the up key is pressed (once per press) */
-  public static var LEFT_SINGLE = function() : Bool { return FlxG.keys.justPressed.LEFT; };
+  public static var LEFT_SINGLE = function() : Bool {
+    if(PMain.A_VERSION) return FlxG.keys.justPressed.LEFT;
+    else return FlxG.keys.justPressed.A;
+  };
 
-  /** Return true iff the grab key is pressed */
-//  public static var GRAB = function() : Bool { return true; }; //Getting rid of the spacebar
+  /** Return true when this should push/pull an element left */
+  public static var PUSHPULL_LEFT = function() : Bool {
+    if(PMain.A_VERSION) return LEFT_PRESSED();
+    else return false;
+  };
+
+  /** Return true when this should push/pull an element up */
+  public static var PUSHPULL_UP = function() : Bool {
+    if(PMain.A_VERSION) return UP_PRESSED();
+    else return false;
+  };
+
+  /** Return true when this should push/pull an element right */
+  public static var PUSHPULL_RIGHT = function() : Bool {
+    if(PMain.A_VERSION) return RIGHT_PRESSED();
+    else return false;
+  };
+
+  /** Return true when this should push/pull an element right */
+  public static var PUSHPULL_DOWN = function() : Bool {
+    if(PMain.A_VERSION) return DOWN_PRESSED();
+    else return false;
+  };
 
   /** Trying "just press space once" */
-  public static var SPACE_SINGLE = function() : Bool {return FlxG.keys.justPressed.SPACE;};
+  public static var SINGLE_SPACE = function() : Bool {return FlxG.keys.justPressed.SPACE;};
 
   /** Return true when the rotate clockwise key is intially pressed */
   public var ROT_CLOCKWISE : Void -> Bool;
@@ -136,18 +181,33 @@ class Character extends MovingElement {
 
   private var moveSprites : Array<FlxSprite>;
 
-  private var grabbing : Bool;
+  public var grabbing : Bool; //This should only be changed outside of Character by AbsMirror's mouse click callback.
 
-  public function check_grab (): Void{
-    if(SPACE_SINGLE()){
-      grabbing = !grabbing;
+  public function check_grab() : Void{
+    if(PMain.A_VERSION) {
+      if (SINGLE_SPACE()) {
+        grabbing = !grabbing;
+      }
     }
+    else {
+      if (elmHolding != null && elmHolding.destTile != null) {
+        grabbing = true;
+      } else {
+        var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
+        if (elm != null && Std.is(elm, InteractableElement)) {
+          grabbing = true;
+        } else{
+          grabbing = false;
+        }
+      }
+      trace(grabbing);
+    }
+
   }
 
-  public function GRAB() : Bool {
+  public function GRAB() : Bool{
     return grabbing;
   }
-  
 
   /** Constructs a TopBar character, belonging to the given state and represented by the given TiledObject */
   public function new(state : GameState, o : TiledObject) {
@@ -196,14 +256,33 @@ class Character extends MovingElement {
     }
 
     ROT_CLOCKWISE = function() : Bool {
-        if (!GRAB()) return false;
-        return FlxG.keys.justPressed.A;
+      if (!grabbing || ! PMain.A_VERSION) return false;
+      if (!GRAB() || (elmHolding == null)) return false;
+
+      if (this.getRow() == this.elmHolding.getRow()) {
+        //PLAYER TO THE LEFT OR RIGHT OF MIRROR
+        return UP_SINGLE();
+      }
+      if (this.getCol() == this.elmHolding.getCol()){
+        //PLAYER ABOVE OR BELOW MIRROR
+        return RIGHT_SINGLE();
+      }
+      return false;
+
     }
 
     ROT_C_CLOCKWISE = function() : Bool {
-      if (!GRAB()) return false;
+      if (!grabbing || !PMain.A_VERSION) return false;
+      if (!GRAB() || (elmHolding == null)) return false;
 
-      return FlxG.keys.justPressed.D;
+      if (this.getRow() == this.elmHolding.getRow()) {
+        //PLAYER TO THE LEFT OR RIGHT OF MIRROR
+        return DOWN_SINGLE();
+      }
+      if (this.getCol() == this.elmHolding.getCol()){
+        return LEFT_SINGLE();
+      }
+      return false;
 
     };
 
@@ -344,7 +423,7 @@ class Character extends MovingElement {
         var row = Std.int(tileLoc.y);
         var col = Std.int(tileLoc.x);
         setMoveTo(row, col);
-      } else if (elmHolding == null) {
+      } else if (elmHolding == null || (!PMain.A_VERSION && elmHolding.destTile == null)){
         moveDirection = Direction.None;
         moveSpeed = MOVE_SPEED;
 
@@ -366,15 +445,14 @@ class Character extends MovingElement {
         }
       } else {
         if (GRAB() && elmHolding.destTile == null) {
-          //TODO: PUSH AND PULL
           if (directionFacing.isHorizontal()) {
-            if (LEFT_PRESSED()) {
+            if (PUSHPULL_LEFT()) {
               if(elmHolding.canMoveInDirection(Direction.Left)) {
                 elmHolding.moveDirection = Direction.Left;
               } else {
                 playCollisionSound();
               }
-            } else if (RIGHT_PRESSED()) {
+            } else if (PUSHPULL_RIGHT()) {
               if (elmHolding.canMoveInDirection(Direction.Right)) {
                 elmHolding.moveDirection = Direction.Right;
               } else {
@@ -382,13 +460,13 @@ class Character extends MovingElement {
               }
             }
           } else if (directionFacing.isVertical()) {
-            if (UP_PRESSED()) {
+            if (PUSHPULL_UP()) {
               if (elmHolding.canMoveInDirection(Direction.Up)) {
                 elmHolding.moveDirection = Direction.Up;
               } else {
                 playCollisionSound();
               }
-            } else if (DOWN_PRESSED()) {
+            } else if (PUSHPULL_DOWN()) {
               if (elmHolding.canMoveInDirection(Direction.Down)) {
                 elmHolding.moveDirection = Direction.Down;
               } else {

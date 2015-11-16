@@ -49,6 +49,7 @@ import flixel.system.FlxSound;
     if(sides != 1 && sides != 2 && PMain.DEBUG_MODE) throw "Illegal values of sides " + sides;
     resetLightInDirection();
     isLit = false;
+
   }
 
   public function isLightingTo(directionOut : Direction) : Bool {
