@@ -512,6 +512,7 @@ class GameState extends FlxState {
     winText.y = FlxG.camera.scroll.y + winText.height;
     add(winText);
     player.kill();
+    exit.playVictoryAnimation();
     Logging.getSingleton().recordLevelEnd();
     actionStackTimer.stop();
   }
