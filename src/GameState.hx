@@ -67,7 +67,8 @@ class GameState extends FlxState {
 
   private static var BACKGROUND_THEME : FlxSound;
 
-  private var hud : TopBar;
+  private var hud : HUD;
+  private var mainCamera : FlxCamera;
   private var hudCamera : FlxCamera;
 
   private var sndWin : FlxSound;
@@ -153,15 +154,22 @@ class GameState extends FlxState {
 
     setZoom(PMain.zoom);
 
-    hudCamera = new FlxCamera(0, 0, FlxG.width, TopBar.HEIGHT, 1.0);
-    FlxG.cameras.add(hudCamera);
-    hud = new TopBar(this, hudCamera);
-    add(hud);
-
     level.wallTiles.forEachOfType(FlxObject, function(ob : FlxObject){
       ob.cameras = [FlxG.camera];
     });
+    level.floorTiles.forEachOfType(FlxObject, function(ob : FlxObject){
+      ob.cameras = [FlxG.camera];
+    });
+    level.holeTiles.forEachOfType(FlxObject, function(ob : FlxObject){
+      ob.cameras = [FlxG.camera];
+    });
 
+    mainCamera = FlxG.camera;
+    hudCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height, 1.0);
+    hudCamera.bgColor = 0x00000000;
+    FlxG.cameras.add(hudCamera);
+    hud = new HUD(this, hudCamera);
+    add(hud);
 
     if(BACKGROUND_THEME == null) {
       BACKGROUND_THEME = FlxG.sound.load(AssetPaths.Background__mp3, 0.95, true);
@@ -170,6 +178,17 @@ class GameState extends FlxState {
     }
 
     sndWin = FlxG.sound.load(AssetPaths.Victory__mp3);
+  }
+
+  public override function destroy() {
+    player.destroy();
+    exit.destroy();
+    lightBulbs.destroy();
+    lightSprites.destroy();
+    lightSprites.destroy();
+    glassWalls.destroy();
+    interactables.destroy();
+    super.destroy();
   }
 
   /** Returns a rectangle representing the given tile */
@@ -318,40 +337,48 @@ class GameState extends FlxState {
       case "player_start":
         var player = new Character(this, o);
         this.player = player;
+        player.cameras = [FlxG.camera];
         FlxG.camera.follow(player, FlxCamera.STYLE_NO_DEAD_ZONE, 1);
 
       case "mirror":
         var mirror = AbsMirror.createMirror(this, o);
         mirror.immovable = true;
+        mirror.cameras = [FlxG.camera];
         interactables.add(mirror);
 
       case "crystal":
         var crystal = new Crystal(this, o);
         crystal.immovable = true;
+        crystal.cameras = [FlxG.camera];
         interactables.add(crystal);
 
       case "barrel":
         var barrel = new Barrel(this, o);
         barrel.immovable = true;
+        barrel.cameras = [FlxG.camera];
         interactables.add(barrel);
 
       case "lightorb":
         var lightBulb = new LightBulb(this, o);
         lightBulb.immovable = true;
+        lightBulb.cameras = [FlxG.camera];
         lightBulbs.add(lightBulb);
 
       case "lightswitch":
         var lightSwitch = new LightSwitch(this, o);
         lightSwitch.immovable = true;
+        lightSwitch.cameras = [FlxG.camera];
         lightSwitches.add(lightSwitch);
 
       case "exit":
         var exit = new Exit(this, o);
+        exit.cameras = [FlxG.camera];
         this.exit = exit;
 
       case "glasswall":
         var wall = new GlassWall(this, o);
         wall.immovable = true;
+        wall.cameras = [FlxG.camera];
         glassWalls.add(wall);
 
       default:

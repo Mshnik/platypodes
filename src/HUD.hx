@@ -6,13 +6,14 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
 
-class TopBar extends FlxTypedGroup<FlxSprite>{
+class HUD extends FlxTypedGroup<FlxSprite>{
 
   public static inline var HEIGHT =38;
 
   @final public var state : GameState;
 
-  public var back(default, null) : FlxSprite;
+  public var backTop(default, null) : FlxSprite;
+  public var backBottom(default, null) : FlxSprite;
 
   public var doReset(default, null) : Bool;
 
@@ -25,7 +26,9 @@ class TopBar extends FlxTypedGroup<FlxSprite>{
     super();
 
     this.state = state;
-    back = new FlxSprite().loadGraphic(AssetPaths.control_bar_icons_off__png, false, FlxG.width, HEIGHT);
+    backTop = new FlxSprite().loadGraphic(AssetPaths.control_bar__png, false, FlxG.width, HEIGHT);
+    backBottom = new FlxSprite().loadGraphic(AssetPaths.control_bar__png, false, FlxG.width, HEIGHT);
+    backBottom.y = FlxG.height - HEIGHT;
 
     //Button events (pressed, ispressed, etc) are handled in GameState to unify with keyboard commands easily.
     resetButton = new FlxButton(0, 0, "Reset (R)", function(){doReset = true;});
@@ -38,7 +41,8 @@ class TopBar extends FlxTypedGroup<FlxSprite>{
     zoomInButton.setPosition(380, (HEIGHT - zoomInButton.height) / 2);
     zoomOutButton.setPosition(540, (HEIGHT - zoomOutButton.height) / 2);
 
-    add(back);
+    add(backTop);
+    add(backBottom);
     add(resetButton);
     add(undoButton);
     add(zoomInButton);
