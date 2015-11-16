@@ -208,7 +208,7 @@ class Character extends MovingElement {
     };
 
     isDying = false;
-    collisionSound = FlxG.sound.load(AssetPaths.Collision8Bit__mp3, 0.5);
+    collisionSound = FlxG.sound.load(AssetPaths.Collision8Bit__wav, 0.8);
     deathSound = FlxG.sound.load(AssetPaths.crackle__mp3, 0.9);
     resetElmHoldingOldCoords();
   }
