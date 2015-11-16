@@ -32,6 +32,7 @@ class LightBulb extends Element implements Lightable{
         else loadGraphic(DEFAULT_SPRITE[3]);
     }
 
+    resetLightInDirection();
     light_dirty = true;
     lighting = new Lighting(state, this);
     isLit = true;

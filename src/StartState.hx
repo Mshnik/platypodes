@@ -1,4 +1,5 @@
 package ;
+import flixel.addons.plugin.FlxMouseControl;
 import flixel.text.FlxText;
 import flixel.system.FlxSound;
 import flixel.ui.FlxButton;
@@ -20,6 +21,7 @@ class StartState extends FlxState{
 
   public override function create(){
     super.create();
+    FlxG.mouse.visible = true;
 
     var splash = new FlxSprite(0,0);
     splash.loadGraphic(AssetPaths.splashscreen__png);
@@ -45,6 +47,7 @@ class StartState extends FlxState{
     levels.push(AssetPaths.l4__tmx);
     levels.push(AssetPaths.l5__tmx);
     levels.push(AssetPaths.l6__tmx);
+    levels.push(AssetPaths.g0__tmx);
 
     playButton = new FlxButton(0,0,"Play", function(){
       WIND_SOUND.fadeOut(5, 0);
@@ -61,7 +64,7 @@ class StartState extends FlxState{
     WIND_SOUND.persist = true;
     WIND_SOUND.play();
 
-    var f = new FlxText(10,10, 200, "Ver-"+PMain.VERSION_ID);
+    var f = new FlxText(10,10, 200, "Ver-"+PMain.VERSION_ID + (PMain.A_VERSION ? ".1" : ".2"));
     add(f);
   }
 }
