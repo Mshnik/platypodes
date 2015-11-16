@@ -21,8 +21,6 @@ class StartState extends FlxState{
 
   public override function create(){
     super.create();
-    FlxG.mouse.visible = true;
-
     var splash = new FlxSprite(0,0);
     splash.loadGraphic(AssetPaths.splashscreen__png);
     var scale = Math.min(FlxG.width / SPLASH_WIDTH, FlxG.height / SPLASH_HEIGHT);
