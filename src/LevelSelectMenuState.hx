@@ -20,51 +20,54 @@ class LevelSelectMenuState extends FlxState
 	 * Creates buttons for each of the levels in levels.
 	 */
 	override public function create():Void {
-		super.create();
-    FlxG.mouse.visible = true;
+      super.create();
+      FlxG.mouse.visible = true;
 
-    levels = new Array<Dynamic>();
-    levels.push(AssetPaths.t0__tmx);
-    levels.push(AssetPaths.t1__tmx);
-    levels.push(AssetPaths.t2__tmx);
-    levels.push(AssetPaths.t3__tmx);
-    levels.push(AssetPaths.olivial0__tmx);
-    levels.push(AssetPaths.olivial1__tmx);
-    levels.push(AssetPaths.olivial2__tmx);
-    levels.push(AssetPaths.olivial3__tmx);
-    levels.push(AssetPaths.l0__tmx);
-    levels.push(AssetPaths.l1__tmx);
-    levels.push(AssetPaths.l2__tmx);
-    levels.push(AssetPaths.l3__tmx);
-    levels.push(AssetPaths.l4__tmx);
-    levels.push(AssetPaths.l5__tmx);
-    levels.push(AssetPaths.l6__tmx);
-    levels.push(AssetPaths.g0__tmx);
+      levels = new Array<Dynamic>();
+      levels.push(AssetPaths.t0__tmx);
+      levels.push(AssetPaths.t1__tmx);
+      levels.push(AssetPaths.t2__tmx);
+      levels.push(AssetPaths.t3__tmx);
+      levels.push(AssetPaths.olivial0__tmx);
+      levels.push(AssetPaths.olivial1__tmx);
+      levels.push(AssetPaths.olivial2__tmx);
+      levels.push(AssetPaths.olivial3__tmx);
+      levels.push(AssetPaths.l0__tmx);
+      levels.push(AssetPaths.l1__tmx);
+      levels.push(AssetPaths.l2__tmx);
+      levels.push(AssetPaths.l3__tmx);
+      levels.push(AssetPaths.l4__tmx);
+      levels.push(AssetPaths.l5__tmx);
+      levels.push(AssetPaths.l6__tmx);
+      levels.push(AssetPaths.oliviag0__tmx);
+      levels.push(AssetPaths.g0__tmx);
+      levels.push(AssetPaths.oliviag1__tmx);
+      levels.push(AssetPaths.oliviag2__tmx);
 
-    var x = MARGIN;
-    var y = MARGIN;
-    var w : Float = -1;
-    var h : Float = -1;
-    for(i in 0...levels.length) {
-      var button = new FlxButton(x, y, "Level " + Std.string(i), function(){ loadLevel(i); });
+      var x = MARGIN;
+      var y = MARGIN;
+      var w : Float = -1;
+      var h : Float = -1;
+      for(i in 0...levels.length) {
+        var button = new FlxButton(x, y, "Level " + Std.string(i), function(){ loadLevel(i); });
 
-      if (w == -1) {
-        w = button.width;
+        if (w == -1) {
+          w = button.width;
+        }
+        if (h == -1) {
+          h = button.height;
+        }
+
+        x += w + SPACING;
+        if(x + w > FlxG.width - MARGIN) {
+          x = MARGIN;
+          y += h + SPACING;
+        }
+
+        button.onUp.sound = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
+
+        add(button);
       }
-      if (h == -1) {
-        h = button.height;
-      }
-
-      x += w + SPACING;
-      if(x + w > FlxG.width - MARGIN) {
-        x = MARGIN;
-        y += h + SPACING;
-      }
-
-      button.onUp.sound = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
-
-      add(button);
-    }
   }
 
   /** Loads (Switches) to level at levels[index] */
