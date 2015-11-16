@@ -1,5 +1,6 @@
 package;
 
+import flixel.addons.plugin.FlxMouseControl;
 import flixel.FlxG;
 import flash.display.Sprite;
 import flash.events.Event;
@@ -66,6 +67,7 @@ class PMain extends Sprite
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 
 		FlxG.sound.playMusic(AssetPaths.BasicBackground__wav, 1, true);
+		FlxG.plugins.add(new FlxMouseControl());
 
 		if (zoom == -1) {
 			var ratioX:Float = stageWidth / gameWidth;

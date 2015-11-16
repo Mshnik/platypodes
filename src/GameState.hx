@@ -88,10 +88,6 @@ class GameState extends FlxState {
 
   override public function create():Void {
     super.create();
-    if(PMain.A_VERSION) {
-      FlxG.mouse.visible = false;
-    }
-
     // Load the level's tilemaps
     level = new TiledLevel(this, levelPaths[levelPathIndex]);
 
