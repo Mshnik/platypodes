@@ -260,6 +260,7 @@ class Tooltip extends FlxGroup {
     var mirror = game.player.elmHolding;
     if (mirror != null) {
       var pull:ActionElement = ActionElement.pushpull(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), pullMirrorDirection);
+      game.actionStack.add(pull);
       game.executeAction(pull, true);
     }
   }
@@ -268,6 +269,7 @@ class Tooltip extends FlxGroup {
     var mirror = game.player.elmHolding;
     if (mirror != null) {
       var pull:ActionElement = ActionElement.pushpull(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), pushMirrorDirection);
+      game.actionStack.add(pull);
       game.executeAction(pull, true);
     }
   }
@@ -277,6 +279,7 @@ class Tooltip extends FlxGroup {
     var mirror = game.player.elmHolding;
     if (mirror != null) {
       var action:ActionElement = ActionElement.rotate(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), true);
+      game.actionStack.add(action);
       game.executeAction(action, true);
     }
   }
@@ -285,6 +288,7 @@ class Tooltip extends FlxGroup {
     var mirror = game.player.elmHolding;
     if (mirror != null) {
       var action:ActionElement = ActionElement.rotate(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), false);
+      game.actionStack.add(action);
       game.executeAction(action, true);
     }
   }

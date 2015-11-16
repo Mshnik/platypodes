@@ -208,9 +208,7 @@ class Character extends MovingElement {
           grabbing = false;
         }
       }
-      trace(grabbing);
     }
-
   }
 
   public function GRAB() : Bool{
@@ -589,6 +587,7 @@ class Character extends MovingElement {
 
   public override function locationReached(oldRow : Int, oldCol : Int) {
     super.locationReached(oldRow, oldCol);
+    trace("Reached location - not tilelocked:" + (!tileLocked) + " holding an elm:" + (elmHolding != null));
     mostRecentCollisionX = 0;
     mostRecentCollisionY = 0;
     if ((!tileLocked && elmHolding == null) || moveList != null) {
