@@ -1,4 +1,5 @@
 package elements.impl;
+import PMain;
 import flixel.FlxSprite;
 import flixel.util.FlxPoint;
 import flixel.system.FlxSound;
@@ -176,12 +177,20 @@ class Character extends MovingElement {
   /** The old x value of the mirror this is holding before it started moving */
   private var elmHoldingOldY : Int;
 
+  /** The most recent x coordinate of an object this has collided into. Used to prevent overplaying the collision sound */
+  private var mostRecentCollisionX : Int;
+
+  /** The most recent y coordinate of an object this has collided into. Used to prevent overplaying the collision sound */
+  private var mostRecentCollisionY : Int;
+
   /** The list of move instructions to execute in the case of mouse movement */
   private var moveList : List<Direction>;
 
   private var moveSprites : Array<FlxSprite>;
 
   public var grabbing : Bool; //This should only be changed outside of Character by AbsMirror's mouse click callback.
+
+  private var centered : Bool; //Used for grabbing. If the Character's in the center of the tile.
 
   public function check_grab() : Void{
     if(PMain.A_VERSION) {
@@ -191,18 +200,17 @@ class Character extends MovingElement {
     }
     else {
       if (elmHolding != null && elmHolding.destTile != null) {
+        //Currently moving with mirror
         grabbing = true;
       } else {
         var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
-        if (elm != null && Std.is(elm, InteractableElement)) {
+        if (elm != null && Std.is(elm, InteractableElement) && centered) {
           grabbing = true;
         } else{
           grabbing = false;
         }
       }
-      trace(grabbing);
     }
-
   }
 
   public function GRAB() : Bool{
@@ -287,7 +295,7 @@ class Character extends MovingElement {
     };
 
     isDying = false;
-    collisionSound = FlxG.sound.load(AssetPaths.Collision8Bit__wav, 0.8);
+    collisionSound = FlxG.sound.load(AssetPaths.Collision8Bit__wav, 1.1);
     deathSound = FlxG.sound.load(AssetPaths.crackle__mp3, 0.9);
     resetElmHoldingOldCoords();
   }
@@ -388,7 +396,9 @@ class Character extends MovingElement {
     if(!tileLocked) {
       if (directionFacing.isCardinal() && alive && ! isDying) {
         var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
+
         if (elm != null && Std.is(elm, AbsMirror)) {
+
           var mirror : AbsMirror = Std.instance(elm, AbsMirror);
           if(mirror.destTile == null && ROT_CLOCKWISE()) {
             state.actionStack.addRotate(mirror, true);
@@ -398,7 +408,7 @@ class Character extends MovingElement {
             state.actionStack.addRotate(mirror, false);
             mirror.rotateCounterClockwise();
           }
-          if(GRAB() && elmHolding == null) {
+          if(GRAB() && (elmHolding != elm)) {
             mirror.moveDirection = Direction.None;
             mirror.holdingPlayer = this;
           }
@@ -506,6 +516,12 @@ class Character extends MovingElement {
       }
 
       moveSpeed = AUTOMOVE_SPEED;
+      
+      if(moveDirection.equals(Direction.None)){
+        this.centered = true;
+      } else{
+        this.centered = false; 
+      }
     }
 
     //Play the appropriate animation
@@ -575,6 +591,8 @@ class Character extends MovingElement {
 
   public override function locationReached(oldRow : Int, oldCol : Int) {
     super.locationReached(oldRow, oldCol);
+    mostRecentCollisionX = 0;
+    mostRecentCollisionY = 0;
     if ((!tileLocked && elmHolding == null) || moveList != null) {
       state.actionStack.addMove(oldCol, oldRow);
     } else if(! tileLocked && elmHolding != null) {
@@ -601,7 +619,13 @@ class Character extends MovingElement {
   }
 
   public function playCollisionSound() {
-    collisionSound.play();
+    var collisionX = getCol() + Std.int(directionFacing.x);
+    var collisionY = getRow() + Std.int(directionFacing.y);
+    if(collisionX != mostRecentCollisionX || collisionY != mostRecentCollisionY) {
+      mostRecentCollisionX = collisionX;
+      mostRecentCollisionY = collisionY;
+      collisionSound.play();
+    }
   }
 
   public override function revive() {

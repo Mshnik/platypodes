@@ -21,9 +21,6 @@ class LevelSelectMenuState extends FlxState
 	 */
 	override public function create():Void {
 		super.create();
-
-    FlxG.mouse.visible = true;
-
     levels = new Array<Dynamic>();
     levels.push(AssetPaths.t0__tmx);
     levels.push(AssetPaths.t1__tmx);
@@ -88,6 +85,5 @@ class LevelSelectMenuState extends FlxState
 	 */
 	override public function update():Void {
 		super.update();
-    FlxG.mouse.load();
   }
 }
