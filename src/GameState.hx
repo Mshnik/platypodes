@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxSprite;
 import PMain;
 import flixel.ui.FlxButton;
 import elements.InteractableElement;
@@ -28,7 +29,7 @@ class GameState extends FlxState {
 
   private static inline var DISPLAY_COORDINATES = false;
 
-  public static var MENU_BUTTON = function() : Bool { return FlxG.keys.justPressed.ESCAPE; }; //TODO - reinstate after friends
+  public static var MENU_BUTTON : Void -> Bool;
   public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
 
   public var RESET : Void -> Bool;
@@ -62,12 +63,12 @@ class GameState extends FlxState {
   public var interactables:FlxTypedGroup<InteractableElement>;
 
   private var won : Bool;
-  private var winText : FlxText;
-  private var deadText : FlxText;
+  private var autoProgress : Bool;
 
   private static var BACKGROUND_THEME : FlxSound;
 
-  private var hud : TopBar;
+  private var hud : OverlayDisplay;
+  private var mainCamera : FlxCamera;
   private var hudCamera : FlxCamera;
 
   private var sndWin : FlxSound;
@@ -125,24 +126,6 @@ class GameState extends FlxState {
     add(player);
     add(tooltip);
 
-    RESET = function(){
-      return FlxG.keys.justPressed.R || hud.doReset;
-    }
-
-    UNDO = function(){
-      return (FlxG.keys.pressed.BACKSPACE || hud.undoButton.status == FlxButton.PRESSED)
-        && ! player.tileLocked
-        && (player.elmHolding == null || player.elmHolding.moveDirection.equals(Direction.None));
-    };
-
-    ZOOM_IN = function() {
-      return FlxG.keys.pressed.ONE || hud.zoomInButton.status == FlxButton.PRESSED;
-    }
-
-    ZOOM_OUT = function() {
-      return FlxG.keys.pressed.TWO || hud.zoomOutButton.status == FlxButton.PRESSED;
-    }
-
     if(DISPLAY_COORDINATES) {
       for(r in 0...level.height) {
         for(c in 0...level.width) {
@@ -153,15 +136,23 @@ class GameState extends FlxState {
 
     setZoom(PMain.zoom);
 
-    hudCamera = new FlxCamera(0, 0, FlxG.width, TopBar.HEIGHT, 1.0);
-    FlxG.cameras.add(hudCamera);
-    hud = new TopBar(this, hudCamera);
-    add(hud);
-
     level.wallTiles.forEachOfType(FlxObject, function(ob : FlxObject){
       ob.cameras = [FlxG.camera];
     });
+    level.floorTiles.forEachOfType(FlxObject, function(ob : FlxObject){
+      ob.cameras = [FlxG.camera];
+    });
+    level.holeTiles.forEachOfType(FlxObject, function(ob : FlxObject){
+      ob.cameras = [FlxG.camera];
+    });
 
+    mainCamera = FlxG.camera;
+    hudCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height, 1.0);
+    hudCamera.bgColor = 0x00000000;
+    FlxG.cameras.add(hudCamera);
+
+    this.hud = new OverlayDisplay(this, hudCamera, levelPathIndex < levelPaths.length - 1);
+    add(this.hud);
 
     if(BACKGROUND_THEME == null) {
       BACKGROUND_THEME = FlxG.sound.load(AssetPaths.Background__mp3, 0.95, true);
@@ -170,6 +161,41 @@ class GameState extends FlxState {
     }
 
     sndWin = FlxG.sound.load(AssetPaths.Victory__mp3);
+
+    MENU_BUTTON = function(){
+      return FlxG.keys.justPressed.ESCAPE || this.hud.doLevelSelect;
+    }
+
+    RESET = function(){
+      return FlxG.keys.justPressed.R || this.hud.doReset;
+    }
+
+    UNDO = function(){
+      return (FlxG.keys.pressed.BACKSPACE || this.hud.undoButton.status == FlxButton.PRESSED
+              || (! player.alive && FlxG.keys.pressed.SPACE))
+      && ! player.tileLocked
+      && (player.elmHolding == null || player.elmHolding.moveDirection.equals(Direction.None));
+    };
+
+    ZOOM_IN = function() {
+      return FlxG.keys.pressed.ONE || this.hud.zoomInButton.status == FlxButton.PRESSED;
+    }
+
+    ZOOM_OUT = function() {
+      return FlxG.keys.pressed.TWO || this.hud.zoomOutButton.status == FlxButton.PRESSED;
+    }
+  }
+
+  public override function destroy() {
+    player.destroy();
+    exit.destroy();
+    lightBulbs.destroy();
+    lightSprites.destroy();
+    lightSprites.destroy();
+    glassWalls.destroy();
+    interactables.destroy();
+    hud.destroy();
+    super.destroy();
   }
 
   /** Returns a rectangle representing the given tile */
@@ -262,7 +288,7 @@ class GameState extends FlxState {
   override public function update():Void {
     if(MENU_BUTTON()) {
       FlxG.switchState(new LevelSelectMenuState());
-    } else if(won && (NEXT_LEVEL_BUTTON() || sndWinDone) && levelPathIndex + 1 < levelPaths.length){
+    } else if(won && (NEXT_LEVEL_BUTTON() || autoProgress) && levelPathIndex + 1 < levelPaths.length){
       BACKGROUND_THEME.resume();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {
@@ -296,7 +322,6 @@ class GameState extends FlxState {
       FlxG.collide(player, player.elmHolding);
     }
 
-
     //Check for victory
     if(! exit.isOpen) {
       var allLit = true;
@@ -311,6 +336,10 @@ class GameState extends FlxState {
         win();
       }
     }
+
+    //Check for finishing of animations
+    hud.showDeadSprite = ! player.alive && !won;
+    hud.showWinSprite = won && exit.animation.finished;
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup) {
@@ -318,40 +347,48 @@ class GameState extends FlxState {
       case "player_start":
         var player = new Character(this, o);
         this.player = player;
+        player.cameras = [FlxG.camera];
         FlxG.camera.follow(player, FlxCamera.STYLE_NO_DEAD_ZONE, 1);
 
       case "mirror":
         var mirror = AbsMirror.createMirror(this, o);
         mirror.immovable = true;
+        mirror.cameras = [FlxG.camera];
         interactables.add(mirror);
 
       case "crystal":
         var crystal = new Crystal(this, o);
         crystal.immovable = true;
+        crystal.cameras = [FlxG.camera];
         interactables.add(crystal);
 
       case "barrel":
         var barrel = new Barrel(this, o);
         barrel.immovable = true;
+        barrel.cameras = [FlxG.camera];
         interactables.add(barrel);
 
       case "lightorb":
         var lightBulb = new LightBulb(this, o);
         lightBulb.immovable = true;
+        lightBulb.cameras = [FlxG.camera];
         lightBulbs.add(lightBulb);
 
       case "lightswitch":
         var lightSwitch = new LightSwitch(this, o);
         lightSwitch.immovable = true;
+        lightSwitch.cameras = [FlxG.camera];
         lightSwitches.add(lightSwitch);
 
       case "exit":
         var exit = new Exit(this, o);
+        exit.cameras = [FlxG.camera];
         this.exit = exit;
 
       case "glasswall":
         var wall = new GlassWall(this, o);
         wall.immovable = true;
+        wall.cameras = [FlxG.camera];
         glassWalls.add(wall);
 
       default:
@@ -413,7 +450,6 @@ class GameState extends FlxState {
 
     if (a.id == ActionElement.PUSHPULL && Std.is(elm, InteractableElement)) {
       var m : InteractableElement = Std.instance(elm, InteractableElement);
-      trace("Trying to push/pull " + m);
       if (player.alive && (! m.canMoveInDirection(a.moveDirection) || ! player.canMoveInDirectionWithElement(a.moveDirection, m))) {
         trace("Can't execute action " + a + " can't move mirror " + m + " in direction " + a.moveDirection.simpleString);
         if(playSounds) {
@@ -457,7 +493,7 @@ class GameState extends FlxState {
         mostRecentUndoTimeStamp = t;
         if(! player.alive) {
           player.revive();
-          remove(deadText);
+          hud.showDeadSprite = false;
         }
       }
     }
@@ -468,11 +504,6 @@ class GameState extends FlxState {
     player.deathSound.play();
     player.animation.play(Character.DEATH_ANIMATION_KEY, false);
     actionStack.addDie();
-    deadText = new FlxText(0, 0, Std.int(400 / FlxG.camera.zoom), "You died - press Backspace to undo or R to reset", Std.int(30 / FlxG.camera.zoom));
-    deadText.x = FlxG.camera.scroll.x + (FlxG.camera.width - deadText.width) / 2;
-    deadText.y = FlxG.camera.scroll.y + deadText.height;
-    deadText.color = 0xFFCC0022;
-    add(deadText);
   }
 
   public function win() {
@@ -484,19 +515,15 @@ class GameState extends FlxState {
     sndWin.onComplete = function() {
       BACKGROUND_THEME.resume();
       sndWinDone = true;
+      Timer.delay(function(){autoProgress = true;}, 3000);
     }
     sndWin.play();
-    winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? " Thanks for playing!!" : " - Press Space to continue"), Std.int(30 / FlxG.camera.zoom));
-    winText.x = FlxG.camera.scroll.x + (FlxG.camera.width - winText.width) / 2;
-    winText.y = FlxG.camera.scroll.y + winText.height;
-    add(winText);
     player.kill();
     exit.playVictoryAnimation();
     var compTime = Timer.stamp() - levelStartTime;
     Logging.getSingleton().recordEvent(ActionStack.LOG_LEVEL_COMPLETION_TIME_ID, "" + compTime);
     Logging.getSingleton().recordEvent(ActionStack.LOG_ACTION_COUNT_ON_LEVEL_COMPLETE, "" + actionStack.getInteractedActionCount());
     Logging.getSingleton().recordLevelEnd();
-    //actionStackTimer.stop();
   }
 
 }
