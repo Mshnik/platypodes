@@ -1,5 +1,4 @@
 package elements.impl;
-import PMain;
 import flixel.FlxSprite;
 import flixel.util.FlxPoint;
 import flixel.system.FlxSound;
@@ -38,7 +37,7 @@ class Character extends MovingElement {
   private inline static var CHARACTER_SPRITE_SHEET = AssetPaths.playerSheet__png;
 
   /** Standard speed of animations for the Character class */
-  public inline static var ANIMATION_SPEED = 10;
+  public inline static var ANIMATION_SPEED = 6;
 
   /** The walking animation keys */
   public inline static var WALK_LEFT_RIGHT_ANIMATION_KEY = "Left-Right";
@@ -243,7 +242,7 @@ class Character extends MovingElement {
     animation.add(PUSH_PULL_LEFT_RIGHT_ANIMATION_KEY, [35,36], ANIMATION_SPEED, false);
     animation.add(RELEASE_LEFT_RIGHT_ANIMATION_KEY, [35,34,33,32], ANIMATION_SPEED, false);
 
-    animation.add(DEATH_ANIMATION_KEY, [40, 41, 42, 43, 44, 45, 46, 47, 48], DEATH_ANIMATION_SPEED, false);
+    animation.add(DEATH_ANIMATION_KEY, [40, 41, 42, 43, 44, 45, 46, 47, 48, 13], DEATH_ANIMATION_SPEED, false);
     animation.callback = animationCallback;
 
     //Make bounding box slightly smaller than sprite for ease of movement
@@ -520,7 +519,7 @@ class Character extends MovingElement {
       if(moveDirection.equals(Direction.None)){
         this.centered = true;
       } else{
-        this.centered = false; 
+        this.centered = false;
       }
     }
 
