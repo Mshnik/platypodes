@@ -151,7 +151,7 @@ class GameState extends FlxState {
     hudCamera.bgColor = 0x00000000;
     FlxG.cameras.add(hudCamera);
 
-    this.hud = new OverlayDisplay(this, hudCamera);
+    this.hud = new OverlayDisplay(this, hudCamera, levelPathIndex < levelPaths.length - 1);
     add(this.hud);
 
     if(BACKGROUND_THEME == null) {

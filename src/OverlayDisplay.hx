@@ -33,7 +33,7 @@ class OverlayDisplay extends FlxTypedGroup<FlxSprite>{
   public var zoomOutButton(default, null) : FlxButton;
   public var zoomInButton(default, null) : FlxButton;
 
-  public function new(state : GameState, camera : FlxCamera) {
+  public function new(state : GameState, camera : FlxCamera, hasNextLevel : Bool) {
     super();
 
     this.state = state;
@@ -41,7 +41,12 @@ class OverlayDisplay extends FlxTypedGroup<FlxSprite>{
     backBottom = new FlxSprite().loadGraphic(AssetPaths.control_bar__png, false, FlxG.width, HEIGHT);
     backBottom.y = FlxG.height - HEIGHT;
 
-    winSprite = new FlxSprite().loadGraphic(AssetPaths.success_popup__png);
+    winSprite = new FlxSprite();
+    if(hasNextLevel) {
+      winSprite.loadGraphic(AssetPaths.success_popup__png);
+    } else {
+      winSprite.loadGraphic(AssetPaths.thanks_popup__png);
+    }
     winSprite.setPosition((FlxG.width - winSprite.width)/2, -winSprite.height + HEIGHT);
     add(winSprite);
     deadSprite = new FlxSprite().loadGraphic(AssetPaths.fail_popup__png);
