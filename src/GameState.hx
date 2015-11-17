@@ -49,6 +49,8 @@ class GameState extends FlxState {
 
   public var player:Character;
   public var tooltip:Tooltip;
+  public static inline var NO_PUSHPULL_LEVEL = 2;
+  public static inline var NO_ROTATE_LEVEL = 1;
 
   public var actionStack : ActionStack;
   public var levelStartTime : Float;
