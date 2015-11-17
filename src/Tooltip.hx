@@ -264,30 +264,32 @@ class Tooltip extends FlxGroup {
     Otherwise, horizontal = false.***/
 
   private function configureRotateArrows(d:Direction, mBox : FlxRect):Void {
-    trace(d);
-    trace(mBox);
-    if (d.isHorizontal()) {
-      cwArrowButton.setPosition(mBox.left, mBox.top - cwArrowButton.height);
-      cwArrowButton.angle = 0;
+    try {
+      if (d.isHorizontal()) {
+        cwArrowButton.setPosition(mBox.left, mBox.top - cwArrowButton.height);
+        cwArrowButton.angle = 0;
 
-      ccwArrowButton.setPosition(mBox.left, mBox.bottom);
-      ccwArrowButton.angle = 180;
+        ccwArrowButton.setPosition(mBox.left, mBox.bottom);
+        ccwArrowButton.angle = 180;
 
-    } else if (d.isVertical()) {
-      cwArrowButton.setPosition(mBox.right, mBox.bottom - ccwArrowButton.height);
-      if(!PMain.A_VERSION)
-      {
-        cwArrowButton.setPosition(mBox.right, mBox.bottom - ccwArrowButton.height + (cwArrowButton.height/6));
+      } else if (d.isVertical()) {
+        cwArrowButton.setPosition(mBox.right, mBox.bottom - ccwArrowButton.height);
+        if(!PMain.A_VERSION)
+        {
+          cwArrowButton.setPosition(mBox.right, mBox.bottom - ccwArrowButton.height + (cwArrowButton.height/6));
+        }
+        cwArrowButton.angle = 90;
+
+
+        ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - cwArrowButton.height);
+        if(!PMain.A_VERSION)
+        {
+          ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - cwArrowButton.height + (ccwArrowButton.height/6));
+        }
+        ccwArrowButton.angle = 270;
       }
-      cwArrowButton.angle = 90;
-
-
-      ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - cwArrowButton.height);
-      if(!PMain.A_VERSION)
-      {
-        ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - cwArrowButton.height + (ccwArrowButton.height/6));
-      }
-      ccwArrowButton.angle = 270;
+    }catch(msg : String) {
+      //TODO - This was thrown once. Do something?
     }
   }
 
