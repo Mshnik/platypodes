@@ -67,7 +67,6 @@ class PMain extends Sprite
     var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 
-		FlxG.sound.playMusic(AssetPaths.BasicBackground__wav, 1, true);
 		FlxG.plugins.add(new FlxMouseControl());
 
 		if (zoom == -1) {
