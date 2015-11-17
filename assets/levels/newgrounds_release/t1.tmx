@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="128" tileheight="128" nextobjectid="78">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="128" tileheight="128" nextobjectid="79">
  <tileset firstgid="1" name="walls" tilewidth="128" tileheight="128" tilecount="42">
   <image source="../../images/newgrounds_release/wall_sheet.png" width="896" height="768"/>
  </tileset>
@@ -13,13 +13,13 @@
   <image source="../../images/newgrounds_release/hole_sheet.png" width="768" height="384"/>
  </tileset>
  <tileset firstgid="77" name="mirrors" tilewidth="128" tileheight="128" tilecount="3">
-  <image source="../../images/newgrounds_release/mirror_sheet.png" width="386" height="130"/>
+  <image source="../../images/newgrounds_release/mirror_sheet.png" width="414" height="138"/>
  </tileset>
  <tileset firstgid="80" name="orb_sheet" tilewidth="128" tileheight="128" tilecount="9">
   <image source="../../images/newgrounds_release/orb_sheet.png" width="384" height="384"/>
  </tileset>
- <tileset firstgid="89" name="tutorialImages" tilewidth="128" tileheight="128" tilecount="64">
-  <image source="../../images/newgrounds_release/tutorial_sheet.png" width="512" height="2048"/>
+ <tileset firstgid="89" name="tutorialImages" tilewidth="128" tileheight="128" tilecount="16">
+  <image source="../../images/newgrounds_release/tutorial_sheet.png" width="512" height="512"/>
  </tileset>
  <layer name="Floor" width="20" height="20">
   <properties>
@@ -45,15 +45,10 @@
    eJxjZGBgYBwimBWIRZEwDxKbiQzztBhQgSoSW2YQmCcIxBxQ/VxALEFl9yEDSswTA2IVNMxPgXnI4UYN91HLPBYgVgZiASiNjJnJMG8Uj+KhjgETIgWz
   </data>
  </layer>
- <layer name="Tutorial Images" width="20" height="20">
-  <properties>
-   <property name="tileset" value="tutorialImages"/>
-  </properties>
-  <data encoding="base64" compression="zlib">
-   eJxjYBgFo2DwgUQgTgLiZCBOoYJ5qUCcBsTpQJxBBfNGwSgYBQwMAO9WAyU=
-  </data>
- </layer>
  <objectgroup name="Objects"/>
+ <objectgroup name="Tutorial Images">
+  <object id="78" gid="89" x="768" y="1152" width="128" height="128"/>
+ </objectgroup>
  <objectgroup name="Mirrors">
   <object id="72" type="mirror" gid="78" x="640" y="896" width="128" height="128">
    <properties>

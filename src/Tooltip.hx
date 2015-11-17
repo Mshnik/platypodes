@@ -1,4 +1,5 @@
 package;
+import flixel.FlxG;
 import logging.ActionElement;
 import flixel.util.FlxPoint;
 import flixel.addons.display.FlxExtendedSprite;
@@ -20,9 +21,9 @@ class Tooltip extends FlxGroup {
   private var pullMirrorDirection:Direction;
 
   /** Rotation arrow graphic for scheme A **/
-  private inline static var A_ROTATE_ARROW_PATH = AssetPaths.A_rotate_arrow__png; //clockwise
+  private inline static var A_ROTATE_ARROW_PATH = AssetPaths.A_up_tip__png; //clockwise
   /** Pull/push arrow graphic for scheme A**/
-  private inline static var A_PUSH_ARROW_PATH = AssetPaths.A_push_pull__png; //pointing up
+  private inline static var A_PUSH_ARROW_PATH = AssetPaths.A_side_tip__png; //pointing up
 
   /** Rotation arrow graphic for scheme B **/
   private inline static var B_ROTATE_ARROW_PATH = AssetPaths.B_rotate_arrow__png; //clockwise
@@ -119,6 +120,11 @@ class Tooltip extends FlxGroup {
       cwArrowButton.mouseReleasedCallback = rotateCWCallback;
       ccwArrowButton.mouseReleasedCallback = rotateCCWCallback;
     }
+
+    pullArrowButton.cameras = [FlxG.camera];
+    pushArrowButton.cameras = [FlxG.camera];
+    cwArrowButton.cameras = [FlxG.camera];
+    ccwArrowButton.cameras = [FlxG.camera];
 
     this.add(pullArrowButton);
     this.add(pushArrowButton);

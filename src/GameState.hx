@@ -43,9 +43,9 @@ class GameState extends FlxState {
 
   private static inline var ZOOM_MULT : Float = 1.03;
 
-  @final private var levelPaths : Array<Dynamic>;
-  @final private var levelPathIndex : Int;
-  public var level:TiledLevel;
+  private var levelPaths : Array<Dynamic>;
+  public var levelPathIndex(default, null) : Int;
+  public var level(default, null) :TiledLevel;
 
   public var player:Character;
   public var tooltip:Tooltip;
@@ -125,7 +125,7 @@ class GameState extends FlxState {
     add(lightSwitches);
     add(player);
     add(tooltip);
-
+    
     if(DISPLAY_COORDINATES) {
       for(r in 0...level.height) {
         for(c in 0...level.width) {
@@ -390,6 +390,12 @@ class GameState extends FlxState {
         wall.immovable = true;
         wall.cameras = [FlxG.camera];
         glassWalls.add(wall);
+
+      case "tutorial images":
+        var t = new TutorialImage(this, o);
+        t.immovable = true;
+        t.cameras = [FlxG.camera];
+        add(t);
 
       default:
         trace("Got unknown object " + o.type.toLowerCase());
