@@ -69,8 +69,6 @@ class PMain extends Sprite
     var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
 
-		FlxG.plugins.add(new FlxMouseControl());
-
 		if (zoom == -1) {
 			var ratioX:Float = stageWidth / gameWidth;
 			var ratioY:Float = stageHeight / gameHeight;
@@ -80,6 +78,7 @@ class PMain extends Sprite
 		}
 
 		var g = new FlxGame(gameWidth, gameHeight, initialState, zoom, updateFrameRate, drawFrameRate, skipSplash, startFullscreen);
+		FlxG.plugins.add(new FlxMouseControl());
 		addChild(g);
 	}
 
