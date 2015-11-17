@@ -45,6 +45,8 @@ class GameState extends FlxState {
 
   @final private var levelPaths : Array<Dynamic>;
   @final private var levelPathIndex : Int;
+
+  public var levelName : String;
   public var level:TiledLevel;
 
   public var player:Character;
@@ -81,6 +83,10 @@ class GameState extends FlxState {
     this.levelPathIndex = levelPathIndex;
     this.actionStack = savedActionStack;
     this.levelStartTime = levelStartTime;
+    this.levelName = "Level " + Std.string(levelPathIndex + 1 - PMain.NUMBER_OF_TUTORIAL_LEVELS);
+    if(this.levelPathIndex < PMain.NUMBER_OF_TUTORIAL_LEVELS){
+      this.levelName = "Tutorial " + Std.string(levelPathIndex + 1);
+    }
   }
 
   override public function create():Void {

@@ -3,12 +3,15 @@ import flixel.FlxCamera;
 import flixel.util.FlxPoint;
 import flixel.ui.FlxButton;
 import flixel.FlxG;
+import flixel.text.FlxText;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
 
 class OverlayDisplay extends FlxTypedGroup<FlxSprite>{
 
   public static inline var HEIGHT =38;
+
+  @final public static var TEXT_COLOR : Int = 0xfff8dec0;
 
   @final public var state : GameState;
 
@@ -32,6 +35,8 @@ class OverlayDisplay extends FlxTypedGroup<FlxSprite>{
   public var volUpButton(default, null) : FlxButton;
   public var zoomOutButton(default, null) : FlxButton;
   public var zoomInButton(default, null) : FlxButton;
+
+  public var levelName(default, null): FlxText;
 
   public function new(state : GameState, camera : FlxCamera, hasNextLevel : Bool) {
     super();
@@ -73,7 +78,7 @@ class OverlayDisplay extends FlxTypedGroup<FlxSprite>{
     zoomInButton = new FlxButton(0, 0, "Zoom In (1)");
     zoomOutButton = new FlxButton(0, 0, "Zoom Out (2)");
 
-    levelSelectButton.setPosition(40, (HEIGHT - levelSelectButton.height) / 2);
+    levelSelectButton.setPosition(280, (HEIGHT - levelSelectButton.height) / 2);
     resetButton.setPosition(400, (HEIGHT - resetButton.height) / 2);
     undoButton.setPosition(520, (HEIGHT - undoButton.height) / 2);
 
@@ -83,10 +88,17 @@ class OverlayDisplay extends FlxTypedGroup<FlxSprite>{
     zoomInButton.setPosition(400, FlxG.height - ((HEIGHT - zoomInButton.height) * 3 / 2));
     zoomOutButton.setPosition(520, FlxG.height - ((HEIGHT - zoomOutButton.height) * 3 / 2));
 
+    levelName = new FlxText();
+    levelName.color = TEXT_COLOR;
+    levelName.size = 10;
+    levelName.text = this.state.levelName;
+    levelName.setPosition(40, (HEIGHT - levelName.height) / 2);
+
     add(winSprite);
     add(deadSprite);
     add(backTop);
     add(backBottom);
+    add(levelName);
     add(levelSelectButton);
     add(resetButton);
     add(undoButton);
