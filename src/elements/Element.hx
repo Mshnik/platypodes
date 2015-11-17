@@ -75,12 +75,12 @@ import flixel.FlxSprite;
 
   /** Return the row of the board this element is currently occupying. The top-left tile is (0,0) */
   public inline function getRow() : Int {
-    return Std.int( (this.y + this.origin.y) / state.level.tileHeight);
+    return Std.int( (this.y + this.origin.y - offset.y) / state.level.tileHeight);
   }
 
   /** Return the col of the board this element is currently occupying. The top-left tile is (0,0) */
   public inline function getCol() : Int {
-    return Std.int( (this.x + this.origin.x) / state.level.tileWidth);
+    return Std.int( (this.x + this.origin.x - offset.x) / state.level.tileWidth);
   }
 
   /** Return a point representing the graphical center of this Element */
@@ -159,10 +159,8 @@ import flixel.FlxSprite;
     squareHighlight.y = getRow() * state.level.tileHeight;
 
     if(bbox != null) {
-      var center = getCenter();
-      bbox.x = center.x - bbox.width/2;
-      bbox.y = center.y - bbox.height/2;
-      center.put();
+      bbox.x = this.x + this.origin.x - offset.x;
+      bbox.y = this.y + this.origin.y - offset.y;
     }
 
     super.update();
