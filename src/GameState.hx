@@ -43,9 +43,9 @@ class GameState extends FlxState {
 
   private static inline var ZOOM_MULT : Float = 1.03;
 
-  @final private var levelPaths : Array<Dynamic>;
-  @final private var levelPathIndex : Int;
-  public var level:TiledLevel;
+  private var levelPaths : Array<Dynamic>;
+  public var levelPathIndex(default, null) : Int;
+  public var level(default, null) :TiledLevel;
 
   public var player:Character;
   public var tooltip:Tooltip;
