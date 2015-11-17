@@ -8,7 +8,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 class StartState extends FlxState{
 
-  private static inline var SPLASH_WIDTH = 960;
+  private static inline var SPLASH_WIDTH = 640;
   private static inline var SPLASH_HEIGHT = 480;
 
   var playButton : FlxButton;
@@ -52,7 +52,7 @@ class StartState extends FlxState{
       PMain.zoom = 0.5;
       FlxG.switchState(new GameState(levels, 0));
     });
-    playButton.setPosition(470, 240);
+    playButton.setPosition(462, 310);
     add(playButton);
 
     var startSound = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
