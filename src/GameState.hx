@@ -43,9 +43,10 @@ class GameState extends FlxState {
 
   private static inline var ZOOM_MULT : Float = 1.03;
 
-  private var levelPaths : Array<Dynamic>;
-  public var levelPathIndex(default, null) : Int;
-  public var level(default, null) :TiledLevel;
+  @final private var levelPaths : Array<Dynamic>;
+  @final public var levelPathIndex : Int;
+  public var levelName : String;
+  public var level(default, null):TiledLevel;
 
   public var player:Character;
   public var tooltip:Tooltip;
@@ -83,6 +84,10 @@ class GameState extends FlxState {
     this.levelPathIndex = levelPathIndex;
     this.actionStack = savedActionStack;
     this.levelStartTime = levelStartTime;
+    this.levelName = "Level " + Std.string(levelPathIndex + 1 - PMain.NUMBER_OF_TUTORIAL_LEVELS);
+    if(this.levelPathIndex < PMain.NUMBER_OF_TUTORIAL_LEVELS){
+      this.levelName = "Tutorial " + Std.string(levelPathIndex + 1);
+    }
   }
 
   override public function create():Void {
@@ -127,7 +132,7 @@ class GameState extends FlxState {
     add(lightSwitches);
     add(player);
     add(tooltip);
-    
+
     if(DISPLAY_COORDINATES) {
       for(r in 0...level.height) {
         for(c in 0...level.width) {
