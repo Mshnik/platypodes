@@ -116,10 +116,6 @@ class OverlayDisplay extends FlxTypedGroup<FlxSprite>{
   }
 
   public function set_showDeadSprite(show : Bool) : Bool {
-    if(! show) {
-      deadSprite.y = -deadSprite.height + HEIGHT;
-      deadSprite.velocity.y = 0;
-    }
     return this.showDeadSprite = show;
   }
 
@@ -132,11 +128,29 @@ class OverlayDisplay extends FlxTypedGroup<FlxSprite>{
   }
 
   public override function update(){
+    if(Math.abs(deadSprite.velocity.y) < 0.01) {
+      deadSprite.velocity.y = 0;
+    }
+    if(Math.abs(winSprite.velocity.y) < 0.01) {
+      winSprite.velocity.y = 0;
+    }
+
     if(showDeadSprite) {
       if(deadSprite.y > (FlxG.height - deadSprite.height) /2 - HEIGHT) {
         deadSprite.velocity.y *= 0.81;
       } else {
         deadSprite.velocity.y = 400;
+      }
+    } else {
+      if(deadSprite.y <= -deadSprite.height + HEIGHT) {
+        deadSprite.velocity.y  = 0;
+        deadSprite.y = -deadSprite.height + HEIGHT;
+      } else if (deadSprite.velocity.y <= -400){
+        deadSprite.velocity.y = -400;
+      } else if (deadSprite.velocity.y >= 0){
+        deadSprite.velocity.y = -9.6;
+      } else {
+        deadSprite.velocity.y *= 1.23;
       }
     }
     if(showWinSprite) {

@@ -22,6 +22,7 @@ class ActionStack {
 
   public function add(a : ActionElement) {
     elms.push(a);
+    trace(a);
     Logging.getSingleton().recordEvent(SINGLE_ACTION_LOGGING_ID, a.loggingString());
   }
 

@@ -31,7 +31,7 @@ class Mirror extends AbsMirror {
   public override function addLightInDirection(d : Direction) {
     super.addLightInDirection(d);
 
-    if (d.opposite().simpleDirec & directionFacing.simpleDirec != 0) {
+    if (isLit || d.opposite().simpleDirec & directionFacing.simpleDirec != 0) {
       isLit = true;
       loadGraphic(LIT_SPRITE_ONE_SIDED, false, Std.int(width), Std.int(height));
     } else {

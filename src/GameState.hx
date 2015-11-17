@@ -347,6 +347,7 @@ class GameState extends FlxState {
     //Check for finishing of animations
     hud.showDeadSprite = ! player.alive && !won;
     hud.showWinSprite = won && exit.animation.finished;
+
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup) {

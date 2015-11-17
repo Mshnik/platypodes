@@ -13,7 +13,7 @@
   <image source="../../images/newgrounds_release/hole_sheet.png" width="768" height="384"/>
  </tileset>
  <tileset firstgid="77" name="mirrors" tilewidth="128" tileheight="128" tilecount="3">
-  <image source="../../images/newgrounds_release/mirror_sheet.png" width="386" height="130"/>
+  <image source="../../images/newgrounds_release/mirror_sheet.png" width="414" height="138"/>
  </tileset>
  <tileset firstgid="80" name="orb_sheet" tilewidth="128" tileheight="128" tilecount="9">
   <image source="../../images/newgrounds_release/orb_sheet.png" width="384" height="384"/>
@@ -173,7 +173,7 @@
  <objectgroup name="Light">
   <object id="106" type="lightorb" gid="82" x="512" y="1024" width="128" height="128">
    <properties>
-    <property name="direction" value="1"/>
+    <property name="direction" value="16"/>
    </properties>
   </object>
   <object id="108" type="lightswitch" gid="87" x="1536" y="512" width="128" height="128"/>

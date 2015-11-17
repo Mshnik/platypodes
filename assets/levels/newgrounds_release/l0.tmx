@@ -13,7 +13,7 @@
   <image source="../../images/newgrounds_release/hole_sheet.png" width="768" height="384"/>
  </tileset>
  <tileset firstgid="77" name="mirrors" tilewidth="128" tileheight="128" tilecount="3">
-  <image source="../../images/newgrounds_release/mirror_sheet.png" width="386" height="130"/>
+  <image source="../../images/newgrounds_release/mirror_sheet.png" width="414" height="138"/>
  </tileset>
  <tileset firstgid="80" name="orb_sheet" tilewidth="128" tileheight="128" tilecount="9">
   <image source="../../images/newgrounds_release/orb_sheet.png" width="384" height="384"/>
@@ -23,7 +23,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBjZwAqILYDYHMoH0ZZQ2orKdpkTVoIBPBgQboK5y4IC8yyhNMzfMDOR5UgBMPdg00uOeRZI5oEwcvyQ618rJP0w9yKH4ygYBaOAPAAAqb8JDw==
+   eJxjYBjZwAqILYDYHMoH0ZZQ2orKdpkTVoJTnyUDwl0WFJhnCaVh/oaZiSxHqttg5uCyixRggWQeCCPHD7n+tULSD3MvcjiOglEwCsgDAFywCMc=
   </data>
  </layer>
  <layer name="Holes" width="20" height="20">
@@ -31,7 +31,7 @@
    <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFMOBEBTOsgdgGiu2pYN5QAjC/2w60Q0bBKBgFdAEAx/QB6Q==
+   eJxjYBgFMOBEBTOsgdgGiu2pYJ47FcygF4D53XagHTIKRsEooAsAABByAjA=
   </data>
  </layer>
  <layer name="Walls" width="20" height="20">
