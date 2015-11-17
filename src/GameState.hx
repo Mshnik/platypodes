@@ -391,6 +391,12 @@ class GameState extends FlxState {
         wall.cameras = [FlxG.camera];
         glassWalls.add(wall);
 
+      case "tutorial images":
+        var t = new TutorialImage(this, o);
+        t.immovable = true;
+        t.cameras = [FlxG.camera];
+        add(t);
+
       default:
         trace("Got unknown object " + o.type.toLowerCase());
     }
