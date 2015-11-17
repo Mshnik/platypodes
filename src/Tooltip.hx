@@ -160,10 +160,18 @@ class Tooltip extends FlxGroup {
       if (player.getCol() < mirror.getCol()) {
         //PLAYER TO THE LEFT OF MIRROR
         pullArrowButton.setPosition(player.x - pullArrowButton.width, mBox.top);
+        if(!PMain.A_VERSION)
+        {
+          pullArrowButton.setPosition(player.x - pullArrowButton.width, mBox.top - (pullArrowButton.height / 6));
+        }
         pullArrowButton.angle = 0;
         pullMirrorDirection = Direction.Left;
 
         pushArrowButton.setPosition(mBox.right, mBox.top);
+        if(!PMain.A_VERSION)
+        {
+          pushArrowButton.setPosition(mBox.right, mBox.top - (pullArrowButton.height / 6));
+        }
         pushArrowButton.angle = 180;
         pushMirrorDirection = Direction.Right;
       }
@@ -171,10 +179,18 @@ class Tooltip extends FlxGroup {
 
 //PLAYER TO THE RIGHT OF MIRROR
         pullArrowButton.setPosition(player.x + player.width, mBox.top);
+        if(!PMain.A_VERSION)
+        {
+          pullArrowButton.setPosition(player.x + player.width, mBox.top - (pullArrowButton.height / 6));
+        }
         pullArrowButton.angle = 180;
         pullMirrorDirection = Direction.Right;
 
         pushArrowButton.setPosition(mBox.left - pushArrowButton.width, mBox.top);
+        if(!PMain.A_VERSION)
+        {
+          pushArrowButton.setPosition(mBox.left - pushArrowButton.width, mBox.top - (pullArrowButton.height / 6));
+        }
         pushArrowButton.angle = 0;
         pushMirrorDirection = Direction.Left;
       }
@@ -257,9 +273,18 @@ class Tooltip extends FlxGroup {
 
     } else if (d.isVertical()) {
       cwArrowButton.setPosition(mBox.right, mBox.bottom - ccwArrowButton.height);
+      if(!PMain.A_VERSION)
+      {
+        cwArrowButton.setPosition(mBox.right, mBox.bottom - ccwArrowButton.height + (cwArrowButton.height/6));
+      }
       cwArrowButton.angle = 90;
 
+
       ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - cwArrowButton.height);
+      if(!PMain.A_VERSION)
+      {
+        ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - cwArrowButton.height + (ccwArrowButton.height/6));
+      }
       ccwArrowButton.angle = 270;
     }
   }
