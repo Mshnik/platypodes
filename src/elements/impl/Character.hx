@@ -39,6 +39,8 @@ class Character extends MovingElement {
   /** Standard speed of animations for the Character class */
   public inline static var ANIMATION_SPEED = 6;
 
+  public inline static var PUSH_PULL_ANIMATION_SPEED = 4;
+
   /** The walking animation keys */
   public inline static var WALK_LEFT_RIGHT_ANIMATION_KEY = "Left-Right";
   public inline static var WALK_DOWN_ANIMATION_KEY = "Down";
@@ -231,15 +233,15 @@ class Character extends MovingElement {
     animation.add(WALK_LEFT_RIGHT_ANIMATION_KEY, [8,9,10,11], ANIMATION_SPEED, true);
 
     animation.add(GRAB_DOWN_ANIMATION_KEY, [16,17,18,19], ANIMATION_SPEED, false);
-    animation.add(PUSH_PULL_DOWN_ANIMATION_KEY, [20,21,22,23], ANIMATION_SPEED, false);
+    animation.add(PUSH_PULL_DOWN_ANIMATION_KEY, [20,21,22,23], PUSH_PULL_ANIMATION_SPEED, false);
     animation.add(RELEASE_DOWN_ANIMATION_KEY, [19,18,17,16], ANIMATION_SPEED, false);
 
     animation.add(GRAB_UP_ANIMATION_KEY, [24,25,26,27], ANIMATION_SPEED, false);
-    animation.add(PUSH_PULL_UP_ANIMATION_KEY, [27, 28], ANIMATION_SPEED, false);
+    animation.add(PUSH_PULL_UP_ANIMATION_KEY, [27, 28], PUSH_PULL_ANIMATION_SPEED, false);
     animation.add(RELEASE_UP_ANIMATION_KEY, [27,26,25,24], ANIMATION_SPEED, false);
 
     animation.add(GRAB_LEFT_RIGHT_ANIMATION_KEY, [32,33,34,35], ANIMATION_SPEED, false);
-    animation.add(PUSH_PULL_LEFT_RIGHT_ANIMATION_KEY, [35,36], ANIMATION_SPEED, false);
+    animation.add(PUSH_PULL_LEFT_RIGHT_ANIMATION_KEY, [35,36], PUSH_PULL_ANIMATION_SPEED, false);
     animation.add(RELEASE_LEFT_RIGHT_ANIMATION_KEY, [35,34,33,32], ANIMATION_SPEED, false);
 
     animation.add(DEATH_ANIMATION_KEY, [40, 41, 42, 43, 44, 45, 46, 47, 48, 13], DEATH_ANIMATION_SPEED, false);
