@@ -391,7 +391,6 @@ class Character extends MovingElement {
   override public function update() {
 
     check_grab();
-    trace(grabbing);
 
     if(!tileLocked && !state.won) {
       if (directionFacing.isCardinal() && alive && ! isDying) {

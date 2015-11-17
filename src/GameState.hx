@@ -27,7 +27,7 @@ import flash.Lib;
 
 class GameState extends FlxState {
 
-  private static inline var DISPLAY_COORDINATES = true;
+  private static inline var DISPLAY_COORDINATES = false;
 
   public static var MENU_BUTTON : Void -> Bool;
   public static var NEXT_LEVEL_BUTTON = function() : Bool { return FlxG.keys.justPressed.SPACE; };
