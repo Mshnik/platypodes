@@ -392,7 +392,7 @@ class Character extends MovingElement {
 
     check_grab();
 
-    if(!tileLocked) {
+    if(!tileLocked && !state.won) {
       if (directionFacing.isCardinal() && alive && ! isDying) {
         var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
 

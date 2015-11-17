@@ -264,6 +264,8 @@ class Tooltip extends FlxGroup {
     Otherwise, horizontal = false.***/
 
   private function configureRotateArrows(d:Direction, mBox : FlxRect):Void {
+    trace(d);
+    trace(mBox);
     if (d.isHorizontal()) {
       cwArrowButton.setPosition(mBox.left, mBox.top - cwArrowButton.height);
       cwArrowButton.angle = 0;

@@ -65,7 +65,7 @@ class GameState extends FlxState {
 
   public var interactables:FlxTypedGroup<InteractableElement>;
 
-  private var won : Bool;
+  public var won(default, null) : Bool;
   private var autoProgress : Bool;
 
   private static var BACKGROUND_THEME : FlxSound;
