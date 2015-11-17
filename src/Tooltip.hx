@@ -31,13 +31,13 @@ class Tooltip extends FlxGroup {
 
   /** Scale factor for arrow and key sprite images **/
   private inline static var B_VERSION_ARROW_SPRITE_SCALE = 0.9;
-  private inline static var B_VERSION_OFFSET = 20;
 
   /** Animation descriptors **/
   private inline static var ANIMATION_SPEED = 7;
   private inline static var GLOW_ANIMATION_KEY = "glow";
+  private inline static var RED_GLOW_ANIMATION_KEY = "redGlow";
   private inline static var A_SPRITE_SIZE = 138;
-  private inline static var B_SPRITE_SIZE = 210;
+  private inline static var B_SPRITE_SIZE = 200;
 
   public function new(currGame:GameState) {
     super();
@@ -48,7 +48,6 @@ class Tooltip extends FlxGroup {
     if(PMain.A_VERSION)
     {
       pullArrowButton.loadGraphic(A_PUSH_ARROW_PATH, true, A_SPRITE_SIZE, A_SPRITE_SIZE);
-      //pullArrowButton.loadRotatedGraphic(A_PUSH_ARROW_PATH, 4); //Create 4 rotations for the push/pull arrow.
     }
     else
     {
@@ -56,6 +55,7 @@ class Tooltip extends FlxGroup {
       pullArrowButton.scale.set(B_VERSION_ARROW_SPRITE_SCALE, B_VERSION_ARROW_SPRITE_SCALE);
     }
     pullArrowButton.animation.add(GLOW_ANIMATION_KEY, [0, 1, 2, 3], ANIMATION_SPEED);
+    pullArrowButton.animation.add(RED_GLOW_ANIMATION_KEY, [4, 5, 6, 7], ANIMATION_SPEED);
     pullArrowButton.updateHitbox();
     pullArrowButton.centerOrigin();
 
@@ -71,6 +71,7 @@ class Tooltip extends FlxGroup {
       pushArrowButton.scale.set(B_VERSION_ARROW_SPRITE_SCALE, B_VERSION_ARROW_SPRITE_SCALE);
     }
     pushArrowButton.animation.add(GLOW_ANIMATION_KEY, [0, 1, 2, 3], ANIMATION_SPEED);
+    pushArrowButton.animation.add(RED_GLOW_ANIMATION_KEY, [4, 5, 6, 7], ANIMATION_SPEED);
     pushArrowButton.updateHitbox();
     pushArrowButton.centerOrigin();
 
@@ -86,6 +87,7 @@ class Tooltip extends FlxGroup {
       cwArrowButton.scale.set(B_VERSION_ARROW_SPRITE_SCALE, B_VERSION_ARROW_SPRITE_SCALE);
     }
     cwArrowButton.animation.add(GLOW_ANIMATION_KEY, [0, 1, 2, 3], ANIMATION_SPEED);
+    cwArrowButton.animation.add(RED_GLOW_ANIMATION_KEY, [4, 5, 6, 7], ANIMATION_SPEED);
     cwArrowButton.updateHitbox();
     cwArrowButton.centerOrigin();
 
@@ -101,6 +103,7 @@ class Tooltip extends FlxGroup {
       ccwArrowButton.scale.set(B_VERSION_ARROW_SPRITE_SCALE, B_VERSION_ARROW_SPRITE_SCALE);
     }
     ccwArrowButton.animation.add(GLOW_ANIMATION_KEY, [0, 1, 2, 3], ANIMATION_SPEED);
+    ccwArrowButton.animation.add(RED_GLOW_ANIMATION_KEY, [4, 5, 6, 7], ANIMATION_SPEED);
     ccwArrowButton.updateHitbox();
     ccwArrowButton.centerOrigin();
 
@@ -150,16 +153,10 @@ class Tooltip extends FlxGroup {
       if (player.getCol() < mirror.getCol()) {
         //PLAYER TO THE LEFT OF MIRROR
         pullArrowButton.setPosition(player.x - pullArrowButton.width, mBox.top);
-        if(!PMain.A_VERSION){
-          pullArrowButton.setPosition(player.x - pullArrowButton.width, mBox.top - (pullArrowButton.height/4));
-        }
         pullArrowButton.angle = 0;
         pullMirrorDirection = Direction.Left;
 
         pushArrowButton.setPosition(mBox.right, mBox.top);
-        if(!PMain.A_VERSION){
-          pushArrowButton.setPosition(mBox.right, mBox.top - (pushArrowButton.height/4));
-        }
         pushArrowButton.angle = 180;
         pushMirrorDirection = Direction.Right;
       }
@@ -167,16 +164,10 @@ class Tooltip extends FlxGroup {
 
 //PLAYER TO THE RIGHT OF MIRROR
         pullArrowButton.setPosition(player.x + player.width, mBox.top);
-        if(!PMain.A_VERSION){
-          pullArrowButton.setPosition(player.x, mBox.top - (pullArrowButton.height/4));
-        }
         pullArrowButton.angle = 180;
         pullMirrorDirection = Direction.Right;
 
         pushArrowButton.setPosition(mBox.left - pushArrowButton.width, mBox.top);
-        if(!PMain.A_VERSION){
-          pushArrowButton.setPosition(mBox.left - pushArrowButton.width, mBox.top - (pushArrowButton.height/4));
-        }
         pushArrowButton.angle = 0;
         pushMirrorDirection = Direction.Left;
       }
@@ -216,33 +207,33 @@ class Tooltip extends FlxGroup {
       animate = true;
     }
 
-    if(pullArrowButton.mouseOver || animate){
+    if(! pullArrowButton.mouseOver || animate){
       pullArrowButton.animation.play(GLOW_ANIMATION_KEY);
     }
     else
     {
-      pullArrowButton.animation.pause();
+      pullArrowButton.animation.play(RED_GLOW_ANIMATION_KEY);
     }
-    if(pushArrowButton.mouseOver || animate){
+    if(! pushArrowButton.mouseOver || animate){
       pushArrowButton.animation.play(GLOW_ANIMATION_KEY);
     }
     else
     {
-      pushArrowButton.animation.pause();
+      pushArrowButton.animation.play(RED_GLOW_ANIMATION_KEY);
     }
-    if(cwArrowButton.mouseOver || animate){
+    if(! cwArrowButton.mouseOver || animate){
       cwArrowButton.animation.play(GLOW_ANIMATION_KEY);
     }
     else
     {
-      cwArrowButton.animation.pause();
+      cwArrowButton.animation.play(RED_GLOW_ANIMATION_KEY);
     }
-    if(ccwArrowButton.mouseOver || animate){
+    if(! ccwArrowButton.mouseOver || animate){
       ccwArrowButton.animation.play(GLOW_ANIMATION_KEY);
     }
     else
     {
-      ccwArrowButton.animation.pause();
+      ccwArrowButton.animation.play(RED_GLOW_ANIMATION_KEY);
     }
   }
 
@@ -251,24 +242,17 @@ class Tooltip extends FlxGroup {
 
   private function configureRotateArrows(d:Direction, mBox : FlxRect):Void {
     if (d.isHorizontal()) {
-
-      cwArrowButton.setPosition(mBox.left - B_VERSION_OFFSET, mBox.top - cwArrowButton.height);
+      cwArrowButton.setPosition(mBox.left, mBox.top - cwArrowButton.height);
       cwArrowButton.angle = 0;
 
-      ccwArrowButton.setPosition(mBox.left - B_VERSION_OFFSET, mBox.bottom);
+      ccwArrowButton.setPosition(mBox.left, mBox.bottom);
       ccwArrowButton.angle = 180;
 
     } else if (d.isVertical()) {
-      cwArrowButton.setPosition(mBox.right, mBox.bottom - cwArrowButton.height);
-      if(!PMain.A_VERSION){
-        cwArrowButton.setPosition(mBox.right, mBox.bottom - cwArrowButton.height +(cwArrowButton.height/5));
-      }
+      cwArrowButton.setPosition(mBox.right, mBox.bottom - ccwArrowButton.height);
       cwArrowButton.angle = 90;
 
-      ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - ccwArrowButton.height);
-      if(!PMain.A_VERSION){
-        ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - ccwArrowButton.height + (ccwArrowButton.height/5));
-      }
+      ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - cwArrowButton.height);
       ccwArrowButton.angle = 270;
     }
   }
@@ -279,20 +263,16 @@ class Tooltip extends FlxGroup {
   private function pullMirrorCallback(obj:FlxExtendedSprite, x:Int, y:Int):Void {
     var mirror = game.player.elmHolding;
     if (mirror != null) {
-      var action:ActionElement = ActionElement.pushpull(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), pullMirrorDirection);
-      if (game.executeAction(action, true)) {
-        game.actionStack.add(action);
-      }
+      var pull:ActionElement = ActionElement.pushpull(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), pullMirrorDirection);
+      game.executeAction(pull, true);
     }
   }
 
   private function pushMirrorCallback(obj:FlxExtendedSprite, x:Int, y:Int):Void {
     var mirror = game.player.elmHolding;
     if (mirror != null) {
-      var action:ActionElement = ActionElement.pushpull(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), pushMirrorDirection);
-      if (game.executeAction(action, true)) {
-        game.actionStack.add(action);
-      }
+      var pull:ActionElement = ActionElement.pushpull(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), pushMirrorDirection);
+      game.executeAction(pull, true);
     }
   }
 
@@ -301,9 +281,7 @@ class Tooltip extends FlxGroup {
     var mirror = game.player.elmHolding;
     if (mirror != null) {
       var action:ActionElement = ActionElement.rotate(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), true);
-      if (game.executeAction(action, true)) {
-        game.actionStack.add(action);
-      }
+      game.executeAction(action, true);
     }
   }
 
@@ -311,9 +289,7 @@ class Tooltip extends FlxGroup {
     var mirror = game.player.elmHolding;
     if (mirror != null) {
       var action:ActionElement = ActionElement.rotate(game.player.getCol(), game.player.getRow(), game.player.directionFacing, mirror.getCol(), mirror.getRow(), false);
-      if (game.executeAction(action, true)) {
-        game.actionStack.add(action);
-      }
+      game.executeAction(action, true);
     }
   }
 
