@@ -13,20 +13,17 @@
   <image source="../../images/newgrounds_release/hole_sheet.png" width="768" height="384"/>
  </tileset>
  <tileset firstgid="77" name="mirrors" tilewidth="128" tileheight="128" tilecount="3">
-  <image source="../../images/newgrounds_release/mirror_sheet.png" width="386" height="130"/>
+  <image source="../../images/newgrounds_release/mirror_sheet.png" width="414" height="138"/>
  </tileset>
  <tileset firstgid="80" name="orb_sheet" tilewidth="128" tileheight="128" tilecount="9">
   <image source="../../images/newgrounds_release/orb_sheet.png" width="384" height="384"/>
- </tileset>
- <tileset firstgid="89" name="floors" tilewidth="128" tileheight="128" tilecount="4">
-  <image source="../../images/friends_release/floor_sheet.png" width="512" height="128"/>
  </tileset>
  <layer name="Floor" width="20" height="20">
   <properties>
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztUUEKwCAM66/G9pPW/v8dc9BgkAndGOzSQLAWjWkUKXyJ1mmdHrVQjb4FM8BZpTstqLHyWxm9u7M+7TWpBy8XjiD0MOsTrPwhP/jak3rwoDJychl5wt+W1FOiUe/tvDwrNOd/XWVSKPyNE24FFhw=
+   eJztkVEKwDAIQ71Vdfc/2PbRx4K0zME+9mEgUJHEaM0aX2JcPIQmb58c0ntCTKK1hc+YrPqtZkeqq/nIgQYdmbLvG7+cR/es+rKv5gm7b8dNq/djRzzQMsM3uh10ricfav37RuNPOAE8Qw4d
   </data>
  </layer>
  <layer name="Holes" width="20" height="20">
