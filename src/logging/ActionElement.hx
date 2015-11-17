@@ -264,6 +264,26 @@ class ActionElement {
     return  FlxStringUtil.getDebugString(arr);
   }
 
+  public function loggingString() : String {
+    var s = "<" + idToString(id) + "," + startX + "," + startY + "," + directionFacing.simpleString;
+    if(id == PUSHPULL || id == ROTATE) {
+      s = s + "," + elmX + "," + elmY;
+    } else {
+      s = s + ",,";
+    }
+    if(id == PUSHPULL || id == MOVE) {
+      s = s + "," + moveDirection.simpleString;
+    } else {
+      s = s + ",";
+    }
+    if(id == ROTATE) {
+      s = s + "," + (rotateClockwise ? "Clockwise" : "Counter-clockwise");
+    } else {
+      s = s + ",";
+    }
+    return s + ">";
+  }
+
   /** Returns a string representing the 32-bit binary representation of the given int */
   private static function toBinString(numb : Int) : String{
     if (numb == 0) {
@@ -297,7 +317,7 @@ class ActionElement {
     }
     if (id == MOVE) {
       return move(Std.int(startX + moveDirection.x), Std.int(startY + moveDirection.y),
-                  directionFacing.opposite(), moveDirection.opposite());
+                  moveDirection.opposite(), moveDirection.opposite());
     }
     if (id == PUSHPULL) {
       return pushpull(Std.int(startX + moveDirection.x), Std.int(startY + moveDirection.y),

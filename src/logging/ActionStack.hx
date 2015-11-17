@@ -1,43 +1,68 @@
 package logging;
 
 
+import elements.impl.Character;
 import logging.ActionElement;
 import elements.Element;
 import elements.Direction;
-import elements.Character;
 class ActionStack {
 
   public var character : Character;
   private var elms : List<ActionElement>;
+
+  public static inline var SINGLE_ACTION_LOGGING_ID = 4;
+  public static inline var LOG_STACK_ACTION_ID = 5;
+  public static inline var LOG_LEVEL_COMPLETION_TIME_ID = 6;
+  public static inline var LOG_ACTION_COUNT_ON_LEVEL_COMPLETE = 7;
 
   public function new(c : Character) {
     this.character = c;
     elms = new List<ActionElement>();
   }
 
-  private function add(a : ActionElement) {
+  public function add(a : ActionElement) {
     elms.push(a);
-    trace(a);
-    Logging.getSingleton().recordEvent(a.serialize(), a.toString());
+    Logging.getSingleton().recordEvent(SINGLE_ACTION_LOGGING_ID, a.loggingString());
   }
 
   public function logStack() {
-    Logging.getSingleton().recordEvent(Std.int(Math.pow(2, 32) - 1), elms.toString());
+    //Do nothing - wasn't useful
   }
 
-  public function getHeadSkipDeath() : ActionElement {
-    return resolveSkipDeath(elms.iterator());
+  public function getFirst() : ActionElement {
+    if (elms.isEmpty()) return null;
+    else return elms.first();
   }
 
-  private function resolveSkipDeath(iter : Iterator<ActionElement>) : ActionElement {
+  public function getFirstUndoable() : ActionElement {
+    return resolveFirstUndoable(elms.iterator(), 0);
+  }
+
+  public function getInteractedActionCount() {
+    var c = 0;
+    var i = elms.iterator();
+    while(i.hasNext()) {
+      var a : ActionElement = i.next();
+      if(a.id == ActionElement.ROTATE || a.id == ActionElement.PUSHPULL) {
+        c = c+1;
+      }
+    }
+    return c;
+  }
+
+  private function resolveFirstUndoable(iter : Iterator<ActionElement>, undoCount : Int) : ActionElement {
     if(! iter.hasNext()) {
       return null;
     }
     var e : ActionElement = iter.next();
-    if (e.id == ActionElement.UNDO) {
-      return resolveSkipDeath(iter).getOpposite();
+    if(e.id == ActionElement.RESET) {
+      return null;
+    } else if (e.id == ActionElement.UNDO) {
+      return resolveFirstUndoable(iter, undoCount + 1);
     } else if (e.id == ActionElement.DIE){
-      return resolveSkipDeath(iter);
+      return resolveFirstUndoable(iter, undoCount);
+    } else if (undoCount > 0){
+      return resolveFirstUndoable(iter, undoCount - 1);
     } else {
       return e;
     }

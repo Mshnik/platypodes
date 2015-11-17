@@ -1,6 +1,7 @@
 extern class Logging {
 	function new() : Void;
 	function initialize(p1 : UInt, p2 : UInt, p3 : Bool) : Void;
+	function assignABTestValue(p1 : UInt) : UInt;
 	function recordABTestValue(p1 : UInt) : UInt;
 	function recordEvent(p1 : UInt, ?p2 : String) : Void;
 	function recordLevelEnd() : Void;

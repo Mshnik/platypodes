@@ -36,6 +36,10 @@ class Direction extends FlxPoint {
   @final public static var Left : Direction = new Direction(-1, 0, LEFT_VAL, "Left");
   @final public static var Up_Left : Direction = new Direction(-1, -1, UP_LEFT_VAL, "Up_Left");
 
+  @final public static var VALS : Array<Direction> = [
+    None, Up, Up_Right, Right, Down_Right, Down, Down_Left, Left, Up_Left
+  ];
+
   /**
    * True iff the x and y coordinates of this direction can no longer be changed.
    * True after construction, so that x and y are locked in their starting values.
@@ -168,27 +172,27 @@ class Direction extends FlxPoint {
 
   /** Returns true iff this is a cardinal direction: Up, Left, Down, Right */
   public inline function isCardinal() : Bool {
-    return Math.abs(x) + Math.abs(y) == 1;
+    return isHorizontal() || isVertical();
   }
 
   /** Returns true iff this is a diagonal direction: Up_Left, Up_Right, Down_Left, Down_Right */
   public inline function isDiagonal() : Bool {
-    return Math.abs(x) + Math.abs(y) == 2;
+    return isNonNone() && ! isCardinal();
   }
 
   /** Returns true iff this is a horizontal direction: Left, Right */
   public inline function isHorizontal() : Bool {
-    return y == 0 && x != 0;
+    return equals(Direction.Left) || equals(Direction.Right);
   }
 
   /** Returns true iff this is a vertical direction: Up, Down */
   public inline function isVertical() : Bool {
-    return x == 0 && y != 0;
+    return equals(Direction.Up) || equals(Direction.Down);
   }
 
   /** Returns true iff this direction is not None */
   public inline function isNonNone() : Bool {
-    return x != 0 && y != 0;
+    return !equals(Direction.None);
   }
 
   /** Returns the direction that results from adding v to this direction, by componenet */

@@ -1,4 +1,5 @@
 package ;
+import flixel.addons.plugin.FlxMouseControl;
 import flixel.text.FlxText;
 import flixel.system.FlxSound;
 import flixel.ui.FlxButton;
@@ -7,7 +8,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 class StartState extends FlxState{
 
-  private static inline var SPLASH_WIDTH = 960;
+  private static inline var SPLASH_WIDTH = 640;
   private static inline var SPLASH_HEIGHT = 480;
 
   var playButton : FlxButton;
@@ -20,7 +21,6 @@ class StartState extends FlxState{
 
   public override function create(){
     super.create();
-
     var splash = new FlxSprite(0,0);
     splash.loadGraphic(AssetPaths.splashscreen__png);
     var scale = Math.min(FlxG.width / SPLASH_WIDTH, FlxG.height / SPLASH_HEIGHT);
@@ -45,12 +45,18 @@ class StartState extends FlxState{
     levels.push(AssetPaths.l4__tmx);
     levels.push(AssetPaths.l5__tmx);
     levels.push(AssetPaths.l6__tmx);
+    levels.push(AssetPaths.oliviag0__tmx);
+    levels.push(AssetPaths.oliviag1__tmx);
+    levels.push(AssetPaths.g0__tmx);
+    levels.push(AssetPaths.oliviag2__tmx);
+    levels.push(AssetPaths.oliviag3__tmx);
 
     playButton = new FlxButton(0,0,"Play", function(){
       WIND_SOUND.fadeOut(5, 0);
+      PMain.zoom = 0.5;
       FlxG.switchState(new GameState(levels, 0));
     });
-    playButton.setPosition(470, 240);
+    playButton.setPosition(462, 310);
     add(playButton);
 
     var startSound = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
@@ -61,7 +67,7 @@ class StartState extends FlxState{
     WIND_SOUND.persist = true;
     WIND_SOUND.play();
 
-    var f = new FlxText(10,10, 200, "Ver-"+PMain.VERSION_ID);
+    var f = new FlxText(10,10, 200, "Ver-"+PMain.VERSION_ID + (PMain.A_VERSION ? ".1" : ".2"));
     add(f);
   }
 }

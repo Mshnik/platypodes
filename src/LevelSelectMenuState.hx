@@ -1,8 +1,10 @@
 package;
 
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.ui.FlxButton;
+import flixel.util.FlxColor;
 
 /**
  * A FlxState which can be used for the game's level select menu.
@@ -10,38 +12,78 @@ import flixel.ui.FlxButton;
 class LevelSelectMenuState extends FlxState
 {
 
-  @final static private var MARGIN : Float = 50;
+  @final static private var MARGIN_X : Float = 75;
+  @final static private var MARGIN_Y : Float = 140;
   @final static private var SPACING : Float= 20;
 
+    @final static private var BG_COLOR : Int = 0xff410d08;
+
 	private var levels : Array<Dynamic>;
+    private var background : FlxSprite;
 
 	/**
 	 * Function that is called up when to state is created to set it up.
 	 * Creates buttons for each of the levels in levels.
 	 */
 	override public function create():Void {
-		super.create();
+      super.create();
+        FlxG.camera.bgColor = BG_COLOR;
+        background = new FlxSprite();
+        background.loadGraphic(AssetPaths.level_select__png, false);
+        background.setPosition(0, 50);
+        add(background);
 
-    FlxG.mouse.visible = true;
+      levels = new Array<Dynamic>();
+      levels.push(AssetPaths.t0__tmx);
+      levels.push(AssetPaths.t1__tmx);
+      levels.push(AssetPaths.t2__tmx);
+      levels.push(AssetPaths.t3__tmx);
+      levels.push(AssetPaths.olivial0__tmx);
+      levels.push(AssetPaths.olivial1__tmx);
+      levels.push(AssetPaths.olivial2__tmx);
+      levels.push(AssetPaths.olivial3__tmx);
+      levels.push(AssetPaths.l0__tmx);
+      levels.push(AssetPaths.l1__tmx);
+      levels.push(AssetPaths.l2__tmx);
+      levels.push(AssetPaths.l3__tmx);
+      levels.push(AssetPaths.l4__tmx);
+      levels.push(AssetPaths.l5__tmx);
+      levels.push(AssetPaths.l6__tmx);
+      levels.push(AssetPaths.oliviag0__tmx);
+      levels.push(AssetPaths.oliviag1__tmx);
+        levels.push(AssetPaths.g0__tmx);
+      levels.push(AssetPaths.oliviag2__tmx);
+      levels.push(AssetPaths.oliviag3__tmx);
 
-    levels = new Array<Dynamic>();
-    levels.push(AssetPaths.olivial0__tmx);
-    levels.push(AssetPaths.olivial1__tmx);
-    levels.push(AssetPaths.olivial2__tmx);
-    levels.push(AssetPaths.olivial3__tmx);
-    levels.push(AssetPaths.l0__tmx);
-    levels.push(AssetPaths.l1__tmx);
-    levels.push(AssetPaths.l2__tmx);
-    levels.push(AssetPaths.l3__tmx);
-    levels.push(AssetPaths.l4__tmx);
-    levels.push(AssetPaths.l5__tmx);
-
-    var x = MARGIN;
-    var y = MARGIN;
+    var x = MARGIN_X;
+    var y = MARGIN_Y;
     var w : Float = -1;
     var h : Float = -1;
-    for(i in 0...levels.length) {
-      var button = new FlxButton(x, y, "Level " + Std.string(i), function(){ loadLevel(i); });
+
+        //Name tutorial levels first
+     for(i in 0...PMain.NUMBER_OF_TUTORIAL_LEVELS){
+         var button = new FlxButton(x, y, "Tutorial " + Std.string(i + 1), function(){ loadLevel(i); });
+
+         if (w == -1) {
+             w = button.width;
+         }
+         if (h == -1) {
+             h = button.height;
+         }
+
+         x += w + SPACING;
+         if(x + w > FlxG.width - MARGIN_X) {
+             x = MARGIN_X;
+             y += h + SPACING;
+         }
+
+         button.onUp.sound = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
+
+         add(button);
+     }
+
+    for(i in PMain.NUMBER_OF_TUTORIAL_LEVELS...levels.length) {
+      var button = new FlxButton(x, y, "Level " + Std.string(i + 1 - PMain.NUMBER_OF_TUTORIAL_LEVELS), function(){ loadLevel(i); });
 
       if (w == -1) {
         w = button.width;
@@ -51,8 +93,8 @@ class LevelSelectMenuState extends FlxState
       }
 
       x += w + SPACING;
-      if(x + w > FlxG.width - MARGIN) {
-        x = MARGIN;
+      if(x + w > FlxG.width - MARGIN_X) {
+        x = MARGIN_X;
         y += h + SPACING;
       }
 
@@ -82,6 +124,5 @@ class LevelSelectMenuState extends FlxState
 	 */
 	override public function update():Void {
 		super.update();
-    FlxG.mouse.load();
   }
 }
