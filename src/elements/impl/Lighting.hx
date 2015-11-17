@@ -99,13 +99,13 @@ class Lighting {
       light_trace[x][y] = TERMINARY;
       return HIT_WALL;
     } else if(Std.is(e, Lightable)) {
-      trace("Light hit " + e);
       var l : Lightable = (cast e:Lightable);
       l.addLightInDirection(direction);
-      for(dNext in l.getReflection(direction)) {
+      var ref = l.getReflection(direction);
+      for(dNext in ref) {
         trace_light(x+Std.int(dNext.x),y+Std.int(dNext.y),dNext);
       }
-      return Std.is(l, Barrel) || Std.is(l, Exit) ? HIT_WALL : OK;
+      return ref.length == 0 ? HIT_WALL : OK;
     } else if (e == null || Std.is(e, Character)) {
       if(Std.is(e, Character)) {
         state.killPlayer();

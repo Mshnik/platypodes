@@ -20,26 +20,29 @@ class LevelSelectMenuState extends FlxState
 	 * Creates buttons for each of the levels in levels.
 	 */
 	override public function create():Void {
-		super.create();
-    FlxG.mouse.visible = true;
+      super.create();
 
-    levels = new Array<Dynamic>();
-    levels.push(AssetPaths.t0__tmx);
-    levels.push(AssetPaths.t1__tmx);
-    levels.push(AssetPaths.t2__tmx);
-    levels.push(AssetPaths.t3__tmx);
-    levels.push(AssetPaths.olivial0__tmx);
-    levels.push(AssetPaths.olivial1__tmx);
-    levels.push(AssetPaths.olivial2__tmx);
-    levels.push(AssetPaths.olivial3__tmx);
-    levels.push(AssetPaths.l0__tmx);
-    levels.push(AssetPaths.l1__tmx);
-    levels.push(AssetPaths.l2__tmx);
-    levels.push(AssetPaths.l3__tmx);
-    levels.push(AssetPaths.l4__tmx);
-    levels.push(AssetPaths.l5__tmx);
-    levels.push(AssetPaths.l6__tmx);
-    levels.push(AssetPaths.g0__tmx);
+      levels = new Array<Dynamic>();
+      levels.push(AssetPaths.t0__tmx);
+      levels.push(AssetPaths.t1__tmx);
+      levels.push(AssetPaths.t2__tmx);
+      levels.push(AssetPaths.t3__tmx);
+      levels.push(AssetPaths.olivial0__tmx);
+      levels.push(AssetPaths.olivial1__tmx);
+      levels.push(AssetPaths.olivial2__tmx);
+      levels.push(AssetPaths.olivial3__tmx);
+      levels.push(AssetPaths.l0__tmx);
+      levels.push(AssetPaths.l1__tmx);
+      levels.push(AssetPaths.l2__tmx);
+      levels.push(AssetPaths.l3__tmx);
+      levels.push(AssetPaths.l4__tmx);
+      levels.push(AssetPaths.l5__tmx);
+      levels.push(AssetPaths.l6__tmx);
+      levels.push(AssetPaths.oliviag0__tmx);
+      levels.push(AssetPaths.oliviag1__tmx);
+        levels.push(AssetPaths.g0__tmx);
+      levels.push(AssetPaths.oliviag2__tmx);
+      levels.push(AssetPaths.oliviag3__tmx);
 
     var x = MARGIN;
     var y = MARGIN;

@@ -35,8 +35,9 @@ class Tooltip extends FlxGroup {
   /** Animation descriptors **/
   private inline static var ANIMATION_SPEED = 7;
   private inline static var GLOW_ANIMATION_KEY = "glow";
+  private inline static var RED_GLOW_ANIMATION_KEY = "redGlow";
   private inline static var A_SPRITE_SIZE = 138;
-  private inline static var B_SPRITE_SIZE = 210;
+  private inline static var B_SPRITE_SIZE = 200;
 
   public function new(currGame:GameState) {
     super();
@@ -47,7 +48,6 @@ class Tooltip extends FlxGroup {
     if(PMain.A_VERSION)
     {
       pullArrowButton.loadGraphic(A_PUSH_ARROW_PATH, true, A_SPRITE_SIZE, A_SPRITE_SIZE);
-      //pullArrowButton.loadRotatedGraphic(A_PUSH_ARROW_PATH, 4); //Create 4 rotations for the push/pull arrow.
     }
     else
     {
@@ -55,6 +55,7 @@ class Tooltip extends FlxGroup {
       pullArrowButton.scale.set(B_VERSION_ARROW_SPRITE_SCALE, B_VERSION_ARROW_SPRITE_SCALE);
     }
     pullArrowButton.animation.add(GLOW_ANIMATION_KEY, [0, 1, 2, 3], ANIMATION_SPEED);
+    pullArrowButton.animation.add(RED_GLOW_ANIMATION_KEY, [4, 5, 6, 7], ANIMATION_SPEED);
     pullArrowButton.updateHitbox();
     pullArrowButton.centerOrigin();
 
@@ -70,6 +71,7 @@ class Tooltip extends FlxGroup {
       pushArrowButton.scale.set(B_VERSION_ARROW_SPRITE_SCALE, B_VERSION_ARROW_SPRITE_SCALE);
     }
     pushArrowButton.animation.add(GLOW_ANIMATION_KEY, [0, 1, 2, 3], ANIMATION_SPEED);
+    pushArrowButton.animation.add(RED_GLOW_ANIMATION_KEY, [4, 5, 6, 7], ANIMATION_SPEED);
     pushArrowButton.updateHitbox();
     pushArrowButton.centerOrigin();
 
@@ -85,6 +87,7 @@ class Tooltip extends FlxGroup {
       cwArrowButton.scale.set(B_VERSION_ARROW_SPRITE_SCALE, B_VERSION_ARROW_SPRITE_SCALE);
     }
     cwArrowButton.animation.add(GLOW_ANIMATION_KEY, [0, 1, 2, 3], ANIMATION_SPEED);
+    cwArrowButton.animation.add(RED_GLOW_ANIMATION_KEY, [4, 5, 6, 7], ANIMATION_SPEED);
     cwArrowButton.updateHitbox();
     cwArrowButton.centerOrigin();
 
@@ -100,6 +103,7 @@ class Tooltip extends FlxGroup {
       ccwArrowButton.scale.set(B_VERSION_ARROW_SPRITE_SCALE, B_VERSION_ARROW_SPRITE_SCALE);
     }
     ccwArrowButton.animation.add(GLOW_ANIMATION_KEY, [0, 1, 2, 3], ANIMATION_SPEED);
+    ccwArrowButton.animation.add(RED_GLOW_ANIMATION_KEY, [4, 5, 6, 7], ANIMATION_SPEED);
     ccwArrowButton.updateHitbox();
     ccwArrowButton.centerOrigin();
 
@@ -203,33 +207,33 @@ class Tooltip extends FlxGroup {
       animate = true;
     }
 
-    if(pullArrowButton.mouseOver || animate){
+    if(! pullArrowButton.mouseOver || animate){
       pullArrowButton.animation.play(GLOW_ANIMATION_KEY);
     }
     else
     {
-      pullArrowButton.animation.pause();
+      pullArrowButton.animation.play(RED_GLOW_ANIMATION_KEY);
     }
-    if(pushArrowButton.mouseOver || animate){
+    if(! pushArrowButton.mouseOver || animate){
       pushArrowButton.animation.play(GLOW_ANIMATION_KEY);
     }
     else
     {
-      pushArrowButton.animation.pause();
+      pushArrowButton.animation.play(RED_GLOW_ANIMATION_KEY);
     }
-    if(cwArrowButton.mouseOver || animate){
+    if(! cwArrowButton.mouseOver || animate){
       cwArrowButton.animation.play(GLOW_ANIMATION_KEY);
     }
     else
     {
-      cwArrowButton.animation.pause();
+      cwArrowButton.animation.play(RED_GLOW_ANIMATION_KEY);
     }
-    if(ccwArrowButton.mouseOver || animate){
+    if(! ccwArrowButton.mouseOver || animate){
       ccwArrowButton.animation.play(GLOW_ANIMATION_KEY);
     }
     else
     {
-      ccwArrowButton.animation.pause();
+      ccwArrowButton.animation.play(RED_GLOW_ANIMATION_KEY);
     }
   }
 

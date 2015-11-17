@@ -37,7 +37,7 @@ class Character extends MovingElement {
   private inline static var CHARACTER_SPRITE_SHEET = AssetPaths.playerSheet__png;
 
   /** Standard speed of animations for the Character class */
-  public inline static var ANIMATION_SPEED = 10;
+  public inline static var ANIMATION_SPEED = 6;
 
   /** The walking animation keys */
   public inline static var WALK_LEFT_RIGHT_ANIMATION_KEY = "Left-Right";
@@ -199,6 +199,7 @@ class Character extends MovingElement {
     }
     else {
       if (elmHolding != null && elmHolding.destTile != null) {
+        //Currently moving with mirror
         grabbing = true;
       } else {
         var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
@@ -208,9 +209,7 @@ class Character extends MovingElement {
           grabbing = false;
         }
       }
-      trace(grabbing);
     }
-
   }
 
   public function GRAB() : Bool{
@@ -243,7 +242,7 @@ class Character extends MovingElement {
     animation.add(PUSH_PULL_LEFT_RIGHT_ANIMATION_KEY, [35,36], ANIMATION_SPEED, false);
     animation.add(RELEASE_LEFT_RIGHT_ANIMATION_KEY, [35,34,33,32], ANIMATION_SPEED, false);
 
-    animation.add(DEATH_ANIMATION_KEY, [40, 41, 42, 43, 44, 45, 46, 47, 48], DEATH_ANIMATION_SPEED, false);
+    animation.add(DEATH_ANIMATION_KEY, [40, 41, 42, 43, 44, 45, 46, 47, 48, 13], DEATH_ANIMATION_SPEED, false);
     animation.callback = animationCallback;
 
     //Make bounding box slightly smaller than sprite for ease of movement
@@ -396,7 +395,9 @@ class Character extends MovingElement {
     if(!tileLocked) {
       if (directionFacing.isCardinal() && alive && ! isDying) {
         var elm = state.getElementAt(getRow() + Std.int(directionFacing.y), getCol() + Std.int(directionFacing.x));
+
         if (elm != null && Std.is(elm, AbsMirror)) {
+
           var mirror : AbsMirror = Std.instance(elm, AbsMirror);
           if(mirror.destTile == null && ROT_CLOCKWISE()) {
             state.actionStack.addRotate(mirror, true);
@@ -406,7 +407,7 @@ class Character extends MovingElement {
             state.actionStack.addRotate(mirror, false);
             mirror.rotateCounterClockwise();
           }
-          if(GRAB() && elmHolding == null) {
+          if(GRAB() && (elmHolding != elm)) {
             mirror.moveDirection = Direction.None;
             mirror.holdingPlayer = this;
           }
