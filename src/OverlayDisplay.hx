@@ -6,7 +6,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxTypedGroup;
 
-class HUD extends FlxTypedGroup<FlxSprite>{
+class OverlayDisplay extends FlxTypedGroup<FlxSprite>{
 
   public static inline var HEIGHT =38;
 
@@ -14,6 +14,11 @@ class HUD extends FlxTypedGroup<FlxSprite>{
 
   public var backTop(default, null) : FlxSprite;
   public var backBottom(default, null) : FlxSprite;
+  public var winSprite(default, null) : FlxSprite;
+  public var deadSprite(default, null) : FlxSprite;
+
+  public var showWinSprite(default, set) : Bool;
+  public var showDeadSprite(default, set) : Bool;
 
   public var doReset(default, null) : Bool;
   public var doLevelSelect(default, null) : Bool;
@@ -35,6 +40,13 @@ class HUD extends FlxTypedGroup<FlxSprite>{
     backTop = new FlxSprite().loadGraphic(AssetPaths.control_bar__png, false, FlxG.width, HEIGHT);
     backBottom = new FlxSprite().loadGraphic(AssetPaths.control_bar__png, false, FlxG.width, HEIGHT);
     backBottom.y = FlxG.height - HEIGHT;
+
+    winSprite = new FlxSprite().loadGraphic(AssetPaths.success_popup__png);
+    winSprite.setPosition((FlxG.width - winSprite.width)/2, -winSprite.height + HEIGHT);
+    add(winSprite);
+    deadSprite = new FlxSprite().loadGraphic(AssetPaths.fail_popup__png);
+    deadSprite.setPosition((FlxG.width - deadSprite.width)/2, -deadSprite.height + HEIGHT);
+    add(deadSprite);
 
     levelSelectButton = new FlxButton(0, 0, "Sel Lvl (Esc)", function(){doLevelSelect = true;});
     resetButton = new FlxButton(0, 0, "Reset (R)", function(){doReset = true;});
@@ -60,14 +72,14 @@ class HUD extends FlxTypedGroup<FlxSprite>{
     resetButton.setPosition(400, (HEIGHT - resetButton.height) / 2);
     undoButton.setPosition(520, (HEIGHT - undoButton.height) / 2);
 
-    trace(muteButton.width);
-
     muteButton.setPosition(40, FlxG.height - ((HEIGHT - muteButton.height) * 3 / 2));
     volDownButton.setPosition(160, FlxG.height - ((HEIGHT - volDownButton.height) * 3 / 2));
     volUpButton.setPosition(280, FlxG.height - ((HEIGHT - volUpButton.height) * 3 / 2));
     zoomInButton.setPosition(400, FlxG.height - ((HEIGHT - zoomInButton.height) * 3 / 2));
     zoomOutButton.setPosition(520, FlxG.height - ((HEIGHT - zoomOutButton.height) * 3 / 2));
 
+    add(winSprite);
+    add(deadSprite);
     add(backTop);
     add(backBottom);
     add(levelSelectButton);
@@ -84,5 +96,40 @@ class HUD extends FlxTypedGroup<FlxSprite>{
       spr.scrollFactor.set();
       spr.cameras = [camera];
     });
+  }
+
+  public function set_showDeadSprite(show : Bool) : Bool {
+    if(! show) {
+      deadSprite.y = -deadSprite.height + HEIGHT;
+      deadSprite.velocity.y = 0;
+    }
+    return this.showDeadSprite = show;
+  }
+
+  public function set_showWinSprite(show : Bool) : Bool {
+    if(! show) {
+      winSprite.y = -winSprite.height + HEIGHT;
+      winSprite.velocity.y = 0;
+    }
+    return this.showWinSprite = show;
+  }
+
+  public override function update(){
+    if(showDeadSprite) {
+      if(deadSprite.y > (FlxG.height - deadSprite.height) /2 - HEIGHT) {
+        deadSprite.velocity.y *= 0.81;
+      } else {
+        deadSprite.velocity.y = 400;
+      }
+    }
+    if(showWinSprite) {
+      if(winSprite.y > (FlxG.height - winSprite.height) /2 - HEIGHT) {
+        winSprite.velocity.y *= 0.81;
+      } else {
+        winSprite.velocity.y = 400;
+      }
+    }
+
+    super.update();
   }
 }

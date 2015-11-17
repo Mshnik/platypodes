@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxSprite;
 import PMain;
 import flixel.ui.FlxButton;
 import elements.InteractableElement;
@@ -62,12 +63,11 @@ class GameState extends FlxState {
   public var interactables:FlxTypedGroup<InteractableElement>;
 
   private var won : Bool;
-  private var winText : FlxText;
-  private var deadText : FlxText;
+  private var autoProgress : Bool;
 
   private static var BACKGROUND_THEME : FlxSound;
 
-  private var hud : HUD;
+  private var hud : OverlayDisplay;
   private var mainCamera : FlxCamera;
   private var hudCamera : FlxCamera;
 
@@ -150,7 +150,8 @@ class GameState extends FlxState {
     hudCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height, 1.0);
     hudCamera.bgColor = 0x00000000;
     FlxG.cameras.add(hudCamera);
-    this.hud = new HUD(this, hudCamera);
+
+    this.hud = new OverlayDisplay(this, hudCamera);
     add(this.hud);
 
     if(BACKGROUND_THEME == null) {
@@ -193,6 +194,7 @@ class GameState extends FlxState {
     lightSprites.destroy();
     glassWalls.destroy();
     interactables.destroy();
+    hud.destroy();
     super.destroy();
   }
 
@@ -286,7 +288,7 @@ class GameState extends FlxState {
   override public function update():Void {
     if(MENU_BUTTON()) {
       FlxG.switchState(new LevelSelectMenuState());
-    } else if(won && (NEXT_LEVEL_BUTTON() || sndWinDone) && levelPathIndex + 1 < levelPaths.length){
+    } else if(won && (NEXT_LEVEL_BUTTON() || autoProgress) && levelPathIndex + 1 < levelPaths.length){
       BACKGROUND_THEME.resume();
       FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
     } else if(RESET()) {
@@ -320,7 +322,6 @@ class GameState extends FlxState {
       FlxG.collide(player, player.elmHolding);
     }
 
-
     //Check for victory
     if(! exit.isOpen) {
       var allLit = true;
@@ -335,6 +336,10 @@ class GameState extends FlxState {
         win();
       }
     }
+
+    //Check for finishing of animations
+    hud.showDeadSprite = ! player.alive && !won;
+    hud.showWinSprite = won && exit.animation.finished;
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup) {
@@ -445,7 +450,6 @@ class GameState extends FlxState {
 
     if (a.id == ActionElement.PUSHPULL && Std.is(elm, InteractableElement)) {
       var m : InteractableElement = Std.instance(elm, InteractableElement);
-      trace("Trying to push/pull " + m);
       if (player.alive && (! m.canMoveInDirection(a.moveDirection) || ! player.canMoveInDirectionWithElement(a.moveDirection, m))) {
         trace("Can't execute action " + a + " can't move mirror " + m + " in direction " + a.moveDirection.simpleString);
         if(playSounds) {
@@ -489,7 +493,7 @@ class GameState extends FlxState {
         mostRecentUndoTimeStamp = t;
         if(! player.alive) {
           player.revive();
-          remove(deadText);
+          hud.showDeadSprite = false;
         }
       }
     }
@@ -500,11 +504,6 @@ class GameState extends FlxState {
     player.deathSound.play();
     player.animation.play(Character.DEATH_ANIMATION_KEY, false);
     actionStack.addDie();
-    deadText = new FlxText(0, 0, Std.int(400 / FlxG.camera.zoom), "You died - press Backspace to undo or R to reset", Std.int(30 / FlxG.camera.zoom));
-    deadText.x = FlxG.camera.scroll.x + (FlxG.camera.width - deadText.width) / 2;
-    deadText.y = FlxG.camera.scroll.y + deadText.height;
-    deadText.color = 0xFFCC0022;
-    add(deadText);
   }
 
   public function win() {
@@ -516,19 +515,15 @@ class GameState extends FlxState {
     sndWin.onComplete = function() {
       BACKGROUND_THEME.resume();
       sndWinDone = true;
+      Timer.delay(function(){autoProgress = true;}, 3000);
     }
     sndWin.play();
-    winText = new FlxText(0, 0, 0, "You WIN!" + (levelPathIndex + 1 == levelPaths.length ? " Thanks for playing!!" : " - Press Space to continue"), Std.int(30 / FlxG.camera.zoom));
-    winText.x = FlxG.camera.scroll.x + (FlxG.camera.width - winText.width) / 2;
-    winText.y = FlxG.camera.scroll.y + winText.height;
-    add(winText);
     player.kill();
     exit.playVictoryAnimation();
     var compTime = Timer.stamp() - levelStartTime;
     Logging.getSingleton().recordEvent(ActionStack.LOG_LEVEL_COMPLETION_TIME_ID, "" + compTime);
     Logging.getSingleton().recordEvent(ActionStack.LOG_ACTION_COUNT_ON_LEVEL_COMPLETE, "" + actionStack.getInteractedActionCount());
     Logging.getSingleton().recordLevelEnd();
-    //actionStackTimer.stop();
   }
 
 }
