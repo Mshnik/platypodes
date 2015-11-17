@@ -19,7 +19,7 @@
   <image source="../../images/newgrounds_release/orb_sheet.png" width="384" height="384"/>
  </tileset>
  <tileset firstgid="89" name="tutorialImages" tilewidth="128" tileheight="128" tilecount="64">
-  <image source="../../images/newgrounds_release/tutorials/tutorial_sheet.png" width="512" height="1024"/>
+  <image source="../../images/newgrounds_release/tutorial_sheet.png" width="512" height="1024"/>
  </tileset>
  <layer name="Floor" width="20" height="20">
   <properties>
