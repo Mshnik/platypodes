@@ -125,7 +125,7 @@ class GameState extends FlxState {
     add(lightSwitches);
     add(player);
     add(tooltip);
-
+    
     if(DISPLAY_COORDINATES) {
       for(r in 0...level.height) {
         for(c in 0...level.width) {
