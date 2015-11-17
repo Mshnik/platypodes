@@ -45,7 +45,11 @@ class StartState extends FlxState{
     levels.push(AssetPaths.l4__tmx);
     levels.push(AssetPaths.l5__tmx);
     levels.push(AssetPaths.l6__tmx);
+    levels.push(AssetPaths.oliviag0__tmx);
+    levels.push(AssetPaths.oliviag1__tmx);
     levels.push(AssetPaths.g0__tmx);
+    levels.push(AssetPaths.oliviag2__tmx);
+    levels.push(AssetPaths.oliviag3__tmx);
 
     playButton = new FlxButton(0,0,"Play", function(){
       WIND_SOUND.fadeOut(5, 0);

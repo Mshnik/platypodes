@@ -242,7 +242,7 @@ class Character extends MovingElement {
     animation.add(PUSH_PULL_LEFT_RIGHT_ANIMATION_KEY, [35,36], ANIMATION_SPEED, false);
     animation.add(RELEASE_LEFT_RIGHT_ANIMATION_KEY, [35,34,33,32], ANIMATION_SPEED, false);
 
-    animation.add(DEATH_ANIMATION_KEY, [40, 41, 42, 43, 44, 45, 46, 47, 48], DEATH_ANIMATION_SPEED, false);
+    animation.add(DEATH_ANIMATION_KEY, [40, 41, 42, 43, 44, 45, 46, 47, 48, 13], DEATH_ANIMATION_SPEED, false);
     animation.callback = animationCallback;
 
     //Make bounding box slightly smaller than sprite for ease of movement
