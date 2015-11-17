@@ -23,7 +23,7 @@ class PMain extends Sprite
 	public static inline var NUMBER_OF_TUTORIAL_LEVELS:Int = 4;
 
   public static inline var TEAM_ID = 626; //THIS SHOULD NEVER CHANGE EVER EVER EVER
-  public static inline var VERSION_ID = 200; //This can change when we do a big update
+  public static inline var VERSION_ID = 201; //This can change when we do a big update
   public static inline var DEBUG_MODE = false; //Make sure this is false when we submit
 
 	public static var A_VERSION(default, null) : Bool; //True if the game is in version A, false for version B
