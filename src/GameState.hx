@@ -136,7 +136,9 @@ class GameState extends FlxState {
     if(DISPLAY_COORDINATES) {
       for(r in 0...level.height) {
         for(c in 0...level.width) {
-          add(new FlxText(c * level.tileWidth, r * level.tileHeight, 0, "(" + r + "," + c + ")", 20));
+          var t = new FlxText(c * level.tileWidth, r * level.tileHeight, 0, "(" + r + "," + c + ")", 20);
+          t.cameras = [FlxG.camera];
+          add(t);
         }
       }
     }
