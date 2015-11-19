@@ -96,10 +96,10 @@ class GameState extends FlxState {
     level = new TiledLevel(this, levelPaths[levelPathIndex]);
 
     // Add tilemaps
-    add(level.floorTiles);
-    add(level.holeTiles);
-    add(level.wallTiles);
-    add(level.tutorialTiles);
+    add(level.floorMap);
+    add(level.holeMap);
+    add(level.wallMap);
+    //add(level.tutorialTiles);
 
     interactables = new FlxTypedGroup<InteractableElement>();
     lightBulbs = new FlxTypedGroup<LightBulb>();
@@ -145,15 +145,9 @@ class GameState extends FlxState {
 
     setZoom(PMain.zoom);
 
-    level.wallTiles.forEachOfType(FlxObject, function(ob : FlxObject){
-      ob.cameras = [FlxG.camera];
-    });
-    level.floorTiles.forEachOfType(FlxObject, function(ob : FlxObject){
-      ob.cameras = [FlxG.camera];
-    });
-    level.holeTiles.forEachOfType(FlxObject, function(ob : FlxObject){
-      ob.cameras = [FlxG.camera];
-    });
+    level.holeMap.cameras = [FlxG.camera];
+    level.floorMap.cameras = [FlxG.camera];
+    level.wallMap.cameras = [FlxG.camera];
 
     mainCamera = FlxG.camera;
     hudCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height, 1.0);

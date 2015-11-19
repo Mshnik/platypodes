@@ -1,4 +1,5 @@
 package ;
+import openfl._legacy.display.Tilesheet;
 import elements.Direction;
 import flixel.FlxBasic;
 import haxe.io.Path;
@@ -27,13 +28,9 @@ class TiledLevel extends TiledMap {
 
   private var tileMaps : Array<FlxTilemap>;
 
-  public var floorTiles(default, null) : FlxGroup;
   public var floorMap(default, null) : FlxTilemap;
-  public var holeTiles(default, null) : FlxGroup;
-  private var holeMap(default, null) : FlxTilemap;
-  public var wallTiles(default, null) : FlxGroup;
-  private var wallMap(default, null) : FlxTilemap;
-  public var tutorialTiles(default, null) : FlxGroup;
+  public var holeMap(default, null) : FlxTilemap;
+  public var wallMap(default, null) : FlxTilemap;
 
   private var walkableTileWidth : Int;
   private var walkableTileHeight : Int;
@@ -65,10 +62,6 @@ class TiledLevel extends TiledMap {
     this.state = state;
 
     tileMaps = new Array<FlxTilemap>();
-    floorTiles = new FlxGroup();
-    holeTiles = new FlxGroup();
-    wallTiles = new FlxGroup();
-    tutorialTiles = new FlxGroup();
 
     FlxG.camera.setBounds(0, 0, fullWidth, fullHeight, true);
 
@@ -107,22 +100,19 @@ class TiledLevel extends TiledMap {
 
       switch(tileLayer.name) {
         case FLOOR_LAYER_NAME:
-          floorTiles.add(tilemap);
+          //floorTiles.add(tilemap);
           floorMap = tilemap;
           walkableImagePath = processedPath;
           walkableTileWidth = tileSet.tileWidth;
           walkableTileHeight = tileSet.tileHeight;
 
         case HOLE_LAYER_NAME:
-          holeTiles.add(tilemap);
+          //holeTiles.add(tilemap);
           holeMap = tilemap;
 
         case WALL_LAYER_NAME:
-          wallTiles.add(tilemap);
+          //wallTiles.add(tilemap);
           wallMap = tilemap;
-
-        case TUTORIAL_LAYER_NAME:
-          tutorialTiles.add(tilemap);
 
         default:
           throw "Unexpected tilelayer name " + tileLayer.name;
@@ -167,10 +157,10 @@ class TiledLevel extends TiledMap {
     // IMPORTANT: Always collide the map with objects, not the other way around.
     // 			  This prevents odd collision errors (collision separation code off by 1 px).
     var b = false;
-    if (holeTiles != null && collideWithHoles) {
+    if (holeMap != null && collideWithHoles) {
         b = FlxG.overlap(holeMap, objOrGroup, notifyCallback, processCallback != null ? processCallback : FlxObject.separate) || b;
     }
-    if (wallTiles != null) {
+    if (wallMap != null) {
         b = FlxG.overlap(wallMap, objOrGroup, notifyCallback, processCallback != null ? processCallback : FlxObject.separate) || b;
     }
     return b;
