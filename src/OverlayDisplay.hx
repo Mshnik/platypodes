@@ -1,4 +1,6 @@
 package ;
+import haxe.Timer;
+import elements.Element;
 import flixel.FlxCamera;
 import flixel.util.FlxPoint;
 import flixel.ui.FlxButton;
@@ -40,6 +42,11 @@ class OverlayDisplay extends FlxTypedGroup<FlxSprite>{
 
   public function new(state : GameState, camera : FlxCamera, hasNextLevel : Bool) {
     super();
+    var tName = Type.getClassName(Type.getClass(this));
+    if(! Element.delayMap.exists(tName)) {
+      Element.delayMap.set(tName, 0);
+      Element.updateCount.set(tName, 0);
+    }
 
     this.state = state;
     backTop = new FlxSprite().loadGraphic(AssetPaths.control_bar__png, false, FlxG.width, HEIGHT);
@@ -128,6 +135,7 @@ class OverlayDisplay extends FlxTypedGroup<FlxSprite>{
   }
 
   public override function update(){
+    var startTime = Timer.stamp();
     if(Math.abs(deadSprite.velocity.y) < 0.01) {
       deadSprite.velocity.y = 0;
     }
@@ -162,5 +170,8 @@ class OverlayDisplay extends FlxTypedGroup<FlxSprite>{
     }
 
     super.update();
+    var tName = Type.getClassName(Type.getClass(this));
+    Element.delayMap.set(tName, Element.delayMap.get(tName) + (Timer.stamp() - startTime));
+    Element.updateCount.set(tName, Element.updateCount.get(tName) + 1);
   }
 }
