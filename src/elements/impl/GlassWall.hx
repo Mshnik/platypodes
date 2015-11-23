@@ -1,4 +1,5 @@
 package elements.impl;
+import haxe.Timer;
 import flixel.addons.editors.tiled.TiledObject;
 class GlassWall extends Element implements Lightable{
 
@@ -60,5 +61,11 @@ class GlassWall extends Element implements Lightable{
     } else {
       return [directionIn];
     }
+  }
+
+  override public function update() {
+    var startTime = Timer.stamp();
+    super.update();
+    logUpdateTime(startTime);
   }
 }

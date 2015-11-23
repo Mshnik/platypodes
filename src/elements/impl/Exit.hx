@@ -1,4 +1,5 @@
 package elements.impl;
+import haxe.Timer;
 import flixel.FlxG;
 import flixel.system.FlxSound;
 import flixel.addons.editors.tiled.TiledObject;
@@ -49,7 +50,9 @@ class Exit extends Element implements Lightable {
   }
 
   override public function update() {
+    var startTime = Timer.stamp();
     super.update();
+    logUpdateTime(startTime);
   }
 
 /** Returns true iff this is giving out light from the given side */

@@ -1,4 +1,5 @@
 package elements;
+import haxe.Timer;
 import flixel.addons.editors.tiled.TiledObject;
 class TutorialImage extends Element {
 
@@ -16,6 +17,11 @@ class TutorialImage extends Element {
 
   public function new(s : GameState, o : TiledObject) {
     super(s, o);
+    var tName = Type.getClassName(Type.getClass(this));
+    if(! Element.delayMap.exists(tName)) {
+      Element.delayMap.set(tName, 0);
+      Element.updateCount.set(tName, 0);
+    }
 
     if(PMain.A_VERSION) {
       loadGraphic(ANIMATION_PATH_A, true, WIDTH, HEIGHT);
@@ -37,5 +43,13 @@ class TutorialImage extends Element {
     }
     animation.add(ANIMATION_KEY, arr, FRAME_RATE, s.levelPathIndex != MOVE_LEVEL);
     animation.play(ANIMATION_KEY);
+  }
+
+  public override function update(){
+    var startTime = Timer.stamp();
+    super.update();
+    var tName = Type.getClassName(Type.getClass(this));
+    Element.delayMap.set(tName, Element.delayMap.get(tName) + (Timer.stamp() - startTime));
+    Element.updateCount.set(tName, Element.updateCount.get(tName) + 1);
   }
 }
