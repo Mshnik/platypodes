@@ -1,5 +1,6 @@
 package elements.impl;
 
+import haxe.Timer;
 import flixel.FlxSprite;
 class LightSprite extends FlxSprite {
 
@@ -11,6 +12,11 @@ class LightSprite extends FlxSprite {
     this.state = state;
     isLit = true;
     immovable = true;
+    var tName = Type.getClassName(Type.getClass(this));
+    if(! Element.delayMap.exists(tName)) {
+      Element.delayMap.set(tName, 0);
+      Element.updateCount.set(tName, 0);
+    }
   }
 
   /** Return the row of the board this element is currently occupying. The top-left tile is (0,0) */
@@ -40,6 +46,10 @@ class LightSprite extends FlxSprite {
 //      velocity.x = followingMirror.velocity.x;
 //      velocity.y = followingMirror.velocity.y;
 //    }
+    var startTime = Timer.stamp();
     super.update();
+    var tName = Type.getClassName(Type.getClass(this));
+    Element.delayMap.set(tName, Element.delayMap.get(tName) + (Timer.stamp() - startTime));
+    Element.updateCount.set(tName, Element.updateCount.get(tName) + 1);
   }
 }

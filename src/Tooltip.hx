@@ -1,4 +1,5 @@
 package;
+import haxe.Timer;
 import flixel.FlxG;
 import logging.ActionElement;
 import flixel.util.FlxPoint;
@@ -43,6 +44,11 @@ class Tooltip extends FlxGroup {
   public function new(currGame:GameState) {
     super();
     this.visible = false;
+    var tName = Type.getClassName(Type.getClass(this));
+    if(! Element.delayMap.exists(tName)) {
+      Element.delayMap.set(tName, 0);
+      Element.updateCount.set(tName, 0);
+    }
 
     //PULL ARROW
     pullArrowButton = new FlxExtendedSprite();
@@ -139,6 +145,7 @@ class Tooltip extends FlxGroup {
 
   override public function update():Void {
 
+    var startTime = Timer.stamp();
     var player = game.player;
     var mirror = game.player.elmHolding;
 
@@ -220,6 +227,9 @@ class Tooltip extends FlxGroup {
     configureRotateArrows(pushMirrorDirection, mBox);
     mBox.put();
     super.update();
+    var tName = Type.getClassName(Type.getClass(this));
+    Element.delayMap.set(tName, Element.delayMap.get(tName) + (Timer.stamp() - startTime));
+    Element.updateCount.set(tName, Element.updateCount.get(tName) + 1);
   }
 
   //Determines which tooltips get animated

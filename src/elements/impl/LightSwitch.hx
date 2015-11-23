@@ -1,4 +1,5 @@
 package elements.impl;
+import haxe.Timer;
 import flixel.addons.editors.tiled.TiledObject;
 class LightSwitch extends Element implements Lightable {
 
@@ -17,7 +18,9 @@ class LightSwitch extends Element implements Lightable {
   }
 
   override public function update() {
+    var startTime = Timer.stamp();
     super.update();
+    logUpdateTime(startTime);
   }
 
   /** Returns true iff this is giving out light from the given side */

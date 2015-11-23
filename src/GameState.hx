@@ -92,6 +92,12 @@ class GameState extends FlxState {
 
   override public function create():Void {
     super.create();
+    var tName = Type.getClassName(Type.getClass(this));
+    if(! Element.delayMap.exists(tName)) {
+      Element.delayMap.set(tName, 0);
+      Element.updateCount.set(tName, 0);
+    }
+
     // Load the level's tilemaps
     level = new TiledLevel(this, levelPaths[levelPathIndex]);
 
@@ -289,6 +295,7 @@ class GameState extends FlxState {
 
 
   override public function update():Void {
+    var startTime = Timer.stamp();
     if(MENU_BUTTON()) {
       FlxG.switchState(new LevelSelectMenuState());
     } else if(won && (NEXT_LEVEL_BUTTON() || autoProgress) && levelPathIndex + 1 < levelPaths.length){
@@ -344,6 +351,15 @@ class GameState extends FlxState {
     hud.showDeadSprite = ! player.alive && !won;
     hud.showWinSprite = won && exit.animation.finished;
 
+    var tName = Type.getClassName(Type.getClass(this));
+    var n = Element.delayMap.get(tName) + (Timer.stamp() - startTime);
+    Element.delayMap.set(tName, n);
+    Element.updateCount.set(tName, Element.updateCount.get(tName) + 1);
+
+    for(s in Element.delayMap.keys()) {
+      trace(s + " " + (Element.delayMap.get(s) / Element.updateCount.get(s) * 1000) + "ms per update");
+    }
+    trace(" ");
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup) {
@@ -518,7 +534,6 @@ class GameState extends FlxState {
 
   public function win() {
     if(won) return;
-
     won = true;
     actionStack.addWin();
     BACKGROUND_THEME.pause();

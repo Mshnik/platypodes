@@ -1,4 +1,5 @@
 package elements;
+import haxe.Timer;
 import flixel.util.FlxPoint;
 import flixel.util.FlxRect;
 import flixel.addons.editors.tiled.TiledObject;
@@ -19,6 +20,9 @@ import flixel.FlxSprite;
   * that handles movement on top of Element's capabilities.
   **/
 @abstract class Element extends FlxExtendedSprite {
+
+  public static var delayMap(default, null):Map<String, Float> = new Map<String, Float>();
+  public static var updateCount(default, null):Map<String, Int> = new Map<String, Int>();
 
   /** The GameState this Element exists within. */
   @final public var state:GameState;
@@ -50,6 +54,12 @@ import flixel.FlxSprite;
     this.state = state;
     this.gID = tileObject.gid;
     centerOrigin();
+
+    var tName = Type.getClassName(Type.getClass(this));
+    if(! delayMap.exists(tName)) {
+      delayMap.set(tName, 0);
+      updateCount.set(tName, 0);
+    }
 
     squareHighlight = new FlxSprite(x, y);
     squareHighlight.makeGraphic(state.level.tileHeight, state.level.tileWidth, 0xffffffff);
@@ -164,6 +174,14 @@ import flixel.FlxSprite;
     }
 
     super.update();
+
+    var tName = Type.getClassName(Type.getClass(this));
+    updateCount.set(tName, updateCount.get(tName)+1);
+  }
+
+  public function logUpdateTime(startTime : Float) {
+    var tName = Type.getClassName(Type.getClass(this));
+    delayMap.set(tName, delayMap.get(tName) + (Timer.stamp() - startTime));
   }
 
 }

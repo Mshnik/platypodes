@@ -1,4 +1,5 @@
 package elements.impl;
+import haxe.Timer;
 import flixel.FlxSprite;
 import flixel.util.FlxPoint;
 import flixel.system.FlxSound;
@@ -390,6 +391,7 @@ class Character extends MovingElement {
     */
   override public function update() {
 
+    var startTime = Timer.stamp();
     check_grab();
 
     if(!tileLocked && !state.won) {
@@ -525,6 +527,7 @@ class Character extends MovingElement {
     continueMoving = GRAB() && (UP_PRESSED() || DOWN_PRESSED() || LEFT_PRESSED() || RIGHT_PRESSED());
 
     super.update();
+    logUpdateTime(startTime);
   }
 
   private function playMovementAnimation(d : Direction, holdingElm : Bool) {
