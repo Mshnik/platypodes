@@ -13,9 +13,11 @@ class LightSprite extends FlxSprite {
     isLit = true;
     immovable = true;
     var tName = Type.getClassName(Type.getClass(this));
-    if(! Element.delayMap.exists(tName)) {
-      Element.delayMap.set(tName, 0);
+    if(! Element.updateTimeMap.exists(tName)) {
+      Element.updateTimeMap.set(tName, 0);
       Element.updateCount.set(tName, 0);
+      Element.drawTimeMap.set(tName, 0);
+      Element.drawCount.set(tName, 0);
     }
   }
 
@@ -27,6 +29,14 @@ class LightSprite extends FlxSprite {
   /** Return the col of the board this element is currently occupying. The top-left tile is (0,0) */
   public inline function getCol() : Int {
     return Std.int( (this.x + this.origin.x) / state.level.tileWidth);
+  }
+
+  public override function draw() {
+    var startTime = Timer.stamp();
+    super.draw();
+    var tName = Type.getClassName(Type.getClass(this));
+    Element.drawTimeMap.set(tName, Element.drawTimeMap.get(tName) + (Timer.stamp() - startTime));
+    Element.drawCount.set(tName, Element.drawCount.get(tName) + 1);
   }
 
   public override function update(){
@@ -49,7 +59,7 @@ class LightSprite extends FlxSprite {
     var startTime = Timer.stamp();
     super.update();
     var tName = Type.getClassName(Type.getClass(this));
-    Element.delayMap.set(tName, Element.delayMap.get(tName) + (Timer.stamp() - startTime));
+    Element.updateTimeMap.set(tName, Element.updateTimeMap.get(tName) + (Timer.stamp() - startTime));
     Element.updateCount.set(tName, Element.updateCount.get(tName) + 1);
   }
 }

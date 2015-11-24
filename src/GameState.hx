@@ -93,18 +93,20 @@ class GameState extends FlxState {
   override public function create():Void {
     super.create();
     var tName = Type.getClassName(Type.getClass(this));
-    if(! Element.delayMap.exists(tName)) {
-      Element.delayMap.set(tName, 0);
+    if(! Element.updateTimeMap.exists(tName)) {
+      Element.updateTimeMap.set(tName, 0);
       Element.updateCount.set(tName, 0);
+      Element.drawTimeMap.set(tName, 0);
+      Element.drawCount.set(tName, 0);
     }
 
     // Load the level's tilemaps
     level = new TiledLevel(this, levelPaths[levelPathIndex]);
 
     // Add tilemaps
-    add(level.floorMap);
-    add(level.holeMap);
-    add(level.wallMap);
+    //add(level.floorMap);
+    //add(level.holeMap);
+    //add(level.wallMap);
     //add(level.tutorialTiles);
 
     interactables = new FlxTypedGroup<InteractableElement>();
@@ -292,7 +294,13 @@ class GameState extends FlxState {
     });
   }
 
-
+  public override function draw() {
+    var startTime = Timer.stamp();
+    super.draw();
+    var tName = Type.getClassName(Type.getClass(this));
+    Element.drawTimeMap.set(tName, Element.drawTimeMap.get(tName) + (Timer.stamp() - startTime));
+    Element.drawCount.set(tName, Element.drawCount.get(tName) + 1);
+  }
 
   override public function update():Void {
     var startTime = Timer.stamp();
@@ -352,14 +360,16 @@ class GameState extends FlxState {
     hud.showWinSprite = won && exit.animation.finished;
 
     var tName = Type.getClassName(Type.getClass(this));
-    var n = Element.delayMap.get(tName) + (Timer.stamp() - startTime);
-    Element.delayMap.set(tName, n);
+    var n = Element.updateTimeMap.get(tName) + (Timer.stamp() - startTime);
+    Element.updateTimeMap.set(tName, n);
     Element.updateCount.set(tName, Element.updateCount.get(tName) + 1);
 
-    for(s in Element.delayMap.keys()) {
-      trace(s + " " + (Element.delayMap.get(s) / Element.updateCount.get(s) * 1000) + "ms per update");
+    for(s in Element.updateTimeMap.keys()) {
+      trace(s + " " + (Element.updateTimeMap.get(s) / Element.updateCount.get(s) * 1000) + "ms per update");
     }
-    trace(" ");
+    for(s in Element.drawTimeMap.keys()) {
+      trace(s + " " + (Element.drawTimeMap.get(s) / Element.drawCount.get(s) * 1000) + "ms per draw");
+    }
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup) {

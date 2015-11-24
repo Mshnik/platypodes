@@ -43,9 +43,11 @@ class OverlayDisplay extends FlxTypedGroup<FlxSprite>{
   public function new(state : GameState, camera : FlxCamera, hasNextLevel : Bool) {
     super();
     var tName = Type.getClassName(Type.getClass(this));
-    if(! Element.delayMap.exists(tName)) {
-      Element.delayMap.set(tName, 0);
+    if(! Element.updateTimeMap.exists(tName)) {
+      Element.updateTimeMap.set(tName, 0);
       Element.updateCount.set(tName, 0);
+      Element.drawTimeMap.set(tName, 0);
+      Element.drawCount.set(tName, 0);
     }
 
     this.state = state;
@@ -171,7 +173,15 @@ class OverlayDisplay extends FlxTypedGroup<FlxSprite>{
 
     super.update();
     var tName = Type.getClassName(Type.getClass(this));
-    Element.delayMap.set(tName, Element.delayMap.get(tName) + (Timer.stamp() - startTime));
+    Element.updateTimeMap.set(tName, Element.updateTimeMap.get(tName) + (Timer.stamp() - startTime));
     Element.updateCount.set(tName, Element.updateCount.get(tName) + 1);
+  }
+
+  public override function draw() {
+    var startTime = Timer.stamp();
+    super.draw();
+    var tName = Type.getClassName(Type.getClass(this));
+    Element.drawTimeMap.set(tName, Element.drawTimeMap.get(tName) + (Timer.stamp() - startTime));
+    Element.drawCount.set(tName, Element.drawCount.get(tName) + 1);
   }
 }
