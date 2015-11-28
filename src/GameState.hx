@@ -104,10 +104,9 @@ class GameState extends FlxState {
     level = new TiledLevel(this, levelPaths[levelPathIndex]);
 
     // Add tilemaps
-    //add(level.floorMap);
-    //add(level.holeMap);
-    //add(level.wallMap);
-    //add(level.tutorialTiles);
+    add(level.floorMap);
+    add(level.holeMap);
+    add(level.wallMap);
 
     interactables = new FlxTypedGroup<InteractableElement>();
     lightBulbs = new FlxTypedGroup<LightBulb>();
@@ -300,6 +299,7 @@ class GameState extends FlxState {
     var tName = Type.getClassName(Type.getClass(this));
     Element.drawTimeMap.set(tName, Element.drawTimeMap.get(tName) + (Timer.stamp() - startTime));
     Element.drawCount.set(tName, Element.drawCount.get(tName) + 1);
+    trace((Element.drawTimeMap.get(tName) / Element.drawCount.get(tName) * 1000) + "ms per draw");
   }
 
   override public function update():Void {
@@ -364,12 +364,7 @@ class GameState extends FlxState {
     Element.updateTimeMap.set(tName, n);
     Element.updateCount.set(tName, Element.updateCount.get(tName) + 1);
 
-    for(s in Element.updateTimeMap.keys()) {
-      trace(s + " " + (Element.updateTimeMap.get(s) / Element.updateCount.get(s) * 1000) + "ms per update");
-    }
-    for(s in Element.drawTimeMap.keys()) {
-      trace(s + " " + (Element.drawTimeMap.get(s) / Element.drawCount.get(s) * 1000) + "ms per draw");
-    }
+    trace((Element.updateTimeMap.get(tName) / Element.updateCount.get(tName) * 1000) + "ms per update");
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup) {

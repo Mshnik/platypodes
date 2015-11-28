@@ -100,7 +100,6 @@ class TiledLevel extends TiledMap {
 
       switch(tileLayer.name) {
         case FLOOR_LAYER_NAME:
-          //floorTiles.add(tilemap);
           floorMap = tilemap;
           walkableImagePath = processedPath;
           walkableTileWidth = tileSet.tileWidth;
