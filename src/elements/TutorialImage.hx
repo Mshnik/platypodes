@@ -3,8 +3,8 @@ import haxe.Timer;
 import flixel.addons.editors.tiled.TiledObject;
 class TutorialImage extends Element {
 
-  private static inline var WIDTH = 512;
-  private static inline var HEIGHT = 256;
+  private static inline var WIDTH = 256;
+  private static inline var HEIGHT = 128;
   private static inline var ANIMATION_PATH_A = AssetPaths.ASheet__png;
   private static inline var ANIMATION_PATH_B = AssetPaths.BSheet__png;
 
