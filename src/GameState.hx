@@ -71,8 +71,8 @@ class GameState extends FlxState {
   private static var BACKGROUND_THEME : FlxSound;
 
   private var hud : OverlayDisplay;
-  private var mainCamera : FlxCamera;
-  private var hudCamera : FlxCamera;
+  public var mainCamera(default, null) : FlxCamera;
+  public var hudCamera(default, null) : FlxCamera;
 
   private var sndWin : FlxSound;
   private var sndWinDone : Bool;
@@ -299,7 +299,7 @@ class GameState extends FlxState {
     var tName = Type.getClassName(Type.getClass(this));
     Element.drawTimeMap.set(tName, Element.drawTimeMap.get(tName) + (Timer.stamp() - startTime));
     Element.drawCount.set(tName, Element.drawCount.get(tName) + 1);
-    trace((Element.drawTimeMap.get(tName) / Element.drawCount.get(tName) * 1000) + "ms per draw");
+    //trace((Element.drawTimeMap.get(tName) / Element.drawCount.get(tName) * 1000) + "ms per draw");
   }
 
   override public function update():Void {
@@ -364,7 +364,7 @@ class GameState extends FlxState {
     Element.updateTimeMap.set(tName, n);
     Element.updateCount.set(tName, Element.updateCount.get(tName) + 1);
 
-    trace((Element.updateTimeMap.get(tName) / Element.updateCount.get(tName) * 1000) + "ms per update");
+    //trace((Element.updateTimeMap.get(tName) / Element.updateCount.get(tName) * 1000) + "ms per update");
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup) {

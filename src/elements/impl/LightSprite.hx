@@ -12,6 +12,7 @@ class LightSprite extends FlxSprite {
     this.state = state;
     isLit = true;
     immovable = true;
+    cameras = [state.mainCamera];
     var tName = Type.getClassName(Type.getClass(this));
     if(! Element.updateTimeMap.exists(tName)) {
       Element.updateTimeMap.set(tName, 0);

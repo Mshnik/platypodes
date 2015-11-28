@@ -14,7 +14,7 @@ import elements.impl.Character;
   public var holdingPlayer(default, set):Character;
 
   /** The speed mirrors move with when being pushed or pulled by a character */
-  public inline static var MOVE_SPEED = 400;
+  public inline static var MOVE_SPEED = 200;
 
   /** Sets the move direction of this mirror, and deletes light sprites that occur after this chain */
   public override function set_moveDirection(d:Direction) {
