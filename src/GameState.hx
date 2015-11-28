@@ -363,7 +363,6 @@ class GameState extends FlxState {
     var n = Element.updateTimeMap.get(tName) + (Timer.stamp() - startTime);
     Element.updateTimeMap.set(tName, n);
     Element.updateCount.set(tName, Element.updateCount.get(tName) + 1);
-
     //trace((Element.updateTimeMap.get(tName) / Element.updateCount.get(tName) * 1000) + "ms per update");
   }
 
@@ -439,6 +438,8 @@ class GameState extends FlxState {
     //Check for min and max zoom
     if (zoom < 0.35) zoom = 0.35;
     if (zoom > 0.7) zoom = 0.7;
+
+    trace(zoom);
 
     FlxG.camera.zoom = zoom;
     FlxG.camera.setSize(Std.int(Lib.current.stage.stageWidth / zoom),
