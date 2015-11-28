@@ -35,7 +35,7 @@ class Character extends MovingElement {
   @final private static var CHARACTER_SPRITE_SIZE = 128;
 
   /** Animated character sprite sheet location */
-  private inline static var CHARACTER_SPRITE_SHEET = AssetPaths.playerSheet__png;
+  private inline static var CHARACTER_SPRITE_SHEET = AssetPaths.player_sheet__png;
 
   /** Standard speed of animations for the Character class */
   public inline static var ANIMATION_SPEED = 6;

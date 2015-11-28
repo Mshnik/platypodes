@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="128" tileheight="128" nextobjectid="122">
+ <tileset firstgid="1" name="walls" tilewidth="128" tileheight="128" tilecount="42">
+  <image source="../../images/newgrounds_release/wall_sheet.png" width="896" height="768"/>
+ </tileset>
+ <tileset firstgid="43" name="exit" tilewidth="128" tileheight="128" tilecount="12">
+  <image source="../../images/newgrounds_release/gate_sheet.png" width="512" height="384"/>
+ </tileset>
+ <tileset firstgid="55" name="floors" tilewidth="128" tileheight="128" tilecount="4">
+  <image source="../../images/newgrounds_release/floor_sheet.png" width="512" height="128"/>
+ </tileset>
+ <tileset firstgid="59" name="holes" tilewidth="128" tileheight="128" tilecount="18">
+  <image source="../../images/newgrounds_release/hole_sheet.png" width="768" height="384"/>
+ </tileset>
+ <tileset firstgid="77" name="mirrors" tilewidth="128" tileheight="128" tilecount="3">
+  <image source="../../images/newgrounds_release/mirror_sheet.png" width="386" height="130"/>
+ </tileset>
+ <tileset firstgid="80" name="orb_sheet" tilewidth="128" tileheight="128" tilecount="9">
+  <image source="../../images/newgrounds_release/orb_sheet.png" width="384" height="384"/>
+ </tileset>
+ <tileset firstgid="89" name="glass_wall_sheet" tilewidth="128" tileheight="128" tilecount="49">
+  <image source="../../images/newgrounds_release/glass_wall_sheet.png" width="896" height="896"/>
+ </tileset>
+ <layer name="Floor" width="20" height="20">
+  <properties>
+   <property name="tileset" value="floors"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztkVEKACEIBb1V2v0Ptn009GCXBeszBx5K0KBodjc+EiN9xqXynvWRNh1N4gc+BW92vrC1m0nVmbO+r73wxevHP12Cl567ZGAnorfduUdRFIsHf9kMHA==
+  </data>
+ </layer>
+ <layer name="Holes" width="20" height="20">
+  <properties>
+   <property name="tileset" value="holes"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFIx24DLQDRsEoGAVDEgAAJj8ARQ==
+  </data>
+ </layer>
+ <layer name="Walls" width="20" height="20">
+  <properties>
+   <property name="tileset" value="walls"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYBwimBWIRYnATESap8VAHJAZNW/UPCBmAWJlIjAzkeaN4lE81DEAbjUFHg==
+  </data>
+ </layer>
+ <objectgroup name="Objects" visible="0"/>
+ <objectgroup name="glasswall">
+  <object id="113" type="glassWall" gid="89" x="896" y="768" width="128" height="128"/>
+  <object id="114" type="glassWall" gid="89" x="1024" y="1024" width="128" height="128"/>
+  <object id="115" gid="89" x="896" y="896" width="128" height="128"/>
+  <object id="116" gid="89" x="896" y="1024" width="128" height="128"/>
+  <object id="117" gid="89" x="1024" y="768" width="128" height="128"/>
+  <object id="118" gid="89" x="1152" y="1024" width="128" height="128"/>
+  <object id="119" gid="89" x="1152" y="768" width="128" height="128"/>
+ </objectgroup>
+ <objectgroup name="Mirrors">
+  <object id="74" type="mirror" gid="1073741902" x="640" y="512" width="128" height="128">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Light">
+  <object id="55" type="lightSwitch" gid="87" x="1408" y="512" width="128" height="128"/>
+  <object id="121" type="lightOrb" gid="82" x="512" y="1024" width="128" height="128">
+   <properties>
+    <property name="direction" value="16"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup color="#141ba4" name="player_start">
+  <object id="45" type="player_start" x="1024" y="768" width="128" height="128">
+   <properties>
+    <property name="direction_facing" value="16"/>
+    <property name="initial_zoom" value="0.7"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup color="#71a400" name="Exit">
+  <object id="47" type="exit" gid="43" x="1536" y="1282" width="128" height="128"/>
+ </objectgroup>
+</map>
