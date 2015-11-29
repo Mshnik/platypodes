@@ -204,6 +204,10 @@ class GameState extends FlxState {
     glassWalls.destroy();
     interactables.destroy();
     hud.destroy();
+    mainCamera.destroy();
+    hudCamera.destroy();
+    tooltip.destroy();
+
     super.destroy();
   }
 
