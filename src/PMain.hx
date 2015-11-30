@@ -61,10 +61,10 @@ class PMain extends Sprite
 	private function setupGame():Void {
     Logging.getSingleton().initialize(TEAM_ID, VERSION_ID, DEBUG_MODE);
     Logging.getSingleton().recordPageLoad(""); //TODO?
-    var abTestVal = Logging.getSingleton().assignABTestValue(Std.random(2));
+    var abTestVal = Logging.getSingleton().assignABTestValue(0);
     Logging.getSingleton().recordABTestValue();
 
-    A_VERSION = (abTestVal == 0);
+    A_VERSION = true;
 
     var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
