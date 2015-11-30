@@ -6,6 +6,7 @@ import flixel.addons.editors.tiled.TiledObject;
 
 class Exit extends Element implements Lightable {
 
+  public static inline var CLOSED_ANIMATION_KEY = "closed";
   public static inline var OPEN_ANIMATION_KEY = "open";
   public static inline var CLOSE_ANIMATION_KEY = "close";
   public static inline var VICTORY_ANIMATION_KEY = "victory";
@@ -23,12 +24,14 @@ class Exit extends Element implements Lightable {
 /** Constructs an exit, with the given level, and initial row and col */
   public function new(level : GameState, o : TiledObject) {
     super(level, o);
-    isOpen = false;
     loadGraphic(AssetPaths.gate_sheet__png, true, PMain.SPRITE_SIZE, PMain.SPRITE_SIZE);
-    animation.add(OPEN_ANIMATION_KEY, [0,2,4,5,6,8], ANIMATION_SPEED, false);
-    animation.add(CLOSE_ANIMATION_KEY, [8,6,5,4,2,0], ANIMATION_SPEED, false);
-    animation.add(VICTORY_ANIMATION_KEY, [9, 10, 3, 1, 8], ANIMATION_SPEED + 5, false);
+    animation.add(OPEN_ANIMATION_KEY, [2,4,5,6,8,9], ANIMATION_SPEED, false);
+    animation.add(CLOSED_ANIMATION_KEY, [2], ANIMATION_SPEED, false);
+    animation.add(CLOSE_ANIMATION_KEY, [9,8,6,5,4,2], ANIMATION_SPEED, false);
+    animation.add(VICTORY_ANIMATION_KEY, [10, 3, 0, 1,9,8,6,5,4,2], ANIMATION_SPEED + 5, false);
 
+    isOpen = false;
+    animation.play(CLOSED_ANIMATION_KEY, true);
     openCloseSound = FlxG.sound.load(AssetPaths.gateOpenClose__wav, 1.0);
     resetLightInDirection();
   }
