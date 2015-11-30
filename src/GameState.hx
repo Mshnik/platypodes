@@ -436,10 +436,7 @@ class GameState extends FlxState {
 
   private function setZoom(zoom:Float) {
     //Check for min and max zoom
-    if (zoom < 0.35) zoom = 0.35;
-    if (zoom > 0.7) zoom = 0.7;
-
-    trace(zoom);
+    zoom = 1;
 
     FlxG.camera.zoom = zoom;
     FlxG.camera.setSize(Std.int(Lib.current.stage.stageWidth / zoom),
