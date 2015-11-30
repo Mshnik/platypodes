@@ -44,50 +44,50 @@
  </layer>
  <objectgroup name="Objects" visible="0"/>
  <objectgroup name="Mirrors">
-  <object id="74" type="mirror" gid="78" x="480" y="288" width="48" height="48">
+  <object id="74" type="mirror" gid="66" x="480" y="288" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="110" type="mirror" gid="2147483726" x="480" y="336" width="48" height="48">
+  <object id="110" type="mirror" gid="2147483714" x="480" y="336" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="112" type="mirror" gid="78" x="336" y="432" width="48" height="48">
+  <object id="112" type="mirror" gid="66" x="336" y="432" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="113" type="mirror" gid="2147483726" x="336" y="336" width="48" height="48">
+  <object id="113" type="mirror" gid="2147483714" x="336" y="336" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="115" type="mirror" gid="1073741902" x="288" y="384" width="48" height="48">
+  <object id="115" type="mirror" gid="1073741890" x="288" y="384" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="116" type="mirror" gid="1073741902" x="240" y="432" width="48" height="48">
+  <object id="116" type="mirror" gid="1073741890" x="240" y="432" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="117" type="mirror" gid="1073741902" x="528" y="336" width="48" height="48">
+  <object id="117" type="mirror" gid="1073741890" x="528" y="336" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="118" type="mirror" gid="78" x="528" y="384" width="48" height="48">
+  <object id="118" type="mirror" gid="66" x="528" y="384" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="55" type="lightSwitch" gid="87" x="576" y="336" width="48" height="48"/>
-  <object id="77" type="lightOrb" gid="82" x="192" y="336" width="48" height="48">
+  <object id="55" type="lightSwitch" gid="69" x="576" y="336" width="48" height="48"/>
+  <object id="77" type="lightOrb" gid="73" x="192" y="336" width="48" height="48">
    <properties>
     <property name="direction" value="16"/>
    </properties>

@@ -47,24 +47,24 @@
  </layer>
  <objectgroup name="Objects" visible="0"/>
  <objectgroup name="glasswall">
-  <object id="113" type="glassWall" gid="89" x="336" y="288" width="48" height="48"/>
-  <object id="114" type="glassWall" gid="89" x="384" y="384" width="48" height="48"/>
-  <object id="115" gid="89" x="336" y="336" width="48" height="48"/>
-  <object id="116" gid="89" x="336" y="384" width="48" height="48"/>
-  <object id="117" gid="89" x="384" y="288" width="48" height="48"/>
-  <object id="118" gid="89" x="432" y="384" width="48" height="48"/>
-  <object id="119" gid="89" x="432" y="288" width="48" height="48"/>
+  <object id="113" type="glassWall" gid="78" x="336" y="288" width="48" height="48"/>
+  <object id="114" type="glassWall" gid="78" x="384" y="384" width="48" height="48"/>
+  <object id="115" gid="78" x="336" y="336" width="48" height="48"/>
+  <object id="116" gid="78" x="336" y="384" width="48" height="48"/>
+  <object id="117" gid="78" x="384" y="288" width="48" height="48"/>
+  <object id="118" gid="78" x="432" y="384" width="48" height="48"/>
+  <object id="119" gid="78" x="432" y="288" width="48" height="48"/>
  </objectgroup>
  <objectgroup name="Mirrors">
-  <object id="74" type="mirror" gid="1073741902" x="240" y="192" width="48" height="48">
+  <object id="74" type="mirror" gid="1073741890" x="240" y="192" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="55" type="lightSwitch" gid="87" x="528" y="192" width="48" height="48"/>
-  <object id="121" type="lightOrb" gid="82" x="192" y="384" width="48" height="48">
+  <object id="55" type="lightSwitch" gid="69" x="528" y="192" width="48" height="48"/>
+  <object id="121" type="lightOrb" gid="73" x="192" y="384" width="48" height="48">
    <properties>
     <property name="direction" value="16"/>
    </properties>
