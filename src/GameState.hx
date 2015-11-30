@@ -150,8 +150,6 @@ class GameState extends FlxState {
       }
     }
 
-    setZoom(PMain.zoom);
-
     level.holeMap.cameras = [FlxG.camera];
     level.floorMap.cameras = [FlxG.camera];
     level.wallMap.cameras = [FlxG.camera];
@@ -187,13 +185,7 @@ class GameState extends FlxState {
       && (player.elmHolding == null || player.elmHolding.moveDirection.equals(Direction.None));
     };
 
-    ZOOM_IN = function() {
-      return FlxG.keys.pressed.ONE || this.hud.zoomInButton.status == FlxButton.PRESSED;
-    }
-
-    ZOOM_OUT = function() {
-      return FlxG.keys.pressed.TWO || this.hud.zoomOutButton.status == FlxButton.PRESSED;
-    }
+    FlxG.camera.focusOn(player.getMidpoint(null));
   }
 
   public override function destroy() {
@@ -313,10 +305,6 @@ class GameState extends FlxState {
       resetState();
     } else if (UNDO() && !player.isDying) {
       undoAction();
-    } else if (ZOOM_IN()) {
-      zoomIn();
-    } else if (ZOOM_OUT()) {
-      zoomOut();
     }
 
     super.update();
@@ -424,26 +412,6 @@ class GameState extends FlxState {
       default:
         trace("Got unknown object " + o.type.toLowerCase());
     }
-  }
-
-  public inline function zoomIn() {
-    setZoom(FlxG.camera.zoom * ZOOM_MULT);
-  }
-
-  public inline function zoomOut() {
-    setZoom(FlxG.camera.zoom / ZOOM_MULT);
-  }
-
-  private function setZoom(zoom:Float) {
-    //Check for min and max zoom
-    zoom = 1;
-
-    FlxG.camera.zoom = zoom;
-    FlxG.camera.setSize(Std.int(Lib.current.stage.stageWidth / zoom),
-                        Std.int(Lib.current.stage.stageHeight / zoom));
-    level.updateBuffers();
-    FlxG.camera.focusOn(player.getMidpoint(null));
-    PMain.zoom = zoom;
   }
 
   public function executeAction(a : ActionElement, playSounds : Bool = false) : Bool {

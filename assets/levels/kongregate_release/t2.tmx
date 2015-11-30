@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="13" height="11" tilewidth="48" tileheight="48" nextobjectid="93">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="14" height="11" tilewidth="48" tileheight="48" nextobjectid="93">
  <tileset firstgid="1" name="walls" tilewidth="48" tileheight="48" tilecount="42">
   <image source="../../images/kongregate_release/wall_sheet.png" width="336" height="288"/>
  </tileset>
@@ -21,28 +21,28 @@
  <tileset firstgid="78" name="tutorialImages" tilewidth="48" tileheight="48" tilecount="50">
   <image source="../../images/kongregate_release/tutorial_sheet.png" width="512" height="256"/>
  </tileset>
- <layer name="Floor" width="13" height="11">
+ <layer name="Floor" width="14" height="11">
   <properties>
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYKA/MAdiKyAOgfItodgKjx6QvAWaGpg+Yu20gLIt8CkEgkgizUQ2mx6AUBjRGwAA7l8EOQ==
+   eJxjYBg4YA7EVkAcAuVbQrEVAX0gNRZo6mB6SbHbAsq2wKcQCiJJMBvZDnoCYsJuoAAAamoEOQ==
   </data>
  </layer>
- <layer name="Holes" width="13" height="11">
+ <layer name="Holes" width="14" height="11">
   <properties>
    <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBiawIkINdZAbAPELiTocwBiOzLcQ6oeazLtGUwAAON+AnU=
+   eJxjYBj6wIlIddZAbAPELiTqdQBiOxLdBAPk6LOmwL7BCgAf3QJ1
   </data>
  </layer>
- <layer name="Walls" width="13" height="11">
+ <layer name="Walls" width="14" height="11">
   <properties>
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYCQTswKxKBLmQeMzYdGjxYAKVNH4MkTo4SRDDzogpEcMiFXQMD8BPeh+IcYecvRIA7EyGmbGooeFgDylGAAo6wSr
+   eJxjZGBgYKQAswKxKBLmQeMz4dCnxYAKVNH4MkTq4yRTHzogRp8YEKugYX4i9KH7jVj7yNUnDcTKaJgZhz4WItRQAwMAossEtg==
   </data>
  </layer>
  <objectgroup name="Objects"/>
