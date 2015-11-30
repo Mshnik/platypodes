@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="48" tileheight="48" nextobjectid="87">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="13" height="11" tilewidth="48" tileheight="48" nextobjectid="93">
  <tileset firstgid="1" name="walls" tilewidth="48" tileheight="48" tilecount="42">
   <image source="../../images/kongregate_release/wall_sheet.png" width="336" height="288"/>
  </tileset>
@@ -18,47 +18,47 @@
  <tileset firstgid="69" name="orb_sheet" tilewidth="48" tileheight="48" tilecount="9">
   <image source="../../images/kongregate_release/orb_sheet.png" width="144" height="144"/>
  </tileset>
- <tileset firstgid="78" name="tutorialImages" tilewidth="48" tileheight="48" tilecount="32">
-  <image source="../../images/kongregate_release/tutorial_sheet.png" width="384" height="129"/>
+ <tileset firstgid="78" name="tutorialImages" tilewidth="48" tileheight="48" tilecount="50">
+  <image source="../../images/kongregate_release/tutorial_sheet.png" width="512" height="256"/>
  </tileset>
- <layer name="Floor" width="20" height="20">
+ <layer name="Floor" width="13" height="11">
   <properties>
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBjZwByIrYA4BMq3hGIrMs0D6bVA0w8zk1JgDjWbAYkmB4RTwS0wYE5Fs2gBKInLUTAKRgF+AADIbQQ3
+   eJxjYKA/MAdiKyAOgfItodgKjx6QvAWaGpg+Yu20gLIt8CkEgkgizUQ2mx6AUBjRGwAA7l8EOQ==
   </data>
  </layer>
- <layer name="Holes" width="20" height="20">
+ <layer name="Holes" width="13" height="11">
   <properties>
    <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFtAROFOq3BmIbIHahkpkOQGxHiYOwAGqaZ01l80bBKBgFtAMApSYCdQ==
+   eJxjYBiawIkINdZAbAPELiTocwBiOzLcQ6oeazLtGUwAAON+AnU=
   </data>
  </layer>
- <layer name="Walls" width="20" height="20">
+ <layer name="Walls" width="13" height="11">
   <properties>
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBwimBWIRZEwDxqfiUTztBhQgSoaX4ZC8zipbB46oMQ8MSBWQcP8FJiHHnaUuo/a5kkDsTIaZibRPBYK9I7iUTwcMQBF6gWs
+   eJxjZGBgYCQTswKxKBLmQeMzYdGjxYAKVNH4MkTo4SRDDzogpEcMiFXQMD8BPeh+IcYecvRIA7EyGmbGooeFgDylGAAo6wSr
   </data>
  </layer>
  <objectgroup name="Objects"/>
  <objectgroup name="Tutorial Images">
-  <object id="86" gid="89" x="336" y="384" width="48" height="48"/>
+  <object id="87" gid="91" x="288" y="336" width="48" height="48"/>
  </objectgroup>
  <objectgroup name="Mirrors">
-  <object id="82" type="mirror" gid="2147483726" x="384" y="288" width="48" height="48">
+  <object id="88" type="mirror" gid="2147483726" x="336" y="240" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="55" type="lightSwitch" gid="87" x="384" y="192" width="48" height="48"/>
-  <object id="85" type="lightOrb" gid="86" x="480" y="288" width="48" height="48">
+  <object id="89" type="lightSwitch" gid="89" x="336" y="144" width="48" height="48"/>
+  <object id="90" type="lightOrb" gid="88" x="432" y="240" width="48" height="48">
    <properties>
     <property name="direction" value="1"/>
    </properties>
@@ -68,13 +68,13 @@
   <properties>
    <property name="tileset" value="tutorialImages"/>
   </properties>
-  <object id="45" type="player_start" x="192" y="432" width="48" height="48">
+  <object id="91" type="player_start" x="144" y="384" width="48" height="48">
    <properties>
     <property name="direction_facing" value="16"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="47" type="exit" gid="43" x="288" y="192" width="48" height="48"/>
+  <object id="92" type="exit" gid="43" x="240" y="144" width="48" height="48"/>
  </objectgroup>
 </map>

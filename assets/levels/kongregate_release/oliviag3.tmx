@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="48" tileheight="48" nextobjectid="179">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="17" height="11" tilewidth="48" tileheight="48" nextobjectid="202">
  <tileset firstgid="1" name="walls" tilewidth="48" tileheight="48" tilecount="42">
   <image source="../../images/kongregate_release/wall_sheet.png" width="336" height="288"/>
  </tileset>
@@ -21,88 +21,88 @@
  <tileset firstgid="78" name="glass_wall_sheet" tilewidth="48" tileheight="48" tilecount="42">
   <image source="../../images/kongregate_release/glass_wall_sheet.png" width="336" height="288"/>
  </tileset>
- <layer name="Floor" width="20" height="20">
+ <layer name="Floor" width="17" height="11">
   <properties>
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztkVEKACAIQ7vVyvsfrCCFYVHWtw9GWjksS0nakAxB86qx0PpCVXlwOLv1d/KLABdzncVNFe2J/bDZ/3mr1fGfszfW61d4luYByl/nmyTJpAOtiQlu
+   eJxjYBi8wBKIrYDYHMq3gLKtkGhCwAKK0YE5Hjls7sBnBi5gjsZGVgtjW0IxPruRzTDHIk6sP2BqkcMN2TxzTOVYAXIcwPSZI/GJiZeBAAB+awlu
   </data>
  </layer>
- <layer name="Holes" width="20" height="20">
+ <layer name="Holes" width="17" height="11">
   <properties>
    <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBjZwInK5rljEbMGYlsyzXOkwC30MA+bfykJU2zmUQI8qGzeKBgFowABAGK5Apw=
+   eJxjYBicwIkKZrhjEbMGYlsSzHCkgjuoYQY2v5AaRtjMIBV4UMGMgQIAGNwCnA==
   </data>
  </layer>
- <layer name="Walls" width="20" height="20">
+ <layer name="Walls" width="17" height="11">
   <properties>
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBwimBWIRdEwDxYxEGYiwjwtBkzAiUUMBGTIMI8bh1mEzIP5kw+PfmQgBcTMJLiLECDkV1zm4fIvIfNYgFgZiNWJNJOXgfz4xQWIiV+YO4nB+OJjFI/i4YIB4nwFfg==
+   eJxjZGBgYKQiZgViUTTMg0UMhJlwmKHFgAk4sYiBgAyRZnDj0I/NDJgf+PDoQQZSQMxMwH5CAJs/cJmByy/YzGABYmUgVifSHF4G0uIFF8AVLzD3EIPRw5RSDAA99gSp
   </data>
  </layer>
  <objectgroup name="Objects"/>
  <objectgroup name="glasswall">
-  <object id="129" gid="78" x="336" y="288" width="48" height="48"/>
-  <object id="149" gid="78" x="336" y="336" width="48" height="48"/>
-  <object id="152" gid="78" x="384" y="288" width="48" height="48"/>
-  <object id="153" gid="78" x="384" y="336" width="48" height="48"/>
-  <object id="159" gid="78" x="336" y="432" width="48" height="48"/>
-  <object id="165" gid="78" x="480" y="288" width="48" height="48"/>
-  <object id="166" gid="78" x="480" y="336" width="48" height="48"/>
-  <object id="167" gid="78" x="480" y="384" width="48" height="48"/>
-  <object id="168" gid="78" x="480" y="432" width="48" height="48"/>
-  <object id="170" gid="78" x="432" y="288" width="48" height="48"/>
-  <object id="176" gid="78" x="384" y="240" width="48" height="48"/>
-  <object id="177" gid="78" x="144" y="336" width="48" height="48"/>
-  <object id="178" gid="78" x="144" y="384" width="48" height="48"/>
+  <object id="179" gid="78" x="336" y="240" width="48" height="48"/>
+  <object id="180" gid="78" x="336" y="288" width="48" height="48"/>
+  <object id="181" gid="78" x="384" y="240" width="48" height="48"/>
+  <object id="182" gid="78" x="384" y="288" width="48" height="48"/>
+  <object id="183" gid="78" x="336" y="384" width="48" height="48"/>
+  <object id="184" gid="78" x="480" y="240" width="48" height="48"/>
+  <object id="185" gid="78" x="480" y="288" width="48" height="48"/>
+  <object id="186" gid="78" x="480" y="336" width="48" height="48"/>
+  <object id="187" gid="78" x="480" y="384" width="48" height="48"/>
+  <object id="188" gid="78" x="432" y="240" width="48" height="48"/>
+  <object id="189" gid="78" x="384" y="192" width="48" height="48"/>
+  <object id="190" gid="78" x="144" y="288" width="48" height="48"/>
+  <object id="191" gid="78" x="144" y="336" width="48" height="48"/>
  </objectgroup>
  <objectgroup name="Mirrors">
-  <object id="74" type="mirror" gid="66" x="240" y="240" width="48" height="48">
+  <object id="192" type="mirror" gid="66" x="240" y="192" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="105" type="mirror" gid="66" x="240" y="336" width="48" height="48">
+  <object id="193" type="mirror" gid="66" x="240" y="288" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="110" type="mirror" gid="3221225538" x="432" y="336" width="48" height="48">
+  <object id="194" type="mirror" gid="3221225538" x="432" y="288" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="172" type="mirror" gid="66" x="432" y="432" width="48" height="48">
+  <object id="195" type="mirror" gid="66" x="432" y="384" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="173" type="mirror" gid="1073741890" x="240" y="384" width="48" height="48">
+  <object id="196" type="mirror" gid="1073741890" x="240" y="336" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="174" type="mirror" gid="1073741890" x="240" y="288" width="48" height="48">
+  <object id="197" type="mirror" gid="1073741890" x="240" y="240" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="55" type="lightSwitch" gid="69" x="384" y="384" width="48" height="48"/>
-  <object id="148" type="lightOrb" gid="73" x="96" y="336" width="48" height="48">
+  <object id="198" type="lightSwitch" gid="69" x="384" y="336" width="48" height="48"/>
+  <object id="199" type="lightOrb" gid="73" x="96" y="288" width="48" height="48">
    <properties>
     <property name="direction" value="16"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
-  <object id="45" type="player_start" x="624" y="144" width="48" height="48">
+  <object id="200" type="player_start" x="624" y="96" width="48" height="48">
    <properties>
     <property name="direction_facing" value="16"/>
     <property name="initial_zoom" value="0.7"/>
@@ -110,6 +110,6 @@
   </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="47" type="exit" gid="43" x="336" y="192" width="48" height="48"/>
+  <object id="201" type="exit" gid="43" x="336" y="144" width="48" height="48"/>
  </objectgroup>
 </map>
