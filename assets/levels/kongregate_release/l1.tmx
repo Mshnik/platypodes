@@ -44,34 +44,34 @@
  </layer>
  <objectgroup name="Objects"/>
  <objectgroup name="Mirrors">
-  <object id="72" type="mirror" gid="1073741902" x="240" y="192" width="48" height="48">
+  <object id="72" type="mirror" gid="1073741890" x="240" y="192" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="73" type="mirror" gid="78" x="288" y="384" width="48" height="48">
+  <object id="73" type="mirror" gid="66" x="288" y="384" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="74" type="mirror" gid="3221225550" x="192" y="288" width="48" height="48">
+  <object id="74" type="mirror" gid="3221225538" x="192" y="288" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="75" type="mirror" gid="3221225550" x="480" y="336" width="48" height="48">
+  <object id="75" type="mirror" gid="3221225538" x="480" y="336" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="79" type="lightorb" gid="82" x="192" y="336" width="48" height="48">
+  <object id="79" type="lightorb" gid="73" x="192" y="336" width="48" height="48">
    <properties>
     <property name="direction" value="16"/>
    </properties>
   </object>
-  <object id="80" type="lightswitch" gid="87" x="624" y="384" width="48" height="48"/>
+  <object id="80" type="lightswitch" gid="69" x="624" y="384" width="48" height="48"/>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
   <object id="45" type="player_start" x="192" y="384" width="48" height="48">
