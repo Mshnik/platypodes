@@ -71,8 +71,8 @@ class GameState extends FlxState {
   private static var BACKGROUND_THEME : FlxSound;
 
   private var hud : OverlayDisplay;
-  private var mainCamera : FlxCamera;
-  private var hudCamera : FlxCamera;
+  public var mainCamera(default, null) : FlxCamera;
+  public var hudCamera(default, null) : FlxCamera;
 
   private var sndWin : FlxSound;
   private var sndWinDone : Bool;
@@ -92,14 +92,21 @@ class GameState extends FlxState {
 
   override public function create():Void {
     super.create();
+    var tName = Type.getClassName(Type.getClass(this));
+    if(! Element.updateTimeMap.exists(tName)) {
+      Element.updateTimeMap.set(tName, 0);
+      Element.updateCount.set(tName, 0);
+      Element.drawTimeMap.set(tName, 0);
+      Element.drawCount.set(tName, 0);
+    }
+
     // Load the level's tilemaps
     level = new TiledLevel(this, levelPaths[levelPathIndex]);
 
     // Add tilemaps
-    add(level.floorTiles);
-    add(level.holeTiles);
-    add(level.wallTiles);
-    add(level.tutorialTiles);
+    add(level.floorMap);
+    add(level.holeMap);
+    add(level.wallMap);
 
     interactables = new FlxTypedGroup<InteractableElement>();
     lightBulbs = new FlxTypedGroup<LightBulb>();
@@ -145,15 +152,9 @@ class GameState extends FlxState {
 
     setZoom(PMain.zoom);
 
-    level.wallTiles.forEachOfType(FlxObject, function(ob : FlxObject){
-      ob.cameras = [FlxG.camera];
-    });
-    level.floorTiles.forEachOfType(FlxObject, function(ob : FlxObject){
-      ob.cameras = [FlxG.camera];
-    });
-    level.holeTiles.forEachOfType(FlxObject, function(ob : FlxObject){
-      ob.cameras = [FlxG.camera];
-    });
+    level.holeMap.cameras = [FlxG.camera];
+    level.floorMap.cameras = [FlxG.camera];
+    level.wallMap.cameras = [FlxG.camera];
 
     mainCamera = FlxG.camera;
     hudCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height, 1.0);
@@ -292,9 +293,17 @@ class GameState extends FlxState {
     });
   }
 
-
+  public override function draw() {
+    var startTime = Timer.stamp();
+    super.draw();
+    var tName = Type.getClassName(Type.getClass(this));
+    Element.drawTimeMap.set(tName, Element.drawTimeMap.get(tName) + (Timer.stamp() - startTime));
+    Element.drawCount.set(tName, Element.drawCount.get(tName) + 1);
+    //trace((Element.drawTimeMap.get(tName) / Element.drawCount.get(tName) * 1000) + "ms per draw");
+  }
 
   override public function update():Void {
+    var startTime = Timer.stamp();
     if(MENU_BUTTON()) {
       FlxG.switchState(new LevelSelectMenuState());
     } else if(won && (NEXT_LEVEL_BUTTON() || autoProgress) && levelPathIndex + 1 < levelPaths.length){
@@ -350,6 +359,11 @@ class GameState extends FlxState {
     hud.showDeadSprite = ! player.alive && !won;
     hud.showWinSprite = won && exit.animation.finished;
 
+    var tName = Type.getClassName(Type.getClass(this));
+    var n = Element.updateTimeMap.get(tName) + (Timer.stamp() - startTime);
+    Element.updateTimeMap.set(tName, n);
+    Element.updateCount.set(tName, Element.updateCount.get(tName) + 1);
+    //trace((Element.updateTimeMap.get(tName) / Element.updateCount.get(tName) * 1000) + "ms per update");
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup) {
@@ -422,8 +436,7 @@ class GameState extends FlxState {
 
   private function setZoom(zoom:Float) {
     //Check for min and max zoom
-    if (zoom < 0.35) zoom = 0.35;
-    if (zoom > 0.7) zoom = 0.7;
+    zoom = 1;
 
     FlxG.camera.zoom = zoom;
     FlxG.camera.setSize(Std.int(Lib.current.stage.stageWidth / zoom),
@@ -524,7 +537,6 @@ class GameState extends FlxState {
 
   public function win() {
     if(won) return;
-
     won = true;
     actionStack.addWin();
     BACKGROUND_THEME.pause();

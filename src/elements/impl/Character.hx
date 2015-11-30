@@ -1,4 +1,5 @@
 package elements.impl;
+import haxe.Timer;
 import flixel.FlxSprite;
 import flixel.util.FlxPoint;
 import flixel.system.FlxSound;
@@ -13,28 +14,25 @@ import flixel.FlxG;
 class Character extends MovingElement {
 
   /** The Character's default move speed, when not interacting with anything */
-  public static inline var MOVE_SPEED = 600;
+  public static inline var MOVE_SPEED = 300;
 
   /** The Character's move speed when automatically moving towards center of tile */
-  public static inline var AUTOMOVE_SPEED = 200;
+  public static inline var AUTOMOVE_SPEED = 75;
 
   /** The distance the character moves per frame. This is the value when moving at velocity of 300
    * 60FPS, how the math works out */
-  private static inline var MOVE_DIST_PER_FRAME = 3.2;
+  private static inline var MOVE_DIST_PER_FRAME = 1.2;
 
   /** True iff mouse movement should be allowed */
   private static inline var ALLOW_MOUSE_MOVEMENT = false;
 
   /** The clippng on the bounding box of the sprite, to make fitting though a one tile wide path easier */
-  private static inline var BOUNDING_BOX_MARGIN_X = 30;
-  private static inline var BOUNDING_BOX_MARGIN_TOP = 45;
-  private static inline var BOUNDING_BOX_MARGIN_BOTTOM = 5;
-
-/** Size of each character sprite, in px */
-  @final private static var CHARACTER_SPRITE_SIZE = 128;
+  private static inline var BOUNDING_BOX_MARGIN_X = 11;
+  private static inline var BOUNDING_BOX_MARGIN_TOP = 16;
+  private static inline var BOUNDING_BOX_MARGIN_BOTTOM = 2;
 
   /** Animated character sprite sheet location */
-  private inline static var CHARACTER_SPRITE_SHEET = AssetPaths.playerSheet__png;
+  private inline static var CHARACTER_SPRITE_SHEET = AssetPaths.player_sheet__png;
 
   /** Standard speed of animations for the Character class */
   public inline static var ANIMATION_SPEED = 6;
@@ -223,7 +221,7 @@ class Character extends MovingElement {
     setHighlightColor(HIGHLIGHT_COLOR);
 
     //Sprite loading and animating
-    loadGraphic(CHARACTER_SPRITE_SHEET, true, CHARACTER_SPRITE_SIZE, CHARACTER_SPRITE_SIZE);
+    loadGraphic(CHARACTER_SPRITE_SHEET, true, PMain.SPRITE_SIZE, PMain.SPRITE_SIZE);
     setFacingFlip(FlxObject.RIGHT, false, false);
     setFacingFlip(FlxObject.LEFT, true, false);
     animation.add(WALK_DOWN_ANIMATION_KEY, [0,1,2,3], ANIMATION_SPEED, true);
@@ -390,6 +388,7 @@ class Character extends MovingElement {
     */
   override public function update() {
 
+    var startTime = Timer.stamp();
     check_grab();
 
     if(!tileLocked && !state.won) {
@@ -525,6 +524,7 @@ class Character extends MovingElement {
     continueMoving = GRAB() && (UP_PRESSED() || DOWN_PRESSED() || LEFT_PRESSED() || RIGHT_PRESSED());
 
     super.update();
+    logUpdateTime(startTime);
   }
 
   private function playMovementAnimation(d : Direction, holdingElm : Bool) {

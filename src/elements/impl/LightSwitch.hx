@@ -1,9 +1,10 @@
 package elements.impl;
+import haxe.Timer;
 import flixel.addons.editors.tiled.TiledObject;
 class LightSwitch extends Element implements Lightable {
 
-  private static inline var UNLIT_SPRITE = AssetPaths.switch_off__png;
-  private static inline var LIT_SPRITE = AssetPaths.switch_on__png;
+  private static inline var UNLIT_SPRITE = AssetPaths.light_orb_grey__png;
+  private static inline var LIT_SPRITE = AssetPaths.light_orb__png;
 
   public var lightInDirection(default, null) : Array<Direction>;
 
@@ -17,7 +18,9 @@ class LightSwitch extends Element implements Lightable {
   }
 
   override public function update() {
+    var startTime = Timer.stamp();
     super.update();
+    logUpdateTime(startTime);
   }
 
   /** Returns true iff this is giving out light from the given side */

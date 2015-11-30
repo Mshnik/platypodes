@@ -1,9 +1,10 @@
 package elements;
+import haxe.Timer;
 import flixel.addons.editors.tiled.TiledObject;
 class TutorialImage extends Element {
 
-  private static inline var WIDTH = 512;
-  private static inline var HEIGHT = 256;
+  private static inline var WIDTH = 4 * PMain.SPRITE_SIZE;
+  private static inline var HEIGHT = 2 * PMain.SPRITE_SIZE;
   private static inline var ANIMATION_PATH_A = AssetPaths.ASheet__png;
   private static inline var ANIMATION_PATH_B = AssetPaths.BSheet__png;
 
@@ -16,6 +17,13 @@ class TutorialImage extends Element {
 
   public function new(s : GameState, o : TiledObject) {
     super(s, o);
+    var tName = Type.getClassName(Type.getClass(this));
+    if(! Element.updateTimeMap.exists(tName)) {
+      Element.updateTimeMap.set(tName, 0);
+      Element.updateCount.set(tName, 0);
+      Element.drawTimeMap.set(tName, 0);
+      Element.drawCount.set(tName, 0);
+    }
 
     if(PMain.A_VERSION) {
       loadGraphic(ANIMATION_PATH_A, true, WIDTH, HEIGHT);
@@ -37,5 +45,21 @@ class TutorialImage extends Element {
     }
     animation.add(ANIMATION_KEY, arr, FRAME_RATE, s.levelPathIndex != MOVE_LEVEL);
     animation.play(ANIMATION_KEY);
+  }
+
+  public override function draw() {
+    var startTime = Timer.stamp();
+    super.draw();
+    var tName = Type.getClassName(Type.getClass(this));
+    Element.drawTimeMap.set(tName, Element.drawTimeMap.get(tName) + (Timer.stamp() - startTime));
+    Element.drawCount.set(tName, Element.drawCount.get(tName) + 1);
+  }
+
+  public override function update(){
+    var startTime = Timer.stamp();
+    super.update();
+    var tName = Type.getClassName(Type.getClass(this));
+    Element.updateTimeMap.set(tName, Element.updateTimeMap.get(tName) + (Timer.stamp() - startTime));
+    Element.updateCount.set(tName, Element.updateCount.get(tName) + 1);
   }
 }

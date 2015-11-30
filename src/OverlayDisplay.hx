@@ -1,4 +1,6 @@
 package ;
+import haxe.Timer;
+import elements.Element;
 import flixel.FlxCamera;
 import flixel.util.FlxPoint;
 import flixel.ui.FlxButton;
@@ -40,6 +42,13 @@ class OverlayDisplay extends FlxTypedGroup<FlxSprite>{
 
   public function new(state : GameState, camera : FlxCamera, hasNextLevel : Bool) {
     super();
+    var tName = Type.getClassName(Type.getClass(this));
+    if(! Element.updateTimeMap.exists(tName)) {
+      Element.updateTimeMap.set(tName, 0);
+      Element.updateCount.set(tName, 0);
+      Element.drawTimeMap.set(tName, 0);
+      Element.drawCount.set(tName, 0);
+    }
 
     this.state = state;
     backTop = new FlxSprite().loadGraphic(AssetPaths.control_bar__png, false, FlxG.width, HEIGHT);
@@ -128,6 +137,7 @@ class OverlayDisplay extends FlxTypedGroup<FlxSprite>{
   }
 
   public override function update(){
+    var startTime = Timer.stamp();
     if(Math.abs(deadSprite.velocity.y) < 0.01) {
       deadSprite.velocity.y = 0;
     }
@@ -162,5 +172,16 @@ class OverlayDisplay extends FlxTypedGroup<FlxSprite>{
     }
 
     super.update();
+    var tName = Type.getClassName(Type.getClass(this));
+    Element.updateTimeMap.set(tName, Element.updateTimeMap.get(tName) + (Timer.stamp() - startTime));
+    Element.updateCount.set(tName, Element.updateCount.get(tName) + 1);
+  }
+
+  public override function draw() {
+    var startTime = Timer.stamp();
+    super.draw();
+    var tName = Type.getClassName(Type.getClass(this));
+    Element.drawTimeMap.set(tName, Element.drawTimeMap.get(tName) + (Timer.stamp() - startTime));
+    Element.drawCount.set(tName, Element.drawCount.get(tName) + 1);
   }
 }
