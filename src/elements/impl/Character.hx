@@ -14,14 +14,14 @@ import flixel.FlxG;
 class Character extends MovingElement {
 
   /** The Character's default move speed, when not interacting with anything */
-  public static inline var MOVE_SPEED = 400;
+  public static inline var MOVE_SPEED = 300;
 
   /** The Character's move speed when automatically moving towards center of tile */
-  public static inline var AUTOMOVE_SPEED = 100;
+  public static inline var AUTOMOVE_SPEED = 75;
 
   /** The distance the character moves per frame. This is the value when moving at velocity of 300
    * 60FPS, how the math works out */
-  private static inline var MOVE_DIST_PER_FRAME = 1.6;
+  private static inline var MOVE_DIST_PER_FRAME = 1.2;
 
   /** True iff mouse movement should be allowed */
   private static inline var ALLOW_MOUSE_MOVEMENT = false;
