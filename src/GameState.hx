@@ -205,6 +205,10 @@ class GameState extends FlxState {
     glassWalls.destroy();
     interactables.destroy();
     hud.destroy();
+    mainCamera.destroy();
+    hudCamera.destroy();
+    tooltip.destroy();
+
     super.destroy();
   }
 
@@ -302,6 +306,10 @@ class GameState extends FlxState {
     //trace((Element.drawTimeMap.get(tName) / Element.drawCount.get(tName) * 1000) + "ms per draw");
   }
 
+  private function playCollisionSound(a, b):Void{
+    player.playCollisionSound();
+  }
+
   override public function update():Void {
     var startTime = Timer.stamp();
     if(MENU_BUTTON()) {
@@ -324,17 +332,17 @@ class GameState extends FlxState {
     //Only collide player with stuff she isn't holding a mirror
     if (player.elmHolding == null || (player.elmHolding != null && player.elmHolding.destTile == null)) {
 
-      level.collideWithLevel(player, false, function(a, a){player.playCollisionSound();});  // Collides player with walls
+      level.collideWithLevel(player, false, playCollisionSound);  // Collides player with walls
 
-      FlxG.collide(player, lightBulbs, function(a, b){player.playCollisionSound();});
-      FlxG.collide(player, lightSwitches, function(a, b){player.playCollisionSound();});
-      FlxG.collide(player, glassWalls, function(a, b){player.playCollisionSound();});
+      FlxG.collide(player, lightBulbs, playCollisionSound);
+      FlxG.collide(player, lightSwitches, playCollisionSound);
+      FlxG.collide(player, glassWalls, playCollisionSound);
 
       //Collide player with light - don't kill player, just don't let them walk into it
-      FlxG.collide(player, lightSprites, function(a, b){player.playCollisionSound();});
+      FlxG.collide(player, lightSprites, playCollisionSound);
 
       //Collide with mirrors - don't let player walk through mirrors
-      FlxG.collide(player, interactables, function(a, b){player.playCollisionSound();});
+      FlxG.collide(player, interactables, playCollisionSound);
     } else {
       //Only collide player with the mirror they are holding
       FlxG.collide(player, player.elmHolding);
@@ -343,9 +351,10 @@ class GameState extends FlxState {
     //Check for victory
     if(! exit.isOpen) {
       var allLit = true;
-      lightSwitches.forEach(function(l : LightSwitch) {
+      var checkLit = function(l : LightSwitch) {
         allLit = allLit && l.isLit;
-      });
+      }
+      lightSwitches.forEach(checkLit);
       if(allLit ) {
         exit.set_isOpen(true);
       }

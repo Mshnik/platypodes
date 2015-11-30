@@ -357,4 +357,14 @@ class Tooltip extends FlxGroup {
     }
   }
 
+  public override function destroy() {
+    if(cwArrowButton != null) cwArrowButton.destroy();
+    if(ccwArrowButton!= null) ccwArrowButton.destroy();
+    if(pullArrowButton != null) pullArrowButton.destroy();
+    if (pushArrowButton != null) pushArrowButton.destroy();
+    if(pushMirrorDirection != null)pushMirrorDirection.destroy();
+    if(pullMirrorDirection != null)pullMirrorDirection.destroy();
+    super.destroy();
+  }
+
 }
