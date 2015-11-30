@@ -603,7 +603,11 @@ class Character extends MovingElement {
     if(nodes == null || nodes.length == 0){
       return;
     } else {
-      moveList = new List<Direction>();
+      if(moveList == null){
+        moveList = new List<Direction>();
+      } else{
+        moveList.clear();
+      }
       for(d in nodes) {
         moveList.add(d);
       }
