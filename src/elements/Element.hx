@@ -172,11 +172,6 @@ import flixel.FlxSprite;
     squareHighlight.x = getCol() * state.level.tileWidth;
     squareHighlight.y = getRow() * state.level.tileHeight;
 
-    if(bbox != null) {
-      bbox.x = this.x + this.origin.x - offset.x;
-      bbox.y = this.y + this.origin.y - offset.y;
-    }
-
     super.update();
 
     var tName = Type.getClassName(Type.getClass(this));
