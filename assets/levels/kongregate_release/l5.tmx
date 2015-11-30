@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="128" tileheight="128" nextobjectid="116">
- <tileset firstgid="1" name="walls" tilewidth="128" tileheight="128" tilecount="42">
-  <image source="../../images/newgrounds_release/wall_sheet.png" width="896" height="768"/>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="48" tileheight="48" nextobjectid="116">
+ <tileset firstgid="1" name="walls" tilewidth="48" tileheight="48" tilecount="42">
+  <image source="../../images/kongregate_release/wall_sheet.png" width="336" height="288"/>
  </tileset>
- <tileset firstgid="43" name="exit" tilewidth="128" tileheight="128" tilecount="12">
-  <image source="../../images/newgrounds_release/gate_sheet.png" width="512" height="384"/>
+ <tileset firstgid="43" name="exit" tilewidth="48" tileheight="48" tilecount="12">
+  <image source="../../images/kongregate_release/gate_sheet.png" width="192" height="144"/>
  </tileset>
- <tileset firstgid="55" name="floors" tilewidth="128" tileheight="128" tilecount="4">
-  <image source="../../images/newgrounds_release/floor_sheet.png" width="512" height="128"/>
+ <tileset firstgid="55" name="floors" tilewidth="48" tileheight="48" tilecount="4">
+  <image source="../../images/kongregate_release/floor_sheet.png" width="192" height="48"/>
  </tileset>
- <tileset firstgid="59" name="holes" tilewidth="128" tileheight="128" tilecount="18">
-  <image source="../../images/newgrounds_release/hole_sheet.png" width="768" height="384"/>
+ <tileset firstgid="59" name="holes" tilewidth="48" tileheight="48" tilecount="6">
+  <image source="../../images/kongregate_release/hole_sheet.png" width="288" height="48"/>
  </tileset>
- <tileset firstgid="77" name="mirrors" tilewidth="128" tileheight="128" tilecount="3">
-  <image source="../../images/newgrounds_release/mirror_sheet.png" width="386" height="130"/>
+ <tileset firstgid="65" name="mirrors" tilewidth="48" tileheight="48" tilecount="4">
+  <image source="../../images/kongregate_release/mirror_sheet.png" width="96" height="96"/>
  </tileset>
- <tileset firstgid="80" name="orb_sheet" tilewidth="128" tileheight="128" tilecount="9">
-  <image source="../../images/newgrounds_release/orb_sheet.png" width="384" height="384"/>
+ <tileset firstgid="69" name="orb_sheet" tilewidth="48" tileheight="48" tilecount="9">
+  <image source="../../images/kongregate_release/orb_sheet.png" width="144" height="144"/>
  </tileset>
  <layer name="Floor" width="20" height="20">
   <properties>
