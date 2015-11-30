@@ -44,57 +44,57 @@
  </layer>
  <objectgroup name="Objects" visible="0"/>
  <objectgroup name="Mirrors">
-  <object id="74" type="mirror" gid="2147483726" x="1152" y="1280" width="128" height="128">
+  <object id="74" type="mirror" gid="2147483726" x="432" y="480" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="75" type="mirror" gid="2147483726" x="640" y="640" width="128" height="128">
+  <object id="75" type="mirror" gid="2147483726" x="240" y="240" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="80" type="mirror" gid="1073741902" x="512" y="640" width="128" height="128">
+  <object id="80" type="mirror" gid="1073741902" x="192" y="240" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="95" type="mirror" gid="78" x="1536" y="640" width="128" height="128">
+  <object id="95" type="mirror" gid="78" x="576" y="240" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="96" type="mirror" gid="3221225550" x="1408" y="640" width="128" height="128">
+  <object id="96" type="mirror" gid="3221225550" x="528" y="240" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="105" type="mirror" gid="2147483726" x="1408" y="1280" width="128" height="128">
+  <object id="105" type="mirror" gid="2147483726" x="528" y="480" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="107" type="mirror" gid="1073741902" x="1152" y="640" width="128" height="128">
+  <object id="107" type="mirror" gid="1073741902" x="432" y="240" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="108" type="mirror" gid="78" x="1536" y="896" width="128" height="128">
+  <object id="108" type="mirror" gid="78" x="576" y="336" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="110" type="lightorb" gid="82" x="512" y="1152" width="128" height="128">
+  <object id="110" type="lightorb" gid="82" x="192" y="432" width="48" height="48">
    <properties>
     <property name="direction" value="16"/>
    </properties>
   </object>
-  <object id="111" type="lightswitch" gid="87" x="896" y="384" width="128" height="128"/>
+  <object id="111" type="lightswitch" gid="87" x="336" y="144" width="48" height="48"/>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
-  <object id="45" type="player_start" x="896" y="768" width="128" height="128">
+  <object id="45" type="player_start" x="336" y="288" width="48" height="48">
    <properties>
     <property name="direction_facing" value="16"/>
     <property name="initial_zoom" value="0.7"/>
@@ -102,6 +102,6 @@
   </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="109" type="exit" gid="43" x="1536" y="1152" width="128" height="128"/>
+  <object id="109" type="exit" gid="43" x="576" y="432" width="48" height="48"/>
  </objectgroup>
 </map>

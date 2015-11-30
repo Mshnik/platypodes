@@ -47,36 +47,36 @@
  </layer>
  <objectgroup name="Objects" visible="0"/>
  <objectgroup name="Glass Walls">
-  <object id="113" type="glassWall" gid="78" x="320" y="576" width="64" height="64"/>
-  <object id="114" type="glassWall" gid="78" x="320" y="384" width="64" height="64"/>
+  <object id="113" type="glassWall" gid="78" x="120" y="216" width="48" height="48"/>
+  <object id="114" type="glassWall" gid="78" x="120" y="144" width="48" height="48"/>
  </objectgroup>
  <objectgroup name="Mirrors">
-  <object id="74" type="mirror" gid="1073741890" x="320" y="256" width="64" height="64">
+  <object id="74" type="mirror" gid="1073741890" x="120" y="96" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="105" type="mirror" gid="3221225538" x="256" y="576" width="64" height="64">
+  <object id="105" type="mirror" gid="3221225538" x="96" y="216" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="110" type="mirror" gid="1073741890" x="448" y="640" width="64" height="64">
+  <object id="110" type="mirror" gid="1073741890" x="168" y="240" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="55" type="lightSwitch" gid="76" x="640" y="384" width="64" height="64"/>
-  <object id="111" type="lightOrb" gid="73" x="320" y="640" width="64" height="64">
+  <object id="55" type="lightSwitch" gid="76" x="240" y="144" width="48" height="48"/>
+  <object id="111" type="lightOrb" gid="73" x="120" y="240" width="48" height="48">
    <properties>
     <property name="direction" value="256"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
-  <object id="45" type="player_start" x="448" y="384" width="64" height="64">
+  <object id="45" type="player_start" x="168" y="144" width="48" height="48">
    <properties>
     <property name="direction_facing" value="16"/>
     <property name="initial_zoom" value="0.7"/>
@@ -84,6 +84,6 @@
   </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="47" type="exit" gid="43" x="640" y="576" width="64" height="64"/>
+  <object id="47" type="exit" gid="43" x="240" y="216" width="48" height="48"/>
  </objectgroup>
 </map>
