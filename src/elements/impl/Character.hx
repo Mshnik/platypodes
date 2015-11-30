@@ -27,9 +27,9 @@ class Character extends MovingElement {
   private static inline var ALLOW_MOUSE_MOVEMENT = false;
 
   /** The clippng on the bounding box of the sprite, to make fitting though a one tile wide path easier */
-  private static inline var BOUNDING_BOX_MARGIN_X = 30;
-  private static inline var BOUNDING_BOX_MARGIN_TOP = 45;
-  private static inline var BOUNDING_BOX_MARGIN_BOTTOM = 5;
+  private static inline var BOUNDING_BOX_MARGIN_X = 11;
+  private static inline var BOUNDING_BOX_MARGIN_TOP = 16;
+  private static inline var BOUNDING_BOX_MARGIN_BOTTOM = 2;
 
   /** Animated character sprite sheet location */
   private inline static var CHARACTER_SPRITE_SHEET = AssetPaths.player_sheet__png;

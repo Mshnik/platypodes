@@ -18,7 +18,7 @@ class PMain extends Sprite
 	var skipSplash:Bool = false; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 
-  public static inline var SPRITE_SIZE = 64;
+  public static inline var SPRITE_SIZE = 48;
 
 	public static inline var NUMBER_OF_TUTORIAL_LEVELS:Int = 4;
 
