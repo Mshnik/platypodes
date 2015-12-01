@@ -20,7 +20,7 @@ class PMain extends Sprite
 
   public static inline var SPRITE_SIZE = 48;
 
-	public static inline var NUMBER_OF_TUTORIAL_LEVELS:Int = 4;
+	public static inline var NUMBER_OF_TUTORIAL_LEVELS:Int = 5;
 
   public static inline var TEAM_ID = 626; //THIS SHOULD NEVER CHANGE EVER EVER EVER
   public static inline var VERSION_ID = 300; //This can change when we do a big update
@@ -84,6 +84,7 @@ class PMain extends Sprite
 		levelPaths.push(AssetPaths.t1__tmx);
 		levelPaths.push(AssetPaths.t2__tmx);
 		levelPaths.push(AssetPaths.t3__tmx);
+		levelPaths.push(AssetPaths.t4__tmx);
 		levelPaths.push(AssetPaths.olivial0__tmx);
 		levelPaths.push(AssetPaths.olivial1__tmx);
 		levelPaths.push(AssetPaths.olivial2__tmx);
@@ -118,4 +119,13 @@ class PMain extends Sprite
     }
     return arr;
   }
+
+	public static function arrayContains(arr : Array<Dynamic>, elm : Dynamic) : Bool {
+		for(e in arr) {
+			if ( elm == e) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

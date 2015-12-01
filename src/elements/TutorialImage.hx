@@ -12,8 +12,9 @@ class TutorialImage extends Element {
   private static inline var ANIMATION_KEY = "play";
   private static inline var MOVE_LEVEL = 0;
   private static inline var PUSH_ONLY_LEVEL = 1;
-  private static inline var ROTATE_ONLY_LEVEL = 2;
-  private static inline var PUSH_AND_ROTATE_LEVEL = 3;
+  private static inline var PULL_ONLY_LEVEL = 2;
+  private static inline var ROTATE_ONLY_LEVEL = 3;
+  private static inline var PUSH_AND_ROTATE_LEVEL = 4;
 
   public function new(s : GameState, o : TiledObject) {
     super(s, o);
@@ -34,7 +35,7 @@ class TutorialImage extends Element {
     var arr :Array<Int>;
     if(s.levelPathIndex == MOVE_LEVEL) {
       arr = [20];
-    } else if (s.levelPathIndex == PUSH_ONLY_LEVEL) {
+    } else if (s.levelPathIndex == PUSH_ONLY_LEVEL || s.levelPathIndex == PULL_ONLY_LEVEL) {
       if(PMain.A_VERSION) arr = [0,1,2,3,4,5,6,7,8,9,10,11,12,13];
       else arr = [0,1,2,3,4,5,6,7,8,9,10,11,12];
     } else if(s.levelPathIndex == ROTATE_ONLY_LEVEL) {

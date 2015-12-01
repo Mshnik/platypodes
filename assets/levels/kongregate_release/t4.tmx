@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="14" height="11" tilewidth="48" tileheight="48" nextobjectid="85">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="14" height="11" tilewidth="48" tileheight="48" nextobjectid="94">
  <tileset firstgid="1" name="walls" tilewidth="48" tileheight="48" tilecount="42">
   <image source="../../images/kongregate_release/wall_sheet.png" width="336" height="288"/>
  </tileset>
@@ -26,7 +26,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBg8wBxKW5CoD6bekgi1VlD1yJgYfZZQvcSoxeY2UgG99dEaAADIaAOI
+   eJxjYCAdMJKhB5s+Cyg2h9KWUGyFRx9MjxVUHzJtQcA+dD0wO82J0AfDlkhuINY+QgBbuKCHATH6zKHuI1UfsYASfQAXGQfH
   </data>
  </layer>
  <layer name="Holes" width="14" height="11">
@@ -42,36 +42,36 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYKQiZgViUSDmgdJMROrTYoAAVSgtQ4QdIMwHVc9JhD6YHdgAKfqkgFgZipmJ0CcGxCpALInkbnzhgh4WpLqTVH0sUL8IIPmLGP+RggHjJAR7
+   eJxjZGBgYCQRMyCxWYFYFA9mwqIPpIePAT+QwaJPi4AeXPpYgFidDH3E2EmMPjEgVkHD/EToUyXTPlL0gcJGGYoFkNgwzIxDH6npBQDWMAR2
   </data>
  </layer>
  <objectgroup name="Objects"/>
- <objectgroup name="Tutorial Images">
-  <object id="79" gid="91" x="288" y="384" width="48" height="48"/>
- </objectgroup>
  <objectgroup name="Mirrors">
-  <object id="80" type="mirror" gid="2147483714" x="240" y="240" width="48" height="48">
+  <object id="88" type="mirror" gid="2147483714" x="240" y="240" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="81" type="lightSwitch" gid="69" x="336" y="144" width="48" height="48"/>
-  <object id="82" type="lightOrb" gid="73" x="192" y="240" width="48" height="48">
+  <object id="89" type="lightSwitch" gid="69" x="432" y="240" width="48" height="48"/>
+  <object id="90" type="lightOrb" gid="74" x="336" y="144" width="48" height="48">
    <properties>
-    <property name="direction" value="16"/>
+    <property name="direction" value="4096"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup color="#141ba4" name="player_start">
-  <object id="83" type="player_start" x="192" y="384" width="48" height="48">
+  <object id="91" type="player_start" x="144" y="384" width="48" height="48">
    <properties>
     <property name="direction_facing" value="16"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="84" type="exit" gid="43" x="432" y="144" width="48" height="48"/>
+  <object id="92" type="exit" gid="43" x="96" y="192" width="48" height="48"/>
+ </objectgroup>
+ <objectgroup name="Tutorial Images">
+  <object id="93" gid="91" x="288" y="384" width="48" height="48"/>
  </objectgroup>
 </map>

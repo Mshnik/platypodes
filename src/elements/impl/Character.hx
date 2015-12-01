@@ -398,11 +398,11 @@ class Character extends MovingElement {
         if (elm != null && Std.is(elm, AbsMirror)) {
 
           var mirror : AbsMirror = Std.instance(elm, AbsMirror);
-          if(mirror.destTile == null && ROT_CLOCKWISE() && state.levelPathIndex != GameState.NO_ROTATE_LEVEL) {
+          if(mirror.destTile == null && ROT_CLOCKWISE() && ! PMain.arrayContains(GameState.NO_ROTATE_LEVEL, state.levelPathIndex)) {
             state.actionStack.addRotate(mirror, true);
             mirror.rotateClockwise();
           }
-          if(mirror.destTile == null && ROT_C_CLOCKWISE() && state.levelPathIndex != GameState.NO_ROTATE_LEVEL) {
+          if(mirror.destTile == null && ROT_C_CLOCKWISE() && ! PMain.arrayContains(GameState.NO_ROTATE_LEVEL, state.levelPathIndex)) {
             state.actionStack.addRotate(mirror, false);
             mirror.rotateCounterClockwise();
           }
@@ -452,7 +452,7 @@ class Character extends MovingElement {
           directionFacing = moveDirection;
         }
       } else {
-        if (GRAB() && elmHolding.destTile == null && state.levelPathIndex != GameState.NO_PUSHPULL_LEVEL) {
+        if (GRAB() && elmHolding.destTile == null && ! PMain.arrayContains(GameState.NO_PUSHPULL_LEVEL, state.levelPathIndex)) {
           if (directionFacing.isHorizontal()) {
             if (PUSHPULL_LEFT()) {
               if(elmHolding.canMoveInDirection(Direction.Left)) {
