@@ -29,6 +29,8 @@ class PMain extends Sprite
 	public static var A_VERSION(default, null) : Bool; //True if the game is in version A, false for version B
 	public static var zoom : Float = -1; //Zoom in game. Her
 
+	public static var levelPaths(default, null) : Array<Dynamic>;
+	public static var levelBeaten(default, null) : Array<Bool>;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 	
@@ -76,6 +78,28 @@ class PMain extends Sprite
 			gameWidth = Math.ceil(stageWidth / zoom);
 			gameHeight = Math.ceil(stageHeight / zoom);
 		}
+
+		levelPaths = new Array<Dynamic>();
+		levelPaths.push(AssetPaths.t0__tmx);
+		levelPaths.push(AssetPaths.t1__tmx);
+		levelPaths.push(AssetPaths.t2__tmx);
+		levelPaths.push(AssetPaths.t3__tmx);
+		levelPaths.push(AssetPaths.olivial0__tmx);
+		levelPaths.push(AssetPaths.olivial1__tmx);
+		levelPaths.push(AssetPaths.olivial2__tmx);
+		levelPaths.push(AssetPaths.olivial3__tmx);
+		levelPaths.push(AssetPaths.l0__tmx);
+		levelPaths.push(AssetPaths.l1__tmx);
+		levelPaths.push(AssetPaths.l2__tmx);
+		levelPaths.push(AssetPaths.l3__tmx);
+		levelPaths.push(AssetPaths.l4__tmx);
+		levelPaths.push(AssetPaths.l5__tmx);
+		levelPaths.push(AssetPaths.l6__tmx);
+		levelPaths.push(AssetPaths.oliviag0__tmx);
+		levelPaths.push(AssetPaths.oliviag1__tmx);
+		levelPaths.push(AssetPaths.g0__tmx);
+		levelPaths.push(AssetPaths.oliviag2__tmx);
+		levelPaths.push(AssetPaths.oliviag3__tmx);
 
 		var g = new FlxGame(gameWidth, gameHeight, initialState, zoom, updateFrameRate, drawFrameRate, skipSplash, startFullscreen);
 		FlxG.plugins.add(new FlxMouseControl());

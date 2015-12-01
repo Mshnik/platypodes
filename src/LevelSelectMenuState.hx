@@ -33,28 +33,6 @@ class LevelSelectMenuState extends FlxState
         background.setPosition(0, 50);
         add(background);
 
-      levels = new Array<Dynamic>();
-      levels.push(AssetPaths.t0__tmx);
-      levels.push(AssetPaths.t1__tmx);
-      levels.push(AssetPaths.t2__tmx);
-      levels.push(AssetPaths.t3__tmx);
-      levels.push(AssetPaths.olivial0__tmx);
-      levels.push(AssetPaths.olivial1__tmx);
-      levels.push(AssetPaths.olivial2__tmx);
-      levels.push(AssetPaths.olivial3__tmx);
-      levels.push(AssetPaths.l0__tmx);
-      levels.push(AssetPaths.l1__tmx);
-      levels.push(AssetPaths.l2__tmx);
-      levels.push(AssetPaths.l3__tmx);
-      levels.push(AssetPaths.l4__tmx);
-      levels.push(AssetPaths.l5__tmx);
-      levels.push(AssetPaths.l6__tmx);
-      levels.push(AssetPaths.oliviag0__tmx);
-      levels.push(AssetPaths.oliviag1__tmx);
-        levels.push(AssetPaths.g0__tmx);
-      levels.push(AssetPaths.oliviag2__tmx);
-      levels.push(AssetPaths.oliviag3__tmx);
-
     var x = MARGIN_X;
     var y = MARGIN_Y;
     var w : Float = -1;
@@ -82,7 +60,7 @@ class LevelSelectMenuState extends FlxState
          add(button);
      }
 
-    for(i in PMain.NUMBER_OF_TUTORIAL_LEVELS...levels.length) {
+    for(i in PMain.NUMBER_OF_TUTORIAL_LEVELS...PMain.levelPaths.length) {
       var button = new FlxButton(x, y, "Level " + Std.string(i + 1 - PMain.NUMBER_OF_TUTORIAL_LEVELS), function(){ loadLevel(i); });
 
       if (w == -1) {
@@ -106,7 +84,7 @@ class LevelSelectMenuState extends FlxState
 
   /** Loads (Switches) to level at levels[index] */
   private function loadLevel(index : Int) : Void {
-    var gameState = new GameState(levels, index);
+    var gameState = new GameState(index);
     FlxG.switchState(gameState);
   }
 

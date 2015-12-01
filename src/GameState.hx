@@ -43,7 +43,6 @@ class GameState extends FlxState {
 
   private static inline var ZOOM_MULT : Float = 1.03;
 
-  @final private var levelPaths : Array<Dynamic>;
   @final public var levelPathIndex : Int;
   public var levelName : String;
   public var level(default, null):TiledLevel;
@@ -77,10 +76,9 @@ class GameState extends FlxState {
   private var sndWin : FlxSound;
   private var sndWinDone : Bool;
 
-  public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int,
+  public function new(levelPathIndex : Int,
                       savedActionStack : ActionStack = null, levelStartTime: Float = -1) {
     super();
-    this.levelPaths = levelPaths;
     this.levelPathIndex = levelPathIndex;
     this.actionStack = savedActionStack;
     this.levelStartTime = levelStartTime;
@@ -101,7 +99,7 @@ class GameState extends FlxState {
     }
 
     // Load the level's tilemaps
-    level = new TiledLevel(this, levelPaths[levelPathIndex]);
+    level = new TiledLevel(this, PMain.levelPaths[levelPathIndex]);
 
     // Add tilemaps
     add(level.floorMap);
@@ -159,7 +157,7 @@ class GameState extends FlxState {
     hudCamera.bgColor = 0x00000000;
     FlxG.cameras.add(hudCamera);
 
-    this.hud = new OverlayDisplay(this, hudCamera, levelPathIndex < levelPaths.length - 1);
+    this.hud = new OverlayDisplay(this, hudCamera, levelPathIndex < PMain.levelPaths.length - 1);
     add(this.hud);
 
     if(BACKGROUND_THEME == null) {
@@ -306,9 +304,9 @@ class GameState extends FlxState {
     var startTime = Timer.stamp();
     if(MENU_BUTTON()) {
       FlxG.switchState(new LevelSelectMenuState());
-    } else if(won && (NEXT_LEVEL_BUTTON() || autoProgress) && levelPathIndex + 1 < levelPaths.length){
+    } else if(won && (NEXT_LEVEL_BUTTON() || autoProgress) && levelPathIndex + 1 < PMain.levelPaths.length){
       BACKGROUND_THEME.resume();
-      FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
+      FlxG.switchState(new GameState(levelPathIndex + 1));
     } else if(RESET()) {
       resetState();
     } else if (UNDO() && !player.isDying) {
@@ -486,7 +484,7 @@ class GameState extends FlxState {
 
   public function resetState() {
     actionStack.addReset();
-    FlxG.switchState(new GameState(levelPaths, levelPathIndex, actionStack, levelStartTime));
+    FlxG.switchState(new GameState(levelPathIndex, actionStack, levelStartTime));
   }
 
   public function undoAction() {
