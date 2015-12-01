@@ -512,7 +512,9 @@ class GameState extends FlxState {
 
   public function win() {
     if(won) return;
+
     won = true;
+    PMain.levelBeaten[levelPathIndex] = true;
     actionStack.addWin();
     BACKGROUND_THEME.pause();
     sndWin.onComplete = function() {

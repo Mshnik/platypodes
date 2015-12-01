@@ -100,6 +100,10 @@ class PMain extends Sprite
 		levelPaths.push(AssetPaths.g0__tmx);
 		levelPaths.push(AssetPaths.oliviag2__tmx);
 		levelPaths.push(AssetPaths.oliviag3__tmx);
+		levelBeaten = new Array<Bool>();
+		for(i in 0...levelPaths.length) {
+			levelBeaten.push(false);
+		}
 
 		var g = new FlxGame(gameWidth, gameHeight, initialState, zoom, updateFrameRate, drawFrameRate, skipSplash, startFullscreen);
 		FlxG.plugins.add(new FlxMouseControl());

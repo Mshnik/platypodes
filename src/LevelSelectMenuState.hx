@@ -38,36 +38,26 @@ class LevelSelectMenuState extends FlxState
     var w : Float = -1;
     var h : Float = -1;
 
-        //Name tutorial levels first
-     for(i in 0...PMain.NUMBER_OF_TUTORIAL_LEVELS){
-         var button = new FlxButton(x, y, "Tutorial " + Std.string(i + 1), function(){ loadLevel(i); });
-
-         if (w == -1) {
-             w = button.width;
-         }
-         if (h == -1) {
-             h = button.height;
-         }
-
-         x += w + SPACING;
-         if(x + w > FlxG.width - MARGIN_X) {
-             x = MARGIN_X;
-             y += h + SPACING;
-         }
-
-         button.onUp.sound = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
-
-         add(button);
-     }
-
-    for(i in PMain.NUMBER_OF_TUTORIAL_LEVELS...PMain.levelPaths.length) {
-      var button = new FlxButton(x, y, "Level " + Std.string(i + 1 - PMain.NUMBER_OF_TUTORIAL_LEVELS), function(){ loadLevel(i); });
+    for(i in 0...PMain.levelPaths.length) {
+      var str = "Level " + Std.string(i + 1 - PMain.NUMBER_OF_TUTORIAL_LEVELS);
+      if (i < PMain.NUMBER_OF_TUTORIAL_LEVELS) {
+        str =  "Tutorial " + Std.string(i + 1);
+      }
+      var button = new FlxButton(x, y, str, function(){ loadLevel(i); });
 
       if (w == -1) {
         w = button.width;
       }
       if (h == -1) {
         h = button.height;
+      }
+      add(button);
+
+      if(PMain.levelBeaten[i]) {
+        var check = new FlxSprite();
+        check.loadGraphic(AssetPaths.check__png);
+        check.setPosition(x + w - check.width/2, y + h - check.height);
+        add(check);
       }
 
       x += w + SPACING;
@@ -77,8 +67,6 @@ class LevelSelectMenuState extends FlxState
       }
 
       button.onUp.sound = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
-
-      add(button);
     }
   }
 
