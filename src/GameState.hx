@@ -76,8 +76,7 @@ class GameState extends FlxState {
   private var sndWin : FlxSound;
   private var sndWinDone : Bool;
 
-  public function new(levelPathIndex : Int,
-                      savedActionStack : ActionStack = null, levelStartTime: Float = -1) {
+  public function new(levelPathIndex : Int, savedActionStack : ActionStack = null, levelStartTime: Float = -1) {
     super();
     this.levelPathIndex = levelPathIndex;
     this.actionStack = savedActionStack;
