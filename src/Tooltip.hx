@@ -22,9 +22,9 @@ class Tooltip extends FlxGroup {
   private var pullMirrorDirection:Direction;
 
   /** Rotation arrow graphic for scheme A **/
-  private inline static var A_ROTATE_ARROW_PATH = AssetPaths.A_up_tip__png; //clockwise
+  private inline static var A_ROTATE_ARROW_PATH = AssetPaths.new_up_tip__png; //clockwise
   /** Pull/push arrow graphic for scheme A**/
-  private inline static var A_PUSH_ARROW_PATH = AssetPaths.A_side_tip__png; //pointing up
+  private inline static var A_PUSH_ARROW_PATH = AssetPaths.new_side_tip__png; //pointing up
 
   /** Rotation arrow graphic for scheme B **/
   private inline static var B_ROTATE_ARROW_PATH = AssetPaths.B_rotate_arrow__png; //clockwise
@@ -38,7 +38,7 @@ class Tooltip extends FlxGroup {
   private inline static var ANIMATION_SPEED = 7;
   private inline static var GLOW_ANIMATION_KEY = "glow";
   private inline static var RED_GLOW_ANIMATION_KEY = "redGlow";
-  private inline static var A_SPRITE_SIZE = 138;
+  private inline static var A_SPRITE_SIZE = 48;
   private inline static var B_SPRITE_SIZE = 200;
 
   public function new(currGame:GameState) {
