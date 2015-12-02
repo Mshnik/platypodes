@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="14" height="11" tilewidth="48" tileheight="48" nextobjectid="188">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="14" height="11" tilewidth="48" tileheight="48" nextobjectid="190">
  <tileset firstgid="1" name="walls" tilewidth="48" tileheight="48" tilecount="42">
   <image source="../../images/kongregate_release/wall_sheet.png" width="336" height="288"/>
  </tileset>
@@ -49,6 +49,8 @@
  <objectgroup name="glasswall">
   <object id="182" gid="96" x="288" y="288" width="48" height="48"/>
   <object id="183" gid="96" x="336" y="192" width="48" height="48"/>
+  <object id="188" gid="96" x="336" y="336" width="48" height="48"/>
+  <object id="189" gid="96" x="336" y="432" width="48" height="48"/>
  </objectgroup>
  <objectgroup name="Mirrors">
   <object id="173" type="mirror" gid="2147483732" x="192" y="240" width="48" height="48">
@@ -87,8 +89,6 @@
     <property name="initial_zoom" value="0.7"/>
    </properties>
   </object>
-  <object id="185" gid="96" x="336" y="336" width="48" height="48"/>
-  <object id="187" gid="96" x="336" y="432" width="48" height="48"/>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
   <object id="133" type="exit" gid="43" x="576" y="336" width="48" height="48"/>
