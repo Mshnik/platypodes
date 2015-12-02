@@ -151,6 +151,9 @@ class Tooltip extends FlxGroup {
     }
 
     this.visible = true;
+    var d : Direction = Direction.getDirection(mirror.getCol() - player.getCol(), mirror.getRow() - player.getRow());
+    pushArrowButton.visible = mirror.canMoveInDirection(d);
+    pullArrowButton.visible = mirror.canMoveInDirection(d.opposite());
 
     check_animation();
 
