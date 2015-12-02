@@ -9,41 +9,39 @@ import flixel.util.FlxColor;
 /**
  * A FlxState which can be used for the game's level select menu.
  */
-class LevelSelectMenuState extends FlxState
-{
+class LevelSelectMenuState extends FlxState {
 
-  @final static private var MARGIN_X : Float = 75;
-  @final static private var MARGIN_Y : Float = 140;
-  @final static private var SPACING : Float= 20;
+  private static inline var MARGIN_X:Float = 75;
+  private static inline var MARGIN_Y:Float = 155;
+  private static inline var SPACING:Float = 20;
 
-    @final static private var BG_COLOR : Int = 0xff410d08;
+  private static inline var BG_COLOR:Int = 0xff410d08;
 
-	private var levels : Array<Dynamic>;
-    private var background : FlxSprite;
+  private var background:FlxSprite;
 
-	/**
+  /**
 	 * Function that is called up when to state is created to set it up.
 	 * Creates buttons for each of the levels in levels.
 	 */
-	override public function create():Void {
-      super.create();
-        FlxG.camera.bgColor = BG_COLOR;
-        background = new FlxSprite();
-        background.loadGraphic(AssetPaths.level_select__png, false);
-        background.setPosition(0, 50);
-        add(background);
+  override public function create():Void {
+    super.create();
+    FlxG.camera.bgColor = BG_COLOR;
+    background = new FlxSprite();
+    background.loadGraphic(AssetPaths.level_select__png, false);
+    background.setPosition((FlxG.width - background.width)/2, (FlxG.height - background.height)/2);
+    add(background);
 
-    var x = MARGIN_X;
-    var y = MARGIN_Y;
-    var w : Float = -1;
-    var h : Float = -1;
+    var x : Float = MARGIN_X;
+    var y : Float = MARGIN_Y;
+    var w:Float = -1;
+    var h:Float = -1;
 
-    for(i in 0...PMain.levelPaths.length) {
+    for (i in 0...PMain.levelPaths.length) {
       var str = "Level " + Std.string(i + 1 - PMain.NUMBER_OF_TUTORIAL_LEVELS);
       if (i < PMain.NUMBER_OF_TUTORIAL_LEVELS) {
-        str =  "Tutorial " + Std.string(i + 1);
+        str = "Tutorial " + Std.string(i + 1);
       }
-      var button = new FlxButton(x, y, str, function(){ loadLevel(i); });
+      var button = new FlxButton(x, y, str, function() { loadLevel(i); });
 
       if (w == -1) {
         w = button.width;
@@ -53,15 +51,15 @@ class LevelSelectMenuState extends FlxState
       }
       add(button);
 
-      if(PMain.levelBeaten[i]) {
+      if (PMain.levelBeaten[i]) {
         var check = new FlxSprite();
         check.loadGraphic(AssetPaths.check__png);
-        check.setPosition(x + w - check.width/2, y + h - check.height);
+        check.setPosition(x + w - check.width / 2, y + h - check.height);
         add(check);
       }
 
       x += w + SPACING;
-      if(x + w > FlxG.width - MARGIN_X) {
+      if (x + w > FlxG.width - MARGIN_X) {
         x = MARGIN_X;
         y += h + SPACING;
       }
@@ -70,25 +68,25 @@ class LevelSelectMenuState extends FlxState
     }
   }
 
-  /** Loads (Switches) to level at levels[index] */
-  private function loadLevel(index : Int) : Void {
+/** Loads (Switches) to level at levels[index] */
+
+  private function loadLevel(index:Int):Void {
     var gameState = new GameState(index);
     FlxG.switchState(gameState);
   }
 
-	/**
+  /**
 	 * Function that is called when this state is destroyed - you might want to 
 	 * consider setting all objects this state uses to null to help garbage collection.
 	 */
-	override public function destroy():Void {
-    levels = null;
-		super.destroy();
-	}
+  override public function destroy():Void {
+    super.destroy();
+  }
 
-	/**
+  /**
 	 * Function that is called once every frame.
 	 */
-	override public function update():Void {
-		super.update();
+  override public function update():Void {
+    super.update();
   }
 }
