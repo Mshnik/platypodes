@@ -9,16 +9,16 @@
  <tileset firstgid="55" name="floors" tilewidth="48" tileheight="48" tilecount="4">
   <image source="../../images/kongregate_release/floor_sheet.png" width="192" height="48"/>
  </tileset>
- <tileset firstgid="59" name="holes" tilewidth="48" tileheight="48" tilecount="12">
-  <image source="../../images/kongregate_release/hole_sheet.png" width="288" height="96"/>
+ <tileset firstgid="59" name="holes" tilewidth="48" tileheight="48" tilecount="24">
+  <image source="../../images/kongregate_release/hole_sheet.png" width="288" height="192"/>
  </tileset>
- <tileset firstgid="71" name="mirrors" tilewidth="48" tileheight="48" tilecount="4">
+ <tileset firstgid="83" name="mirrors" tilewidth="48" tileheight="48" tilecount="4">
   <image source="../../images/kongregate_release/mirror_sheet.png" width="96" height="96"/>
  </tileset>
- <tileset firstgid="75" name="orb_sheet" tilewidth="48" tileheight="48" tilecount="9">
+ <tileset firstgid="87" name="orb_sheet" tilewidth="48" tileheight="48" tilecount="9">
   <image source="../../images/kongregate_release/orb_sheet.png" width="144" height="144"/>
  </tileset>
- <tileset firstgid="84" name="tutorialImages" tilewidth="48" tileheight="48" tilecount="50">
+ <tileset firstgid="96" name="tutorialImages" tilewidth="48" tileheight="48" tilecount="50">
   <image source="../../images/kongregate_release/tutorial_sheet.png" width="512" height="256"/>
  </tileset>
  <layer name="Floor" width="14" height="11">
@@ -26,7 +26,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBg4YA7EVkAcBeVbQrEVAX0gNRZo6mB6SbHbAsq2wKcQCuJJMBvZDnoCYsJuoAAAfUIERQ==
+   eJxjYBg4YA7EVkCcBuVbQrEVAX0gNRZo6mB6SbHbAsq2wKcQCrJJMBvZDnoCYsJuoAAAovIEXQ==
   </data>
  </layer>
  <layer name="Holes" width="14" height="11">
@@ -34,7 +34,7 @@
    <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBj6wINIddZAbAPEXiTqdQBiOxLdBAPk6LOmwL7BCgA63QKH
+   eJxjYBj6wJFIddZAbAPEtiTqdQBiNxLdBANOZOixpsC+wQoAJ0UCgA==
   </data>
  </layer>
  <layer name="Walls" width="14" height="11">
@@ -47,18 +47,18 @@
  </layer>
  <objectgroup name="Objects"/>
  <objectgroup name="Tutorial Images">
-  <object id="87" gid="97" x="288" y="336" width="48" height="48"/>
+  <object id="87" gid="109" x="288" y="336" width="48" height="48"/>
  </objectgroup>
  <objectgroup name="Mirrors">
-  <object id="88" type="mirror" gid="2147483720" x="336" y="240" width="48" height="48">
+  <object id="88" type="mirror" gid="2147483732" x="288" y="240" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="89" type="lightSwitch" gid="75" x="336" y="144" width="48" height="48"/>
-  <object id="90" type="lightOrb" gid="81" x="432" y="240" width="48" height="48">
+  <object id="89" type="lightSwitch" gid="87" x="336" y="144" width="48" height="48"/>
+  <object id="90" type="lightOrb" gid="93" x="432" y="240" width="48" height="48">
    <properties>
     <property name="direction" value="1"/>
    </properties>

@@ -9,16 +9,16 @@
  <tileset firstgid="55" name="floors" tilewidth="48" tileheight="48" tilecount="4">
   <image source="../../images/kongregate_release/floor_sheet.png" width="192" height="48"/>
  </tileset>
- <tileset firstgid="59" name="holes" tilewidth="48" tileheight="48" tilecount="6">
-  <image source="../../images/kongregate_release/hole_sheet.png" width="288" height="48"/>
+ <tileset firstgid="59" name="holes" tilewidth="48" tileheight="48" tilecount="24">
+  <image source="../../images/kongregate_release/hole_sheet.png" width="288" height="192"/>
  </tileset>
- <tileset firstgid="65" name="mirrors" tilewidth="48" tileheight="48" tilecount="4">
+ <tileset firstgid="83" name="mirrors" tilewidth="48" tileheight="48" tilecount="4">
   <image source="../../images/kongregate_release/mirror_sheet.png" width="96" height="96"/>
  </tileset>
- <tileset firstgid="69" name="orb_sheet" tilewidth="48" tileheight="48" tilecount="9">
+ <tileset firstgid="87" name="orb_sheet" tilewidth="48" tileheight="48" tilecount="9">
   <image source="../../images/kongregate_release/orb_sheet.png" width="144" height="144"/>
  </tileset>
- <tileset firstgid="78" name="glass_wall_sheet" tilewidth="48" tileheight="48" tilecount="42">
+ <tileset firstgid="96" name="glass_wall_sheet" tilewidth="48" tileheight="48" tilecount="42">
   <image source="../../images/kongregate_release/glass_wall_sheet.png" width="336" height="288"/>
  </tileset>
  <layer name="Floor" width="15" height="11">
@@ -34,7 +34,7 @@
    <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgF1AIuA+2AYQIAWbQARQ==
+   eJxjYBgF1AKOA+2AYQIAVdwAQg==
   </data>
  </layer>
  <layer name="Walls" width="15" height="11">
@@ -47,24 +47,24 @@
  </layer>
  <objectgroup name="Objects" visible="0"/>
  <objectgroup name="glasswall">
-  <object id="122" type="glassWall" gid="78" x="288" y="240" width="48" height="48"/>
-  <object id="123" type="glassWall" gid="78" x="336" y="336" width="48" height="48"/>
-  <object id="124" gid="78" x="288" y="288" width="48" height="48"/>
-  <object id="125" gid="78" x="288" y="336" width="48" height="48"/>
-  <object id="126" gid="78" x="336" y="240" width="48" height="48"/>
-  <object id="127" gid="78" x="384" y="336" width="48" height="48"/>
-  <object id="128" gid="78" x="384" y="240" width="48" height="48"/>
+  <object id="122" type="glassWall" gid="96" x="288" y="240" width="48" height="48"/>
+  <object id="123" type="glassWall" gid="96" x="336" y="336" width="48" height="48"/>
+  <object id="124" gid="96" x="288" y="288" width="48" height="48"/>
+  <object id="125" gid="96" x="288" y="336" width="48" height="48"/>
+  <object id="126" gid="96" x="336" y="240" width="48" height="48"/>
+  <object id="127" gid="96" x="384" y="336" width="48" height="48"/>
+  <object id="128" gid="96" x="384" y="240" width="48" height="48"/>
  </objectgroup>
  <objectgroup name="Mirrors">
-  <object id="129" type="mirror" gid="1073741890" x="192" y="144" width="48" height="48">
+  <object id="129" type="mirror" gid="1073741908" x="192" y="144" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="130" type="lightSwitch" gid="69" x="480" y="144" width="48" height="48"/>
-  <object id="131" type="lightOrb" gid="73" x="144" y="336" width="48" height="48">
+  <object id="130" type="lightSwitch" gid="87" x="480" y="144" width="48" height="48"/>
+  <object id="131" type="lightOrb" gid="91" x="144" y="336" width="48" height="48">
    <properties>
     <property name="direction" value="16"/>
    </properties>
