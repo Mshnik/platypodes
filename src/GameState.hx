@@ -128,6 +128,7 @@ class GameState extends FlxState {
     add(lightBulbs);
     add(lightSwitches);
     add(player);
+    add(player.glowSprite);
     add(tooltip);
 
     if(DISPLAY_COORDINATES) {
@@ -344,6 +345,7 @@ class GameState extends FlxState {
         var player = new Character(this, o);
         this.player = player;
         player.cameras = [FlxG.camera];
+        player.glowSprite.cameras = [FlxG.camera];
         FlxG.camera.follow(player, FlxCamera.STYLE_NO_DEAD_ZONE, 1);
 
       case "mirror":
