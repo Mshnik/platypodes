@@ -126,11 +126,8 @@ class Tooltip extends FlxGroup {
     pushArrowButton.cameras = [FlxG.camera];
     cwArrowButton.cameras = [FlxG.camera];
     ccwArrowButton.cameras = [FlxG.camera];
-
-    if(! PMain.arrayContains(GameState.NO_PUSHPULL_LEVEL, currGame.levelPathIndex)) {
-      this.add(pullArrowButton);
-      this.add(pushArrowButton);
-    }
+    this.add(pullArrowButton);
+    this.add(pushArrowButton);
     if(! PMain.arrayContains(GameState.NO_ROTATE_LEVEL, currGame.levelPathIndex)){
       this.add(cwArrowButton);
       this.add(ccwArrowButton);

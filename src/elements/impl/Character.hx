@@ -468,7 +468,7 @@ class Character extends MovingElement {
           directionFacing = moveDirection;
         }
       } else {
-        if (GRAB() && elmHolding.destTile == null && ! PMain.arrayContains(GameState.NO_PUSHPULL_LEVEL, state.levelPathIndex)) {
+        if (GRAB() && elmHolding.destTile == null) {
           if (directionFacing.isHorizontal()) {
             if (PUSHPULL_LEFT()) {
               if(elmHolding.canMoveInDirection(Direction.Left)) {
