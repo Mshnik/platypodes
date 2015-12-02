@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="14" height="11" tilewidth="48" tileheight="48" nextobjectid="85">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="14" height="11" tilewidth="48" tileheight="48" nextobjectid="87">
  <tileset firstgid="1" name="walls" tilewidth="48" tileheight="48" tilecount="42">
   <image source="../../images/kongregate_release/wall_sheet.png" width="336" height="288"/>
  </tileset>
@@ -26,7 +26,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgcwJIO+syh6q2A2AIN4wMWUH0wvaQCYuwgRh8xfrWE6oH5EebugQYAzcsFTw==
+   eJxjYBgcwJIO+syh6q2A2AIqZgHF5nj0WUD1wfSSaj/MDpgbGJD4xOqD0YTss4SqhfkR5m58/kPXD1MPM4caAAASoQeA
   </data>
  </layer>
  <layer name="Holes" width="14" height="11">
@@ -34,7 +34,7 @@
    <property name="tileset" value="holes"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo4D2AAACaAAB
+   eJxjYBi5wHGgHTCCAABe1ABC
   </data>
  </layer>
  <layer name="Walls" width="14" height="11">
@@ -42,7 +42,7 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZWBgEEXDTEDMSABrMWACBSL0Y9OnCqVl8OhjAWJlIJYFYhUoloDq4yXC7djsRQa47MamTwrqFhBmJuBedTQ7WAm4kxGqhg9JHy8SH18Y4fMjMWGLDePyH6kYAHamBQ0=
+   eJxjZWBgEEXDTEDMSABrMWACBSL0Y9OnCqVl8OhjAWJlIJYFYhUoloDq4yXC/djsRQfY7MemTwxqvzgefTD3qmPxJyH/sgIxH5I+TjQalz5CfsSlD5tbidGHrh8dMyOpAQCq/gWK
   </data>
  </layer>
  <objectgroup name="Objects"/>
@@ -55,9 +55,19 @@
     <property name="sides" value="1"/>
    </properties>
   </object>
+  <object id="85" type="mirror" gid="2147483732" x="480" y="480" width="48" height="48">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
+  <object id="86" type="mirror" gid="3221225556" x="480" y="240" width="48" height="48">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="81" type="lightSwitch" gid="87" x="432" y="240" width="48" height="48"/>
+  <object id="81" type="lightSwitch" gid="87" x="288" y="480" width="48" height="48"/>
   <object id="82" type="lightOrb" gid="91" x="288" y="144" width="48" height="48">
    <properties>
     <property name="direction" value="4096"/>
@@ -72,6 +82,6 @@
   </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="84" type="exit" gid="43" x="432" y="384" width="48" height="48"/>
+  <object id="84" type="exit" gid="43" x="384" y="336" width="48" height="48"/>
  </objectgroup>
 </map>
