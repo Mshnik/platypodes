@@ -55,14 +55,12 @@ class LightBulb extends Element implements Lightable{
   }
 
   override public function update() {
-    var startTime = Timer.stamp();
     if(light_dirty) {
       light_dirty = false;
       lighting.redraw_light();
     }
 
     super.update();
-    logUpdateTime(startTime);
   }
 
   public function resetLightInDirection() {

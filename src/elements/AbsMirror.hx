@@ -135,8 +135,6 @@ import flixel.system.FlxSound;
   }
 
   public override function update() {
-    var startTime = Timer.stamp();
     super.update();
-    logUpdateTime(startTime);
   }
 }

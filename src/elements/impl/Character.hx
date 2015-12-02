@@ -524,7 +524,6 @@ class Character extends MovingElement {
     continueMoving = GRAB() && (UP_PRESSED() || DOWN_PRESSED() || LEFT_PRESSED() || RIGHT_PRESSED());
 
     super.update();
-    logUpdateTime(startTime);
   }
 
   private function playMovementAnimation(d : Direction, holdingElm : Bool) {

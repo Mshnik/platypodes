@@ -89,13 +89,6 @@ class GameState extends FlxState {
 
   override public function create():Void {
     super.create();
-    var tName = Type.getClassName(Type.getClass(this));
-    if(! Element.updateTimeMap.exists(tName)) {
-      Element.updateTimeMap.set(tName, 0);
-      Element.updateCount.set(tName, 0);
-      Element.drawTimeMap.set(tName, 0);
-      Element.drawCount.set(tName, 0);
-    }
 
     // Load the level's tilemaps
     level = new TiledLevel(this, PMain.levelPaths[levelPathIndex]);
@@ -286,15 +279,6 @@ class GameState extends FlxState {
     });
   }
 
-  public override function draw() {
-    var startTime = Timer.stamp();
-    super.draw();
-    var tName = Type.getClassName(Type.getClass(this));
-    Element.drawTimeMap.set(tName, Element.drawTimeMap.get(tName) + (Timer.stamp() - startTime));
-    Element.drawCount.set(tName, Element.drawCount.get(tName) + 1);
-    //trace((Element.drawTimeMap.get(tName) / Element.drawCount.get(tName) * 1000) + "ms per draw");
-  }
-
   private function playCollisionSound(a, b):Void{
     player.playCollisionSound();
   }
@@ -352,12 +336,6 @@ class GameState extends FlxState {
     //Check for finishing of animations
     hud.showDeadSprite = ! player.alive && !won;
     hud.showWinSprite = won && exit.animation.finished;
-
-    var tName = Type.getClassName(Type.getClass(this));
-    var n = Element.updateTimeMap.get(tName) + (Timer.stamp() - startTime);
-    Element.updateTimeMap.set(tName, n);
-    Element.updateCount.set(tName, Element.updateCount.get(tName) + 1);
-    //trace((Element.updateTimeMap.get(tName) / Element.updateCount.get(tName) * 1000) + "ms per update");
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup) {

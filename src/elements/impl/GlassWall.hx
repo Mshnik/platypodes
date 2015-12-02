@@ -64,8 +64,6 @@ class GlassWall extends Element implements Lightable{
   }
 
   override public function update() {
-    var startTime = Timer.stamp();
     super.update();
-    logUpdateTime(startTime);
   }
 }

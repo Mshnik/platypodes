@@ -18,9 +18,7 @@ class LightSwitch extends Element implements Lightable {
   }
 
   override public function update() {
-    var startTime = Timer.stamp();
     super.update();
-    logUpdateTime(startTime);
   }
 
   /** Returns true iff this is giving out light from the given side */
