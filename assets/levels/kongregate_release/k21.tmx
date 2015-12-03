@@ -26,7 +26,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJzNUFsKACAI263M7n+w+nA0osi+ajAUma8B71A6vbMGs7CgC1nLzKGmRM8JHlpINIz7d6CW+0zqzFf96ofuY3Ss/6xy6+zPjb8/oQGZ4AlG
+   eJzFkFEKwCAMQ3Or2t7/YPOjYWEoBn/2ICgltTXAf4ypnKqWS7RSxJrzDj2je05keyFn4N1/B72cF1LnfdWveeg8non1P0t2/ebj5EKfk4ni5njDAyCfCl8=
   </data>
  </layer>
  <layer name="Holes" width="14" height="12">
@@ -42,7 +42,7 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYKQAswKxKBpmIkKfFgMm4CXCHGz60IEMnfUpYHEvMfo4sdhLjD5s7iVGnxQQKwMxM5I+FqiYOhBbQLE5klp09djCxxKIraB68KllxGIvIfMBr5sFYA==
+   eJxjZGBgYKQAswKxKBpmIkKfFgMm4CXCHGz60IEMnfUpYHEvMfo4sdhLjD5s7iVGnxQQKwMxM5I+FqiYOg616OrxhY8UAbXImIVI8wEpOwRG
   </data>
  </layer>
  <objectgroup name="Objects" visible="0"/>

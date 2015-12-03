@@ -26,7 +26,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJzFkFEKACAIQ72V2v0Plh+ORqX01+BhiLOhyH9Z4MFIjCr6nRdozithj14WdnT/OuUTqpyl896yweuHY2kQ2IE3blYJuXSbr/L80gS5ZQwc
+   eJzFkMsJADAIQ93Kz/6D1YOBUKT11AYe9mCCjch/WeJJFEbTB16gta/E1MtCxkm+3YfZ5XVebfYm3iCQgXdQTid0pLSPP6C7W98vtAA0jgs6
   </data>
  </layer>
  <layer name="Holes" width="15" height="11">
@@ -42,7 +42,7 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYKQQswKxKBGYCYteLQbigMyo3gHTywLEykRgZix6ycEABY8EMw==
+   eJxjZGBgYKQQswKxKAHMhEOvFgNhIDPC9CowYA8zYvRy4rCfGL0wgK6XBYiVicTMDNj9TQoGAAqPBGY=
   </data>
  </layer>
  <objectgroup name="Objects" visible="0"/>
@@ -79,6 +79,6 @@
   </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="133" type="exit" gid="43" x="528" y="433" width="48" height="48"/>
+  <object id="133" type="exit" gid="43" x="576" y="384" width="48" height="48"/>
  </objectgroup>
 </map>

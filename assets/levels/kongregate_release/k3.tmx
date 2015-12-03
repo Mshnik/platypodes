@@ -23,7 +23,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjYBg6wJIMPeZk6LUAYiuoHhiNDyCrtYCyidEDwxZQd1qR4MbBAABr9AR2
+   eJxjYBg6wJIMPeZk6LUAYiuoHhiND1ih6bUkUg8MW0DdaYVXx+ADAP8xBAM=
   </data>
  </layer>
  <layer name="Holes" width="13" height="11">

@@ -9,13 +9,13 @@
  <tileset firstgid="55" name="floors" tilewidth="48" tileheight="48" tilecount="4">
   <image source="../../images/kongregate_release/floor_sheet.png" width="192" height="48"/>
  </tileset>
- <tileset firstgid="59" name="holes" tilewidth="48" tileheight="48" tilecount="6">
-  <image source="../../images/kongregate_release/hole_sheet.png" width="288" height="48"/>
+ <tileset firstgid="59" name="holes" tilewidth="48" tileheight="48" tilecount="24">
+  <image source="../../images/kongregate_release/hole_sheet.png" width="288" height="192"/>
  </tileset>
- <tileset firstgid="65" name="mirrors" tilewidth="48" tileheight="48" tilecount="4">
+ <tileset firstgid="83" name="mirrors" tilewidth="48" tileheight="48" tilecount="4">
   <image source="../../images/kongregate_release/mirror_sheet.png" width="96" height="96"/>
  </tileset>
- <tileset firstgid="69" name="orb_sheet" tilewidth="48" tileheight="48" tilecount="9">
+ <tileset firstgid="87" name="orb_sheet" tilewidth="48" tileheight="48" tilecount="9">
   <image source="../../images/kongregate_release/orb_sheet.png" width="144" height="144"/>
  </tileset>
  <layer name="Floor" width="13" height="11">
@@ -23,7 +23,7 @@
    <property name="tileset" value="floors"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJzFj1EKACAIQ7tV0/sfrAgHQ8zPerAPZRs6xnuwZcVuNhkLIWVQ2w8enR6CzF2Gt0FyHeylz1JPhd5FH3M3+D99+tMPFoerCN0=
+   eJxjYBgcwIKAvCUUI6sjpMcKiM2htBVUvTkReiyRzIfpwwdg5sLUWUL14QPI7oLZZ4lbOVzeAsl8YtxGSwAAUkkHGQ==
   </data>
  </layer>
  <layer name="Holes" width="13" height="11">
@@ -44,20 +44,20 @@
  </layer>
  <objectgroup name="Objects" visible="0"/>
  <objectgroup name="Mirrors">
-  <object id="114" type="mirror" gid="2147483714" x="288" y="288" width="48" height="48">
+  <object id="114" type="mirror" gid="2147483732" x="288" y="288" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
-  <object id="116" type="mirror" gid="66" x="192" y="336" width="48" height="48">
+  <object id="116" type="mirror" gid="84" x="192" y="336" width="48" height="48">
    <properties>
     <property name="sides" value="1"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Light">
-  <object id="117" type="lightSwitch" gid="69" x="384" y="144" width="48" height="48"/>
-  <object id="118" type="lightOrb" gid="72" x="192" y="432" width="48" height="48">
+  <object id="117" type="lightSwitch" gid="87" x="384" y="144" width="48" height="48"/>
+  <object id="118" type="lightOrb" gid="90" x="192" y="432" width="48" height="48">
    <properties>
     <property name="direction" value="256"/>
    </properties>

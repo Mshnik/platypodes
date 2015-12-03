@@ -39,7 +39,7 @@
    <property name="tileset" value="walls"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYKQAswKxKBLmQeMz4dCnxYAKVNH4MkNAHxcQS+LwI7o+TgZMgM1OdH3oQAqImcnQh8t/LECsjAdjs4scDAAyLwRl
+   eJxjZGBgYKQAswKxKBLmQeMz4dCnxYAKVNH4MnTWx4vDrfj0cQOxFQ470fVxMmACYvShAykgZiZDH65wYQFiZTwYm13kYABj5wST
   </data>
  </layer>
  <objectgroup name="Objects" visible="0"/>
@@ -87,6 +87,6 @@
   </object>
  </objectgroup>
  <objectgroup color="#71a400" name="Exit">
-  <object id="119" type="exit" gid="43" x="480" y="336" width="48" height="48"/>
+  <object id="119" type="exit" gid="43" x="480" y="288" width="48" height="48"/>
  </objectgroup>
 </map>
