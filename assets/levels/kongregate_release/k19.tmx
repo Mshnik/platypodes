@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="14" height="11" tilewidth="48" tileheight="48" nextobjectid="120">
+ <tileset firstgid="1" name="walls" tilewidth="48" tileheight="48" tilecount="42">
+  <image source="../../images/kongregate_release/wall_sheet.png" width="336" height="288"/>
+ </tileset>
+ <tileset firstgid="43" name="exit" tilewidth="48" tileheight="48" tilecount="12">
+  <image source="../../images/kongregate_release/gate_sheet.png" width="192" height="144"/>
+ </tileset>
+ <tileset firstgid="55" name="floors" tilewidth="48" tileheight="48" tilecount="4">
+  <image source="../../images/kongregate_release/floor_sheet.png" width="192" height="48"/>
+ </tileset>
+ <tileset firstgid="59" name="holes" tilewidth="48" tileheight="48" tilecount="24">
+  <image source="../../images/kongregate_release/hole_sheet.png" width="288" height="192"/>
+ </tileset>
+ <tileset firstgid="83" name="mirrors" tilewidth="48" tileheight="48" tilecount="4">
+  <image source="../../images/kongregate_release/mirror_sheet.png" width="96" height="96"/>
+ </tileset>
+ <tileset firstgid="87" name="orb_sheet" tilewidth="48" tileheight="48" tilecount="9">
+  <image source="../../images/kongregate_release/orb_sheet.png" width="144" height="144"/>
+ </tileset>
+ <layer name="Floor" width="14" height="11">
+  <properties>
+   <property name="tileset" value="floors"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJzFkFEKACAIQ73V0vsfrD4cjUD7dCBm+EbLbE5+Kk6tnCPv/MORIff2SkhviI/J3HEQ/98+5ckwD6R3HvwX2M0a8t5KusucPE9rA2dCCNU=
+  </data>
+ </layer>
+ <layer name="Holes" width="14" height="11">
+  <properties>
+   <property name="tileset" value="holes"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBgewJFMfR5k6nOis31DHQAAZXcBFA==
+  </data>
+ </layer>
+ <layer name="Walls" width="14" height="11">
+  <properties>
+   <property name="tileset" value="walls"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYKQAswKxKBLmQeMz4dCnxYAKVNH4MnTWx4vDrfj0cQOxFQ470fVxMmACYvShAykgZiZDH65wYQFiZTwYm13kYABj5wST
+  </data>
+ </layer>
+ <objectgroup name="Objects" visible="0"/>
+ <objectgroup name="Mirrors">
+  <object id="111" type="mirror" gid="84" x="192" y="432" width="48" height="48">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
+  <object id="112" type="mirror" gid="2147483732" x="432" y="384" width="48" height="48">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
+  <object id="113" type="mirror" gid="3221225556" x="192" y="144" width="48" height="48">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
+  <object id="114" type="mirror" gid="3221225556" x="192" y="288" width="48" height="48">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
+  <object id="115" type="mirror" gid="2147483732" x="144" y="384" width="48" height="48">
+   <properties>
+    <property name="sides" value="1"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Light">
+  <object id="116" type="lightSwitch" gid="87" x="432" y="192" width="48" height="48"/>
+  <object id="117" type="lightOrb" gid="91" x="144" y="144" width="48" height="48">
+   <properties>
+    <property name="direction" value="16"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup color="#141ba4" name="player_start">
+  <object id="118" type="player_start" x="240" y="96" width="48" height="48">
+   <properties>
+    <property name="direction_facing" value="16"/>
+    <property name="initial_zoom" value="0.7"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup color="#71a400" name="Exit">
+  <object id="119" type="exit" gid="43" x="480" y="288" width="48" height="48"/>
+ </objectgroup>
+</map>

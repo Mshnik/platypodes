@@ -1,5 +1,6 @@
 package elements;
 
+import flixel.FlxSprite;
 import flixel.util.FlxRect;
 import flixel.addons.editors.tiled.TiledObject;
 @abstract class MovingElement extends Element {
@@ -43,7 +44,7 @@ import flixel.addons.editors.tiled.TiledObject;
    **/
   public var continueMoving : Bool;
 
-  private static inline var TOLERANCE = 5;
+  private static inline var TOLERANCE = 0.5;
 
   /** Construct a TopBar moving element
    * state - the GameState this element belongs to
@@ -123,8 +124,6 @@ import flixel.addons.editors.tiled.TiledObject;
    **/
   public function locationReached(oldRow : Int, oldCol : Int){}
 
-  private static inline var CONTAINS_TOLERANCE = 5;
-
   /** Updates this element:
    * Check for location move. If moved, call locationReached, update oldRow and oldCol
    * If TileLocked:
@@ -143,15 +142,15 @@ import flixel.addons.editors.tiled.TiledObject;
       oldCol = getCol();
     }
 
-    var boundingBox = getBoundingBox(false);
     //Check if we should stop moving
     if(moveDirection.equals(Direction.None)) {
       velocity.x = 0;
       velocity.y = 0;
     }
     //Check if destination is reached
-    else if(destTile != null && ((moveDirection.isHorizontal() && destTile.left - TOLERANCE <= x && destTile.right + TOLERANCE >= x + width)
-            || (moveDirection.isVertical() && destTile.top - TOLERANCE <= y && destTile.bottom + TOLERANCE >= y + height))) {
+    else if(destTile != null && ((moveDirection.isHorizontal() && destTile.left - TOLERANCE <= (x - offset.x)
+                                                               && destTile.right + TOLERANCE >= (x - offset.x) + width)
+            || (moveDirection.isVertical() && destTile.top - TOLERANCE <= (y - offset.y) && destTile.bottom + TOLERANCE >= (y - offset.y) + height))) {
       destinationReached();
       moveDirection = Direction.None;
       destTile = null;
@@ -171,7 +170,6 @@ import flixel.addons.editors.tiled.TiledObject;
       velocity.x = moveSpeed * moveDirection.x;
       velocity.y = moveSpeed * moveDirection.y;
     }
-    boundingBox.put();
     super.update();
   }
 }

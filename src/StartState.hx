@@ -29,32 +29,10 @@ class StartState extends FlxState{
     splash.setPosition(0, (FlxG.height - splash.height)/2);
     add(splash);
 
-    var levels = new Array<Dynamic>();
-    levels.push(AssetPaths.t0__tmx);
-    levels.push(AssetPaths.t1__tmx);
-    levels.push(AssetPaths.t2__tmx);
-    levels.push(AssetPaths.t3__tmx);
-    levels.push(AssetPaths.olivial0__tmx);
-    levels.push(AssetPaths.olivial1__tmx);
-    levels.push(AssetPaths.olivial2__tmx);
-    levels.push(AssetPaths.olivial3__tmx);
-    levels.push(AssetPaths.l0__tmx);
-    levels.push(AssetPaths.l1__tmx);
-    levels.push(AssetPaths.l2__tmx);
-    levels.push(AssetPaths.l3__tmx);
-    levels.push(AssetPaths.l4__tmx);
-    levels.push(AssetPaths.l5__tmx);
-    levels.push(AssetPaths.l6__tmx);
-    levels.push(AssetPaths.oliviag0__tmx);
-    levels.push(AssetPaths.oliviag1__tmx);
-    levels.push(AssetPaths.g0__tmx);
-    levels.push(AssetPaths.oliviag2__tmx);
-    levels.push(AssetPaths.oliviag3__tmx);
-
     playButton = new FlxButton(0,0,"Play", function(){
       WIND_SOUND.fadeOut(5, 0);
-      PMain.zoom = 0.5;
-      FlxG.switchState(new GameState(levels, 0));
+      PMain.zoom = 1;
+      FlxG.switchState(new GameState(0));
     });
     playButton.setPosition(462, 310);
     add(playButton);

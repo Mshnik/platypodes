@@ -15,7 +15,7 @@ class Mirror extends AbsMirror {
   private static inline var UNLIT_SPRITE_ONE_SIDED = AssetPaths.mirror__png;
 
   /** The sprite for a lit one sided mirror */
-  private static inline var LIT_SPRITE_ONE_SIDED = AssetPaths.mirror_reflection_1__png;
+  private static inline var LIT_SPRITE_ONE_SIDED = AssetPaths.mirror_reflection__png;
 
   /** Constructs a TopBar mirror belonging to the given game state and representing the given TiledObject */
   public function new(state : GameState, o : TiledObject) {
@@ -33,9 +33,15 @@ class Mirror extends AbsMirror {
 
     if (isLit || d.opposite().simpleDirec & directionFacing.simpleDirec != 0) {
       isLit = true;
-      loadGraphic(LIT_SPRITE_ONE_SIDED, false, Std.int(width), Std.int(height));
     } else {
       isLit = false;
+    }
+  }
+
+  public override function updateGraphic() {
+    if(isLit) {
+      loadGraphic(LIT_SPRITE_ONE_SIDED, false, Std.int(width), Std.int(height));
+    } else {
       loadGraphic(UNLIT_SPRITE_ONE_SIDED, false, Std.int(width), Std.int(height));
     }
   }

@@ -1,9 +1,10 @@
 package elements.impl;
+import haxe.Timer;
 import flixel.addons.editors.tiled.TiledObject;
 class LightSwitch extends Element implements Lightable {
 
-  private static inline var UNLIT_SPRITE = AssetPaths.switch_off__png;
-  private static inline var LIT_SPRITE = AssetPaths.switch_on__png;
+  private static inline var UNLIT_SPRITE = AssetPaths.light_orb_grey__png;
+  private static inline var LIT_SPRITE = AssetPaths.light_orb__png;
 
   public var lightInDirection(default, null) : Array<Direction>;
 
@@ -32,7 +33,7 @@ class LightSwitch extends Element implements Lightable {
 
   public function resetLightInDirection() {
     lightInDirection = [];
-    updateGraphic(false);
+    isLit = false;
   }
 
 /** Set to Direction.None or null to turn off light */
@@ -41,16 +42,15 @@ class LightSwitch extends Element implements Lightable {
       return;
     }
     lightInDirection.push(d);
-    updateGraphic(true);
+    isLit = true;
   }
 
-  private function updateGraphic(isLit : Bool) : Bool {
+  public function updateGraphic() {
     if(isLit) {
       loadGraphic(LIT_SPRITE, false, Std.int(width), Std.int(height));
     } else {
       loadGraphic(UNLIT_SPRITE, false, Std.int(width), Std.int(height));
     }
-    return this.isLit = isLit;
   }
 
 }

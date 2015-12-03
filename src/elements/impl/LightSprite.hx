@@ -1,5 +1,6 @@
 package elements.impl;
 
+import haxe.Timer;
 import flixel.FlxSprite;
 class LightSprite extends FlxSprite {
 
@@ -11,6 +12,7 @@ class LightSprite extends FlxSprite {
     this.state = state;
     isLit = true;
     immovable = true;
+    cameras = [state.mainCamera];
   }
 
   /** Return the row of the board this element is currently occupying. The top-left tile is (0,0) */
@@ -24,22 +26,6 @@ class LightSprite extends FlxSprite {
   }
 
   public override function update(){
-    //TODO - reinstate after friends
-//    if(leadingMirror != null) {
-//      if(getRow() == leadingMirror.getRow() && leadingMirror.moveDirection.isHorizontal()) {
-//        var diff : Float = Math.abs(leadingMirror.x - x);
-//        scale.x = diff/frameWidth;
-//        updateHitbox();
-//      } else if(getCol() == leadingMirror.getCol() && leadingMirror.moveDirection.isVertical()) {
-//        var diff : Float = Math.abs(leadingMirror.y - y);
-//        scale.y = diff/frameHeight;
-//        updateHitbox();
-//      }
-//    }
-//    if(followingMirror != null) {
-//      velocity.x = followingMirror.velocity.x;
-//      velocity.y = followingMirror.velocity.y;
-//    }
     super.update();
   }
 }

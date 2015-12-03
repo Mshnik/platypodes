@@ -1,4 +1,5 @@
 package;
+import haxe.Timer;
 import flixel.FlxG;
 import logging.ActionElement;
 import flixel.util.FlxPoint;
@@ -21,9 +22,9 @@ class Tooltip extends FlxGroup {
   private var pullMirrorDirection:Direction;
 
   /** Rotation arrow graphic for scheme A **/
-  private inline static var A_ROTATE_ARROW_PATH = AssetPaths.A_up_tip__png; //clockwise
+  private inline static var A_ROTATE_ARROW_PATH = AssetPaths.new_up_tip__png; //clockwise
   /** Pull/push arrow graphic for scheme A**/
-  private inline static var A_PUSH_ARROW_PATH = AssetPaths.A_side_tip__png; //pointing up
+  private inline static var A_PUSH_ARROW_PATH = AssetPaths.new_side_tip__png; //pointing up
 
   /** Rotation arrow graphic for scheme B **/
   private inline static var B_ROTATE_ARROW_PATH = AssetPaths.B_rotate_arrow__png; //clockwise
@@ -34,11 +35,12 @@ class Tooltip extends FlxGroup {
   private inline static var B_VERSION_ARROW_SPRITE_SCALE = 0.9;
 
   /** Animation descriptors **/
-  private inline static var ANIMATION_SPEED = 7;
+  private inline static var ANIMATION_SPEED = 5;
   private inline static var GLOW_ANIMATION_KEY = "glow";
   private inline static var RED_GLOW_ANIMATION_KEY = "redGlow";
-  private inline static var A_SPRITE_SIZE = 138;
+  private inline static var A_SPRITE_SIZE = 72;
   private inline static var B_SPRITE_SIZE = 200;
+  private inline static var A_OFFSET = (A_SPRITE_SIZE/6);
 
   public function new(currGame:GameState) {
     super();
@@ -125,12 +127,9 @@ class Tooltip extends FlxGroup {
     pushArrowButton.cameras = [FlxG.camera];
     cwArrowButton.cameras = [FlxG.camera];
     ccwArrowButton.cameras = [FlxG.camera];
-
-    if(currGame.levelPathIndex != GameState.NO_PUSHPULL_LEVEL) {
-      this.add(pullArrowButton);
-      this.add(pushArrowButton);
-    }
-    if(currGame.levelPathIndex != GameState.NO_ROTATE_LEVEL){
+    this.add(pullArrowButton);
+    this.add(pushArrowButton);
+    if(! PMain.arrayContains(GameState.NO_ROTATE_LEVEL, currGame.levelPathIndex)){
       this.add(cwArrowButton);
       this.add(ccwArrowButton);
     }
@@ -139,6 +138,7 @@ class Tooltip extends FlxGroup {
 
   override public function update():Void {
 
+    var startTime = Timer.stamp();
     var player = game.player;
     var mirror = game.player.elmHolding;
 
@@ -149,6 +149,9 @@ class Tooltip extends FlxGroup {
     }
 
     this.visible = true;
+    var d : Direction = Direction.getDirection(mirror.getCol() - player.getCol(), mirror.getRow() - player.getRow());
+    pushArrowButton.visible = mirror.canMoveInDirection(d);
+    pullArrowButton.visible = mirror.canMoveInDirection(d.opposite());
 
     check_animation();
 
@@ -159,7 +162,7 @@ class Tooltip extends FlxGroup {
     if (player.getRow() == mirror.getRow()) {
       if (player.getCol() < mirror.getCol()) {
         //PLAYER TO THE LEFT OF MIRROR
-        pullArrowButton.setPosition(player.x - pullArrowButton.width, mBox.top);
+        pullArrowButton.setPosition(player.x - pullArrowButton.width, mBox.top - A_OFFSET);
         if(!PMain.A_VERSION)
         {
           pullArrowButton.setPosition(player.x - pullArrowButton.width, mBox.top - (pullArrowButton.height / 6));
@@ -167,7 +170,7 @@ class Tooltip extends FlxGroup {
         pullArrowButton.angle = 0;
         pullMirrorDirection = Direction.Left;
 
-        pushArrowButton.setPosition(mBox.right, mBox.top);
+        pushArrowButton.setPosition(mBox.right, mBox.top - A_OFFSET);
         if(!PMain.A_VERSION)
         {
           pushArrowButton.setPosition(mBox.right, mBox.top - (pullArrowButton.height / 6));
@@ -178,7 +181,7 @@ class Tooltip extends FlxGroup {
       else if (player.getCol() > mirror.getCol()) {
 
 //PLAYER TO THE RIGHT OF MIRROR
-        pullArrowButton.setPosition(player.x + player.width, mBox.top);
+        pullArrowButton.setPosition(player.x + player.width, mBox.top - A_OFFSET );
         if(!PMain.A_VERSION)
         {
           pullArrowButton.setPosition(player.x + player.width, mBox.top - (pullArrowButton.height / 6));
@@ -186,7 +189,7 @@ class Tooltip extends FlxGroup {
         pullArrowButton.angle = 180;
         pullMirrorDirection = Direction.Right;
 
-        pushArrowButton.setPosition(mBox.left - pushArrowButton.width, mBox.top);
+        pushArrowButton.setPosition(mBox.left - pushArrowButton.width, mBox.top - A_OFFSET);
         if(!PMain.A_VERSION)
         {
           pushArrowButton.setPosition(mBox.left - pushArrowButton.width, mBox.top - (pullArrowButton.height / 6));
@@ -266,14 +269,14 @@ class Tooltip extends FlxGroup {
   private function configureRotateArrows(d:Direction, mBox : FlxRect):Void {
     try {
       if (d.isHorizontal()) {
-        cwArrowButton.setPosition(mBox.left, mBox.top - cwArrowButton.height);
+        cwArrowButton.setPosition(mBox.left - A_OFFSET, mBox.top - cwArrowButton.height);
         cwArrowButton.angle = 0;
 
-        ccwArrowButton.setPosition(mBox.left, mBox.bottom);
+        ccwArrowButton.setPosition(mBox.left - A_OFFSET, mBox.bottom);
         ccwArrowButton.angle = 180;
 
       } else if (d.isVertical()) {
-        cwArrowButton.setPosition(mBox.right, mBox.bottom - ccwArrowButton.height);
+        cwArrowButton.setPosition(mBox.right, mBox.top - A_OFFSET);
         if(!PMain.A_VERSION)
         {
           cwArrowButton.setPosition(mBox.right, mBox.bottom - ccwArrowButton.height + (cwArrowButton.height/6));
@@ -281,7 +284,7 @@ class Tooltip extends FlxGroup {
         cwArrowButton.angle = 90;
 
 
-        ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - cwArrowButton.height);
+        ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.top - A_OFFSET);
         if(!PMain.A_VERSION)
         {
           ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - cwArrowButton.height + (ccwArrowButton.height/6));
@@ -335,6 +338,16 @@ class Tooltip extends FlxGroup {
         game.actionStack.add(action);
       }
     }
+  }
+
+  public override function destroy() {
+    if(cwArrowButton != null) cwArrowButton.destroy();
+    if(ccwArrowButton!= null) ccwArrowButton.destroy();
+    if(pullArrowButton != null) pullArrowButton.destroy();
+    if (pushArrowButton != null) pushArrowButton.destroy();
+    if(pushMirrorDirection != null)pushMirrorDirection.destroy();
+    if(pullMirrorDirection != null)pullMirrorDirection.destroy();
+    super.destroy();
   }
 
 }

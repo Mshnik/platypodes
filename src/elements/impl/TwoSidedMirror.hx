@@ -16,8 +16,7 @@ class TwoSidedMirror extends AbsMirror {
     resetLightInDirection();
   }
 
-  private function updateGraphic() {
-    isLit = litMain || litSec;
+  public override function updateGraphic() {
     if (sides_lit() == 0) {
       loadGraphic(UNLIT_SPRITE, false, Std.int(width), Std.int(height));
     } else if (sides_lit() == 1 && litMain) {
@@ -35,7 +34,7 @@ class TwoSidedMirror extends AbsMirror {
     super.resetLightInDirection();
     litMain = false;
     litSec = false;
-    updateGraphic();
+    isLit = litMain || litSec;
   }
 
   public override function addLightInDirection(d : Direction) {
@@ -50,7 +49,6 @@ class TwoSidedMirror extends AbsMirror {
         litSec = true;
       }
     }
-    updateGraphic();
   }
 
   public function sides_lit():Int {

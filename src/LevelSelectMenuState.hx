@@ -9,81 +9,45 @@ import flixel.util.FlxColor;
 /**
  * A FlxState which can be used for the game's level select menu.
  */
-class LevelSelectMenuState extends FlxState
-{
+class LevelSelectMenuState extends FlxState {
 
-  @final static private var MARGIN_X : Float = 75;
-  @final static private var MARGIN_Y : Float = 140;
-  @final static private var SPACING : Float= 20;
+  private static var BACK_TO_LEVEL = function() : Bool {
+    return FlxG.keys.justPressed.ESCAPE;
+  };
 
-    @final static private var BG_COLOR : Int = 0xff410d08;
+  private static inline var MARGIN_X:Float = 75;
+  private static inline var MARGIN_Y:Float = 155;
+  private static inline var SPACING:Float = 20;
 
-	private var levels : Array<Dynamic>;
-    private var background : FlxSprite;
+  private static inline var BG_COLOR:Int = 0xff410d08;
 
-	/**
+  private var oldLevelIndex : Int;
+  private var background:FlxSprite;
+
+  public function new(oldLevelIndex : Int) {
+    super();
+    this.oldLevelIndex = oldLevelIndex;
+  }
+
+  /**
 	 * Function that is called up when to state is created to set it up.
 	 * Creates buttons for each of the levels in levels.
 	 */
-	override public function create():Void {
-      super.create();
-        FlxG.camera.bgColor = BG_COLOR;
-        background = new FlxSprite();
-        background.loadGraphic(AssetPaths.level_select__png, false);
-        background.setPosition(0, 50);
-        add(background);
+  override public function create():Void {
+    super.create();
+    FlxG.camera.bgColor = BG_COLOR;
+    background = new FlxSprite();
+    background.loadGraphic(AssetPaths.level_select__png, false);
+    background.setPosition((FlxG.width - background.width)/2, (FlxG.height - background.height)/2);
+    add(background);
 
-      levels = new Array<Dynamic>();
-      levels.push(AssetPaths.t0__tmx);
-      levels.push(AssetPaths.t1__tmx);
-      levels.push(AssetPaths.t2__tmx);
-      levels.push(AssetPaths.t3__tmx);
-      levels.push(AssetPaths.olivial0__tmx);
-      levels.push(AssetPaths.olivial1__tmx);
-      levels.push(AssetPaths.olivial2__tmx);
-      levels.push(AssetPaths.olivial3__tmx);
-      levels.push(AssetPaths.l0__tmx);
-      levels.push(AssetPaths.l1__tmx);
-      levels.push(AssetPaths.l2__tmx);
-      levels.push(AssetPaths.l3__tmx);
-      levels.push(AssetPaths.l4__tmx);
-      levels.push(AssetPaths.l5__tmx);
-      levels.push(AssetPaths.l6__tmx);
-      levels.push(AssetPaths.oliviag0__tmx);
-      levels.push(AssetPaths.oliviag1__tmx);
-        levels.push(AssetPaths.g0__tmx);
-      levels.push(AssetPaths.oliviag2__tmx);
-      levels.push(AssetPaths.oliviag3__tmx);
+    var x : Float = MARGIN_X;
+    var y : Float = MARGIN_Y;
+    var w:Float = -1;
+    var h:Float = -1;
 
-    var x = MARGIN_X;
-    var y = MARGIN_Y;
-    var w : Float = -1;
-    var h : Float = -1;
-
-        //Name tutorial levels first
-     for(i in 0...PMain.NUMBER_OF_TUTORIAL_LEVELS){
-         var button = new FlxButton(x, y, "Tutorial " + Std.string(i + 1), function(){ loadLevel(i); });
-
-         if (w == -1) {
-             w = button.width;
-         }
-         if (h == -1) {
-             h = button.height;
-         }
-
-         x += w + SPACING;
-         if(x + w > FlxG.width - MARGIN_X) {
-             x = MARGIN_X;
-             y += h + SPACING;
-         }
-
-         button.onUp.sound = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
-
-         add(button);
-     }
-
-    for(i in PMain.NUMBER_OF_TUTORIAL_LEVELS...levels.length) {
-      var button = new FlxButton(x, y, "Level " + Std.string(i + 1 - PMain.NUMBER_OF_TUTORIAL_LEVELS), function(){ loadLevel(i); });
+    for (i in 0...PMain.levelPaths.length) {
+      var button = new FlxButton(x, y, "Level " + Std.string(i + 1), function() { loadLevel(i); });
 
       if (w == -1) {
         w = button.width;
@@ -91,38 +55,47 @@ class LevelSelectMenuState extends FlxState
       if (h == -1) {
         h = button.height;
       }
+      add(button);
+
+      if (PMain.levelBeaten[i]) {
+        var check = new FlxSprite();
+        check.loadGraphic(AssetPaths.check__png);
+        check.setPosition(x + w - check.width / 2, y + h - check.height);
+        add(check);
+      }
 
       x += w + SPACING;
-      if(x + w > FlxG.width - MARGIN_X) {
+      if (x + w > FlxG.width - MARGIN_X) {
         x = MARGIN_X;
         y += h + SPACING;
       }
 
       button.onUp.sound = FlxG.sound.load(AssetPaths.Lightning_Storm_Sound_Effect__mp3);
-
-      add(button);
     }
   }
 
-  /** Loads (Switches) to level at levels[index] */
-  private function loadLevel(index : Int) : Void {
-    var gameState = new GameState(levels, index);
+/** Loads (Switches) to level at levels[index] */
+
+  private function loadLevel(index:Int):Void {
+    var gameState = new GameState(index);
     FlxG.switchState(gameState);
   }
 
-	/**
+  /**
 	 * Function that is called when this state is destroyed - you might want to 
 	 * consider setting all objects this state uses to null to help garbage collection.
 	 */
-	override public function destroy():Void {
-    levels = null;
-		super.destroy();
-	}
+  override public function destroy():Void {
+    super.destroy();
+  }
 
-	/**
+  /**
 	 * Function that is called once every frame.
 	 */
-	override public function update():Void {
-		super.update();
+  override public function update():Void {
+    if(BACK_TO_LEVEL()) {
+      loadLevel(oldLevelIndex);
+    }
+    super.update();
   }
 }
