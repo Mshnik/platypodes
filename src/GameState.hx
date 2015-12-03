@@ -324,6 +324,10 @@ class GameState extends FlxState {
 
       level.collideWithLevel(player, false, playCollisionSound);  // Collides player with walls
 
+      if(! exit.isOpen) {
+        FlxG.collide(player, exit, playCollisionSound);
+      }
+
       FlxG.collide(player, lightBulbs, playCollisionSound);
       FlxG.collide(player, lightSwitches, playCollisionSound);
       FlxG.collide(player, glassWalls, playCollisionSound);
@@ -401,6 +405,7 @@ class GameState extends FlxState {
       case "exit":
         var exit = new Exit(this, o);
         exit.cameras = [FlxG.camera];
+        exit.immovable = true;
         this.exit = exit;
 
       case "glasswall":
