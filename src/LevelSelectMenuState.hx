@@ -11,13 +11,23 @@ import flixel.util.FlxColor;
  */
 class LevelSelectMenuState extends FlxState {
 
+  private static var BACK_TO_LEVEL = function() : Bool {
+    return FlxG.keys.justPressed.ESCAPE;
+  };
+
   private static inline var MARGIN_X:Float = 75;
   private static inline var MARGIN_Y:Float = 155;
   private static inline var SPACING:Float = 20;
 
   private static inline var BG_COLOR:Int = 0xff410d08;
 
+  private var oldLevelIndex : Int;
   private var background:FlxSprite;
+
+  public function new(oldLevelIndex : Int) {
+    super();
+    this.oldLevelIndex = oldLevelIndex;
+  }
 
   /**
 	 * Function that is called up when to state is created to set it up.
@@ -83,6 +93,9 @@ class LevelSelectMenuState extends FlxState {
 	 * Function that is called once every frame.
 	 */
   override public function update():Void {
+    if(BACK_TO_LEVEL()) {
+      loadLevel(oldLevelIndex);
+    }
     super.update();
   }
 }

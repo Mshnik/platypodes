@@ -304,7 +304,7 @@ class GameState extends FlxState {
   override public function update():Void {
     var startTime = Timer.stamp();
     if(MENU_BUTTON()) {
-      FlxG.switchState(new LevelSelectMenuState());
+      FlxG.switchState(new LevelSelectMenuState(levelPathIndex));
     } else if(won && (NEXT_LEVEL_BUTTON() || autoProgress) && levelPathIndex + 1 < PMain.levelPaths.length){
       BACKGROUND_THEME.resume();
       FlxG.switchState(new GameState(levelPathIndex + 1));
