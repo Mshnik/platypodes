@@ -80,10 +80,7 @@ class GameState extends FlxState {
     this.levelPathIndex = levelPathIndex;
     this.actionStack = savedActionStack;
     this.levelStartTime = levelStartTime;
-    this.levelName = "Level " + Std.string(levelPathIndex + 1 - PMain.NUMBER_OF_TUTORIAL_LEVELS);
-    if(this.levelPathIndex < PMain.NUMBER_OF_TUTORIAL_LEVELS){
-      this.levelName = "Tutorial " + Std.string(levelPathIndex + 1);
-    }
+    this.levelName = "Level " + Std.string(levelPathIndex + 1);
   }
 
   override public function create():Void {

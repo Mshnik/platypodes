@@ -37,11 +37,7 @@ class LevelSelectMenuState extends FlxState {
     var h:Float = -1;
 
     for (i in 0...PMain.levelPaths.length) {
-      var str = "Level " + Std.string(i + 1 - PMain.NUMBER_OF_TUTORIAL_LEVELS);
-      if (i < PMain.NUMBER_OF_TUTORIAL_LEVELS) {
-        str = "Tutorial " + Std.string(i + 1);
-      }
-      var button = new FlxButton(x, y, str, function() { loadLevel(i); });
+      var button = new FlxButton(x, y, "Level " + Std.string(i + 1), function() { loadLevel(i); });
 
       if (w == -1) {
         w = button.width;
