@@ -13,6 +13,7 @@ class Exit extends Element implements Lightable {
 
   private static inline var ANIMATION_SPEED = 10;
 
+  public var wasOpen(default, default) : Bool;
   public var isOpen(default, set) : Bool;
 
   public var isLit(default, null) : Bool;
@@ -41,18 +42,18 @@ class Exit extends Element implements Lightable {
   }
 
   public function updateGraphic() {
-
-  }
-
-  public function set_isOpen(open : Bool) : Bool {
-    if(isOpen != open){
-      if(open) {
+    if(wasOpen != isOpen) {
+      if(isOpen) {
         animation.play(OPEN_ANIMATION_KEY);
       } else {
         animation.play(CLOSE_ANIMATION_KEY);
       }
       openCloseSound.play(true);
     }
+    wasOpen = isOpen;
+  }
+
+  public function set_isOpen(open : Bool) : Bool {
     return this.isOpen = open;
   }
 

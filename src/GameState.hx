@@ -176,6 +176,7 @@ class GameState extends FlxState {
     };
 
     FlxG.camera.focusOn(player.getMidpoint(null));
+    updateLight();
   }
 
   public override function destroy() {
@@ -259,24 +260,44 @@ class GameState extends FlxState {
     return false;
   }
 
+  private function resetLightInDirection(l : Lightable) {
+    l.resetLightInDirection();
+  }
+
+  private function markLightDirty(l : LightBulb) {
+    l.markLightDirty();
+  }
+
+  private function updateGraphic(l : Lightable) {
+    l.updateGraphic();
+  }
+
   public function updateLight() : Void {
-    exit.isOpen = false;
+    exit.wasOpen = exit.isOpen;
 
-    interactables.forEachOfType(Lightable, function(l : Lightable){
-      l.resetLightInDirection();
-    });
+    interactables.forEachOfType(Lightable, resetLightInDirection);
 
-    lightSwitches.forEach(function(l : LightSwitch) {
-      l.resetLightInDirection();
-    });
+    lightSwitches.forEach(resetLightInDirection);
 
-    glassWalls.forEach(function(w : GlassWall) {
-      w.resetLightInDirection();
-    });
+    glassWalls.forEach(resetLightInDirection);
 
-    lightBulbs.forEach(function(l : LightBulb) {
-      l.markLightDirty();
-    });
+    lightBulbs.forEach(markLightDirty);
+
+    interactables.forEachOfType(Lightable, updateGraphic);
+
+    lightSwitches.forEach(updateGraphic);
+
+    glassWalls.forEach(updateGraphic);
+
+    exit.isOpen = true;
+    for(s in lightSwitches.members) {
+      if(! s.isLit) {
+        exit.isOpen = false;
+        break;
+      }
+    }
+
+    exit.updateGraphic();
   }
 
   private function playCollisionSound(a, b):Void{
