@@ -21,11 +21,6 @@ import flixel.FlxSprite;
   **/
 @abstract class Element extends FlxExtendedSprite {
 
-  public static var updateTimeMap(default, null):Map<String, Float> = new Map<String, Float>();
-  public static var drawTimeMap(default, null):Map<String, Float> = new Map<String, Float>();
-  public static var updateCount(default, null):Map<String, Int> = new Map<String, Int>();
-  public static var drawCount(default, null):Map<String, Int> = new Map<String, Int>();
-
   /** The GameState this Element exists within. */
   @final public var state:GameState;
 
@@ -56,14 +51,6 @@ import flixel.FlxSprite;
     this.state = state;
     this.gID = tileObject.gid;
     centerOrigin();
-
-    var tName = Type.getClassName(Type.getClass(this));
-    if(! updateTimeMap.exists(tName)) {
-      updateTimeMap.set(tName, 0);
-      drawTimeMap.set(tName, 0);
-      updateCount.set(tName, 0);
-      drawCount.set(tName, 0);
-    }
 
     squareHighlight = new FlxSprite(x, y);
     squareHighlight.makeGraphic(state.level.tileHeight, state.level.tileWidth, 0xffffffff);
@@ -173,22 +160,5 @@ import flixel.FlxSprite;
     squareHighlight.y = getRow() * state.level.tileHeight;
 
     super.update();
-
-    var tName = Type.getClassName(Type.getClass(this));
-    updateCount.set(tName, updateCount.get(tName)+1);
   }
-
-  public override function draw() {
-    var startTime = Timer.stamp();
-    super.draw();
-    var tName = Type.getClassName(Type.getClass(this));
-    drawTimeMap.set(tName, drawTimeMap.get(tName) + (Timer.stamp() - startTime));
-    drawCount.set(tName, drawCount.get(tName) + 1);
-  }
-
-  public function logUpdateTime(startTime : Float) {
-    var tName = Type.getClassName(Type.getClass(this));
-    updateTimeMap.set(tName, updateTimeMap.get(tName) + (Timer.stamp() - startTime));
-  }
-
 }

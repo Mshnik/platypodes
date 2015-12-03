@@ -5,8 +5,6 @@ class GlassWall extends Element implements Lightable{
 
   private static inline var SPR_ANIMATION = "spr";
 
-  private static inline var FIRST_GID = 93; //First GID of a wall tile. Should be kept up to date
-
   /** The variable that denotes lighting status. Get access must be public, but set can or can not be */
   public var isLit(default, set) : Bool;
 
@@ -18,16 +16,19 @@ class GlassWall extends Element implements Lightable{
     resetLightInDirection();
   }
 
-  public function set_isLit(lit : Bool) {
-    if(lit) {
+  public function updateGraphic() {
+    if(isLit) {
       loadGraphic(AssetPaths.light_wall_sheet__png, true, PMain.SPRITE_SIZE, PMain.SPRITE_SIZE);
-      animation.add(SPR_ANIMATION, [gID  - FIRST_GID], 0, false);
+      animation.add(SPR_ANIMATION, [0], 0, false);
       animation.play(SPR_ANIMATION);
     } else {
       loadGraphic(AssetPaths.glass_wall_sheet__png, true, PMain.SPRITE_SIZE, PMain.SPRITE_SIZE);
-      animation.add(SPR_ANIMATION, [gID  - FIRST_GID], 0, false);
+      animation.add(SPR_ANIMATION, [0], 0, false);
       animation.play(SPR_ANIMATION);
     }
+  }
+
+  public function set_isLit(lit : Bool) {
     return this.isLit = lit;
   }
 
@@ -64,8 +65,6 @@ class GlassWall extends Element implements Lightable{
   }
 
   override public function update() {
-    var startTime = Timer.stamp();
     super.update();
-    logUpdateTime(startTime);
   }
 }

@@ -35,22 +35,16 @@ class Tooltip extends FlxGroup {
   private inline static var B_VERSION_ARROW_SPRITE_SCALE = 0.9;
 
   /** Animation descriptors **/
-  private inline static var ANIMATION_SPEED = 7;
+  private inline static var ANIMATION_SPEED = 5;
   private inline static var GLOW_ANIMATION_KEY = "glow";
   private inline static var RED_GLOW_ANIMATION_KEY = "redGlow";
-  private inline static var A_SPRITE_SIZE = 48;
+  private inline static var A_SPRITE_SIZE = 72;
   private inline static var B_SPRITE_SIZE = 200;
+  private inline static var A_OFFSET = (A_SPRITE_SIZE/6);
 
   public function new(currGame:GameState) {
     super();
     this.visible = false;
-    var tName = Type.getClassName(Type.getClass(this));
-    if(! Element.updateTimeMap.exists(tName)) {
-      Element.updateTimeMap.set(tName, 0);
-      Element.updateCount.set(tName, 0);
-      Element.drawTimeMap.set(tName, 0);
-      Element.drawCount.set(tName, 0);
-    }
 
     //PULL ARROW
     pullArrowButton = new FlxExtendedSprite();
@@ -133,24 +127,13 @@ class Tooltip extends FlxGroup {
     pushArrowButton.cameras = [FlxG.camera];
     cwArrowButton.cameras = [FlxG.camera];
     ccwArrowButton.cameras = [FlxG.camera];
-
-    if(currGame.levelPathIndex != GameState.NO_PUSHPULL_LEVEL) {
-      this.add(pullArrowButton);
-      this.add(pushArrowButton);
-    }
-    if(currGame.levelPathIndex != GameState.NO_ROTATE_LEVEL){
+    this.add(pullArrowButton);
+    this.add(pushArrowButton);
+    if(! PMain.arrayContains(GameState.NO_ROTATE_LEVEL, currGame.levelPathIndex)){
       this.add(cwArrowButton);
       this.add(ccwArrowButton);
     }
     game = currGame;
-  }
-
-  public override function draw() {
-    var startTime = Timer.stamp();
-    super.draw();
-    var tName = Type.getClassName(Type.getClass(this));
-    Element.drawTimeMap.set(tName, Element.drawTimeMap.get(tName) + (Timer.stamp() - startTime));
-    Element.drawCount.set(tName, Element.drawCount.get(tName) + 1);
   }
 
   override public function update():Void {
@@ -166,6 +149,9 @@ class Tooltip extends FlxGroup {
     }
 
     this.visible = true;
+    var d : Direction = Direction.getDirection(mirror.getCol() - player.getCol(), mirror.getRow() - player.getRow());
+    pushArrowButton.visible = mirror.canMoveInDirection(d);
+    pullArrowButton.visible = mirror.canMoveInDirection(d.opposite());
 
     check_animation();
 
@@ -176,7 +162,7 @@ class Tooltip extends FlxGroup {
     if (player.getRow() == mirror.getRow()) {
       if (player.getCol() < mirror.getCol()) {
         //PLAYER TO THE LEFT OF MIRROR
-        pullArrowButton.setPosition(player.x - pullArrowButton.width, mBox.top);
+        pullArrowButton.setPosition(player.x - pullArrowButton.width, mBox.top - A_OFFSET);
         if(!PMain.A_VERSION)
         {
           pullArrowButton.setPosition(player.x - pullArrowButton.width, mBox.top - (pullArrowButton.height / 6));
@@ -184,7 +170,7 @@ class Tooltip extends FlxGroup {
         pullArrowButton.angle = 0;
         pullMirrorDirection = Direction.Left;
 
-        pushArrowButton.setPosition(mBox.right, mBox.top);
+        pushArrowButton.setPosition(mBox.right, mBox.top - A_OFFSET);
         if(!PMain.A_VERSION)
         {
           pushArrowButton.setPosition(mBox.right, mBox.top - (pullArrowButton.height / 6));
@@ -195,7 +181,7 @@ class Tooltip extends FlxGroup {
       else if (player.getCol() > mirror.getCol()) {
 
 //PLAYER TO THE RIGHT OF MIRROR
-        pullArrowButton.setPosition(player.x + player.width, mBox.top);
+        pullArrowButton.setPosition(player.x + player.width, mBox.top - A_OFFSET );
         if(!PMain.A_VERSION)
         {
           pullArrowButton.setPosition(player.x + player.width, mBox.top - (pullArrowButton.height / 6));
@@ -203,7 +189,7 @@ class Tooltip extends FlxGroup {
         pullArrowButton.angle = 180;
         pullMirrorDirection = Direction.Right;
 
-        pushArrowButton.setPosition(mBox.left - pushArrowButton.width, mBox.top);
+        pushArrowButton.setPosition(mBox.left - pushArrowButton.width, mBox.top - A_OFFSET);
         if(!PMain.A_VERSION)
         {
           pushArrowButton.setPosition(mBox.left - pushArrowButton.width, mBox.top - (pullArrowButton.height / 6));
@@ -237,9 +223,6 @@ class Tooltip extends FlxGroup {
     configureRotateArrows(pushMirrorDirection, mBox);
     mBox.put();
     super.update();
-    var tName = Type.getClassName(Type.getClass(this));
-    Element.updateTimeMap.set(tName, Element.updateTimeMap.get(tName) + (Timer.stamp() - startTime));
-    Element.updateCount.set(tName, Element.updateCount.get(tName) + 1);
   }
 
   //Determines which tooltips get animated
@@ -286,14 +269,14 @@ class Tooltip extends FlxGroup {
   private function configureRotateArrows(d:Direction, mBox : FlxRect):Void {
     try {
       if (d.isHorizontal()) {
-        cwArrowButton.setPosition(mBox.left, mBox.top - cwArrowButton.height);
+        cwArrowButton.setPosition(mBox.left - A_OFFSET, mBox.top - cwArrowButton.height);
         cwArrowButton.angle = 0;
 
-        ccwArrowButton.setPosition(mBox.left, mBox.bottom);
+        ccwArrowButton.setPosition(mBox.left - A_OFFSET, mBox.bottom);
         ccwArrowButton.angle = 180;
 
       } else if (d.isVertical()) {
-        cwArrowButton.setPosition(mBox.right, mBox.bottom - ccwArrowButton.height);
+        cwArrowButton.setPosition(mBox.right, mBox.top - A_OFFSET);
         if(!PMain.A_VERSION)
         {
           cwArrowButton.setPosition(mBox.right, mBox.bottom - ccwArrowButton.height + (cwArrowButton.height/6));
@@ -301,7 +284,7 @@ class Tooltip extends FlxGroup {
         cwArrowButton.angle = 90;
 
 
-        ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - cwArrowButton.height);
+        ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.top - A_OFFSET);
         if(!PMain.A_VERSION)
         {
           ccwArrowButton.setPosition(mBox.left - cwArrowButton.width, mBox.bottom - cwArrowButton.height + (ccwArrowButton.height/6));

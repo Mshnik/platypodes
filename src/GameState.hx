@@ -43,15 +43,13 @@ class GameState extends FlxState {
 
   private static inline var ZOOM_MULT : Float = 1.03;
 
-  @final private var levelPaths : Array<Dynamic>;
   @final public var levelPathIndex : Int;
   public var levelName : String;
   public var level(default, null):TiledLevel;
 
   public var player:Character;
   public var tooltip:Tooltip;
-  public static inline var NO_PUSHPULL_LEVEL = 2;
-  public static inline var NO_ROTATE_LEVEL = 1;
+  public static var NO_ROTATE_LEVEL(default, null) = [1,2];
 
   public var actionStack : ActionStack;
   public var levelStartTime : Float;
@@ -77,31 +75,19 @@ class GameState extends FlxState {
   private var sndWin : FlxSound;
   private var sndWinDone : Bool;
 
-  public function new(levelPaths : Array<Dynamic>, levelPathIndex : Int,
-                      savedActionStack : ActionStack = null, levelStartTime: Float = -1) {
+  public function new(levelPathIndex : Int, savedActionStack : ActionStack = null, levelStartTime: Float = -1) {
     super();
-    this.levelPaths = levelPaths;
     this.levelPathIndex = levelPathIndex;
     this.actionStack = savedActionStack;
     this.levelStartTime = levelStartTime;
-    this.levelName = "Level " + Std.string(levelPathIndex + 1 - PMain.NUMBER_OF_TUTORIAL_LEVELS);
-    if(this.levelPathIndex < PMain.NUMBER_OF_TUTORIAL_LEVELS){
-      this.levelName = "Tutorial " + Std.string(levelPathIndex + 1);
-    }
+    this.levelName = "Level " + Std.string(levelPathIndex + 1);
   }
 
   override public function create():Void {
     super.create();
-    var tName = Type.getClassName(Type.getClass(this));
-    if(! Element.updateTimeMap.exists(tName)) {
-      Element.updateTimeMap.set(tName, 0);
-      Element.updateCount.set(tName, 0);
-      Element.drawTimeMap.set(tName, 0);
-      Element.drawCount.set(tName, 0);
-    }
 
     // Load the level's tilemaps
-    level = new TiledLevel(this, levelPaths[levelPathIndex]);
+    level = new TiledLevel(this, PMain.levelPaths[levelPathIndex]);
 
     // Add tilemaps
     add(level.floorMap);
@@ -138,12 +124,13 @@ class GameState extends FlxState {
     add(lightBulbs);
     add(lightSwitches);
     add(player);
+    add(player.glowSprite);
     add(tooltip);
 
     if(DISPLAY_COORDINATES) {
       for(r in 0...level.height) {
         for(c in 0...level.width) {
-          var t = new FlxText(c * level.tileWidth, r * level.tileHeight, 0, "(" + r + "," + c + ")", 20);
+          var t = new FlxText(c * level.tileWidth, r * level.tileHeight, 0, "(" + r + "," + c + ")", 8);
           t.cameras = [FlxG.camera];
           add(t);
         }
@@ -159,7 +146,7 @@ class GameState extends FlxState {
     hudCamera.bgColor = 0x00000000;
     FlxG.cameras.add(hudCamera);
 
-    this.hud = new OverlayDisplay(this, hudCamera, levelPathIndex < levelPaths.length - 1);
+    this.hud = new OverlayDisplay(this, hudCamera, levelPathIndex < PMain.levelPaths.length - 1);
     add(this.hud);
 
     if(BACKGROUND_THEME == null) {
@@ -186,6 +173,7 @@ class GameState extends FlxState {
     };
 
     FlxG.camera.focusOn(player.getMidpoint(null));
+    updateLight();
   }
 
   public override function destroy() {
@@ -269,33 +257,44 @@ class GameState extends FlxState {
     return false;
   }
 
-  public function updateLight() : Void {
-    exit.isOpen = false;
-
-    interactables.forEachOfType(Lightable, function(l : Lightable){
-      l.resetLightInDirection();
-    });
-
-    lightSwitches.forEach(function(l : LightSwitch) {
-      l.resetLightInDirection();
-    });
-
-    glassWalls.forEach(function(w : GlassWall) {
-      w.resetLightInDirection();
-    });
-
-    lightBulbs.forEach(function(l : LightBulb) {
-      l.markLightDirty();
-    });
+  private function resetLightInDirection(l : Lightable) {
+    l.resetLightInDirection();
   }
 
-  public override function draw() {
-    var startTime = Timer.stamp();
-    super.draw();
-    var tName = Type.getClassName(Type.getClass(this));
-    Element.drawTimeMap.set(tName, Element.drawTimeMap.get(tName) + (Timer.stamp() - startTime));
-    Element.drawCount.set(tName, Element.drawCount.get(tName) + 1);
-    //trace((Element.drawTimeMap.get(tName) / Element.drawCount.get(tName) * 1000) + "ms per draw");
+  private function markLightDirty(l : LightBulb) {
+    l.markLightDirty();
+  }
+
+  private function updateGraphic(l : Lightable) {
+    l.updateGraphic();
+  }
+
+  public function updateLight() : Void {
+    exit.wasOpen = exit.isOpen;
+
+    interactables.forEachOfType(Lightable, resetLightInDirection);
+
+    lightSwitches.forEach(resetLightInDirection);
+
+    glassWalls.forEach(resetLightInDirection);
+
+    lightBulbs.forEach(markLightDirty);
+
+    interactables.forEachOfType(Lightable, updateGraphic);
+
+    lightSwitches.forEach(updateGraphic);
+
+    glassWalls.forEach(updateGraphic);
+
+    exit.isOpen = true;
+    for(s in lightSwitches.members) {
+      if(! s.isLit) {
+        exit.isOpen = false;
+        break;
+      }
+    }
+
+    exit.updateGraphic();
   }
 
   private function playCollisionSound(a, b):Void{
@@ -305,10 +304,10 @@ class GameState extends FlxState {
   override public function update():Void {
     var startTime = Timer.stamp();
     if(MENU_BUTTON()) {
-      FlxG.switchState(new LevelSelectMenuState());
-    } else if(won && (NEXT_LEVEL_BUTTON() || autoProgress) && levelPathIndex + 1 < levelPaths.length){
+      FlxG.switchState(new LevelSelectMenuState(levelPathIndex));
+    } else if(won && (NEXT_LEVEL_BUTTON() || autoProgress) && levelPathIndex + 1 < PMain.levelPaths.length){
       BACKGROUND_THEME.resume();
-      FlxG.switchState(new GameState(levelPaths, levelPathIndex + 1));
+      FlxG.switchState(new GameState(levelPathIndex + 1));
     } else if(RESET()) {
       resetState();
     } else if (UNDO() && !player.isDying) {
@@ -321,6 +320,10 @@ class GameState extends FlxState {
     if (player.elmHolding == null || (player.elmHolding != null && player.elmHolding.destTile == null)) {
 
       level.collideWithLevel(player, false, playCollisionSound);  // Collides player with walls
+
+      if(! exit.isOpen) {
+        FlxG.collide(player, exit, playCollisionSound);
+      }
 
       FlxG.collide(player, lightBulbs, playCollisionSound);
       FlxG.collide(player, lightSwitches, playCollisionSound);
@@ -355,12 +358,6 @@ class GameState extends FlxState {
     //Check for finishing of animations
     hud.showDeadSprite = ! player.alive && !won;
     hud.showWinSprite = won && exit.animation.finished;
-
-    var tName = Type.getClassName(Type.getClass(this));
-    var n = Element.updateTimeMap.get(tName) + (Timer.stamp() - startTime);
-    Element.updateTimeMap.set(tName, n);
-    Element.updateCount.set(tName, Element.updateCount.get(tName) + 1);
-    //trace((Element.updateTimeMap.get(tName) / Element.updateCount.get(tName) * 1000) + "ms per update");
   }
 
   public function onAddObject(o : TiledObject, g : TiledObjectGroup) {
@@ -369,6 +366,7 @@ class GameState extends FlxState {
         var player = new Character(this, o);
         this.player = player;
         player.cameras = [FlxG.camera];
+        player.glowSprite.cameras = [FlxG.camera];
         FlxG.camera.follow(player, FlxCamera.STYLE_NO_DEAD_ZONE, 1);
 
       case "mirror":
@@ -404,6 +402,7 @@ class GameState extends FlxState {
       case "exit":
         var exit = new Exit(this, o);
         exit.cameras = [FlxG.camera];
+        exit.immovable = true;
         this.exit = exit;
 
       case "glasswall":
@@ -440,6 +439,10 @@ class GameState extends FlxState {
           player.playCollisionSound();
         }
         return false;
+      }
+      if(player.elmHolding != null) {
+        player.elmHolding.holdingPlayer = null;
+        player.grabbing = false;
       }
       player.moveDirection = a.moveDirection;
       player.directionFacing = a.directionFacing;
@@ -486,7 +489,7 @@ class GameState extends FlxState {
 
   public function resetState() {
     actionStack.addReset();
-    FlxG.switchState(new GameState(levelPaths, levelPathIndex, actionStack, levelStartTime));
+    FlxG.switchState(new GameState(levelPathIndex, actionStack, levelStartTime));
   }
 
   public function undoAction() {
@@ -514,7 +517,9 @@ class GameState extends FlxState {
 
   public function win() {
     if(won) return;
+
     won = true;
+    PMain.levelBeaten[levelPathIndex] = true;
     actionStack.addWin();
     BACKGROUND_THEME.pause();
     sndWin.onComplete = function() {

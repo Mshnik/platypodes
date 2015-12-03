@@ -17,19 +17,18 @@ class Crystal extends InteractableElement implements Lightable {
     isLit = false;
   }
 
-  private function updateGraphic(light:Bool):Bool {
-    if (light) {
+  public function updateGraphic() {
+    if (isLit) {
       loadGraphic(LIT_CRYSTAL, false, Std.int(width), Std.int(height));
     }
     else {
       loadGraphic(UNLIT_CRYSTAL, false, Std.int(width), Std.int(height));
     }
-    return isLit = light;
   }
 
   public function resetLightInDirection() {
     lightInDirection = [];
-    updateGraphic(false);
+    isLit = false;
   }
 
 /** Set to Direction.None or null to turn off light */
@@ -38,7 +37,7 @@ class Crystal extends InteractableElement implements Lightable {
       return;
     }
     lightInDirection.push(d);
-    updateGraphic(true);
+    isLit = true;
   }
 
   /** Returns true iff this is giving out light from the given side */

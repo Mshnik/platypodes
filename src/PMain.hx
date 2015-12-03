@@ -20,15 +20,17 @@ class PMain extends Sprite
 
   public static inline var SPRITE_SIZE = 48;
 
-	public static inline var NUMBER_OF_TUTORIAL_LEVELS:Int = 4;
+	public static inline var NUMBER_OF_TUTORIAL_LEVELS:Int = 5;
 
   public static inline var TEAM_ID = 626; //THIS SHOULD NEVER CHANGE EVER EVER EVER
-  public static inline var VERSION_ID = 300; //This can change when we do a big update
+  public static inline var VERSION_ID = 301; //This can change when we do a big update
   public static inline var DEBUG_MODE = true; //Make sure this is false when we submit
 
 	public static var A_VERSION(default, null) : Bool; //True if the game is in version A, false for version B
 	public static var zoom : Float = -1; //Zoom in game. Her
 
+	public static var levelPaths(default, null) : Array<Dynamic>;
+	public static var levelBeaten(default, null) : Array<Bool>;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
 	
@@ -77,6 +79,43 @@ class PMain extends Sprite
 			gameHeight = Math.ceil(stageHeight / zoom);
 		}
 
+		levelPaths = new Array<Dynamic>();
+		levelPaths.push(AssetPaths.t0__tmx);
+		levelPaths.push(AssetPaths.t1__tmx);
+		levelPaths.push(AssetPaths.t2__tmx);
+		levelPaths.push(AssetPaths.t3__tmx);
+		levelPaths.push(AssetPaths.t4__tmx);
+		levelPaths.push(AssetPaths.k0__tmx);
+		levelPaths.push(AssetPaths.k1__tmx);
+		levelPaths.push(AssetPaths.k2__tmx);
+		levelPaths.push(AssetPaths.k3__tmx);
+		levelPaths.push(AssetPaths.k4__tmx);
+		levelPaths.push(AssetPaths.k5__tmx);
+		levelPaths.push(AssetPaths.k6__tmx);
+		levelPaths.push(AssetPaths.k7__tmx);
+		levelPaths.push(AssetPaths.k8__tmx);
+		levelPaths.push(AssetPaths.k9__tmx);
+		levelPaths.push(AssetPaths.k10__tmx);
+		levelPaths.push(AssetPaths.k11__tmx);
+		levelPaths.push(AssetPaths.k12__tmx);
+		levelPaths.push(AssetPaths.k13__tmx);
+		levelPaths.push(AssetPaths.k14__tmx);
+		levelPaths.push(AssetPaths.k15__tmx);
+		levelPaths.push(AssetPaths.k16__tmx);
+		levelPaths.push(AssetPaths.k17__tmx);
+		levelPaths.push(AssetPaths.k18__tmx);
+		levelPaths.push(AssetPaths.k19__tmx);
+		levelPaths.push(AssetPaths.k20__tmx);
+		levelPaths.push(AssetPaths.k21__tmx);
+		levelPaths.push(AssetPaths.k22__tmx);
+		levelPaths.push(AssetPaths.k23__tmx);
+		levelPaths.push(AssetPaths.k24__tmx);
+
+		levelBeaten = new Array<Bool>();
+		for(i in 0...levelPaths.length) {
+			levelBeaten.push(false);
+		}
+
 		var g = new FlxGame(gameWidth, gameHeight, initialState, zoom, updateFrameRate, drawFrameRate, skipSplash, startFullscreen);
 		FlxG.plugins.add(new FlxMouseControl());
 		addChild(g);
@@ -90,4 +129,13 @@ class PMain extends Sprite
     }
     return arr;
   }
+
+	public static function arrayContains(arr : Array<Dynamic>, elm : Dynamic) : Bool {
+		for(e in arr) {
+			if ( elm == e) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

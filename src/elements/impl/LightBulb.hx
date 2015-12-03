@@ -34,9 +34,12 @@ class LightBulb extends Element implements Lightable{
     }
 
     resetLightInDirection();
-    light_dirty = true;
     lighting = new Lighting(state, this);
     isLit = true;
+  }
+
+  public function updateGraphic() {
+
   }
 
   /** Returns true iff this is giving out light from the given side */
@@ -49,20 +52,12 @@ class LightBulb extends Element implements Lightable{
     return [directionFacing];
   }
 
-  /** Mark this bulb as having to update lighting on the next frame */
   public function markLightDirty() {
-    light_dirty = true;
+    lighting.redraw_light();
   }
 
   override public function update() {
-    var startTime = Timer.stamp();
-    if(light_dirty) {
-      light_dirty = false;
-      lighting.redraw_light();
-    }
-
     super.update();
-    logUpdateTime(startTime);
   }
 
   public function resetLightInDirection() {

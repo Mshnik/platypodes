@@ -34,6 +34,15 @@ class Character extends MovingElement {
   /** Animated character sprite sheet location */
   private inline static var CHARACTER_SPRITE_SHEET = AssetPaths.player_sheet__png;
 
+  /** Animated glow sprite sheet location */
+  private inline static var GLOW_SPRITE_SHEET = AssetPaths.glowsheet__png;
+
+  /** X offset for glow sprite */
+  private inline static var GLOW_X_OFFSET = 2;
+
+  /** Y offset for glow sprite */
+  private inline static var GLOW_Y_OFFSET = 7;
+
   /** Standard speed of animations for the Character class */
   public inline static var ANIMATION_SPEED = 6;
 
@@ -65,6 +74,9 @@ class Character extends MovingElement {
   /** The death animation key */
   public inline static var DEATH_ANIMATION_SPEED = 10;
   public inline static var DEATH_ANIMATION_KEY = "Die";
+
+  /** The sprite of the player hovering. Only visible when the player is over a hole */
+  public var glowSprite(default, null) : FlxSprite;
 
   /** True when the animation of going into or out of grab is playing */
   public var isChangingGrabStatus : Bool;
@@ -250,6 +262,12 @@ class Character extends MovingElement {
     this.height -= (BOUNDING_BOX_MARGIN_TOP + BOUNDING_BOX_MARGIN_BOTTOM);
     this.centerOrigin();
 
+    glowSprite = new FlxSprite();
+    glowSprite.loadGraphic(GLOW_SPRITE_SHEET, true, PMain.SPRITE_SIZE, PMain.SPRITE_SIZE);
+    glowSprite.animation.add("Glow", [0,1,2,3,2,1], ANIMATION_SPEED, true);
+    glowSprite.animation.play("Glow");
+    glowSprite.visible = state.level.hasHoleAt(getCol(), getRow());
+
     this.x += BOUNDING_BOX_MARGIN_X;
     this.y += BOUNDING_BOX_MARGIN_TOP;
 
@@ -387,8 +405,6 @@ class Character extends MovingElement {
     * - calls super.update() to move the character based on calculated move direction
     */
   override public function update() {
-
-    var startTime = Timer.stamp();
     check_grab();
 
     if(!tileLocked && !state.won) {
@@ -398,11 +414,11 @@ class Character extends MovingElement {
         if (elm != null && Std.is(elm, AbsMirror)) {
 
           var mirror : AbsMirror = Std.instance(elm, AbsMirror);
-          if(mirror.destTile == null && ROT_CLOCKWISE() && state.levelPathIndex != GameState.NO_ROTATE_LEVEL) {
+          if(mirror.destTile == null && ROT_CLOCKWISE() && ! PMain.arrayContains(GameState.NO_ROTATE_LEVEL, state.levelPathIndex)) {
             state.actionStack.addRotate(mirror, true);
             mirror.rotateClockwise();
           }
-          if(mirror.destTile == null && ROT_C_CLOCKWISE() && state.levelPathIndex != GameState.NO_ROTATE_LEVEL) {
+          if(mirror.destTile == null && ROT_C_CLOCKWISE() && ! PMain.arrayContains(GameState.NO_ROTATE_LEVEL, state.levelPathIndex)) {
             state.actionStack.addRotate(mirror, false);
             mirror.rotateCounterClockwise();
           }
@@ -452,7 +468,7 @@ class Character extends MovingElement {
           directionFacing = moveDirection;
         }
       } else {
-        if (GRAB() && elmHolding.destTile == null && state.levelPathIndex != GameState.NO_PUSHPULL_LEVEL) {
+        if (GRAB() && elmHolding.destTile == null) {
           if (directionFacing.isHorizontal()) {
             if (PUSHPULL_LEFT()) {
               if(elmHolding.canMoveInDirection(Direction.Left)) {
@@ -524,7 +540,8 @@ class Character extends MovingElement {
     continueMoving = GRAB() && (UP_PRESSED() || DOWN_PRESSED() || LEFT_PRESSED() || RIGHT_PRESSED());
 
     super.update();
-    logUpdateTime(startTime);
+    glowSprite.x = x - offset.x - GLOW_X_OFFSET;
+    glowSprite.y = y - GLOW_Y_OFFSET;
   }
 
   private function playMovementAnimation(d : Direction, holdingElm : Bool) {
@@ -580,6 +597,7 @@ class Character extends MovingElement {
     if(moveList != null && moveList.isEmpty()) {
       moveList = null;
     }
+    glowSprite.visible = state.level.hasHoleAt(getCol(), getRow());
   }
 
   public override function locationReached(oldRow : Int, oldCol : Int) {
@@ -592,6 +610,8 @@ class Character extends MovingElement {
       state.actionStack.addPushpull(oldCol, oldRow, elmHoldingOldX, elmHoldingOldY);
       resetElmHoldingOldCoords();
     }
+
+    glowSprite.visible = state.level.hasHoleAt(getCol(), getRow());
   }
 
   public function setMoveTo(row : Int, col : Int) {
@@ -633,6 +653,7 @@ class Character extends MovingElement {
 
   public override function kill() {
     super.kill();
+    glowSprite.visible = false;
     isDying = false;
     isChangingGrabStatus = false;
   }

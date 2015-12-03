@@ -33,9 +33,15 @@ class Mirror extends AbsMirror {
 
     if (isLit || d.opposite().simpleDirec & directionFacing.simpleDirec != 0) {
       isLit = true;
-      loadGraphic(LIT_SPRITE_ONE_SIDED, false, Std.int(width), Std.int(height));
     } else {
       isLit = false;
+    }
+  }
+
+  public override function updateGraphic() {
+    if(isLit) {
+      loadGraphic(LIT_SPRITE_ONE_SIDED, false, Std.int(width), Std.int(height));
+    } else {
       loadGraphic(UNLIT_SPRITE_ONE_SIDED, false, Std.int(width), Std.int(height));
     }
   }

@@ -1,5 +1,6 @@
 package elements;
 
+import flixel.FlxSprite;
 import flixel.util.FlxRect;
 import flixel.addons.editors.tiled.TiledObject;
 @abstract class MovingElement extends Element {
@@ -147,9 +148,9 @@ import flixel.addons.editors.tiled.TiledObject;
       velocity.y = 0;
     }
     //Check if destination is reached
-    else if(destTile != null && ((moveDirection.isHorizontal() && destTile.left - TOLERANCE <= (x + offset.x)
-                                                               && destTile.right + TOLERANCE >= (x + offset.x) + width)
-            || (moveDirection.isVertical() && destTile.top - TOLERANCE <= (y + offset.y) && destTile.bottom + TOLERANCE >= (y + offset.y) + height))) {
+    else if(destTile != null && ((moveDirection.isHorizontal() && destTile.left - TOLERANCE <= (x - offset.x)
+                                                               && destTile.right + TOLERANCE >= (x - offset.x) + width)
+            || (moveDirection.isVertical() && destTile.top - TOLERANCE <= (y - offset.y) && destTile.bottom + TOLERANCE >= (y - offset.y) + height))) {
       destinationReached();
       moveDirection = Direction.None;
       destTile = null;
