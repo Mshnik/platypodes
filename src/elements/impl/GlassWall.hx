@@ -16,8 +16,8 @@ class GlassWall extends Element implements Lightable{
     resetLightInDirection();
   }
 
-  public function set_isLit(lit : Bool) {
-    if(lit) {
+  public function updateGraphic() {
+    if(isLit) {
       loadGraphic(AssetPaths.light_wall_sheet__png, true, PMain.SPRITE_SIZE, PMain.SPRITE_SIZE);
       animation.add(SPR_ANIMATION, [0], 0, false);
       animation.play(SPR_ANIMATION);
@@ -26,6 +26,9 @@ class GlassWall extends Element implements Lightable{
       animation.add(SPR_ANIMATION, [0], 0, false);
       animation.play(SPR_ANIMATION);
     }
+  }
+
+  public function set_isLit(lit : Bool) {
     return this.isLit = lit;
   }
 

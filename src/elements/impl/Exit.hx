@@ -40,6 +40,10 @@ class Exit extends Element implements Lightable {
     animation.play(VICTORY_ANIMATION_KEY);
   }
 
+  public function updateGraphic() {
+
+  }
+
   public function set_isOpen(open : Bool) : Bool {
     if(isOpen != open){
       if(open) {

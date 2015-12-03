@@ -14,6 +14,10 @@ class Barrel extends InteractableElement implements Lightable {
     resetLightInDirection();
   }
 
+  public function updateGraphic() {
+
+  }
+
   /** Returns true iff this is giving out light from the given side */
   public function isLightingTo(directionOut : Direction) : Bool {
     return false;
@@ -26,6 +30,7 @@ class Barrel extends InteractableElement implements Lightable {
 
   public function resetLightInDirection() {
     lightInDirection = [];
+    isLit = false;
   }
 
   /** Set to Direction.None or null to turn off light */
@@ -34,6 +39,7 @@ class Barrel extends InteractableElement implements Lightable {
       return;
     }
     lightInDirection.push(d);
+    isLit = true;
   }
 
 }

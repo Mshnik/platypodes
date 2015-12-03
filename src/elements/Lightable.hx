@@ -11,6 +11,9 @@ interface Lightable {
   /** The direction this is lit from. Set whenever lighting is recalculated */
   public var lightInDirection(default, null) : Array<Direction>;
 
+  /** Update the graphic representation of this to match the current lighting status */
+  public function updateGraphic() : Void;
+
   /** Resets the lightInDirection to an empty array */
   public function resetLightInDirection() : Void;
 

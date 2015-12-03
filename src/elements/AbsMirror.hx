@@ -86,6 +86,10 @@ import flixel.system.FlxSound;
     lightInDirection.push(d);
   }
 
+  public function updateGraphic(){
+    throw "NOT IMPLEMENTED - MUST BE OVERRIDDEN";
+  }
+
   public function getReflection(directionIn : Direction) : Array<Direction> {
     throw "NOT IMPLEMENTED - MUST BE OVERRIDDEN";
   }

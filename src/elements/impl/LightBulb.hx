@@ -39,6 +39,10 @@ class LightBulb extends Element implements Lightable{
     isLit = true;
   }
 
+  public function updateGraphic() {
+
+  }
+
   /** Returns true iff this is giving out light from the given side */
   public function isLightingTo(directionOut : Direction) : Bool {
     return directionFacing.equals(directionOut);
