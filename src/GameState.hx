@@ -443,6 +443,10 @@ class GameState extends FlxState {
         }
         return false;
       }
+      if(player.elmHolding != null) {
+        player.elmHolding.holdingPlayer = null;
+        player.grabbing = false;
+      }
       player.moveDirection = a.moveDirection;
       player.directionFacing = a.directionFacing;
       player.moveSpeed = Character.MOVE_SPEED;
